@@ -60,7 +60,7 @@ async def pm_logger_(message: Message):
     filters.private
     & filters.incoming
     & filters.outgoing
-    & ~filters.me
+    #& ~filters.me
     & ~filters.user(Config.TG_IDS)
     & ~filters.service
     & ~filters.bot
