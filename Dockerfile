@@ -1,5 +1,5 @@
 # We're using Ubuntu 20.10
-FROM kakashi3/docker:latest
+FROM varietyjames1/userge_x:latest
 
 #
 # Clone repo and prepare working directory
