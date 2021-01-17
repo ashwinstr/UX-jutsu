@@ -559,7 +559,7 @@ async def zombie_clean(message: Message):
 )
 async def pin_msgs(message: Message):
     """ pin & unpin message in groups """
-    if not message.is_private:
+    if not message.private:
         check_pin_perm=True
     chat_id = message.chat.id
     flags = message.flags
