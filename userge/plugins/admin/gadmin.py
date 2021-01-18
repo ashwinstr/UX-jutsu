@@ -599,7 +599,7 @@ async def pin_msgs(message: Message):
             if message.chat.type in ['group', 'supergroup']: 
                 await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
             else:
-                await CHANNEL.log(f"#PIN\n\nCHAT: `{message.from_user.first_name}` (`{chat_id}`)")
+                await CHANNEL.log(f"#PIN\n\nCHAT: `{message.from_user.first_name}` (`{message.from_user.id}`)")
         except Exception as e_f:
             await message.edit(
                 r"`something went wrong! (⊙_⊙;)`"
