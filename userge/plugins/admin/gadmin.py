@@ -560,7 +560,7 @@ async def zombie_clean(message: Message):
 async def pin_msgs(message: Message):
     """ pin & unpin message in groups """
     
-    if message.chat.type is ['group', 'supergroup']
+    if message.chat.type='supergroup':
         check_pin_perm=True
     chat_id = message.chat.id
     flags = message.flags
