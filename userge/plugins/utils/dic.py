@@ -43,10 +43,7 @@ async def dictionary(message: Message):
                     )
                 else:
                     w_word += (
-                        "\n **Definition** \n"
-                        + "<pre>"
-                        + i["definition"]
-                        + "</pre>"
+                        "\n **Definition** \n" + "<pre>" + i["definition"] + "</pre>"
                     )
         w_word += "\n\n"
         return w_word
