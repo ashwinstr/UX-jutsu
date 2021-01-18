@@ -559,9 +559,9 @@ async def zombie_clean(message: Message):
 )
 async def pin_msgs(message: Message):
     """ pin & unpin message in groups """
-    
-    if message.chat.type in ['group', 'supergroup']:
-        check_pin_perm=True
+
+    if message.chat.type in ["group", "supergroup"]:
+        pass
     chat_id = message.chat.id
     flags = message.flags
     loud_pin = "-l" in flags
@@ -594,12 +594,16 @@ async def pin_msgs(message: Message):
     else:
         try:
             message_id = message.reply_to_message.message_id
-            await message.client.pin_chat_message(chat_id, message_id, disable_notification=True)
+            await message.client.pin_chat_message(
+                chat_id, message_id, disable_notification=True
+            )
             await message.edit("`Pinned Successfully!`")
-            if message.chat.type in ['group', 'supergroup']: 
+            if message.chat.type in ["group", "supergroup"]:
                 await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
             else:
-                await CHANNEL.log(f"#PIN\n\nCHAT: `{message.from_user.first_name}` (`{message.from_user.id}`)")
+                await CHANNEL.log(
+                    f"#PIN\n\nCHAT: `{message.from_user.first_name}` (`{message.from_user.id}`)"
+                )
         except Exception as e_f:
             await message.edit(
                 r"`something went wrong! (⊙_⊙;)`"
