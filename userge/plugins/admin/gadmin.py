@@ -556,8 +556,7 @@ async def zombie_clean(message: Message):
         ],
     },
     allow_channels=True,
-    if not filters.private:
-        check_pin_perm=True,
+    check_pin_perm=True,
 )
 async def pin_msgs(message: Message):
     """ pin & unpin message in groups """
