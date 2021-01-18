@@ -27,23 +27,23 @@ async def dictionary(message: Message):
     LOG.info("starting dic command...")
     input_ = message.input_str
 
-    await message.edit("`processing...⚙️🛠`")
+    await message.edit("`processing...`")
 
     def combine(s_word, name):
-        w_word = f"🛑--**__{name.title()}__**--\n"
+        w_word = f"--**__{name.title()}__**--\n"
         for i in s_word:
             if "definition" in i:
                 if "example" in i:
                     w_word += (
-                        "\n👩‍🏫 **Definition** 👨‍🏫\n<pre>"
+                        "\n **Definition** \n<pre>"
                         + i["definition"]
-                        + "</pre>\n\t\t❓<b>Example</b>❔\n<pre>"
+                        + "</pre>\n\t\t<b>Example</b>\n<pre>"
                         + i["example"]
                         + "</pre>"
                     )
                 else:
                     w_word += (
-                        "\n👩‍🏫 **Definition** 👨‍🏫\n"
+                        "\n **Definition** \n"
                         + "<pre>"
                         + i["definition"]
                         + "</pre>"
@@ -97,18 +97,18 @@ async def dictionary(message: Message):
                 # print(crosref)
         if "title" in list(word1):
             out += (
-                "🔖--**__Error Note__**--\n\n▪️`"
+                "--**__Error Note__**--\n\n▪️`"
                 + word1["title"]
-                + "🥺\n\n▪️"
+                + "\n\n▪️"
                 + word1["message"]
-                + "😬\n\n▪️<i>"
+                + "\n\n▪️<i>"
                 + word1["resolution"]
-                + "</i>🤓`"
+                + "</i>`"
             )
         return out
 
     if not input_:
-        await message.edit("`❌Plz enter word to search‼️`", del_in=5)
+        await message.edit("`Plz enter word to search‼️`", del_in=5)
     else:
         word = input_
         async with aiohttp.ClientSession() as ses:
@@ -123,9 +123,9 @@ async def dictionary(message: Message):
         last_output = out_print(r_dec)
         if last_output:
             await message.edit(
-                "`📌Search reasult for   `" + f"👉 {v_word}\n\n" + last_output
+                "`Search reasult for   `" + f"◾ {v_word}\n\n" + last_output
             )
-            await CHANNEL.log(f"Get dictionary results for 👉 {v_word}")
+            await CHANNEL.log(f"Get dictionary results for ◾ {v_word}")
         else:
             await message.edit("`No result found from the database.😔`", del_in=5)
             await CHANNEL.log("Get dictionary results empty")
