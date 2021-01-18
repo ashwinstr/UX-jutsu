@@ -1,3 +1,4 @@
+from urllib.error import HTTPError
 from PyDictionary import PyDictionary
 from userge import Message, userge
 
@@ -28,6 +29,6 @@ async def meaning_wrd(message: Message):
                 for i in b:
                     output += f"◾ __{i}__\n"
             await message.edit(output)
-    except Exception:
-        await event.edit(f"Couldn't fetch meaning of {word}")
+    except HTTPError:
+        await message.err(text=f"Sorry, couldn't find any results for: `{word}``")
         return
