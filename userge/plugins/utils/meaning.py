@@ -1,4 +1,5 @@
 from PyDictionary import PyDictionary
+
 from userge import Message, userge
 
 
@@ -14,7 +15,7 @@ from userge import Message, userge
 async def meaning_wrd(message: Message):
     """ meaning of word """
     await message.edit("`Searching for meaning...`")
-    word = message.input_str or message.reply_to_message 
+    word = message.input_str or message.reply_to_message
     if not word:
         await message.err("no input!")
     else:
