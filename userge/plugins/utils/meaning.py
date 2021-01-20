@@ -41,7 +41,7 @@ async def meaning_wrd(message: Message):
         ],
     },
 )
-async def meaning_wrd(message: Message):
+async def synonym_wrd(message: Message):
     """ synonym of word """
     await message.edit("`Searching for synonyms...`")
     word = message.input_str or message.reply_to_message
@@ -68,7 +68,7 @@ async def meaning_wrd(message: Message):
         ],
     },
 )
-async def meaning_wrd(message: Message):
+async def antonym_wrd(message: Message):
     """ antonym of word """
     await message.edit("`Searching for antonyms...`")
     word = message.input_str or message.reply_to_message
