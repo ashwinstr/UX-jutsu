@@ -36,7 +36,6 @@ CHANNEL = userge.getCLogger(__name__)
 )
 async def promote_usr(message: Message):
     """ promote members in tg group """
-    custom_rank = ""
     chat_id = message.chat.id
     await message.edit("`Trying to Promote User.. Hang on!! ⏳`")
     user_id, custom_rank = message.extract_user_and_text
@@ -153,7 +152,6 @@ async def demote_usr(message: Message):
 async def ban_user(message: Message):
     """ ban user from tg group """
     await message.edit("`Trying to Ban User.. Hang on!! ⏳`")
-    reason = ""
     user_id, reason = message.extract_user_and_text
     if not user_id:
         await message.edit(
@@ -316,7 +314,6 @@ async def kick_usr(message: Message):
 )
 async def mute_usr(message: Message):
     """ mute user from tg group """
-    reason = ""
     chat_id = message.chat.id
     flags = message.flags
     minutes = flags.get("-m", 0)
@@ -541,6 +538,46 @@ async def zombie_clean(message: Message):
                 f"CHAT: `{message.chat.title}` (`{chat_id}`)\n"
                 r"ZOMBIE COUNT: `WOOHOO group is clean.. \^o^/`"
             )
+
+
+def chat_name_(msg: Message):
+    chat_ = msg.chat
+    if chat_.type in ("private", "bot"):
+        return " ".join([chat_.first_name, chat_.last_name or ""])
+    return chat_.title
+
+
+@userge.on_cmd(
+    "unpin",
+    about={
+        "header": "use this to unpin messages",
+        "description": "unpin messages in groups",
+        "flags": {"-all": "unpin all messages"},
+        "examples": [
+            "{tr}unpin [reply to chat message]",
+            "{tr}unpin -all [reply to chat message]",
+        ],
+    },
+    check_pin_perm=True,
+)
+async def unpin_msgs(message: Message):
+    """ unpin message """
+    reply = message.reply_to_message
+    unpinall_ = bool("-all" in message.flags)
+    try:
+        if unpinall_:
+            await message.client.unpin_all_chat_messages(message.chat.id)
+        else:
+            if not reply:
+                await message.err("First reply to a message to unpin !", del_in=5)
+                return
+            await reply.unpin()
+        await message.delete()
+        await CHANNEL.log(
+            f"{'#UNPIN_All' if unpinall_ else '#UNPIN'}\n\nCHAT: **{chat_name_(message)}**  (`{message.chat.id}`)"
+        )
+    except Exception as e_f:
+        await message.err(e_f + "\ndo .help unpin for more info ...", del_in=7)
 
 
 @userge.on_cmd(

@@ -150,6 +150,7 @@ if userge.has_bot:
                     InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_0"),
                 ]
             )
+        GOGO_DB[key_]["current_pg"] = paginate[0]
         await c_q.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(paginate[0])
         )
@@ -167,7 +168,7 @@ if userge.has_bot:
         url_ = key_data.get("url")
         await c_q.answer()
         await c_q.edit_message_text(
-            text=f"{key_data.get('body')}\n• **Episode: {episode}**\n\n📹  Choose the desired quality from below\n**Note: **for uploading to TG:\n>>  `{Config.CMD_TRIGGER}upload [link] | [filename].mp4`\ne.g  {Config.CMD_TRIGGER}upload [link] | video.mp4",
+            text=f"{key_data.get('body')}\n**[  Episode: {episode}  ]**\n\n📹 __Choose the desired video quality from below.__\n**Note:** for uploading to TG:\n`{Config.CMD_TRIGGER}upload [link] | [filename].mp4`",
             reply_markup=(
                 await Anime.get_quality(url=url_, episode=episode, key_=key_)
             ),
@@ -187,32 +188,34 @@ if userge.has_bot:
         await c_q.answer()
         pages = key_data.get("page")
         p_len = len(pages)
-        del_back = False
+        del_back, del_next = False, False
         if direction == "next":
             page = pos + 1
-            if page >= p_len:
-                return await c_q.answer("That's All Folks !")
+            del_next = (page + 1) == p_len
         elif direction == "back":
             del_back = pos == 1
             page = pos - 1
         else:
             return
         button_base = [
-            InlineKeyboardButton("Back", callback_data=f"gogo_back{key_}_{page}"),
+            InlineKeyboardButton("❮  Back", callback_data=f"gogo_back{key_}_{page}"),
             InlineKeyboardButton(
                 f"{page + 1} / {p_len}",
                 callback_data=f"gogo_page{key_}_{page}",
             ),
-            InlineKeyboardButton("Next", callback_data=f"gogo_next{key_}_{page}"),
+            InlineKeyboardButton("Next  ❯", callback_data=f"gogo_next{key_}_{page}"),
         ]
         if del_back:
             button_base.pop(0)
+        if del_next:
+            button_base.pop()
         # Work Around for multiple nav buttons
         # idk why "pages" is acting as a global variable
-        if pages[page][-1][-1].text == "Next":
-            pages[page][-1] = button_base
-        else:
+        # So safe to check if nav buttons already exists
+        if "gogo_get_qual" in pages[page][-1][-1].callback_data:
             pages[page].append(button_base)
+        else:
+            pages[page][-1] = button_base
         GOGO_DB[key_]["current_pg"] = pages[page]
         await c_q.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(pages[page])
