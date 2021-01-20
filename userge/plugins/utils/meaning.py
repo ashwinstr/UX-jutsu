@@ -25,9 +25,9 @@ async def meaning_wrd(message: Message):
         try:
             for a, b in words.items():
                 
-                word1 = word1 + f"**{a}**\n"
+                output = output + f"**{a}**\n"
                 for i in b:
-                    word1 = word1 + f"◾ __{i}__\n"
+                    output = output + f"◾ __{i}__\n"
             await message.edit(output)
         except Exception:
             await message.err(f"Couldn't fetch meaning of {word}")
