@@ -52,10 +52,8 @@ async def meaning_wrd(message: Message):
         words = dictionary.synonym(word)
         output = f"**Word :** __{word}__\n"
         try:
-            for a, b in words.items():
-                output = output + f"\n**{a}**\n"
-                for i in b:
-                    output = output + f"◾ __{i}__\n"
+            for a, words:
+                output = output + f"◾ __{a}__"
             await message.edit(output)
         except Exception:
             await message.err(f"Couldn't fetch synonyms of {word}")
