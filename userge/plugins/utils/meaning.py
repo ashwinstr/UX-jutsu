@@ -52,7 +52,7 @@ async def meaning_wrd(message: Message):
         words = dictionary.synonym(word)
         output = f"**Word :** __{word}__\n"
         try:
-            for a, words:
+            for a in words:
                 output = output + f"◾ __{a}__"
             await message.edit(output)
         except Exception:
