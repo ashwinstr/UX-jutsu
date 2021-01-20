@@ -57,3 +57,30 @@ async def meaning_wrd(message: Message):
             await message.edit(output)
         except Exception:
             await message.err(f"Couldn't fetch synonyms of {word}")
+            
+            
+@userge.on_cmd(
+    "ayn",
+    about={
+        "header": "use this to find antonym of any word.",
+        "examples": [
+            "{tr}ayn [word] or [reply to msg]",
+        ],
+    },
+)
+async def meaning_wrd(message: Message):
+    """ antonym of word """
+    await message.edit("`Searching for antonyms...`")
+    word = message.input_str or message.reply_to_message
+    if not word:
+        await message.err("no input!")
+    else:
+        dictionary = PyDictionary()
+        words = dictionary.antonym(word)
+        output = f"**Antonym for :** __{word}__\n"
+        try:
+            for a in words:
+                output = output + f"◾ __{a}__\n"
+            await message.edit(output)
+        except Exception:
+            await message.err(f"Couldn't fetch antonyms of {word}")
