@@ -23,7 +23,6 @@ async def meaning_wrd(message: Message):
         words = dictionary.meaning(word)
         try:
             for a, b in words.items():
-
                 output = output + f"**{a}**\n"
                 for i in b:
                     output = output + f"◾ __{i}__\n"
