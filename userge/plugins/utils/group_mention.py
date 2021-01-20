@@ -7,7 +7,7 @@ from userge import Config
 
 
 @userge.on_message(filters.incoming & ~filters.bot)
-async def gp_logger(message: Message):
+async def gp_lgger(_, message: Message):
     chat = message.chat.id
 
     if Config.PM_LOG_GROUP_ID:
@@ -21,8 +21,8 @@ async def gp_logger(message: Message):
                         \n<b>Message : </b><a href = 'https://t.me/c/{chat}/{message.message_id}'> link</a>",
                 parse_mode="html",
                 link_preview=True,
-	    )
-	    try:
+            )
+            try:
                 await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
