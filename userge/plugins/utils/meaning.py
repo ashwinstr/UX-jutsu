@@ -21,10 +21,10 @@ async def meaning_wrd(message: Message):
     else:
         dictionary = PyDictionary()
         words = dictionary.meaning(word)
-        output = f"**Word :** __{word}__\n\n"
+        output = f"**Word :** __{word}__\n"
         try:
             for a, b in words.items():
-                output = output + f"**{a}**\n"
+                output = output + f"\n**{a}**\n"
                 for i in b:
                     output = output + f"◾ __{i}__\n"
             await message.edit(output)
