@@ -31,7 +31,7 @@ async def meaning_wrd(message: Message):
         except Exception:
             await message.err(f"Couldn't fetch meaning of {word}")
 
-            
+
 @userge.on_cmd(
     "syn",
     about={
