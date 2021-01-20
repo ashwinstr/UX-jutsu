@@ -7,7 +7,7 @@ from userge import Config
 
 
 @userge.on_message(filters.incoming & ~filters.bot)
-async def gp_logger(_, message: Message):
+async def gp_logger(message: Message):
     chat = message.chat.id
 
     if Config.PM_LOG_GROUP_ID:
