@@ -57,8 +57,8 @@ async def meaning_wrd(message: Message):
             await message.edit(output)
         except Exception:
             await message.err(f"Couldn't fetch synonyms of {word}")
-            
-            
+
+
 @userge.on_cmd(
     "ayn",
     about={
