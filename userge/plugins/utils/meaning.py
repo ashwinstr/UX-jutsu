@@ -21,10 +21,9 @@ async def meaning_wrd(message: Message):
     else:
         dictionary = PyDictionary()
         words = dictionary.meaning(word)
-        words1 = ""
         try:
             for a, b in words.items():
-                
+
                 output = output + f"**{a}**\n"
                 for i in b:
                     output = output + f"◾ __{i}__\n"
