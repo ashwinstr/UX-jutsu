@@ -8,7 +8,7 @@ from userge import Config
 
 @userge.on_message(filters.incoming & ~filters.bot)
 async def gp_lgger(_, message: Message):
-    chat = message.chat.id
+    chat_id = message.chat.id
 
     if Config.PM_LOG_GROUP_ID:
         u_id = message.from_user.id
@@ -18,7 +18,7 @@ async def gp_lgger(_, message: Message):
                 Config.PM_LOG_GROUP_ID,
                 f"#TAGS \n<b>Sent by : </b><a href = 'tg://user?id={u_id}'> {message.from_user.first_name}</a>\
                         \n<b>Group : </b><code>{message.chat.title}</code>\
-                        \n<b>Message : </b><a href = 'https://t.me/c/{chat}/{message.message_id}'> link</a>",
+                        \n<b>Message : </b><a href = 'https://t.me/c/{chat_id}/{message.message_id}'> link</a>",
                 parse_mode="html",
                 link_preview=True,
             )
