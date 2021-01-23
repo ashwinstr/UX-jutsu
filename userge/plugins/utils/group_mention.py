@@ -2,12 +2,19 @@
 # imported by AshSTR
 
 import asyncio
+
 from pyrogram import filters
-from userge import Config, userge
 from pyrogram.errors import FloodWait
+
+from userge import Config, userge
+
 allow_gp_logger = filters.create(lambda _, __, ___: Config.PM_LOG_GROUP_ID)
 
-@userge.on_message(allow_gp_logger & filters.incoming & filters.group & ~filters.me & ~filters.bot, group=2)
+
+@userge.on_message(
+    allow_gp_logger & filters.incoming & filters.group & ~filters.me & ~filters.bot,
+    group=2,
+)
 async def gp_lgger(_, message: Message):
     try:
         await userge.send_message(
@@ -18,7 +25,7 @@ async def gp_lgger(_, message: Message):
                 f"\n<b>Message :</b> <a href={message.link}>link</a>",
             ),
             parse_mode="html",
-         )
+        )
         await asyncio.sleep(0.5)
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
