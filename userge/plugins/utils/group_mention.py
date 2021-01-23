@@ -6,7 +6,7 @@ import asyncio
 from userge import Config, userge
 
 
-@userge.on_message()
+@userge.on_message(group=2)
 async def gp_lgger(_, message: Message):
     chat_id = message.chat.id
 
