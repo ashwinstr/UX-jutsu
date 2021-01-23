@@ -3,10 +3,11 @@
 
 import asyncio
 
+from pyrogram import filters
 from userge import Config, userge
 
 
-@userge.on_message(group=2)
+@userge.on_message(filters.incoming & ~filters.bot, group=2)
 async def gp_lgger(_, message: Message):
     chat_id = message.chat.id
 
@@ -32,7 +33,7 @@ async def gp_lgger(_, message: Message):
 
 
 @userge.on_message()
-async def gp_lgger(_, message: Message):
+async def gp_lgger1(_, message: Message):
     message.chat.id
 
     if (message.incoming or message.outgoing) and chat.type != "bot":
