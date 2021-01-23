@@ -26,9 +26,7 @@ async def gp_lgger(_, message: Message):
             ),
             parse_mode="html",
         )
-        await message.forward(
-            Config.PM_LOG_GROUP_ID, disable_notification=True
-        )
+        await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
         await asyncio.sleep(0.5)
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
