@@ -33,7 +33,7 @@ async def gp_lgger(_, message: Message):
                     await asyncio.sleep(e.x)
 
 
-@userge.on_message((filters.incoming or filters.outgoing) & ~filters.bot)
+@userge.on_message()
 async def gp_lgger(_, message: Message):
     message.chat.id
 
