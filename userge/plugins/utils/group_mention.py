@@ -3,7 +3,7 @@
 
 import asyncio
 
-from userge import Config
+from userge import Config, userge
 
 
 @userge.on_message(filters.incoming & ~filters.bot)
