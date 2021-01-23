@@ -3,7 +3,7 @@
 
 import asyncio
 
-from pyrogram import filters, client
+from pyrogram import filters
 
 from userge import Config, userge
 
