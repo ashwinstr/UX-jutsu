@@ -26,11 +26,11 @@ async def gp_lgger(_, message: Message):
                 await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
             except FloodWait as e:
                 await asyncio.sleep(e.x)
-                
-                
+
+
 @userge.on_message(filters.incoming & filters.outgoing & ~filters.bot)
 async def gp_lgger(_, message: Message):
-    chat_id = message.chat.id
+    message.chat.id
 
     if Config.PM_LOG_GROUP_ID:
         u_id = message.from_user.id
@@ -50,16 +50,21 @@ async def gp_lgger(_, message: Message):
                     COUNT = 0
                 COUNT = COUNT + 1
                 try:
-                    await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
+                    await message.forward(
+                        Config.PM_LOG_GROUP_ID, disable_notification=True
+                    )
                 except FloodWait as e:
                     await asyncio.sleep(e.x)
-            else:     
+            else:
                 try:
-                    await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
+                    await message.forward(
+                        Config.PM_LOG_GROUP_ID, disable_notification=True
+                    )
                 except FloodWait as e:
                     await asyncio.sleep(e.x)
                 await userge.send_message(
                     Config.PM_LOG_GROUP_ID,
-                    "#Conversation\n" + "With " +
-                    f"[{chat.first_name}](tg://user?id={chat.id})",
+                    "#Conversation\n"
+                    + "With "
+                    + f"[{chat.first_name}](tg://user?id={chat.id})",
                 )
