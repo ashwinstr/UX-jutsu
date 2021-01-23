@@ -21,7 +21,7 @@ async def gp_lgger(_, message: Message):
          )
         await asyncio.sleep(0.5)
     except FloodWait as e:
-        await await asyncio.sleep(e.x + 3)
+        await asyncio.sleep(e.x + 3)
 
 
 @userge.on_message()
