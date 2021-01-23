@@ -23,7 +23,6 @@ async def gp_lgger(client, message: Message):
                             \n<b>Group : </b><code>{message.chat.title}</code>\
                             \n<b>Message : </b><a href = 'https://t.me/c/{chat_id}/{message.message_id}'> link</a>",
                     parse_mode="html",
-                    link_preview=True,
                 )
                 try:
                     await message.forward(
