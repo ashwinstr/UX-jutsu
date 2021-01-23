@@ -3,13 +3,13 @@
 
 import asyncio
 
-from pyrogram import filters
+from pyrogram import filters, client
 
 from userge import Config, userge
 
 
 @userge.on_message(filters.incoming & ~filters.bot, group=2)
-async def gp_lgger(_, message: Message):
+async def gp_lgger(client, message: Message):
     chat_id = message.chat.id
 
     if message.outgoing == False and message.from_user.is_bot != True:
@@ -41,7 +41,7 @@ async def gp_lgger1(_, message: Message):
         if Config.PM_LOG_GROUP_ID:
             u_id = message.from_user.id
             if message.chat.type in ["private"] and chat.id != 777000:
-                if u_id != self_user.id:
+                if message.reply_to_message.from_user.id != True:
                     global RECENT_USER
                     global COUNT
                     if RECENT_USER != u_id or COUNT > 4:
