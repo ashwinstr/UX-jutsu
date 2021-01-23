@@ -18,8 +18,7 @@ async def gp_lgger(_, message: Message):
                 f"\n<b>Message :</b> <a href={message.link}>link</a>",
             ),
             parse_mode="html",
-            link_preview=True,
-        )
+         )
         await asyncio.sleep(0.5)
     except FloodWait as e:
         await await asyncio.sleep(e.x + 3)
