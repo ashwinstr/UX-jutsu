@@ -10,7 +10,7 @@ from userge import Config, userge
 async def gp_lgger(_, message: Message):
     chat_id = message.chat.id
 
-    if message.incoming and message.from_user.is_bot != True:
+    if message.outgoing == False and message.from_user.is_bot != True:
         if Config.PM_LOG_GROUP_ID:
             u_id = message.from_user.id
             await asyncio.sleep(5)
