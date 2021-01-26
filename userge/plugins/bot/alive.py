@@ -131,7 +131,7 @@ class Bot_Alive:
     @staticmethod
     async def check_media_link(media_link: str):
         user = await userge.get_me()
-        name = " ".join([user.first_name, user.last_name or ""])
+        " ".join([user.first_name, user.last_name or ""])
         alive_regex_ = r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
         match = search(alive_regex_, media_link)
         if not match:
