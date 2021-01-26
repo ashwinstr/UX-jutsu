@@ -166,7 +166,7 @@ class Bot_Alive:
 
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
-
+            return
         return alive_info
 
     @staticmethod
