@@ -152,11 +152,10 @@ class Bot_Alive:
         return link_type, link
 
     @staticmethod
-    def alive_info():
-        async def alive_info_ash():
-            user = await userge.get_me()
-            name = " ".join([user.first_name, user.last_name or ""])
-            alive_info = f"""
+    def alive_info(message: Message):
+        username = message.from_user
+        name = username.first_name, username.last_name or ""
+        alive_info = f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
 
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
@@ -166,8 +165,6 @@ class Bot_Alive:
 
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
-            return
-
         return alive_info
 
     @staticmethod
