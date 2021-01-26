@@ -707,7 +707,7 @@ if userge.has_bot:
 
             if string == "alive":
                 user = await userge.get_me()
-                name = " ".join([user.first_name, user.last_name or ""])
+                " ".join([user.first_name, user.last_name or ""])
                 alive_info = Bot_Alive.alive_info()
                 buttons = Bot_Alive.alive_buttons()
                 if Config.ALIVE_MEDIA:
