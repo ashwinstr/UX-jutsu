@@ -152,9 +152,7 @@ class Bot_Alive:
         return link_type, link
 
     @staticmethod
-    async def alive_info():
-        user = await userge.get_me()
-        name = " ".join([user.first_name, user.last_name or ""])
+    def alive_info():
         alive_info = f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
 
