@@ -155,6 +155,8 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info():
+        user = message.from_user
+        name = user.first_name, user.last_name or ""
         alive_info = f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
 
