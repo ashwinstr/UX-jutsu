@@ -68,6 +68,8 @@ async def alive_inline(message: Message):
             )
     else:
         bot = await userge.bot.get_me()
+        user = await userge.get_me()
+        name = " ".join([user.first_name, user.last_name or ""]) 
         try:
             x = await userge.get_inline_bot_results(bot.username, "alive")
             y = await userge.send_inline_bot_result(
@@ -159,7 +161,7 @@ class Bot_Alive:
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
-  👤   <b>User :</b>    <code>{bot}</code>
+  👤   <b>User :</b>    <code>{name}</code>
 
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
