@@ -17,6 +17,8 @@ CACHED_MEDIA = None
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
+    u = message.from_user
+    name = " ".join([user.first_name, user.last_name or ""])
     global CACHED_MEDIA
     if message.client.is_bot:
         if Config.ALIVE_MEDIA:
@@ -68,8 +70,6 @@ async def alive_inline(message: Message):
             )
     else:
         bot = await userge.bot.get_me()
-        user = await userge.get_me()
-        " ".join([user.first_name, user.last_name or ""])
         try:
             x = await userge.get_inline_bot_results(bot.username, "alive")
             y = await userge.send_inline_bot_result(
