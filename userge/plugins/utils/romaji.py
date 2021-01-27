@@ -26,7 +26,7 @@ async def romaji_(message: Message):
     if not x:
         await message.err("No Input Found")
     else:
-        z = detector.detect(x)
+        z = translator.detect(x)
         y = x.split("\n")
         result = translator.translate(y, lang_src=z, lang_tgt="en", pronounce=True)
         k = result[1]
