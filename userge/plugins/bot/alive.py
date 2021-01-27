@@ -69,7 +69,7 @@ async def alive_inline(message: Message):
     else:
         bot = await userge.bot.get_me()
         user = await userge.get_me()
-        name = " ".join([user.first_name, user.last_name or ""]) 
+        " ".join([user.first_name, user.last_name or ""])
         try:
             x = await userge.get_inline_bot_results(bot.username, "alive")
             y = await userge.send_inline_bot_result(
