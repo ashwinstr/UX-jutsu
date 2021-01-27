@@ -124,7 +124,7 @@ if userge.has_bot:
 
 
 async def user_():
-    k = userge.get_me()
+    userge.get_me()
     me_ = " ".join([user.first_name, user.last_name or ""])
     return me_
 
