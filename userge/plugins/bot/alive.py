@@ -159,11 +159,17 @@ class Bot_Alive:
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
-  👤   <b>User :</b>    [Itachi](t.me/Itachi_HTK)
+  👤   <b>User :</b>    {user_()}
 
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
         return alive_info
+
+    async def user_():
+        u = await userge.get_me()
+        me_ = " ".join([u.first_name, u.last_name or ""])
+
+        return me_
 
     @staticmethod
     def _get_mode() -> str:
