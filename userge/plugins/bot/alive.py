@@ -15,11 +15,6 @@ from userge.utils import get_file_id, rand_array
 CACHED_MEDIA = None
 
 
-async def user_():
-    k = userge.get_me()
-    return k.mention
-
-
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
     global CACHED_MEDIA
@@ -155,6 +150,12 @@ class Bot_Alive:
                 message_id = match.group(3)
             link = [chat_id, int(message_id)]
         return link_type, link
+
+k = await userge.get_me()
+
+    def user_():
+        name = k.first_name
+        return name
 
     @staticmethod
     def alive_info():
