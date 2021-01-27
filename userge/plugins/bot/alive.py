@@ -151,7 +151,7 @@ class Bot_Alive:
             link = [chat_id, int(message_id)]
         return link_type, link
 
-async username():
+async def username():
     k = await userge.get_me()
 
     def user_():
