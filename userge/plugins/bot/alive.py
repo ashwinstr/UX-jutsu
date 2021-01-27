@@ -14,9 +14,11 @@ from userge.utils import get_file_id, rand_array
 
 CACHED_MEDIA = None
 
+
 async def user_():
     k = userge.get_me()
     return k.mention
+
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
