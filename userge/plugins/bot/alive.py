@@ -122,9 +122,11 @@ if userge.has_bot:
             await c_q.answer(alive_s, show_alert=True)
         await asyncio.sleep(0.5)
 
+
 async def user_():
     k = userge.get_me()
     return k.mention
+
 
 def _parse_arg(arg: bool) -> str:
     return " ✅ 𝙴𝚗𝚊𝚋𝚕𝚎𝚍" if arg else " ❌ 𝙳𝚒𝚜𝚊𝚋𝚕𝚎𝚍"
