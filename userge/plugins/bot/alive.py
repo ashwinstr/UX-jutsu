@@ -125,7 +125,8 @@ if userge.has_bot:
 
 async def user_():
     k = userge.get_me()
-    return k.mention
+    me_ = " ".join([user.first_name, user.last_name or ""])
+    return me_
 
 
 def _parse_arg(arg: bool) -> str:
