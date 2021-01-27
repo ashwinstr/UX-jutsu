@@ -14,6 +14,9 @@ from userge.utils import get_file_id, rand_array
 
 CACHED_MEDIA = None
 
+async def user_():
+    k = userge.get_me()
+    return k.mention
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
@@ -121,12 +124,6 @@ if userge.has_bot:
         else:
             await c_q.answer(alive_s, show_alert=True)
         await asyncio.sleep(0.5)
-
-
-async def user_():
-    userge.get_me()
-    me_ = " ".join([user.first_name, user.last_name or ""])
-    return me_
 
 
 def _parse_arg(arg: bool) -> str:
