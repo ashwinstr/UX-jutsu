@@ -13,8 +13,6 @@ from userge.core.ext import RawClient
 from userge.utils import get_file_id, rand_array
 
 CACHED_MEDIA = None
-u = message.from_user
-name = " ".join([u.first_name, u.last_name or ""])
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
@@ -161,7 +159,7 @@ class Bot_Alive:
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
-  👤   <b>User :</b>    <code>{name}</code>
+#  👤   <b>User :</b>    <code>{name}</code>
 
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
