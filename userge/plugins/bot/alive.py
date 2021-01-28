@@ -79,12 +79,15 @@ async def alive_inline(message: Message):
         await asyncio.sleep(200)
         await userge.delete_messages(message.chat.id, y.updates[0].id)
 
+
 u = message.from_user
 user = " ".join([u.first_name, u.last_name or ""])
 
+
 def name_():
     return user
-    
+
+
 if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
@@ -159,7 +162,7 @@ class Bot_Alive:
     @staticmethod
     def alive_info():
         k = userge.get_me()
-        me = k.first_name
+        k.first_name
         alive_info = f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
