@@ -81,8 +81,8 @@ async def alive_inline(message: Message):
         await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
-def name_(message: Message):
-    u = message.from_user
+async def name_():
+    u = await userge.get_me()
     user = " ".join([u.first_name, u.last_name or ""])
     return user
 
