@@ -17,7 +17,7 @@ CACHED_MEDIA = None
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
-    
+
     global CACHED_MEDIA
     if message.client.is_bot:
         if Config.ALIVE_MEDIA:
@@ -81,10 +81,9 @@ async def alive_inline(message: Message):
         await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
-
 async def name_(message: Message):
     u = message.from_user
-    user = " ".join([u.first_name, u.last_name or ""]) 
+    user = " ".join([u.first_name, u.last_name or ""])
     return user
 
 
