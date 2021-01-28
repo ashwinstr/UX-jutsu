@@ -17,6 +17,7 @@ CACHED_MEDIA = None
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
 async def alive_inline(message: Message):
+    
     global CACHED_MEDIA
     if message.client.is_bot:
         if Config.ALIVE_MEDIA:
@@ -80,11 +81,10 @@ async def alive_inline(message: Message):
         await userge.delete_messages(message.chat.id, y.updates[0].id)
 
 
-u = message.from_user
-user = " ".join([u.first_name, u.last_name or ""])
 
-
-def name_():
+async def name_(message: Message):
+    u = message.from_user
+    user = " ".join([u.first_name, u.last_name or ""]) 
     return user
 
 
@@ -161,8 +161,6 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info():
-        k = userge.get_me()
-        k.first_name
         alive_info = f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
