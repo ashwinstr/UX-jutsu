@@ -19,6 +19,7 @@ k = userge.get_me()
 
 def user_():
     k.first_name
+    return k.first_name
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
