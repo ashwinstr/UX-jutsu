@@ -14,12 +14,6 @@ from userge.utils import get_file_id, rand_array
 
 CACHED_MEDIA = None
 
-k = userge.get_me()
-
-
-def user_():
-    k.first_name
-    return k.first_name
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
@@ -160,12 +154,14 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info():
+        k = userge.get_me()
+        me = k.first_name
         alive_info = f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
-  👤   <b>User :</b>    {user_()}
+  👤   <b>User :</b>    {me}
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
         return alive_info
