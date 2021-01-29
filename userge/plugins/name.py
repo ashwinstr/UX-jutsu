@@ -1,3 +1,4 @@
-def name_():
-    u = message.from_user
-    return u.first_name
+class user:
+    def name_():
+        u = message.from_user
+        return u.first_name
