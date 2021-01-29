@@ -2,7 +2,7 @@ from userge import Message
 
 
 async def user(message: Message):
-    message.from_user
+    u = message.from_user
 
 
 def name_(u):
