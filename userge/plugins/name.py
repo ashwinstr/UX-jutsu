@@ -1,10 +1,6 @@
-from userge import Message
+from userge import message
 
-
-async def user(message: Message):
-    message.from_user
-
-
-def name_(u):
+def name_():
+    u = message.from_user
     user = " ".join([u.first_name, u.last_name or ""])
     return user
