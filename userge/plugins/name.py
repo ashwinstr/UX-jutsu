@@ -1,5 +1,6 @@
 from userge import userge
 
+
 class user:
     @staticmethod
     async def name_():
