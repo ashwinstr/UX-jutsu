@@ -1,3 +1,5 @@
+from userge import Message
+
 async def user(message: Message):
     message.from_user
 
