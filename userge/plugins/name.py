@@ -8,5 +8,5 @@ async def u_n():
     def name_():
         user = " ".join([u.first_name, u.last_name or ""])
         return user
-    
+
     return name
