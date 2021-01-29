@@ -1,5 +1,7 @@
+from userge import userge
+
 class user:
     @staticmethod
     async def name_():
-        u = message.from_user
+        u = await userge.get_me()
         return u.first_name
