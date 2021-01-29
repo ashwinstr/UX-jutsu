@@ -1,4 +1,4 @@
-from userge import message
+from userge import Message
 
 
 def name_():
