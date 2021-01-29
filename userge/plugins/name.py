@@ -1,5 +1,6 @@
 async def user(message: Message):
-    u = message.from_user
+    message.from_user
+
 
 def name_(u):
     user = " ".join([u.first_name, u.last_name or ""])
