@@ -11,6 +11,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from userge import Config, Message, get_version, userge, versions
 from userge.core.ext import RawClient
 from userge.utils import get_file_id, rand_array
+from userge.plugins import username
 
 CACHED_MEDIA = None
 
@@ -80,11 +81,6 @@ async def alive_inline(message: Message):
         await asyncio.sleep(200)
         await userge.delete_messages(message.chat.id, y.updates[0].id)
 
-
-async def name_():
-    u = await userge.get_me()
-    user = " ".join([u.first_name, u.last_name or ""])
-    return user
 
 
 if userge.has_bot:
@@ -165,7 +161,7 @@ class Bot_Alive:
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
-  👤   <b>User :</b>    {user}
+  👤   <b>User :</b>    {username.name_}
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
         return alive_info
