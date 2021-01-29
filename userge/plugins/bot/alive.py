@@ -10,7 +10,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 
 from userge import Config, Message, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.plugins import u_n
+from userge.plugins import name
 from userge.utils import get_file_id, rand_array
 
 CACHED_MEDIA = None
@@ -160,7 +160,7 @@ class Bot_Alive:
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
-  👤   <b>User :</b>    {u_n.me}
+  👤   <b>User :</b>    {name.me}
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
         return alive_info
