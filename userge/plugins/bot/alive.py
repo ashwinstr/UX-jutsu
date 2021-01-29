@@ -16,7 +16,7 @@ CACHED_MEDIA = None
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
-async def alive_inline(message: Message):
+async def alive_inline(message: Message) -> str:
     me = await userge.get_me()
     global CACHED_MEDIA
     if message.client.is_bot:
