@@ -1,6 +1,6 @@
 import asyncurban
 
-from userge import userge
+from userge import userge, Message
 
 
 @userge.on_cmd(
