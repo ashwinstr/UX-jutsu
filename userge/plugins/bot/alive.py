@@ -155,7 +155,7 @@ class Bot_Alive:
 
     @staticmethod
     def alive_info(me) -> str:
-        user = " ".join([me.first_name, me.last_name or ""])
+        " ".join([me.first_name, me.last_name or ""])
         alive_info = f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
