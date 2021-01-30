@@ -553,7 +553,7 @@ if userge.has_bot:
             MEDIA_URL = f_id
 
     @userge.bot.on_inline_query()
-    async def inline_answer(_, inline_query: InlineQuery) -> str:
+    async def inline_answer(_, inline_query: InlineQuery):
         global MEDIA_URL, MEDIA_TYPE
         results = []
         i_q = inline_query.query
