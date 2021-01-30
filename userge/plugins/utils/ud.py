@@ -1,5 +1,7 @@
 import asyncurban
+
 from userge import userge
+
 
 @userge.on_cmd(
     "ud",
@@ -14,6 +16,8 @@ async def urban_dict(message: Message):
     urban = asyncurban.UrbanDictionary()
     try:
         mean = await urban.get_word(word)
-        await message.edit(f"Text: {mean.word}**\n\nMeaning: {mean.definition}**\n\nExample: {mean.example}")
+        await message.edit(
+            f"Text: {mean.word}**\n\nMeaning: {mean.definition}**\n\nExample: {mean.example}"
+        )
     except asyncurban.WordNotFoundError:
         await message.edit("No result found for " + word + "")
