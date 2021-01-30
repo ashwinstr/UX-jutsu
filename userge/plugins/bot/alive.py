@@ -10,13 +10,13 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 
 from userge import Config, Message, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id, rand_array
+from userge.utils import get_file_id, rand_array, mention_html
 
 CACHED_MEDIA = None
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
-async def alive_inline(message: Message) -> str:
+async def alive_inline(message: Message):
     me = await userge.get_me()
     global CACHED_MEDIA
     if message.client.is_bot:
@@ -84,7 +84,7 @@ async def alive_inline(message: Message) -> str:
 if userge.has_bot:
 
     @userge.bot.on_callback_query(filters.regex(pattern=r"^settings_btn$"))
-    async def alive_cb(_, c_q: CallbackQuery) -> str:
+    async def alive_cb(_, c_q: CallbackQuery):
         me = await userge.get_me()
         allow = bool(
             c_q.from_user
@@ -154,14 +154,15 @@ class Bot_Alive:
         return link_type, link
 
     @staticmethod
-    def alive_info(me) -> str:
-        " ".join([me.first_name, me.last_name or ""])
+    def alive_info(me):
+        u_id = me.id
+        u_name = " ".join([me.first_name, me.last_name or ""])
         alive_info = f"""
 <a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
   🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🧬   <b>𝑿 :</b>    <code>v{get_version()}</code>
-  👤   <b>User :</b>    {me.mention}
+  👤   <b>User :</b>    {mention_html(u_id, u_name)}
 <b>{Bot_Alive._get_mode()}</b>    <code>|</code>    🕔  <b>{userge.uptime}</b>
 """
         return alive_info
