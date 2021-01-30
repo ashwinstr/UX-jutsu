@@ -10,7 +10,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 
 from userge import Config, Message, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id, rand_array, mention_html
+from userge.utils import get_file_id, mention_html, rand_array
 
 CACHED_MEDIA = None
 
