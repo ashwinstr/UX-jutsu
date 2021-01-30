@@ -1,7 +1,6 @@
 import asyncurban
 
 from userge import Message, userge
-from userge.utils import get_response
 
 
 @userge.on_cmd(
