@@ -6,7 +6,7 @@
 #
 # All rights reserved.
 
-from userge import Message
+from userge import userge, Message
 
 
 @userge.on_cmd(
