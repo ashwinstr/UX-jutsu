@@ -19,6 +19,6 @@ from userge import Message, userge
 async def accunt(message: Message):
     msg = message.from_user
     name = " ".join([msg.first_name, msg.last_name or ""])
-    out_str = f"👤 **Account** : `{name}`"
+    out_str = f"👤 **Account** : `{name}`\n"
     out_str += f"#⃣ **Account ID** : `{msg.id}`\n"
     await message.edit(out_str, del_in=5)
