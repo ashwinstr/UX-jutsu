@@ -585,68 +585,39 @@ async def unpin_msgs(message: Message):
     about={
         "header": "use this to pin & unpin messages",
         "description": "pin & unpin messages in groups with or without notify to members.",
-        "flags": {"-l": "loud", "-u": "unpin"},
+        "flags": {
+            "-l": "loud",
+            "-both": "only for both sides (for private chats only), Defaults pin for yourself)",
+        },
         "examples": [
             "{tr}pin [reply to chat message]",
             "{tr}pin -l [reply to chat message]",
-            "{tr}pin -u [send to chat]",
+            "{tr}pin -both [send to private chat]",
+            
         ],
     },
-    allow_channels=True,
+    check_pin_perm=True,
 )
 async def pin_msgs(message: Message):
-    """ pin & unpin message in groups """
-
-    if message.chat.type in ["group", "supergroup"]:
-        pass
-    chat_id = message.chat.id
-    flags = message.flags
-    loud_pin = "-l" in flags
-    unpin_pinned = "-u" in flags
-    if unpin_pinned:
-        try:
-            await message.client.unpin_chat_message(chat_id)
-            await message.edit("`Unpinned Successfully!`")
-            await CHANNEL.log(f"#UNPIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
-        except Exception as e_f:
-            await message.edit(
-                r"`something went wrong! (⊙_⊙;)`"
-                "\n`do .help pin for more info..`\n\n"
-                f"**ERROR:** `{e_f}`"
+    """ pin message """
+    reply = message.reply_to_message
+    if not reply:
+        await message.err("First  reply to a message to pin !", del_in=5)
+        return
+    try:
+        await reply.pin(
+            disable_notification=(not bool("-l" in message.flags)),
+            both_sides=(not bool("-me" in message.flags)),
+        )
+        await message.edit("`Pinned Successfully!`\nSilent: False")
+        if message.chat.type in ["group", "supergroup"]:
+            await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
+        else:
+            await CHANNEL.log(
+                f"#PIN\n\nCHAT: `{message.from_user.first_name}` (`{message.from_user.id}`)"
             )
-    elif loud_pin:
-        try:
-            message_id = message.reply_to_message.message_id
-            await message.client.pin_chat_message(
-                chat_id, message_id, disable_notification=False
-            )
-            await message.edit("`Pinned Successfully!`\nSilent: False")
-            await CHANNEL.log(f"#PIN-LOUD\n\n{message.chat.title}` (`{chat_id}`)")
-        except Exception as e_f:
-            await message.edit(
-                r"`something went wrong! (⊙_⊙;)`"
-                "\n`do .help pin for more info..`\n\n"
-                f"**ERROR:** `{e_f}`"
-            )
-    else:
-        try:
-            message_id = message.reply_to_message.message_id
-            await message.client.pin_chat_message(
-                chat_id, message_id, disable_notification=True
-            )
-            await message.edit("`Pinned Successfully!`")
-            if message.chat.type in ["group", "supergroup"]:
-                await CHANNEL.log(f"#PIN\n\nCHAT: `{message.chat.title}` (`{chat_id}`)")
-            else:
-                await CHANNEL.log(
-                    f"#PIN\n\nCHAT: `{message.from_user.first_name}` (`{message.from_user.id}`)"
-                )
-        except Exception as e_f:
-            await message.edit(
-                r"`something went wrong! (⊙_⊙;)`"
-                "\n`do .help pin for more info..`\n\n"
-                f"**ERROR:** `{e_f}`"
-            )
+    except Exception as e_f:
+        await message.err(e_f + "\ndo .help pin for more info ...", del_in=7)
 
 
 @userge.on_cmd(
