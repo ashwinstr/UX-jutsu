@@ -80,7 +80,6 @@ async def check_update(message: Message):
                     "`Now restarting... Wait for a while!`",
                 )
                 asyncio.get_event_loop().create_task(userge.restart(True))
-                await CHANNEL.log("**USERGE-X restarted!**")
         elif push_to_heroku:
             await _pull_from_repo(repo, branch)
         else:
