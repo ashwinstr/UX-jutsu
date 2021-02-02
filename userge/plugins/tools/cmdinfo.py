@@ -24,8 +24,8 @@ async def see_info(message: Message):
     if not cmd_str:
         return await message.err("Provide a Valid Command to Search", del_in=5)
     word = None
-    if "|" in cmd_str:
-        cmd_str, word = cmd_str.split("|", 1)
+    if ";" in cmd_str:
+        cmd_str, word = cmd_str.split(";", 1)
     cmd_str = cmd_str.strip()
     other_trigger = [".", Config.SUDO_TRIGGER]
     cmd_list = list(userge.manager.commands)
