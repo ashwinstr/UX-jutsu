@@ -81,7 +81,7 @@ async def check_update(message: Message):
                 )
                 asyncio.get_event_loop().create_task(userge.restart(True))
                 await userge.send_message(
-                    Config.PM_LOG_GROUP_ID,
+                    message.chat.id,
                     "**USERGE-X restarted!**",
                     disable_notification=True,
                 )
