@@ -78,7 +78,6 @@ async def check_update(message: Message):
                 await message.edit(
                     "**USERGE-X Successfully Updated!**\n"
                     "`Now restarting... Wait for a while!`",
-                    del_in=3,
                 )
                 asyncio.get_event_loop().create_task(userge.restart(True))
         elif push_to_heroku:
