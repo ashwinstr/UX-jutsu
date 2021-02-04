@@ -10,8 +10,8 @@
 
 import asyncio
 import shutil
-import time
 import subprocess
+import time
 
 from pyrogram.types import User
 
@@ -66,7 +66,7 @@ async def restart_(message: Message):
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
     if "l" in message.flags:
-        subprocess.call(['sh', './init/init.sh'])
+        subprocess.call(["sh", "./init/init.sh"])
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
     if Config.HEROKU_APP and "h" in message.flags:
