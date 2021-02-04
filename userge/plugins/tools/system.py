@@ -7,8 +7,8 @@
 #
 # All rights reserved.
 
-from init import checks.sh
-from init import init.sh
+from init import checks
+from init import init
 
 import asyncio
 import shutil
