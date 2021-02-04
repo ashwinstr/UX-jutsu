@@ -19,6 +19,8 @@ from userge.utils import terminate
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 DISABLED_CHATS = get_collection("DISABLED_CHATS")
+. init/checks.sh
+. init/init.sh
 
 MAX_IDLE_TIME = 300
 LOG = userge.getLogger(__name__)
@@ -47,6 +49,7 @@ async def _init() -> None:
         "header": "Restarts the bot and reload all plugins",
         "flags": {
             "-h": "restart heroku dyno",
+            "-l": "restart logging",
             "-t": "clean temp loaded plugins",
             "-d": "clean working folder",
         },
@@ -62,6 +65,10 @@ async def restart_(message: Message):
     LOG.info("USERGE-X Services - Restart initiated")
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
+    if "l" in message.flags:
+        initUserge() {
+            assertEnvironment
+        }
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
     if Config.HEROKU_APP and "h" in message.flags:
