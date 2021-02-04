@@ -10,11 +10,9 @@
 
 import asyncio
 import shutil
-import subprocess
 import time
 
 from pyrogram.types import User
-from plumbum.cmd import bash
 
 from userge import Config, Message, get_collection, userge
 from userge.core.ext import RawClient
@@ -68,7 +66,7 @@ async def restart_(message: Message):
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
     if "l" in message.flags:
         await message.edit("Restarting <b>logs</b>...")
-        ['bash', './run']
+        ["bash", "./run"]
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
     if Config.HEROKU_APP and "h" in message.flags:
