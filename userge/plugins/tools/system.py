@@ -7,8 +7,6 @@
 #
 # All rights reserved.
 
-from init import checks
-from init import init
 
 import asyncio
 import shutil
