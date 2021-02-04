@@ -67,9 +67,7 @@ async def restart_(message: Message):
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
     if "l" in message.flags:
-        initUserge() {
-            assertEnvironment
-        }
+        initUserge.assertEnvironment()
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
     if Config.HEROKU_APP and "h" in message.flags:
