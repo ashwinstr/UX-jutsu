@@ -7,6 +7,9 @@
 #
 # All rights reserved.
 
+from init import checks.sh
+from init import init.sh
+
 import asyncio
 import shutil
 import time
@@ -19,8 +22,6 @@ from userge.utils import terminate
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 DISABLED_CHATS = get_collection("DISABLED_CHATS")
-. init/checks.sh
-. init/init.sh
 
 MAX_IDLE_TIME = 300
 LOG = userge.getLogger(__name__)
@@ -49,7 +50,7 @@ async def _init() -> None:
         "header": "Restarts the bot and reload all plugins",
         "flags": {
             "-h": "restart heroku dyno",
-            "-l": "restart logging",
+            "-l": "restart logging (for zeet users)",
             "-t": "clean temp loaded plugins",
             "-d": "clean working folder",
         },
