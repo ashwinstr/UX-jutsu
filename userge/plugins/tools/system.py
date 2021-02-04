@@ -66,6 +66,7 @@ async def restart_(message: Message):
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
     if "l" in message.flags:
+        await message.edit("Restarting <b>logs</b>...")
         subprocess.call(["sh", "./init/init.sh"])
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
