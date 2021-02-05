@@ -134,7 +134,7 @@ __Command:__\n`{cmd}`\n__PID:__\n`{pid}`\n__RETURN:__\n`{ret}`\n\n\
     },
     allow_channels=False,
 )
-async def term_(message: Message, cmd: str) -> Tuple[str, int]:
+async def term_(message: Message, cmd: str):
     """ run commands in shell (terminal with live update) """
     cmd = await init_func(message)
     if cmd is None:
