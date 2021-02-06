@@ -67,7 +67,6 @@ async def restart_(message: Message):
     if "rp" in message.flags:
         await message.edit("Restarting <b>logs</b>...")
         await runcmd("bash run")
-        await asyncio.sleep(45)
         asyncio.get_event_loop().create_task(userge.restart())
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
