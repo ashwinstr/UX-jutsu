@@ -16,7 +16,7 @@ from pyrogram.types import User
 
 from userge import Config, Message, get_collection, userge
 from userge.core.ext import RawClient
-from userge.utils import terminate, runcmd
+from userge.utils import runcmd, terminate
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 DISABLED_CHATS = get_collection("DISABLED_CHATS")
