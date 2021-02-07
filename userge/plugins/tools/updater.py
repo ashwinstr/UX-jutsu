@@ -5,6 +5,7 @@ from git import Repo
 from git.exc import GitCommandError
 
 from userge import Config, Message, pool, userge
+from userge.utils import runcmd
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
@@ -18,6 +19,8 @@ CHANNEL = userge.getCLogger(__name__)
             "-pull": "pull updates",
             "-push": "push updates to heroku",
             "-branch": "Default is -alpha",
+            "-pr": "Userge-Plugins repo updates"
+            "-prp": "Userge-Plugins repo pull updates",
         },
         "usage": "{tr}update : check updates from default branch\n"
         "{tr}update -[branch_name] : check updates from any branch\n"
@@ -35,6 +38,9 @@ async def check_update(message: Message):
     pull_from_repo = False
     push_to_heroku = False
     branch = "alpha"
+    u_repo = Config.UPSTREAM_REPO
+    u_repo = u_repo.replace("/", " ")
+    git_u_n = u_repo.split()[2]
     if "pull" in flags:
         pull_from_repo = True
         flags.remove("pull")
@@ -44,6 +50,13 @@ async def check_update(message: Message):
             return
         push_to_heroku = True
         flags.remove("push")
+    if "pr" in flags:
+        branch = "master"
+        out = _get_updates_pr(git_u_n, branch)
+    if "prp" in flags:
+        await message.edit("Updating <b><u>Userge-Plugins</u></b>...", log=__name__)
+        await runcmd("bash run")
+        asyncio.get_event_loop().create_task(userge.restart())
     if len(flags) == 1:
         branch = flags[0]
 
@@ -104,6 +117,17 @@ def _get_updates(repo: Repo, branch: str) -> str:
     out = ""
     upst = Config.UPSTREAM_REPO.rstrip("/")
     for i in repo.iter_commits(f"HEAD..{Config.UPSTREAM_REMOTE}/{branch}"):
+        out += f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👷 __{i.author}__\n\n"
+    return out
+
+def _get_updates_pr(git_u_n: str, branch: str) -> str:
+    pr_up = f"https://github.com/{git_u_n}/Userge-Plugins"
+    repo = Repo()
+    repo.remote(pr_up).fetch(branch)
+    upst = pr_up.rstrip("/")
+    out = ""
+    upst = pr_up.rstrip("/")
+    for i in repo.iter_commits(f"HEAD..{pr_up}/{branch}"):
         out += f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👷 __{i.author}__\n\n"
     return out
 
