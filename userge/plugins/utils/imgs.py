@@ -40,6 +40,6 @@ async def img_sampler(message: Message):
     except Exception as e:
         return await message.edit(f"Error: \n`{e}`")
     lst = paths[0][query]
-    await message.client.send_photo(message.chat.id, lst, caption=query)
+    await message.client.send_document(message.chat.id, lst, caption=query)
     shutil.rmtree(os.path.dirname(os.path.abspath(lst[0])))
     await message.delete()
