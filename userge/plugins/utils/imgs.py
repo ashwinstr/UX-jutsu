@@ -16,19 +16,14 @@ from userge.helpers.google_image_download import googleimagesdownload
 )
 async def img_sampler(message: Message):
     reply_id = message.message_id
-    if message.reply_to_message and not message.input_str:
-        query = message.reply_to_message.text
-    else:
-        query = message.input_str
+    query = message.input_str
     if not query:
         return await message.edit("Reply to a message or pass a query to search!")
     await message.edit("`Processing...`")
-    if message.input_str.split()[1] != "":
-        lim = int(message.input_str.split()[1])
-        if lim > 10:
-            lim = int(10)
-        if lim <= 0:
-            lim = int(1)
+    if "-l" in message.flags:
+        for flag in query:
+            if "-l" in flag:
+                lim = flag[-1]
     else:
         lim = int(3)
     response = googleimagesdownload()
