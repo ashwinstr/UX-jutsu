@@ -15,7 +15,7 @@ from userge.helpers.google_image_download import googleimagesdownload
     },
 )
 async def img_sampler(message: Message):
-    reply_id = message.message_id
+    message.message_id
     query = message.input_str
     if not query:
         return await message.edit("Reply to a message or pass a query to search!")
