@@ -19,7 +19,7 @@ CHANNEL = userge.getCLogger(__name__)
             "-pull": "pull updates",
             "-push": "push updates to heroku",
             "-branch": "Default is -alpha",
-            "-pr": "Userge-Plugins repo updates"
+            "-pr": "Userge-Plugins repo updates",
             "-prp": "Userge-Plugins repo pull updates",
         },
         "usage": "{tr}update : check updates from default branch\n"
