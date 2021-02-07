@@ -21,9 +21,7 @@ async def img_sampler(message: Message):
     else:
         query = message.input_str
     if not query:
-        return await message.edit(
-            "Reply to a message or pass a query to search!"
-        )
+        return await message.edit("Reply to a message or pass a query to search!")
     await edit("`Processing...`")
     if message.input_str.split()[1] != "":
         lim = int(message.input_str.split()[1])
