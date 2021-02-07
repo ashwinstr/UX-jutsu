@@ -120,6 +120,7 @@ def _get_updates(repo: Repo, branch: str) -> str:
         out += f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👷 __{i.author}__\n\n"
     return out
 
+
 def _get_updates_pr(git_u_n: str, branch: str) -> str:
     pr_up = f"https://github.com/{git_u_n}/Userge-Plugins"
     repo = Repo()
