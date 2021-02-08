@@ -2,6 +2,7 @@ import os
 import shutil
 
 from pyrogram.types import InputMediaPhoto
+
 from userge import Message, userge
 from userge.helpers.google_image_download import googleimagesdownload
 
@@ -20,13 +21,13 @@ async def img_sampler(message: Message):
     if not query:
         return await message.edit("Reply to a message or pass a query to search!")
     await message.edit("`Processing...`")
-    flag_ = message.flags
+    message.flags
     if "-l" in flags_:
         lim = flags_.get("-l", 0)
         if not str(lim).isdigit():
             await message.err('"-l" Flag only takes integers', del_in=5)
             return
-    #if "-l" in message.flags:
+    # if "-l" in message.flags:
     #    for flag in query:
     #        if "-l" in flag:
     #            lim = flag[-1]
@@ -48,9 +49,7 @@ async def img_sampler(message: Message):
     img = paths[0][query]
     media = []
     for a in img:
-        media.append(
-            InputMediaPhoto(media=a, caption=query)
-        )
+        media.append(InputMediaPhoto(media=a, caption=query))
     if media:
         await message.client.send_media_group(message.chat.id, media)
     shutil.rmtree(os.path.dirname(os.path.abspath(lst[0])))
