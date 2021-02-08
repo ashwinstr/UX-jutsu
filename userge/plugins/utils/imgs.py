@@ -1,6 +1,7 @@
 import os
 import shutil
 
+from pyrogram.types import InputMediaPhoto
 from userge import Message, userge
 from userge.helpers.google_image_download import googleimagesdownload
 
@@ -15,15 +16,21 @@ from userge.helpers.google_image_download import googleimagesdownload
     },
 )
 async def img_sampler(message: Message):
-    message.message_id
-    query = message.input_str
+    query = message.filtered_input_str or message.reply_to_message.text
     if not query:
         return await message.edit("Reply to a message or pass a query to search!")
     await message.edit("`Processing...`")
-    if "-l" in message.flags:
-        for flag in query:
-            if "-l" in flag:
-                lim = flag[-1]
+    flag_ = message.flags
+    if "-l" in flags_:
+        get_l = flags_.get("-l", 0)
+        if not str(get_l).isdigit():
+            await message.err('"-l" Flag only takes integers', del_in=5)
+            return
+    lim = get_l
+    #if "-l" in message.flags:
+    #    for flag in query:
+    #        if "-l" in flag:
+    #            lim = flag[-1]
     else:
         lim = int(3)
     response = googleimagesdownload()
@@ -39,7 +46,13 @@ async def img_sampler(message: Message):
         paths = response.download(arguments)
     except Exception as e:
         return await message.edit(f"Error: \n`{e}`")
-    lst = paths[0][query]
-    await message.client.send_document(message.chat.id, lst, caption=query)
+    img = paths[0][query]
+    media = []
+    for a in img:
+        media.append(
+            InputMediaPhoto(media=a, caption=query)
+        )
+    if media:
+        await message.client.send_media_group(message.chat.id, media)
     shutil.rmtree(os.path.dirname(os.path.abspath(lst[0])))
     await message.delete()
