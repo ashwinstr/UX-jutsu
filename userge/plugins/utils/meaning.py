@@ -15,7 +15,7 @@ from userge import Message, userge
 async def meaning_wrd(message: Message):
     """ meaning of word """
     await message.edit("`Searching for meaning...`")
-    word = message.input_str or message.reply_to_message
+    word = message.input_str or message.reply_to_message.text
     if not word:
         await message.err("no input!")
     else:
@@ -44,7 +44,7 @@ async def meaning_wrd(message: Message):
 async def synonym_wrd(message: Message):
     """ synonym of word """
     await message.edit("`Searching for synonyms...`")
-    word = message.input_str or message.reply_to_message
+    word = message.input_str or message.reply_to_message.text
     if not word:
         await message.err("no input!")
     else:
@@ -71,7 +71,7 @@ async def synonym_wrd(message: Message):
 async def antonym_wrd(message: Message):
     """ antonym of word """
     await message.edit("`Searching for antonyms...`")
-    word = message.input_str or message.reply_to_message
+    word = message.input_str or message.reply_to_message.text
     if not word:
         await message.err("no input!")
     else:
