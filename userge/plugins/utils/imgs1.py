@@ -40,6 +40,6 @@ async def img_sampler(message: Message):
     except Exception as e:
         return await cat.edit(f"Error: \n{e}")
     lst = paths[0][query]
-    await event.client.send_file(event.chat_id, lst, reply_to=reply_to_id)
+    await message.client.send_file(event.chat_id, lst, reply_to=reply_to_id)
     shutil.rmtree(os.path.dirname(os.path.abspath(lst[0])))
     await cat.delete()
