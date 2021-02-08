@@ -22,11 +22,10 @@ async def img_sampler(message: Message):
     await message.edit("`Processing...`")
     flag_ = message.flags
     if "-l" in flags_:
-        get_l = flags_.get("-l", 0)
-        if not str(get_l).isdigit():
+        lim = flags_.get("-l", 0)
+        if not str(lim).isdigit():
             await message.err('"-l" Flag only takes integers', del_in=5)
             return
-    lim = get_l
     #if "-l" in message.flags:
     #    for flag in query:
     #        if "-l" in flag:
