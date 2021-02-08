@@ -2,7 +2,7 @@ import os
 import shutil
 
 from userge import Message, userge
-from userge.img import googleimagesdownload
+from userge.helpers.google_image_download import googleimagesdownload
 
 
 @userge.on_cmd(
