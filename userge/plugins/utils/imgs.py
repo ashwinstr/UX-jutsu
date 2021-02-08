@@ -21,7 +21,7 @@ async def img_sampler(message: Message):
     if not query:
         return await message.edit("Reply to a message or pass a query to search!")
     await message.edit("`Processing...`")
-    message.flags
+    flags_ = message.flags
     if "-l" in flags_:
         lim = flags_.get("-l", 0)
         if not str(lim).isdigit():
