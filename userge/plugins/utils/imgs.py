@@ -54,5 +54,8 @@ async def img_sampler(message: Message):
             if media:
                 await message.client.send_media_group(message.chat.id, media)
             repeat = 0
+            media = []
+        if img[-1]:
+            await message.client.send_media_group(message.chat.id, media)
     shutil.rmtree(os.path.dirname(os.path.abspath(img[0])))
     await message.delete()
