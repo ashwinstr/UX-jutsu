@@ -29,7 +29,7 @@ async def img_sampler(message: Message):
         if not str(lim).isdigit():
             await message.err('"-l" Flag only takes integers', del_in=5)
             return
-        if lim > 15:
+        if lim > int(15):
             await message.err("limit can't be more than 15", del_in=5)
             return
     else:
@@ -54,7 +54,7 @@ async def img_sampler(message: Message):
     for a in img:
         media.append(InputMediaPhoto(media=a, caption=query))
         repeat += 1
-        if repeat == (10 * int(last)) or repeat == lim:
+        if repeat == (10 * last) or repeat == lim:
             if media:
                 await message.client.send_media_group(message.chat.id, media)
             media = []
