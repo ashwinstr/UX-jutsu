@@ -4,6 +4,7 @@ import os
 import shutil
 
 from pyrogram.types import InputMediaPhoto
+from pyrogram.errors import ImageProcessFailed
 
 from userge import Message, userge
 from userge.helpers.google_image_download import googleimagesdownload
@@ -57,7 +58,10 @@ async def img_sampler(message: Message):
         repeat += 1
         if repeat == (10 * last) or repeat == int(lim):
             if media:
-                await message.client.send_media_group(message.chat.id, media)
+                try:
+                    await message.client.send_media_group(message.chat.id, media)
+                except ImageProcessFailed:
+                    pass
             media = []
     shutil.rmtree(os.path.dirname(os.path.abspath(img[0])))
     await message.delete()
