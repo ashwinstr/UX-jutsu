@@ -55,7 +55,7 @@ async def img_sampler(message: Message):
     for a in img:
         media.append(InputMediaPhoto(media=a, caption=query))
         repeat += 1
-        if repeat == (10 * last) or repeat == lim:
+        if repeat == (10 * last) or repeat == int(lim):
             if media:
                 await message.client.send_media_group(message.chat.id, media)
             media = []
