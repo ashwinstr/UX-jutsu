@@ -29,6 +29,9 @@ async def img_sampler(message: Message):
         if not str(lim).isdigit():
             await message.err('"-l" Flag only takes integers', del_in=5)
             return
+        if lim > 15:
+            await message.err('limit can't be more than 15', del_in=5)
+            return
     else:
         lim = int(3)
     response = googleimagesdownload()
