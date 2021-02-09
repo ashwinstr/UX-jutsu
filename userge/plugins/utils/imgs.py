@@ -30,7 +30,7 @@ async def img_sampler(message: Message):
             await message.err('"-l" Flag only takes integers', del_in=5)
             return
         lim = lim.replace("-l", "")
-        if lim > 15:
+        if int(lim) > 15:
             await message.err("limit can't be more than 15", del_in=5)
             return
     else:
