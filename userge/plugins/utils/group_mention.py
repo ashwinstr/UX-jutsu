@@ -6,7 +6,7 @@ import asyncio
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 
-from userge import Config, userge
+from userge import Config, userge, Message
 
 allow_gp_logger = filters.create(lambda _, __, ___: Config.PM_LOG_GROUP_ID)
 
