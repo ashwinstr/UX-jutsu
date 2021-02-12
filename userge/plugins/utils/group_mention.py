@@ -1,5 +1,5 @@
 # credits: mrconfused
-# imported by AshSTR
+# imported by AshSTR/ashwinstr
 
 import asyncio
 
@@ -17,7 +17,7 @@ allow_gp_logger = filters.create(lambda _, __, ___: Config.PM_LOG_GROUP_ID)
 async def gp_lgger(_, message: Message):
     me = await userge.get_me()
     replied = message.reply_to_message
-    if replied.from_user.id == me.id or me.username in replied.text:
+    if replied.from_user.id == me.id or (("@" + me.username) in replied.text):
         try:
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
