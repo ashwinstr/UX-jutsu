@@ -16,20 +16,23 @@ allow_gp_logger = filters.create(lambda _, __, ___: Config.PM_LOG_GROUP_ID)
     group=2,
 )
 async def gp_lgger(_, message: Message):
-    try:
-        await userge.send_message(
-            Config.PM_LOG_GROUP_ID,
-            (
-                f"#TAGS \nSent by : {message.from_user.mention}"
-                f"\nGroup :</b> <code>{message.chat.title}</code>"
-                f"\n<b>Message :</b> <a href={message.link}>link</a>",
-            ),
-            parse_mode="html",
-        )
-        await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
-        await asyncio.sleep(0.5)
-    except FloodWait as e:
-        await asyncio.sleep(e.x + 3)
+    me = await userge.get_me()
+    replied = message.reply_to_message
+    if replied.from_user.id == me.id or me.username in replied.text:
+        try:
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                (
+                    f"#TAGS \nSent by : {message.from_user.mention}"
+                    f"\nGroup :</b> <code>{message.chat.title}</code>"
+                    f"\n<b>Message :</b> <a href={message.link}>link</a>",
+                ),
+                parse_mode="html",
+            )
+            await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
+            await asyncio.sleep(0.5)
+        except FloodWait as e:
+            await asyncio.sleep(e.x + 3)
 
 
 @userge.on_message()
