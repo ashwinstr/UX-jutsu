@@ -47,12 +47,8 @@ async def _init() -> None:
     about={
         "header": "Restarts the bot and reload all plugins",
         "flags": {
-<<<<<<< HEAD
-            "-h": "restart heroku dyno",
-            "-rp": "reload userge-plugins repo (for zeet users)",
-=======
             "-h": "restart hard",
->>>>>>> 5d3058db60258c3d013cf8c051ee2a9774308af1
+            "-rp": "reload userge-plugins repo (for zeet users)",
             "-t": "clean temp loaded plugins",
             "-d": "clean working folder",
         },
