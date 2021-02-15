@@ -75,7 +75,7 @@ async def gimg_down(message: Message):
     color_ = None
     flags_ = message.flags
     allow_gif = bool("gif" in flags_)
-    upload_ = not bool("down" in flags_ or allow_gif)
+    upload_ = not bool("down" in flags_)
     doc_ = bool("d" in flags_)
     limit = min(int(flags_.get("l", 5)), 40)
     if flags_:
