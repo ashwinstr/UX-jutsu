@@ -1,10 +1,6 @@
 aiofiles>=0.6.0
-<<<<<<< HEAD
-aiohttp>=3.7.3
-asyncurban>=0.3.3
-=======
 aiohttp[speedups]>=3.7.3
->>>>>>> 74d7fe869dc3f1a37e858dfab7159a381869d0f9
+asyncurban>=0.3.3
 beautifulsoup4>=4.9.1
 covid>=2.4.0
 cowpy>=1.1.0
