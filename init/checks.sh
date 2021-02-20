@@ -163,14 +163,7 @@ _checkUpstreamRepo() {
     deleteLastMessage
 }
 
-<<<<<<< HEAD
-_checkUnoffPlugins() {
-    editLastMessage "Checking USERGE-X [Extra] Plugins ..."
-    if test $LOAD_UNOFFICIAL_PLUGINS = true; then
-        editLastMessage "\tLoading USERGE-X [Extra] Plugins ..."
-        replyLastMessage "\t\tClonning ashwinstr/Userge-Plugins.git ..."
-        gitClone --depth=1 https://github.com/ashwinstr/Userge-Plugins.git
-=======
+
 _setupPlugins() {
     local link path tmp
     editLastMessage "Checking $1 Plugins ..."
@@ -180,7 +173,6 @@ _setupPlugins() {
         link=$(test $4 && echo $4 || echo $3)
         tmp=Temp-Plugins
         gitClone --depth=1 $link $tmp
->>>>>>> 74d7fe869dc3f1a37e858dfab7159a381869d0f9
         editLastMessage "\t\tUpgrading PIP ..."
         upgradePip
         editLastMessage "\t\tInstalling Requirements ..."
