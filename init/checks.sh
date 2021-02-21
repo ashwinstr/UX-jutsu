@@ -164,30 +164,27 @@ _checkUpstreamRepo() {
 }
 
 
-_setupPlugins() {
-    local link path tmp
-    editLastMessage "Checking $1 Plugins ..."
-    if test $(grep -P '^'$2'$' <<< $3); then
-        editLastMessage "\tLoading $1 Plugins ..."
-        replyLastMessage "\t\tClonning ..."
-        link=$(test $4 && echo $4 || echo $3)
-        tmp=Temp-Plugins
-        gitClone --depth=1 $link $tmp
+_checkUnoffPlugins() {
+    editLastMessage "Checking USERGE-X [Extra] Plugins ..."
+    if test $LOAD_UNOFFICIAL_PLUGINS = true; then
+        editLastMessage "\tLoading USERGE-X [Extra] Plugins ..."
+        replyLastMessage "\t\tClonning ashwinstr/Userge-Plugins.git ..."
+        gitClone --depth=1 https://github.com/ashwinstr/Userge-Plugins.git
         editLastMessage "\t\tUpgrading PIP ..."
         upgradePip
         editLastMessage "\t\tInstalling Requirements ..."
-        installReq $tmp
+        installReq Userge-Plugins
         editLastMessage "\t\tCleaning ..."
-        path=$(tr "[:upper:]" "[:lower:]" <<< $1)
-        rm -rf userge/plugins/$path/
-        mv $tmp/plugins/ userge/plugins/$path/
-        cp -r $tmp/resources/. resources/
-        rm -rf $tmp/
+        rm -rf userge/plugins/unofficial/
+        mv Userge-Plugins/plugins/ userge/plugins/unofficial/
+        cp -r Userge-Plugins/resources/* resources/
+        rm -rf Userge-Plugins/
         deleteLastMessage
-        editLastMessage "\t$1 Plugins Loaded Successfully !"
+        editLastMessage "\tUSERGE-X [Extra] Plugins Loaded Successfully !"
     else
-        editLastMessage "\t$1 Plugins Disabled !"
+        editLastMessage "\tUSERGE-X [Extra] Plugins Disabled !"
     fi
+    deleteLastMessage
 }
 
 _checkUnoffPlugins() {
