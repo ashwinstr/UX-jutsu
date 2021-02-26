@@ -4,7 +4,7 @@ from userge import Message, userge
 
 
 @userge.on_cmd(
-    "mng",
+    "mng2",
     about={
         "header": "use this to find meaning of any word.",
         "examples": [
