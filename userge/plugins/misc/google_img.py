@@ -34,7 +34,7 @@ class Colors:
 
 
 @userge.on_cmd(
-    "(?:gimg|img)",
+    "gimg",
     about={
         "header": "Google Image Downloader",
         "description": "Search and download images from google and upload to telegram",
