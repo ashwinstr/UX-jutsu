@@ -6,7 +6,7 @@ from userge import Config, Message, userge
 
 
 @userge.on_cmd(
-    "img",
+    "imgs",
     about={
         "header": "Convert to image",
         "description": "Convert GIF/sticker to jpg format image",
