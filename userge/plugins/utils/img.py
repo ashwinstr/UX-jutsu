@@ -1,14 +1,16 @@
 # import from oub-remix to ux by Itachi_HTK/ashwinstr
 
 import os
-from userge import userge, Config, Message
+
+from userge import Config, Message, userge
+
 
 @userge.on_cmd(
     "img",
     about={
         "header": "Convert to image",
         "description": "Convert GIF/sticker to jpg format image",
-        "usage": "{tr}img [reply to media]"
+        "usage": "{tr}img [reply to media]",
     },
 )
 async def img(message: Message):
@@ -23,9 +25,7 @@ async def img(message: Message):
     down_dir = Config.DOWN_PATH
     down_file = os.path.join(down_dir, file_name)
     reply_message = await userge.get_messages(message.chat.id, stik)
-    down_file = await userge.download_media(
-        reply_message, down_file
-    )
+    down_file = await userge.download_media(reply_message, down_file)
     if os.path.exists(down_file):
         pic = await userge.send_photo(
             message.chat.id,
