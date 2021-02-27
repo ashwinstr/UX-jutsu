@@ -17,7 +17,7 @@ async def img(message: Message):
     if not message.reply_to_message:
         print("Reply to media.")
         return
-    await message.edit("Converting...")
+    await message.edit("Converting...", del_in=5)
     stik = message.reply_to_message.message_id
     if not os.path.isdir(Config.DOWN_PATH):
         os.makedirs(Config.DOWN_PATH)
