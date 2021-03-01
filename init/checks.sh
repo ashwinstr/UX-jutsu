@@ -1,12 +1,13 @@
 #!/bin/bash
 #
-# Copyright (C) 2020-2021 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
+# Copyright (C) 2020 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
 #
 # This file is part of < https://github.com/UsergeTeam/Userge > project,
 # and is released under the "GNU v3.0 License Agreement".
-# Please see < https://github.com/UsergeTeam/Userge/blob/master/LICENSE >
+# Please see < https://github.com/uaudith/Userge/blob/master/LICENSE >
 #
 # All rights reserved.
+
 
 _checkBashReq() {
     log "Checking Bash Commands ..."
@@ -53,7 +54,6 @@ _checkDefaultVars() {
         [UPSTREAM_REMOTE]="upstream"
         [UPSTREAM_REPO]="https://github.com/code-rgb/USERGE-X"
         [LOAD_UNOFFICIAL_PLUGINS]=true
-        [CUSTOM_PLUGINS_REPO]=""
         [G_DRIVE_IS_TD]=true
         [CMD_TRIGGER]="."
         [SUDO_TRIGGER]="!"
@@ -71,9 +71,8 @@ _checkDefaultVars() {
         WORKERS=32
     fi
     export MOTOR_MAX_WORKERS=$WORKERS
-    export HEROKU_ENV=$(test $DYNO && echo 1 || echo 0)
     DOWN_PATH=${DOWN_PATH%/}/
-    if [[ $HEROKU_ENV == 1 && -n $HEROKU_API_KEY && -n $HEROKU_APP_NAME ]]; then
+    if [[ -n $HEROKU_API_KEY && -n $HEROKU_APP_NAME ]]; then
         local herokuErr=$(runPythonCode '
 import heroku3
 try:
@@ -163,42 +162,26 @@ _checkUpstreamRepo() {
     deleteLastMessage
 }
 
-
-_setupPlugins() {
-    local link path tmp
-    editLastMessage "Checking $1 Plugins ..."
-    if test $(grep -P '^'$2'$' <<< $3); then
-        editLastMessage "\tLoading $1 Plugins ..."
-        replyLastMessage "\t\tClonning ..."
-        link=$(test $4 && echo $4 || echo $3)
-        tmp=Temp-Plugins
-        gitClone --depth=1 $link $tmp
+_checkUnoffPlugins() {
+    editLastMessage "Checking USERGE-X [Extra] Plugins ..."
+    if test $LOAD_UNOFFICIAL_PLUGINS = true; then
+        editLastMessage "\tLoading USERGE-X [Extra] Plugins ..."
+        replyLastMessage "\t\tClonning ashwinstr/Userge-Plugins.git ..."
+        gitClone --depth=1 https://github.com/ashwinstr/Userge-Plugins.git
         editLastMessage "\t\tUpgrading PIP ..."
         upgradePip
         editLastMessage "\t\tInstalling Requirements ..."
-        installReq $tmp
+        installReq Userge-Plugins
         editLastMessage "\t\tCleaning ..."
-        path=$(tr "[:upper:]" "[:lower:]" <<< $1)
-        rm -rf userge/plugins/$path/
-        mv $tmp/plugins/ userge/plugins/$path/
-        cp -r $tmp/resources/. resources/
-        rm -rf $tmp/
+        rm -rf userge/plugins/unofficial/
+        mv Userge-Plugins/plugins/ userge/plugins/unofficial/
+        cp -r Userge-Plugins/resources/* resources/
+        rm -rf Userge-Plugins/
         deleteLastMessage
-        editLastMessage "\t$1 Plugins Loaded Successfully !"
+        editLastMessage "\tUSERGE-X [Extra] Plugins Loaded Successfully !"
     else
-        editLastMessage "\t$1 Plugins Disabled !"
+        editLastMessage "\tUSERGE-X [Extra] Plugins Disabled !"
     fi
-}
-
-_checkUnoffPlugins() {
-    _setupPlugins Xtra true $LOAD_UNOFFICIAL_PLUGINS https://github.com/code-rgb/Userge-Plugins.git
-}
-
-_checkCustomPlugins() {
-    _setupPlugins Custom "https://([0-9a-f]{40}@)?github.com/.+/.+" $CUSTOM_PLUGINS_REPO
-}
-
-_flushMessages() {
     deleteLastMessage
 }
 
@@ -218,6 +201,4 @@ assertEnvironment() {
     _checkGit
     _checkUpstreamRepo
     _checkUnoffPlugins
-    _checkCustomPlugins
-    _flushMessages
 }
