@@ -5,10 +5,11 @@
 
 import asyncio
 from json import dumps
-from google_trans_new import google_translator
 
-from googletrans import LANGUAGES, Translator
-from userge import Message, userge, Config, pool
+from google_trans_new import google_translator
+from googletrans import LANGUAGES
+
+from userge import Message, userge
 from userge.utils.functions import get_emoji_regex
 
 translator = google_translator()
@@ -21,9 +22,9 @@ translator = google_translator()
         "supported languages": dumps(LANGUAGES, indent=4, sort_keys=True),
         "usage": "[reply to message or text after cmd]",
         "examples": "for other language to latin\n"
-                    "{tr}rom こんばんは　or　{tr}rom [reply to msg]\n\n"
-                    "for english to other language translation then script to latin\n"
-                    "{tr}rom [flag] [[text] or [reply to msg]]",
+        "{tr}rom こんばんは　or　{tr}rom [reply to msg]\n\n"
+        "for english to other language translation then script to latin\n"
+        "{tr}rom [flag] [[text] or [reply to msg]]",
     },
 )
 async def romaji_(message: Message):
@@ -48,7 +49,7 @@ async def romaji_(message: Message):
         except ValueError:
             await message.err(text="Invalid destination language.\nuse `.help tr`")
             return
-        transl_lan = LANGUAGES[f"{reply_text.dest.lower()}"]
+        LANGUAGES[f"{reply_text.dest.lower()}"]
         tran = f"`{reply_text.text}`"
         if len(tran) <= 4096:
             await message.edit(tran)
@@ -62,8 +63,6 @@ async def romaji_(message: Message):
     result = translator.translate(y, lang_src=z, lang_tgt="en", pronounce=True)
     k = result[1]
     if k == None:
-        result = translator.translate(
-            y, lang_src="en", lang_tgt="ja", pronounce=True
-        )
+        result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
     await message.reply(k.replace("', '", "\n").replace("['", "").replace("']", ""))
