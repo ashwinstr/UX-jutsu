@@ -37,12 +37,12 @@ async def speedtst(message: Message):
     path = wget.download(result["share"])
     output = f"""**--Started at {result['timestamp']}--
 
-Client:   **{user}**
+Client:   {user}
 
 ISP: `{result['client']['isp']}`
 Country: `{result['client']['country']}`
 
-Server:
+Server:  `NASA`
 
 Name: `{result['server']['name']}`
 Country: `{result['server']['country']}, {result['server']['cc']}`
