@@ -4,6 +4,7 @@
 ## further improvement by @Kakashi_HTK/ashwinstr
 
 import asyncio
+import time
 from json import dumps
 
 from google_trans_new import google_translator
