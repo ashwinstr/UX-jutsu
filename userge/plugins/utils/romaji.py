@@ -10,7 +10,7 @@ from json import dumps
 from google_trans_new import google_translator
 from googletrans import LANGUAGES
 
-from userge import Message, userge
+from userge import Message, userge, pool
 from userge.utils.functions import get_emoji_regex
 
 translator = google_translator()
