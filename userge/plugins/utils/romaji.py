@@ -46,7 +46,7 @@ async def romaji_(message: Message):
         x = get_emoji_regex().sub("", x)
         await message.edit("`Translating ...`")
         try:
-            reply_text = await _translate_this(text, dest, src)
+            reply_text = await _translate_this(x, dest, src)
         except ValueError:
             await message.err(text="Invalid destination language.\nuse `.help tr`")
             return
