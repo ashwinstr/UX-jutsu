@@ -8,7 +8,7 @@ import time
 from json import dumps
 
 from google_trans_new import google_translator
-from googletrans import LANGUAGES
+from googletrans import LANGUAGES, Translator
 
 from userge import Message, pool, userge
 from userge.utils.functions import get_emoji_regex
@@ -70,10 +70,10 @@ async def romaji_(message: Message):
 
 
 @pool.run_in_thread
-def _translate_this(text: str, dest: str, src: str):
+def _translate_this(x: str, dest: str, src: str):
     for i in range(10):
         try:
-            return Translator().translate(text, dest=dest, src=src)
+            return Translator().translate(x, dest=dest, src=src)
         except AttributeError:
             if i == 9:
                 raise
