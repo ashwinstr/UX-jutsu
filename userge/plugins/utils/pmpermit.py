@@ -246,7 +246,9 @@ async def view_current_noPM_msg(message: Message):
     else:
         reply_to = message.message_id
     await message.edit(f"--Current PM message is as below--👇")
-    await userge.send_message(message.chat.id, noPmMessage, reply_to_message_id=reply_to)
+    await userge.send_message(
+        message.chat.id, noPmMessage, reply_to_message_id=reply_to
+    )
 
 
 @userge.on_cmd(
