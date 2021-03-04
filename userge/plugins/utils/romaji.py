@@ -29,11 +29,9 @@ translator = google_translator()
     },
 )
 async def romaji_(message: Message):
-    x = str(
-        message.input_str
-        or message.reply_to_message.text
-        or message.reply_to_message.caption
-    )
+    x = message.filtered_input_str
+    if message.reply_to_message:
+        x = message.reply_to_message.text or message.reply_to_message.caption
     flag = message.flags
     if not x:
         await message.err("No Input Found")
