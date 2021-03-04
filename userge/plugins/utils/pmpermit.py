@@ -250,8 +250,8 @@ async def view_current_noPM_msg(message: Message):
 )
 async def view_current_blockPM_msg(message: Message):
     """ view current block pm message """
-    await message.edit(f"--current blockPM message--\n\n{blocked_message}")
-
+    await message.edit(f"--current blockPM message is as below--👇")
+    await userge.send_message(blocked_message)
 
 @userge.on_filters(
     ~allowAllFilter
