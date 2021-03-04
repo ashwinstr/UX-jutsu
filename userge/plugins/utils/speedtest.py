@@ -21,6 +21,11 @@ CHANNEL = userge.getCLogger(__name__)
 async def speedtst(message: Message):
     me = await userge.get_me()
     user = " ".join([me.first_name, me.last_name or ""])
+    reply = message.reply_to_message
+    if reply:
+        reply_to = reply.message_id
+    else:
+        reply_to = message.message_id
     await message.edit("`Running speed test . . .`")
     try:
         test = speedtest.Speedtest()
@@ -55,7 +60,7 @@ Received: `{humanbytes(result['bytes_received'])}`
 Download: `{humanbytes(result['download'] / 8)}/s`
 Upload: `{humanbytes(result['upload'] / 8)}/s`**"""
     msg = await message.client.send_photo(
-        chat_id=message.chat.id, photo=path, caption=output
+        chat_id=message.chat.id, photo=path, caption=output, reply_to_message_id=reply_to
     )
     await CHANNEL.fwd_msg(msg)
     os.remove(path)
