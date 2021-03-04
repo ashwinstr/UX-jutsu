@@ -1,6 +1,7 @@
 # made by @Kakashi_HTK/@ashwinstr
 
-from userge import userge, Message
+from userge import Message, userge
+
 
 @userge.on_cmd(
     "copy",
@@ -15,6 +16,11 @@ async def _copy(message: Message):
     if not text:
         await message.edit("Text not found, provide text. See `{tr}help copy`")
         return
-    text = text.replace(": ", ":").replace(":", ":\n").replace(", ", ",").replace(",", "\n")
+    text = (
+        text.replace(": ", ":")
+        .replace(":", ":\n")
+        .replace(", ", ",")
+        .replace(",", "\n")
+    )
     text = text.replace("\n", "</code>\n<code>")
     await message.edit(text)
