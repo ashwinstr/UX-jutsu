@@ -240,7 +240,7 @@ async def set_custom_blockpm_message(message: Message):
 )
 async def view_current_noPM_msg(message: Message):
     """ view current pm message """
-    await message.edit(f"--current PM message--\n\n{noPmMessage}")
+    await message.edit(f"--current PM message--\n\n`{noPmMessage}`")
 
 
 @userge.on_cmd(
