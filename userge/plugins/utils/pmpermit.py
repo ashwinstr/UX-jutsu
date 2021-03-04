@@ -240,7 +240,8 @@ async def set_custom_blockpm_message(message: Message):
 )
 async def view_current_noPM_msg(message: Message):
     """ view current pm message """
-    await message.edit(f"--current PM message--\n\n`{noPmMessage}`")
+    await message.edit(f"--Current PM message is as below--👇")
+    await userge.send_message(noPmMessage)
 
 
 @userge.on_cmd(
@@ -250,7 +251,7 @@ async def view_current_noPM_msg(message: Message):
 )
 async def view_current_blockPM_msg(message: Message):
     """ view current block pm message """
-    await message.edit(f"--current blockPM message is as below--👇")
+    await message.edit(f"--Current blockPM message is as below--👇")
     await userge.send_message(blocked_message)
 
 @userge.on_filters(
