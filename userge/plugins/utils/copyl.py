@@ -16,6 +16,7 @@ async def _copy(message: Message):
     if not text:
         await message.edit("Text not found, provide text. See `{tr}help copy`")
         return
+    await message.edit("`Editing...`")
     text = (
         text.replace(": ", ":")
         .replace(":", ":\n")
@@ -23,4 +24,4 @@ async def _copy(message: Message):
         .replace(",", "\n")
     )
     text = text.replace("\n", "</code>\n<code>")
-    await message.edit(text)
+    await message.edit(f"<code>{text}</code>")
