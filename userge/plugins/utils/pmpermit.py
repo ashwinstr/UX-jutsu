@@ -183,7 +183,6 @@ async def set_custom_nopm_message(message: Message):
         noPmMessage = bk_noPmMessage
         await SAVED_SETTINGS.find_one_and_delete({"_id": "CUSTOM NOPM MESSAGE"})
     else:
-        me = (await userge.get_me()).first_name
         string = message.input_or_reply_raw
         if string:
             await message.edit("`Custom NOpm message saved`", del_in=3, log=True)
@@ -283,8 +282,10 @@ async def view_current_blockPM_msg(message: Message):
 )
 async def uninvitedPmHandler(message: Message):
     """ pm message handler """
+    me = await userge.get_me()
+    owner = " ".join([me.first_name, me.last_name or ""])
     user_dict = await userge.get_user_dict(message.from_user.id)
-    user_dict.update({"chat": message.chat.title or "this group"})
+    user_dict.update({"chat": message.chat.title or user or "this group"})
     if message.from_user.is_verified:
         return
     if message.from_user.id in pmCounter:
