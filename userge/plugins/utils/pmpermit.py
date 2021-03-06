@@ -285,7 +285,7 @@ async def uninvitedPmHandler(message: Message):
     me = await userge.get_me()
     owner = " ".join([me.first_name, me.last_name or ""])
     user_dict = await userge.get_user_dict(message.from_user.id)
-    user_dict.update({"chat": message.chat.title or user or "this group"})
+    user_dict.update({"chat": message.chat.title or owner or "this group"})
     if message.from_user.is_verified:
         return
     if message.from_user.id in pmCounter:
