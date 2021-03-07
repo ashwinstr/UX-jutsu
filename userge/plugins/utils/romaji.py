@@ -1,7 +1,7 @@
-## Creator @midnightmadwalk to be found on tg
-## on github as https://github.com/iMBadBoi
-## improved by @Lostb053
-## further improvement by @Kakashi_HTK/ashwinstr
+# Creator @midnightmadwalk to be found on tg
+# on github as https://github.com/iMBadBoi
+# improved by @Lostb053
+# further improvement by @Kakashi_HTK/ashwinstr
 
 import asyncio
 import time
@@ -61,7 +61,7 @@ async def romaji_(message: Message):
     y = tran.split("\n")
     result = translator.translate(y, lang_src=z, lang_tgt="en", pronounce=True)
     k = result[1]
-    if k == None:
+    if k is None:
         result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
     await message.reply(k.replace("', '", "\n").replace("['", "").replace("']", ""))

@@ -60,7 +60,10 @@ Received: `{humanbytes(result['bytes_received'])}`
 Download: `{humanbytes(result['download'] / 8)}/s`
 Upload: `{humanbytes(result['upload'] / 8)}/s`**"""
     msg = await message.client.send_photo(
-        chat_id=message.chat.id, photo=path, caption=output, reply_to_message_id=reply_to
+        chat_id=message.chat.id,
+        photo=path,
+        caption=output,
+        reply_to_message_id=reply_to,
     )
     await CHANNEL.fwd_msg(msg)
     os.remove(path)
