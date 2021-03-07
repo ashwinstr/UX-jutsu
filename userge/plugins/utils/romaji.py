@@ -58,7 +58,7 @@ async def romaji_(message: Message):
         await asyncio.sleep(1)
         await message.edit("`romanising...`")
         z = translator.detect(tran)
-    else:
+    if not flag:
         await message.edit("`romanising...`")
         z = translator.detect(x)
     y = tran.split("\n")
