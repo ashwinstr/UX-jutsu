@@ -56,8 +56,11 @@ async def romaji_(message: Message):
             await message.err("too much text.")
             return
         await asyncio.sleep(1)
-    await message.edit("`romanising...`")
-    z = translator.detect(tran)
+        await message.edit("`romanising...`")
+        z = translator.detect(tran)
+    else:
+        await message.edit("`romanising...`")
+        z = translator.detect(x)
     y = tran.split("\n")
     result = translator.translate(y, lang_src=z, lang_tgt="en", pronounce=True)
     k = result[1]
