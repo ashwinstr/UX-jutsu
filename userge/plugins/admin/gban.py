@@ -1,6 +1,5 @@
 """ setup gban """
 
-
 import asyncio
 from typing import Union
 
@@ -483,29 +482,33 @@ async def gban_at_entry(message: Message):
                         ),
                     )
         elif Config.SPAM_WATCH_API:
-            intruder = await _get_spamwatch_data(user_id)
-            if intruder:
-                await asyncio.gather(
-                    message.client.kick_chat_member(chat_id, user_id),
-                    message.reply(
-                        r"\\**#𝑿_Antispam**//"
-                        "\n\nGlobally Banned User Detected in this Chat.\n\n"
-                        "**$SENTRY SpamWatch Federation Ban**\n"
-                        f"**User:** {mention_html(user_id, firstname)}\n"
-                        f"**ID:** `{user_id}`\n**Reason:** `{intruder.reason}`\n\n"
-                        "**Quick Action:** Banned",
-                        del_in=10,
-                    ),
-                    CHANNEL.log(
-                        r"\\**#Antispam_Log**//"
-                        "\n\n**GBanned User $SPOTTED**\n"
-                        "**$SENRTY #SPAMWATCH_API BAN**"
-                        f"\n**User:** {mention_html(user_id, firstname)}\n"
-                        f"**ID:** `{user_id}`\n**Reason:** `{intruder.reason}`\n"
-                        f"**Quick Action:** Banned in {message.chat.title}\n\n"
-                        f"$AUTOBAN #id{user_id}"
-                    ),
-                )
+            try:
+                intruder = await _get_spamwatch_data(user_id)
+            except spamwatch.errors.Error as err:
+                LOG.error(str(err))
+            else:
+                if intruder:
+                    await asyncio.gather(
+                        message.client.kick_chat_member(chat_id, user_id),
+                        message.reply(
+                            r"\\**#𝑿_Antispam**//"
+                            "\n\nGlobally Banned User Detected in this Chat.\n\n"
+                            "**$SENTRY SpamWatch Federation Ban**\n"
+                            f"**User:** {mention_html(user_id, firstname)}\n"
+                            f"**ID:** `{user_id}`\n**Reason:** `{intruder.reason}`\n\n"
+                            "**Quick Action:** Banned",
+                            del_in=10,
+                        ),
+                        CHANNEL.log(
+                            r"\\**#Antispam_Log**//"
+                            "\n\n**GBanned User $SPOTTED**\n"
+                            "**$SENRTY #SPAMWATCH_API BAN**"
+                            f"\n**User:** {mention_html(user_id, firstname)}\n"
+                            f"**ID:** `{user_id}`\n**Reason:** `{intruder.reason}`\n"
+                            f"**Quick Action:** Banned in {message.chat.title}\n\n"
+                            f"$AUTOBAN #id{user_id}"
+                        ),
+                    )
     message.continue_propagation()
 
 
