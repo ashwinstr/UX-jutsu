@@ -3,7 +3,6 @@
 # improved by @Lostb053
 # further improvement by @Kakashi_HTK/ashwinstr
 
-import asyncio
 import time
 from json import dumps
 
@@ -11,7 +10,6 @@ from google_trans_new import google_translator
 from googletrans import LANGUAGES, Translator
 
 from userge import Message, pool, userge
-from userge.utils.functions import get_emoji_regex
 from userge.plugins.utils.translate import translateme
 
 translator = google_translator()
