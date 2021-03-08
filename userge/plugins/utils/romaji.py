@@ -12,6 +12,7 @@ from googletrans import LANGUAGES, Translator
 
 from userge import Message, pool, userge
 from userge.utils.functions import get_emoji_regex
+from userge.plugins.utils.translate import translateme
 
 translator = google_translator()
 
@@ -34,28 +35,11 @@ async def romaji_(message: Message):
         x = message.reply_to_message.text or message.reply_to_message.caption
     flag = message.flags
     if not x:
-        await message.err("No Input Found")
-        return
-    if len(flag) > 1:
-        await message.err("provide only one language flag.")
-        return
-    elif len(flag) == 1:
-        src, dest = "auto", flag
-        x = get_emoji_regex().sub("", x)
-        await message.edit("`Translating ...`")
-        try:
-            reply_text = await _translate_this(x, dest, src)
-        except ValueError:
-            await message.err(text="Invalid destination language.\nuse `.help tr`")
-            return
-        LANGUAGES[f"{reply_text.dest.lower()}"]
-        tran = f"`{reply_text.text}`"
-        if len(tran) <= 4096:
-            await message.edit(tran)
-        else:
-            await message.err("too much text.")
-            return
-        await asyncio.sleep(1)
+        await message.edit("`No input found...`")
+    if flag > 1:
+        await message.edit("`Only one flag please...`")
+    if flag == 1:
+        tran = await translateme(x)
         await message.edit("`romanising...`")
         z = translator.detect(tran)
         y = tran.split("\n")
