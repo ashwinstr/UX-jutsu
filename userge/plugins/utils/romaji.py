@@ -40,7 +40,7 @@ async def romaji_(message: Message):
         await message.err("provide only one language flag.")
         return
     elif len(flag) == 1:
-        src, dest = "auto", list(flag)[0]
+        src, dest = "auto", flag
         x = get_emoji_regex().sub("", x)
         await message.edit("`Translating ...`")
         try:
