@@ -85,13 +85,17 @@ async def delfed_(message: Message):
     about={
         "header": "Fban user",
         "description": "Fban the user from the list of fed",
-        "usage": "{tr}fban [username|reply to user|user_id] [reason (optional)]",
+        "flags": {
+            "-p": "sends replied message as proof",
+        },
+        "usage": "{tr}fban -p[optional] [username|reply to user|user_id] [reason (optional)]",
     },
     allow_bots=False,
     allow_channels=False,
 )
 async def fban_(message: Message):
     """Bans a user from connected Feds."""
+    flag = message.flags
     user, reason = message.extract_user_and_text
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
@@ -108,7 +112,7 @@ async def fban_(message: Message):
         or user in Config.OWNER_ID
         or user == (await message.client.get_me()).id
     ):
-        user = (message.input_str).split()[0]
+        user = (message.input_str).split()[1]
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
@@ -124,13 +128,17 @@ async def fban_(message: Message):
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
+        if "-p" in flag:
+            if message.reply_to_message:
+                proof = message.reply_to_message.message_id
+                await message.forward_messages(
+                    chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
+                )
+            else:
+                await message.edit("Please reply to proof to send it...")
+                return
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
-                if message.reply_to_message:
-                    proof = message.reply_to_message.message_id
-                    await conv.forward_messages(
-                        from_chat_id=message.chat.id, message_ids=proof
-                    )
                 await conv.send_message(f"/fban {user} {reason}")
                 response = await conv.get_response(
                     mark_read=True,
