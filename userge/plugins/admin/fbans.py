@@ -131,21 +131,28 @@ async def fban_(message: Message):
         total += 1
         chat_id = int(data["chat_id"])
         if "-p" in flag:
-            if message.reply_to_message:
+            if message.reply_to_message and chat_id != message.chat.id:
                 proof = message.reply_to_message.message_id
                 fwd = await userge.forward_messages(
                     chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
                 )
-            else:
+            elif not message.reply_to_message:
                 await message.edit("Please reply to proof to send it...")
                 return
         try:
-            async with userge.conversation(chat_id, timeout=8) as conv:
+            if "-p" in flag:
                 await userge.send_message(
                     chat_id,
                     f"/fban {user} {reason}",
                     reply_to_message_id=fwd.message_id,
                 )
+            else:
+                await userge.send_message(
+                    chat_id,
+                    f"/fban {user} {reason}",
+                    reply_to_message_id=fwd.message_id,
+                )
+            async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
                     mark_read=True,
                     filters=(filters.user([609517172]) & ~filters.service),
