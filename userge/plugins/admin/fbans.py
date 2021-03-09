@@ -141,7 +141,11 @@ async def fban_(message: Message):
                 return
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
-                await userge.send_message(chat_id, f"/fban {user} {reason}", reply_to_message_id=fwd.message_id)
+                await userge.send_message(
+                    chat_id,
+                    f"/fban {user} {reason}",
+                    reply_to_message_id=fwd.message_id,
+                )
                 response = await conv.get_response(
                     mark_read=True,
                     filters=(filters.user([609517172]) & ~filters.service),
