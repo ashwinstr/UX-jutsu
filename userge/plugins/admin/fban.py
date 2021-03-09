@@ -120,6 +120,9 @@ async def fban_(message: Message):
         chat_id = int(data["chat_id"])
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
+                if message.reply_to_message:
+                    proof = message.reply_to_message.message_id
+                    await conv.forward_messages(from_chat_id=message.chat.id, message_ids=proof)
                 await conv.send_message(f"/fban {user} {reason}")
                 response = await conv.get_response(
                     mark_read=True,
