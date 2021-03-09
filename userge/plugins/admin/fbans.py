@@ -113,6 +113,8 @@ async def fban_(message: Message):
         or user == (await message.client.get_me()).id
     ):
         user = (message.input_str).split()[1]
+        reason = (message.input_str).split()[2:]
+        reason = " ".join(reason)
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
