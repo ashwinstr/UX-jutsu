@@ -131,7 +131,7 @@ async def fban_(message: Message):
         if "-p" in flag:
             if message.reply_to_message:
                 proof = message.reply_to_message.message_id
-                await message.forward_messages(
+                await userge.forward_messages(
                     chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
                 )
             else:
