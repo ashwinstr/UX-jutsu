@@ -103,12 +103,12 @@ async def fban_(message: Message):
     except (PeerIdInvalid, IndexError):
         return await message.err(error_msg, del_in=7)
     user = user_.id
-    if user in Config.SUDO_USERS or user in Config.OWNER_ID:
-        return await message.err(
-            "Can't F-Ban users that exists in Sudo or Owners", del_in=7
-        )
-    if user == (await message.client.get_me()).id:
+    if user in Config.SUDO_USERS or user in Config.OWNER_ID or user == (await message.client.get_me()).id:
         user = (message.input_str).split()[0]
+        if user in Config.SUDO_USERS or user in Config.OWNER_ID or user == (await message.client.get_me()).id:
+            return await message.err(
+                "Can't F-Ban users that exists in Sudo or Owners", del_in=7
+            )
     failed = []
     total = 0
     reason = reason or "Not specified."
