@@ -97,10 +97,10 @@ async def fban_(message: Message):
     """Bans a user from connected Feds."""
     flag = message.flags
     input = message.input_str
-    await message.reply(
-        f"[0] - {input.split()[0]}\n[1] - {input.split()[1]}\n[2:] - {input.split()[2:]}"
-    )
-    error_msg = "Provide a User ID or reply to a User"
+#    await message.reply(
+#        f"[0] - {input.split()[0]}\n[1] - {input.split()[1]}\n[2:] - {input.split()[2:]}"
+#    )
+    error_msg = f"Couldn't find the user - {user}"
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
@@ -111,7 +111,7 @@ async def fban_(message: Message):
         user = message.reply_to_message.from_user.id
         reason = input
     if user is None:
-        return await message.err(error_msg, del_in=7)
+        return await message.err("Provide a user ID or reply to a user.", del_in=7)
     try:
         user_ = await message.client.get_users(user)
     except (PeerIdInvalid, IndexError):
@@ -155,11 +155,17 @@ async def fban_(message: Message):
                     fwd = await userge.forward_messages(
                         chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
                     )
-                await userge.send_message(
-                    chat_id,
-                    f"/fban {user} {reason}",
-                    reply_to_message_id=fwd.message_id,
-                )
+                    await userge.send_message(
+                        chat_id,
+                        f"/fban {user} {reason}",
+                        reply_to_message_id=fwd.message_id,
+                    )
+                else:
+                    await userge.send_message(
+                        chat_id,
+                        f"/fban {user} {reason}",
+                        reply_to_message_id=message.reply_to_message.message_id,
+                    )
             else:
                 await userge.send_message(
                     chat_id,
