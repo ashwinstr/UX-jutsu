@@ -97,6 +97,7 @@ async def fban_(message: Message):
     """Bans a user from connected Feds."""
     flag = message.flags
     input = message.input_str
+    error_msg = "Provide a User ID or reply to a User"
     user, reason = message.extract_user_and_text
     if not message.reply_to_message:
         user = input.split()[1]
@@ -108,7 +109,6 @@ async def fban_(message: Message):
             return await message.err(error_msg, del_in=7)
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
-    error_msg = "Provide a User ID or reply to a User"
     if user is None:
         return await message.err(error_msg, del_in=7)
     try:
