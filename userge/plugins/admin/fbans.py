@@ -118,7 +118,7 @@ async def fban_(message: Message):
             reason = input.split()[2:]
         else:
             user = input.split()[0]
-            reason = input.split()[1]
+            reason = input.split()[1:]
         reason = " ".join(reason)
         user_ = await message.client.get_users(user)
         if (
@@ -156,7 +156,6 @@ async def fban_(message: Message):
                 await userge.send_message(
                     chat_id,
                     f"/fban {user} {reason}",
-                    reply_to_message_id=fwd.message_id,
                 )
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
