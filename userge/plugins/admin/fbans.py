@@ -136,15 +136,26 @@ async def fban_(message: Message):
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
-        if "-p" in flag:
-            if message.reply_to_message and chat_id != message.chat.id:
-                proof = message.reply_to_message.message_id
-                fwd = await userge.forward_messages(
-                    chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
-                )
-            elif not message.reply_to_message:
-                await message.edit("Please reply to proof to send it...")
-                return
+        if message.reply_to_message:
+            if "-p" in flag:
+                if chat_id != message.chat.id:
+                    proof = message.reply_to_message.message_id
+                    fwd = await userge.forward_messages(
+                        chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
+                    )
+            else:
+                user = message.reply_to_message.from_user.id
+                if (
+                    user in Config.SUDO_USERS
+                    or user in Config.OWNER_ID
+                    or user == (await message.client.get_me()).id
+                ):
+                    return await message.err(
+                        "Can't F-Ban users that exists in Sudo or Owners", del_in=7
+                    ) 
+        else:
+            await message.edit("Please reply to proof to send it...")
+            return
         try:
             if "-p" in flag:
                 await userge.send_message(
