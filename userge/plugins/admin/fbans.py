@@ -117,7 +117,7 @@ async def fban_(message: Message):
         or user in Config.OWNER_ID
         or user == (await message.client.get_me()).id
     ):
-        
+
         if "-p" in flag:
             user = input.split()[1]
             reason = input.split()[2:]
