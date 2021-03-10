@@ -109,6 +109,7 @@ async def fban_(message: Message):
     else:
         user = message.reply_to_message.from_user.id
         reason = input
+        reason = reason.replace("-p ", "")
     if user is None:
         return await message.err("Provide a user ID or reply to a user.", del_in=7)
     error_msg = f"Couldn't find the user - {user}"
