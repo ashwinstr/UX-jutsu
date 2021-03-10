@@ -152,7 +152,7 @@ async def fban_(message: Message):
                 ):
                     return await message.err(
                         "Can't F-Ban users that exists in Sudo or Owners", del_in=7
-                    ) 
+                    )
         else:
             await message.edit("Please reply to proof to send it...")
             return
