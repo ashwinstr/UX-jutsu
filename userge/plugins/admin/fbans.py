@@ -102,6 +102,10 @@ async def fban_(message: Message):
         user = input.split()[1]
         reason = input.split()[2:]
         reason = " ".join(reason)
+        try:
+            user_ = await message.client.get_users(user)
+        except (PeerIdInvalid, IndexError):
+            return await message.err(error_msg, del_in=7)
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
     error_msg = "Provide a User ID or reply to a User"
