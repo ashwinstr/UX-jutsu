@@ -98,7 +98,6 @@ async def fban_(message: Message):
     flag = message.flags
     input = message.input_str
     error_msg = "Provide a User ID or reply to a User"
-    user, reason = message.extract_user_and_text
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
@@ -132,9 +131,9 @@ async def fban_(message: Message):
         except (PeerIdInvalid, IndexError):
             return await message.err(error_msg, del_in=7)
         if (
-            user in Config.SUDO_USERS
-            or user in Config.OWNER_ID
-            or user == (await message.client.get_me()).id
+            user_.id in Config.SUDO_USERS
+            or user_.id in Config.OWNER_ID
+            or user_.id == (await message.client.get_me()).id
         ):
             return await message.err(
                 "Can't F-Ban users that exists in Sudo or Owners", del_in=7
@@ -148,41 +147,28 @@ async def fban_(message: Message):
         chat_id = int(data["chat_id"])
         if message.reply_to_message:
             if "-p" in flag:
+                proof = message.reply_to_message.message_id
                 if chat_id != message.chat.id:
-                    proof = message.reply_to_message.message_id
                     fwd = await userge.forward_messages(
                         chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
                     )
-            else:
-                user = message.reply_to_message.from_user.id
-                if (
-                    user in Config.SUDO_USERS
-                    or user in Config.OWNER_ID
-                    or user == (await message.client.get_me()).id
-                ):
-                    return await message.err(
-                        "Can't F-Ban users that exists in Sudo or Owners", del_in=7
+                try:
+                    await userge.send_message(
+                        chat_id,
+                        f"/fban {user} {reason}",
+                        reply_to_message_id=fwd.message_id,
                     )
+            else:
+                await userge.send_message(
+                    chat_id,
+                    f"/fban {user} {reason}",
+                )
         elif not message.reply_to_message and "-p" in flag:
             await message.edit("Please reply to proof to send it...")
             return
         else:
             pass
         try:
-            if "-p" in flag:
-                await userge.send_message(
-                    chat_id,
-                    f"/fban {user} {reason}",
-                    reply_to_message_id=fwd.message_id,
-                )
-            else:
-                user = input.split()[0]
-                reason = input.split()[1:]
-                reason = " ".join(reason)
-                await userge.send_message(
-                    chat_id,
-                    f"/fban {user} {reason}",
-                )
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
                     mark_read=True,
