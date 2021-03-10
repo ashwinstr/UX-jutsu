@@ -152,12 +152,11 @@ async def fban_(message: Message):
                     fwd = await userge.forward_messages(
                         chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
                     )
-                try:
-                    await userge.send_message(
-                        chat_id,
-                        f"/fban {user} {reason}",
-                        reply_to_message_id=fwd.message_id,
-                    )
+                await userge.send_message(
+                    chat_id,
+                    f"/fban {user} {reason}",
+                    reply_to_message_id=fwd.message_id,
+                )
             else:
                 await userge.send_message(
                     chat_id,
