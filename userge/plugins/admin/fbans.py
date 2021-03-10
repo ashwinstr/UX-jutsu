@@ -100,7 +100,6 @@ async def fban_(message: Message):
     #    await message.reply(
     #        f"[0] - {input.split()[0]}\n[1] - {input.split()[1]}\n[2:] - {input.split()[2:]}"
     #    )
-    error_msg = f"Couldn't find the user - {user}"
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
@@ -112,6 +111,7 @@ async def fban_(message: Message):
         reason = input
     if user is None:
         return await message.err("Provide a user ID or reply to a user.", del_in=7)
+    error_msg = f"Couldn't find the user - {user}"
     try:
         user_ = await message.client.get_users(user)
     except (PeerIdInvalid, IndexError):
