@@ -169,7 +169,10 @@ async def fban_(message: Message):
             await message.edit("Please reply to proof to send it...")
             return
         else:
-            pass
+            await userge.send_message(
+                chat_id,
+                f"/fban {user} {reason}",
+            ) 
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
