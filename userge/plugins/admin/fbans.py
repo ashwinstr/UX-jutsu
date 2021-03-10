@@ -153,9 +153,11 @@ async def fban_(message: Message):
                     return await message.err(
                         "Can't F-Ban users that exists in Sudo or Owners", del_in=7
                     )
-        else:
+        elif not message.reply_to_message and "-p" in flag:
             await message.edit("Please reply to proof to send it...")
             return
+        else:
+            pass
         try:
             if "-p" in flag:
                 await userge.send_message(
@@ -164,6 +166,9 @@ async def fban_(message: Message):
                     reply_to_message_id=fwd.message_id,
                 )
             else:
+                user = input.split()[0]
+                reason = input.split()[1:]
+                reason = " ".join(reason)
                 await userge.send_message(
                     chat_id,
                     f"/fban {user} {reason}",
