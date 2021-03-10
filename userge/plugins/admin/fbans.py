@@ -96,7 +96,12 @@ async def delfed_(message: Message):
 async def fban_(message: Message):
     """Bans a user from connected Feds."""
     flag = message.flags
+    input = message.input_str
     user, reason = message.extract_user_and_text
+    if not message.reply_to_message:
+        user = input.split()[0]
+        reason = input.split()[1:]
+        reason = " ".join(reason)
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
     error_msg = "Provide a User ID or reply to a User"
@@ -112,7 +117,7 @@ async def fban_(message: Message):
         or user in Config.OWNER_ID
         or user == (await message.client.get_me()).id
     ):
-        input = message.input_str
+        
         if "-p" in flag:
             user = input.split()[1]
             reason = input.split()[2:]
@@ -120,7 +125,10 @@ async def fban_(message: Message):
             user = input.split()[0]
             reason = input.split()[1:]
         reason = " ".join(reason)
-        user_ = await message.client.get_users(user)
+        try:
+            user_ = await message.client.get_users(user)
+        except (PeerIdInvalid, IndexError):
+            return await message.err(error_msg, del_in=7)
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
