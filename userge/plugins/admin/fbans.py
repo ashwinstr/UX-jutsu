@@ -97,6 +97,7 @@ async def fban_(message: Message):
     """Bans a user from connected Feds."""
     flag = message.flags
     input = message.input_str
+    await message.reply(f"[0] - {input.split()[0]}\n[1] - {input.split()[1]}\n[2:] - {input.split()[2:]}")
     error_msg = "Provide a User ID or reply to a User"
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
