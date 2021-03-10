@@ -99,8 +99,8 @@ async def fban_(message: Message):
     input = message.input_str
     user, reason = message.extract_user_and_text
     if not message.reply_to_message:
-        user = input.split()[0]
-        reason = input.split()[1:]
+        user = input.split()[1]
+        reason = input.split()[2:]
         reason = " ".join(reason)
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     await message.edit(fban_arg[0])
