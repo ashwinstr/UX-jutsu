@@ -89,19 +89,20 @@ async def convert_(message: Message):
 async def upload_to_tg(message: Message):
     """ upload to telegram """
     flag = message.flags
-    path_ = message.input_str
-    await message.reply(f"0 - {path_.split()[0]}\n1 - {path_.split()[1:]}")
+    input = message.filtered_input_str
     if not path_:
         await message.edit("invalid input!, check `{tr}help upload`", del_in=5)
         return
-    if "-p" in flag:
-        path_ = path_.replace("/", " ").split()[1]
+    try:
+        path_ = input.replace("/", " ").split()[0]
         cmd_str = Config.CMD_TRIGGER + path_
         plugin_name = userge.manager.commands[cmd_str].plugin_name
         plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
             "/plugins", ""
         )
         path_ = f"userge/plugins{plugin_loc}/{path_}.py"
+    except:
+        path_ = input
     is_url = re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_)
     del_path = False
     if is_url:
@@ -124,10 +125,7 @@ async def upload_to_tg(message: Message):
     try:
         string = Path(path_)
     except IndexError:
-        if "-p" in flag:
-            await message.edit("Plugin not found...")
-        else:
-            await message.edit("wrong syntax\n`.upload [path]`")
+        await message.edit("wrong syntax\n`.upload [path]`")
     else:
         await message.delete()
         await upload_path(message=message, path=string, del_path=del_path)
