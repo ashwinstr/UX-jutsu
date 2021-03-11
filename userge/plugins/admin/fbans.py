@@ -10,7 +10,7 @@
 import asyncio
 
 from pyrogram import filters
-from pyrogram.errors import PeerIdInvalid, FloodWait
+from pyrogram.errors import FloodWait, PeerIdInvalid
 
 from userge import Config, Message, get_collection, userge
 
@@ -115,8 +115,9 @@ async def fban_(message: Message):
                 user_ = await userge.get_users(user)
             except (PeerIdInvalid, IndexError):
                 valid_u = False
-                await CHANNEL.log(f"#FBAN\n**User:** {user}\n**Status:** failed\n**Reason:** invalid user")
-                pass
+                await CHANNEL.log(
+                    f"#FBAN\n**User:** {user}\n**Status:** failed\n**Reason:** invalid user"
+                )
             if valid_u:
                 await mass_fban(user, reason)
             if user_n == len(input):
@@ -319,6 +320,7 @@ async def fban_lst_(message: Message):
         else "**You haven't connected to any federations yet!**",
         caption="Connected Fed List",
     )
+
 
 async def mass_fban(user, reason):
     async for data in FED_LIST.find():
