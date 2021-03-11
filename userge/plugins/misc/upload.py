@@ -88,7 +88,8 @@ async def upload_to_tg(message: Message):
     if not path_:
         await message.edit("invalid input!, check `.help .upload`", del_in=5)
         return
-    is_url = re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_)
+    if "-p" not in flag:
+        is_url = re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_)
     del_path = False
     if is_url:
         del_path = True
@@ -100,6 +101,8 @@ async def upload_to_tg(message: Message):
         except Exception as e_e:  # pylint: disable=broad-except
             await message.err(str(e_e))
             return
+    else:
+        await message.reply("Problem's here...")
     if "|" in path_:
         path_, file_name = path_.split("|")
         path_ = path_.strip()
