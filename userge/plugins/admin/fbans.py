@@ -138,7 +138,7 @@ async def fban_(message: Message):
             if user_n == len(input):
                 await CHANNEL.log(
                     f"#FBAN\n**Fbanned:** {ban} out of {len(input)}\n**Failed:** {fail}\n**Can't fban:** {cant}"
-                ) 
+                )
                 return
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
