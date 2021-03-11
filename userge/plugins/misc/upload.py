@@ -74,13 +74,11 @@ async def convert_(message: Message):
         "flags": {
             "-d": "upload as document",
             "-wt": "without thumb",
-            "-p": "uploads plugin",
         },
         "usage": "{tr}upload [flags] [file or folder path | link]",
         "examples": [
             "{tr}upload -d https://speed.hetzner.de/100MB.bin | test.bin",
             "{tr}upload downloads/test.mp4",
-            "{tr}upload -p lyrics",
         ],
     },
     del_pre=True,
