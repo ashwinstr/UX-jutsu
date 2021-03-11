@@ -86,7 +86,6 @@ async def convert_(message: Message):
 )
 async def upload_to_tg(message: Message):
     """ upload to telegram """
-    message.flags
     input = message.filtered_input_str
     if not input:
         await message.edit("invalid input!, check `{tr}help upload`", del_in=5)
