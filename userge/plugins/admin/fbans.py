@@ -102,16 +102,16 @@ async def fban_(message: Message):
     flag = message.flags
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     if "-m" not in flag:
-        input = message.input_str
+        input = message.filtered_input_str
     else:
-        input = message.reply_to_message.text.split()
-        reason = message.filtered_input_str
-        user_n = 0
-        ban, fail, cant = 0, 0, 0
-    if "-m" in flag:
         if not message.reply_to_message:
             await message.edit("Reply to list of users...", del_in=5)
             return
+        input = message.reply_to_message.text.split()
+        reason = message.filtered_input_str or "Not specified"
+        user_n = 0
+        ban, fail, cant = 0, 0, 0
+    if "-m" in flag:
         for user in input:
             user_n += 1
             if (
@@ -162,12 +162,10 @@ async def fban_(message: Message):
         or user in Config.OWNER_ID
         or user == (await message.client.get_me()).id
     ):
-        if "-p" in flag:
-            user = input.split()[1]
-            reason = input.split()[2:]
-        else:
-            user = input.split()[0]
-            reason = input.split()[1:]
+        if not input:
+            await message.edit("Can't fban replied user, give user ID...", del_in=7)
+        user = input.split()[0]
+        reason = input.split()[1:]
         reason = " ".join(reason)
         try:
             user_ = await message.client.get_users(user)
@@ -179,7 +177,7 @@ async def fban_(message: Message):
             or user_.id == (await message.client.get_me()).id
         ):
             return await message.err(
-                "Can't F-Ban users that exists in Sudo or Owners", del_in=7
+                "Can't fban user that exists in SUDO or OWNERS...", del_in=7
             )
     failed = []
     total = 0
