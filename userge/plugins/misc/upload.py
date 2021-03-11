@@ -97,7 +97,7 @@ async def upload_to_tg(message: Message):
         plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
             "/plugins", ""
         )
-        path_ = f"userge/plugins{plugin_loc}/{path_}.py"
+        path_ = f"userge/plugins{plugin_loc}/{plugin_name}.py"
     except BaseException:
         path_ = input
     is_url = re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_)
