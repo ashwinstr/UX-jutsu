@@ -71,11 +71,16 @@ async def convert_(message: Message):
     "upload",
     about={
         "header": "Upload files to telegram",
-        "flags": {"-d": "upload as document", "-wt": "without thumb"},
+        "flags": {
+            "-d": "upload as document",
+            "-wt": "without thumb",
+            "-p": "uploads plugin",
+        },
         "usage": "{tr}upload [flags] [file or folder path | link]",
         "examples": [
             "{tr}upload -d https://speed.hetzner.de/100MB.bin | test.bin",
             "{tr}upload downloads/test.mp4",
+            "{tr}upload -p lyrics",
         ],
     },
     del_pre=True,
@@ -90,10 +95,7 @@ async def upload_to_tg(message: Message):
         await message.edit("invalid input!, check `.help .upload`", del_in=5)
         return
     if "-p" in flag:
-        path_ = path_.split()[1]
-        if len(path_.replace("/", " ").split()) != 1:
-            await message.edit("Please enter just command name...")
-            return
+        path_ = path_.replace("/", " ").split()[0]
         cmd_str = Config.CMD_TRIGGER + path_
         plugin_name = userge.manager.commands[cmd_str].plugin_name
         plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
