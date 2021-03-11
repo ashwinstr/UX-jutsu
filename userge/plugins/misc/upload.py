@@ -95,7 +95,7 @@ async def upload_to_tg(message: Message):
         await message.edit("invalid input!, check `{tr}help upload`", del_in=5)
         return
     if "-p" in flag:
-        path_ = path_.replace("/", " ").split()[0]
+        path_ = path_.replace("/", " ").split()[1]
         cmd_str = Config.CMD_TRIGGER + path_
         plugin_name = userge.manager.commands[cmd_str].plugin_name
         plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
