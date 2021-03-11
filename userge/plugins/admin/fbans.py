@@ -107,19 +107,29 @@ async def fban_(message: Message):
         input = message.reply_to_message.text.split()
         reason = message.filtered_input_str
         user_n = 0
+        ban, fail = 0, 0
     if "-m" in flag:
+        if not message.reply_to_message:
+            await message.edit("Reply to list of users...", del_in=5)
+            return
         for user in input:
             user_n += 1
             valid_u = True
             try:
                 user_ = await userge.get_users(user)
+                ban += 1
             except (PeerIdInvalid, IndexError):
                 valid_u = False
+                fail += 1
                 await CHANNEL.log(
                     f"#FBAN\n**User:** {user}\n**Status:** failed\n**Reason:** invalid user"
                 )
             if valid_u:
                 await mass_fban(user, reason)
+                await message.edit(
+                    f"**Fbanned:** {ban} out of {len(input)}\n"
+                    f"**Failed:** {fail}"
+                )
             if user_n == len(input):
                 return
     await message.edit(fban_arg[0])
