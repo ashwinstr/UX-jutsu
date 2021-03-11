@@ -89,10 +89,10 @@ async def convert_(message: Message):
 async def upload_to_tg(message: Message):
     """ upload to telegram """
     flag = message.flags
-    path_ = message.filtered_input_str
-    await message.reply(f"[0] - {path_.split()[0]}\n[1] - {path_.split()[1:]}")
+    path_ = message.input_str
+    await message.reply(f"0 - {path_.split()[0]}\n1 - {path_.split()[1:]}")
     if not path_:
-        await message.edit("invalid input!, check `.help .upload`", del_in=5)
+        await message.edit("invalid input!, check `{tr}help upload`", del_in=5)
         return
     if "-p" in flag:
         path_ = path_.replace("/", " ").split()[0]
