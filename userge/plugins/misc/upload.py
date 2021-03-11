@@ -112,7 +112,7 @@ async def upload_to_tg(message: Message):
             if len(path_.replace("/", " ").split()) != 1:
                 await message.edit("Please enter proper command name...")
                 return
-            cmd = Config.CMD_TRIGGER + path_
+            Config.CMD_TRIGGER + path_
             plugin_name = userge.manager.commands[cmd_str].plugin_name
             plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
                 "/plugins", ""
