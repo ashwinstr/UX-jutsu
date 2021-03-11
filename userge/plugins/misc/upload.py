@@ -85,7 +85,7 @@ async def upload_to_tg(message: Message):
     """ upload to telegram """
     flag = message.flags
     path_ = message.filtered_input_str
-    await message.reply(f"[0] - path_.split()[0]\n[1] - path_.split()[1:]")
+    await message.reply(f"[0] - {path_.split()[0]}\n[1] - {path_.split()[1:]}")
     if not path_:
         await message.edit("invalid input!, check `.help .upload`", del_in=5)
         return
