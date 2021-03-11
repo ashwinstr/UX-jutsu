@@ -107,13 +107,20 @@ async def fban_(message: Message):
         input = message.reply_to_message.text.split()
         reason = message.filtered_input_str
         user_n = 0
-        ban, fail = 0, 0
+        ban, fail, cant = 0, 0, 0
     if "-m" in flag:
         if not message.reply_to_message:
             await message.edit("Reply to list of users...", del_in=5)
             return
         for user in input:
             user_n += 1
+            if (
+                user in Config.SUDO_USERS
+                or user in Config.OWNER_ID
+                or user == (await message.client.get_me()).id
+            ):
+                cant += 1
+                continue
             valid_u = True
             try:
                 user_ = await userge.get_users(user)
@@ -121,15 +128,17 @@ async def fban_(message: Message):
             except (PeerIdInvalid, IndexError):
                 valid_u = False
                 fail += 1
-                await CHANNEL.log(
-                    f"#FBAN\n**User:** {user}\n**Status:** failed\n**Reason:** invalid user"
-                )
             if valid_u:
                 await mass_fban(user, reason)
-                await message.edit(
-                    f"**Fbanned:** {ban} out of {len(input)}\n" f"**Failed:** {fail}"
-                )
+            await message.edit(
+                f"**Fbanned:** {ban} out of {len(input)}\n"
+                f"**Failed:** {fail}"
+                f"**Can't fban:** {cant}"
+            )
             if user_n == len(input):
+                await CHANNEL.log(
+                    f"#FBAN\n**Fbanned:** {ban} out of {len(input)}\n**Failed:** {fail}\n**Can't fban:** {cant}"
+                ) 
                 return
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
