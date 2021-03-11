@@ -5,9 +5,12 @@
 # Ported to Pyrogram + Rewrite with Mongo DB
 # by: (TG - @DeletedUser420) [https://github.com/code-rgb]
 # Thanks @Lostb053  for writing help
+# Added proof forward and mass fban by @Kakashi_HTK/@ashwinstr
+
+import asyncio
 
 from pyrogram import filters
-from pyrogram.errors import PeerIdInvalid
+from pyrogram.errors import PeerIdInvalid, FloodWait
 
 from userge import Config, Message, get_collection, userge
 
@@ -87,6 +90,7 @@ async def delfed_(message: Message):
         "description": "Fban the user from the list of fed",
         "flags": {
             "-p": "sends replied message as proof",
+            "-m": "mass bans replied list of users",
         },
         "usage": "{tr}fban -p[optional] [username|reply to user|user_id] [reason (optional)]",
     },
@@ -96,11 +100,27 @@ async def delfed_(message: Message):
 async def fban_(message: Message):
     """Bans a user from connected Feds."""
     flag = message.flags
-    input = message.input_str
-    #    await message.reply(
-    #        f"[0] - {input.split()[0]}\n[1] - {input.split()[1]}\n[2:] - {input.split()[2:]}"
-    #    )
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
+    if "-m" not in flag:
+        input = message.input_str
+    else:
+        input = message.reply_to_message.text.split()
+        reason = message.filtered_input_str
+        user_n = 0
+    if "-m" in flag:
+        for user in input:
+            user_n += 1
+            valid_u = True
+            try:
+                user_ = await userge.get_users(user)
+            except (PeerIdInvalid, IndexError):
+                valid_u = False
+                await CHANNEL.log(f"#FBAN\n**User:** {user}\n**Status:** failed\n**Reason:** invalid user")
+                pass
+            if valid_u:
+                await mass_fban(user, reason)
+            if user_n == len(input):
+                return
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
         user = input.split()[0]
@@ -299,3 +319,12 @@ async def fban_lst_(message: Message):
         else "**You haven't connected to any federations yet!**",
         caption="Connected Fed List",
     )
+
+async def mass_fban(user, reason):
+    async for data in FED_LIST.find():
+        chat_id = int(data["chat_id"])
+        try:
+            await userge.send_message(chat_id, f"/fban {user} {reason}")
+            await asyncio.sleep(0.5)
+        except FloodWait as e:
+            await asyncio.sleep(e.x + 5)
