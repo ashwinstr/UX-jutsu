@@ -88,8 +88,17 @@ async def upload_to_tg(message: Message):
     if not path_:
         await message.edit("invalid input!, check `.help .upload`", del_in=5)
         return
-    if "-p" not in flag:
-        is_url = re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_)
+    if "-p" in flag:
+        if len(path_.replace("/", " ").split()) != 1:
+            await message.edit("Please enter proper command name...")
+            return
+        cmd_str = Config.CMD_TRIGGER + path_
+        plugin_name = userge.manager.commands[cmd_str].plugin_name
+        plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
+            "/plugins", ""
+        )
+        path_ = f"userge/plugins{plugin_loc}/{path_}.py"
+    is_url = re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_)
     del_path = False
     if is_url:
         del_path = True
@@ -101,8 +110,6 @@ async def upload_to_tg(message: Message):
         except Exception as e_e:  # pylint: disable=broad-except
             await message.err(str(e_e))
             return
-    else:
-        await message.reply("Problem's here...")
     if "|" in path_:
         path_, file_name = path_.split("|")
         path_ = path_.strip()
@@ -111,16 +118,6 @@ async def upload_to_tg(message: Message):
             os.rename(path_, new_path)
             path_ = new_path
     try:
-        if "-p" in flag:
-            if len(path_.replace("/", " ").split()) != 1:
-                await message.edit("Please enter proper command name...")
-                return
-            cmd_str = Config.CMD_TRIGGER + path_
-            plugin_name = userge.manager.commands[cmd_str].plugin_name
-            plugin_loc = ("/" + userge.manager.plugins[plugin_name].parent).replace(
-                "/plugins", ""
-            )
-            path_ = f"userge/plugins{plugin_loc}/{path_}.py"
         string = Path(path_)
     except IndexError:
         if "-p" in flag:
