@@ -127,8 +127,7 @@ async def fban_(message: Message):
             if valid_u:
                 await mass_fban(user, reason)
                 await message.edit(
-                    f"**Fbanned:** {ban} out of {len(input)}\n"
-                    f"**Failed:** {fail}"
+                    f"**Fbanned:** {ban} out of {len(input)}\n" f"**Failed:** {fail}"
                 )
             if user_n == len(input):
                 return
