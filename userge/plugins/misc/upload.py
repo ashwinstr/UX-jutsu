@@ -88,7 +88,7 @@ async def convert_(message: Message):
 )
 async def upload_to_tg(message: Message):
     """ upload to telegram """
-    flag = message.flags
+    message.flags
     input = message.filtered_input_str
     if not path_:
         await message.edit("invalid input!, check `{tr}help upload`", del_in=5)
@@ -101,7 +101,7 @@ async def upload_to_tg(message: Message):
             "/plugins", ""
         )
         path_ = f"userge/plugins{plugin_loc}/{path_}.py"
-    except:
+    except BaseException:
         path_ = input
     is_url = re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_)
     del_path = False
