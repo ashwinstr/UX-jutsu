@@ -99,7 +99,7 @@ async def delfed_(message: Message):
 )
 async def fban_(message: Message):
     """Bans a user from connected Feds."""
-    flag = message.flags
+    message.flags
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     input = message.filtered_input_str
     await message.edit(fban_arg[0])
@@ -331,8 +331,8 @@ async def fban_m(message: Message):
             await mass_fban(user, reason)
         (user_n / len(input) * 100)
         prog_1, prog_2, prog_3 = True, True, True
-     #  if prog >= 33 and prog_1:
-     #  fban_prog
+        #  if prog >= 33 and prog_1:
+        #  fban_prog
         await message.edit(
             f"{fban_prog}\n"
             f"**Fbanned:** {ban} out of {len(input)}\n"
