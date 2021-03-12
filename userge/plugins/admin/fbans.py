@@ -315,7 +315,7 @@ async def fban_p(message: Message):
     total = 0
     reason = reason or "Not specified"
     await message.edit(fban_arg[1])
-    from = message.chat.id
+    from_ = message.chat.id
     proof = message.reply_to_message.message_id
     async for data in FED_LIST.find():
         total += 1
