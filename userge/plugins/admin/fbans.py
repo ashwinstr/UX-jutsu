@@ -115,7 +115,7 @@ async def fban_(message: Message):
     try:
         user_ = await message.client.get_users(user)
     except (PeerIdInvalid, IndexError):
-        return await message.err(f"Couldn't find any user with {user}", del_in=7)
+        pass
     user = user_.id
     if (
         user in Config.SUDO_USERS
@@ -131,7 +131,7 @@ async def fban_(message: Message):
         try:
             user_ = await message.client.get_users(user)
         except (PeerIdInvalid, IndexError):
-            return await message.err(f"Couldn't find any user with {user}", del_in=7)
+            pass
         if (
             user_.id in Config.SUDO_USERS
             or user_.id in Config.OWNER_ID
@@ -221,10 +221,7 @@ async def fban_p(message: Message):
         try:
             user_ = await userge.get_users(user)
         except (PeerIdInvalid, IndexError):
-            return await message.err(
-                "Can't find the user {user}. Give a valid user ID or username...",
-                del_in=7,
-            )
+            pass
         if (
             user_.id in Config.SUDO_USERS
             or user_.id in Config.OWNER_ID
