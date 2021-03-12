@@ -255,7 +255,7 @@ async def fban_(message: Message):
     await CHANNEL.log(msg_)
 
 
-### test command by @Kakashi_HTK
+# test command by @Kakashi_HTK
 @userge.on_cmd(
     "fbanp",
     about={
@@ -271,7 +271,6 @@ async def fban_(message: Message):
 )
 async def fban_p(message: Message):
     """Fban user from connected feds with proof."""
-    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     if not message.reply_to_message:
         await message.err("Please reply to proof...", del_in=7)
         return
@@ -292,7 +291,10 @@ async def fban_p(message: Message):
         try:
             user_ = userge.get_users(user)
         except (PeerIdInvalid, IndexError):
-            return await message.err("Can't find the user {user}. Give a valid user ID or username...", del_in=7)
+            return await message.err(
+                "Can't find the user {user}. Give a valid user ID or username...",
+                del_in=7,
+            )
         if (
             user_.id in Config.SUDO_USERS
             or user_.id in Config.OWNER_ID
@@ -301,6 +303,7 @@ async def fban_p(message: Message):
             return await message.err(
                 "Can't fban user that exists in SUDO or OWNERS...", del_in=7
             )
+
 
 @userge.on_cmd(
     "unfban",
