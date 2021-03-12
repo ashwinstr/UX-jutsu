@@ -316,7 +316,7 @@ async def fban_m(message: Message):
             ban += 1
         except (PeerIdInvalid, IndexError):
             user_ = user
-            fail += 1 
+            fail += 1
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
