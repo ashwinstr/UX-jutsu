@@ -219,7 +219,7 @@ async def fban_p(message: Message):
         reason = input.split()[1:]
         reason = " ".join(reason)
         try:
-            user_ = userge.get_users(user)
+            user_ = await userge.get_users(user)
         except (PeerIdInvalid, IndexError):
             return await message.err(
                 "Can't find the user {user}. Give a valid user ID or username...",
