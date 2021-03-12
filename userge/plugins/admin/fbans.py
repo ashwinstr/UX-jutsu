@@ -131,10 +131,10 @@ async def fban_(message: Message):
                 fail += 1
             if valid_u:
                 await mass_fban(user, reason)
-            prog = (user_n / len(input) * 100)
+            (user_n / len(input) * 100)
             prog_1, prog_2, prog_3 = True, True, True
-          #  if prog >= 33 and prog_1:
-          #      fban_prog
+            #  if prog >= 33 and prog_1:
+            #      fban_prog
             await message.edit(
                 f"{fban_prog}\n"
                 f"**Fbanned:** {ban} out of {len(input)}\n"
@@ -345,7 +345,7 @@ async def fban_p(message: Message):
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
         except BaseException:
-            failed.append(data["fed_name"]) 
+            failed.append(data["fed_name"])
     if total == 0:
         return await message.err(
             "You Don't have any feds connected!\nsee .help addf, for more info."
@@ -458,4 +458,3 @@ async def mass_fban(user, reason):
             await asyncio.sleep(0.5)
         except FloodWait as e:
             await asyncio.sleep(e.x + 5)
-    
