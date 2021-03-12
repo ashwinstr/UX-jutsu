@@ -115,7 +115,7 @@ async def fban_(message: Message):
     try:
         user_ = await message.client.get_users(user)
     except (PeerIdInvalid, IndexError):
-        pass
+        user_ = user
     user = user_.id
     if (
         user in Config.SUDO_USERS
@@ -131,7 +131,7 @@ async def fban_(message: Message):
         try:
             user_ = await message.client.get_users(user)
         except (PeerIdInvalid, IndexError):
-            pass
+            user_ = user
         if (
             user_.id in Config.SUDO_USERS
             or user_.id in Config.OWNER_ID
@@ -221,7 +221,7 @@ async def fban_p(message: Message):
         try:
             user_ = await userge.get_users(user)
         except (PeerIdInvalid, IndexError):
-            pass
+            user_ = user
         if (
             user_.id in Config.SUDO_USERS
             or user_.id in Config.OWNER_ID
@@ -310,6 +310,13 @@ async def fban_m(message: Message):
     fban_prog = fban_arg[0]
     for user in input:
         user_n += 1
+        try:
+            user_ = await userge.get_users(user)
+            user_ = user_.id
+            ban += 1
+        except (PeerIdInvalid, IndexError):
+            user_ = user
+            fail += 1 
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
@@ -317,11 +324,6 @@ async def fban_m(message: Message):
         ):
             cant += 1
             continue
-        try:
-            await userge.get_users(user)
-            ban += 1
-        except (PeerIdInvalid, IndexError):
-            fail += 1
         await mass_fban(user, reason)
         (user_n / len(input) * 100)
         prog_1, prog_2, prog_3 = True, True, True
