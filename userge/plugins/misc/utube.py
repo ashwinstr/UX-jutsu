@@ -20,7 +20,7 @@ import youtube_dl as ytdl
 from userge import Config, Message, pool, userge
 from userge.utils import humanbytes, time_formatter
 
-from .upload import upload
+from .uploads import upload
 
 LOGGER = userge.getLogger(__name__)
 
