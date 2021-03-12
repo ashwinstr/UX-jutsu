@@ -115,7 +115,9 @@ async def fban_(message: Message):
     try:
         user_ = await message.client.get_users(user)
     except (PeerIdInvalid, IndexError):
-        await message.edit(f"User **{user}** not found, please give valid id or username...", del_in=7)
+        await message.edit(
+            f"User **{user}** not found, please give valid id or username...", del_in=7
+        )
         return
     user = user_.id
     if (
@@ -132,7 +134,10 @@ async def fban_(message: Message):
         try:
             user_ = await message.client.get_users(user)
         except (PeerIdInvalid, IndexError):
-            await message.edit(f"User **{user}** not found, please give valid id or username...", del_in=7)
+            await message.edit(
+                f"User **{user}** not found, please give valid id or username...",
+                del_in=7,
+            )
             return
         if (
             user_.id in Config.SUDO_USERS
@@ -223,7 +228,10 @@ async def fban_p(message: Message):
         try:
             user_ = await userge.get_users(user)
         except (PeerIdInvalid, IndexError):
-            await message.edit(f"User **{user}** not found, please give valid id or username...", del_in=7)
+            await message.edit(
+                f"User **{user}** not found, please give valid id or username...",
+                del_in=7,
+            )
             return
         if (
             user_.id in Config.SUDO_USERS
@@ -316,19 +324,19 @@ async def fban_m(message: Message):
         if user.startswith("@"):
             user_ = await message.client.get_users(user)
             user = user_.id
-      #  try:
-      #      user_ = await userge.get_users(user)
-      #      user_ = user_.id
-      #      ban += 1
-      #  except (PeerIdInvalid, IndexError):
-      #      user_ = user
-      #      fail += 1
+        #  try:
+        #      user_ = await userge.get_users(user)
+        #      user_ = user_.id
+        #      ban += 1
+        #  except (PeerIdInvalid, IndexError):
+        #      user_ = user
+        #      fail += 1
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
             or user == (await message.client.get_me()).id
         ):
-      #      cant += 1
+            #      cant += 1
             continue
         await mass_fban(user, reason)
         (user_n / len(input) * 100)
