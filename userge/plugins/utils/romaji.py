@@ -35,18 +35,20 @@ async def romaji_(message: Message):
         await message.edit("`No input found...`")
         return
     flags = message.flags
-    if flag:
+    if flags:
         flag = list(flags)[0]
         flag = flag.replace("-", "")
         if len(flags) > 1:
             await message.edit("`Only one flag please...`")
+            return
         if len(flags) == 1:
             tran = await _translate_this(x, flag, "auto")
             await message.edit("`romanising...`")
             await message.edit(
                 f"**Translation...**\n{tran.text}\n\n**Pronunciation**\n{tran.pronunciation}"
             )
-        return
+            z = translator.detect(tran)
+            y = tran.split("\n")
     else:
         await message.edit("`romanising...`")
         z = translator.detect(x)
