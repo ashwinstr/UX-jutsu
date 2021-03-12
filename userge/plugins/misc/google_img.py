@@ -19,7 +19,7 @@ from pyrogram.types import InputMediaDocument, InputMediaPhoto
 from userge import Config, Message, pool, userge
 from userge.utils import sublists
 
-from .upload import doc_upload, photo_upload
+from .uploads import doc_upload, photo_upload
 
 
 class Colors:
