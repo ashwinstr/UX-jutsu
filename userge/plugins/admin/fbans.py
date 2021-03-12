@@ -219,7 +219,7 @@ async def fban_(message: Message):
 
 # command by @Kakashi_HTK
 @userge.on_cmd(
-    "fbanp",
+    "fban -pr",
     about={
         "header": "Fban user with proof",
         "description": "Fban user from the list of fed with proof",
