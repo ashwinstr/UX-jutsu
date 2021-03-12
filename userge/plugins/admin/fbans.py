@@ -314,6 +314,7 @@ async def fban_m(message: Message):
     if not message.reply_to_message:
         await message.edit("Reply to a list of users...", del_in=5)
         return
+    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     input = message.reply_to_message.text.split()
     reason = message.filtered_input_str or "Not specified"
     user_n = 0
