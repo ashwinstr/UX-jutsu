@@ -36,7 +36,7 @@ from userge.utils import (
     sublists,
 )
 
-from ..misc.upload import upload
+from ..misc.uploads import upload
 
 LOGGER = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
