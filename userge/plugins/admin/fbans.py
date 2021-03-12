@@ -111,11 +111,12 @@ async def fban_(message: Message):
         user = message.reply_to_message.from_user.id
         reason = input
     if user is None:
-        return await message.err("Provide a user ID or reply to a user.", del_in=7)
+        return await message.err("Provide a user ID or reply to a user...", del_in=7)
     try:
         user_ = await message.client.get_users(user)
     except (PeerIdInvalid, IndexError):
-        user_ = user
+        await message.edit(f"User **{user}** not found, please give valid id or username...", del_in=7)
+        return
     user = user_.id
     if (
         user in Config.SUDO_USERS
@@ -131,7 +132,8 @@ async def fban_(message: Message):
         try:
             user_ = await message.client.get_users(user)
         except (PeerIdInvalid, IndexError):
-            user_ = user
+            await message.edit(f"User **{user}** not found, please give valid id or username...", del_in=7)
+            return
         if (
             user_.id in Config.SUDO_USERS
             or user_.id in Config.OWNER_ID
@@ -220,13 +222,13 @@ async def fban_p(message: Message):
         reason = " ".join(reason)
         try:
             user_ = await userge.get_users(user)
-            user_ = user_.id
         except (PeerIdInvalid, IndexError):
-            user_ = user
+            await message.edit(f"User **{user}** not found, please give valid id or username...", del_in=7)
+            return
         if (
-            user_ in Config.SUDO_USERS
-            or user_ in Config.OWNER_ID
-            or user_ == (await message.client.get_me()).id
+            user_.id in Config.SUDO_USERS
+            or user_.id in Config.OWNER_ID
+            or user_.id == (await message.client.get_me()).id
         ):
             return await message.err(
                 "Can't fban user that exists in SUDO or OWNERS...", del_in=7
@@ -311,19 +313,22 @@ async def fban_m(message: Message):
     fban_prog = fban_arg[0]
     for user in input:
         user_n += 1
-        try:
-            user_ = await userge.get_users(user)
-            user_ = user_.id
-            ban += 1
-        except (PeerIdInvalid, IndexError):
-            user_ = user
-            fail += 1
+        if user.startswith("@"):
+            user_ = await message.client.get_users(user)
+            user = user_.id
+      #  try:
+      #      user_ = await userge.get_users(user)
+      #      user_ = user_.id
+      #      ban += 1
+      #  except (PeerIdInvalid, IndexError):
+      #      user_ = user
+      #      fail += 1
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
             or user == (await message.client.get_me()).id
         ):
-            cant += 1
+      #      cant += 1
             continue
         await mass_fban(user, reason)
         (user_n / len(input) * 100)
