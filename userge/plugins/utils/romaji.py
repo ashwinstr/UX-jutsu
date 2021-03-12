@@ -10,7 +10,7 @@ from google_trans_new import google_translator
 from googletrans import LANGUAGES, Translator
 
 from userge import Message, pool, userge
-from userge.plugins.utils.translate import translateme
+from userge.plugins.utils.translate import _translate_this
 
 translator = google_translator()
 
@@ -31,7 +31,7 @@ async def romaji_(message: Message):
     x = message.filtered_input_str
     if message.reply_to_message:
         x = message.reply_to_message.text or message.reply_to_message.caption
-    flag = message.flags
+    flag = message.flags.replace("-", "")
     if not x:
         await message.edit("`No input found...`")
         return
@@ -39,10 +39,9 @@ async def romaji_(message: Message):
         await message.edit("`Only one flag please...`")
         return
     if len(flag) == 1:
-        tran = await translateme(x)
+        tran = await _translate_this(x, flag, "auto")
         await message.edit("`romanising...`")
-        z = translator.detect(tran)
-        y = tran.split("\n")
+        await message.edit(tran.pronunciation)
     if not flag:
         await message.edit("`romanising...`")
         z = translator.detect(x)
