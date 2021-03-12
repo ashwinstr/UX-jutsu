@@ -102,48 +102,6 @@ async def fban_(message: Message):
     flag = message.flags
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     input = message.filtered_input_str
-    if "-m" in flag:
-        if not message.reply_to_message:
-            await message.edit("Reply to a list of users...", del_in=5)
-            return
-        input = message.reply_to_message.text.split()
-        reason = message.filtered_input_str or "Not specified"
-        user_n = 0
-        ban, fail, cant = 0, 0, 0
-        fban_prog = fban_arg[0]
-        for user in input:
-            user_n += 1
-            if (
-                user in Config.SUDO_USERS
-                or user in Config.OWNER_ID
-                or user == (await message.client.get_me()).id
-            ):
-                cant += 1
-                continue
-            valid_u = True
-            try:
-                await userge.get_users(user)
-                ban += 1
-            except (PeerIdInvalid, IndexError):
-                valid_u = False
-                fail += 1
-            if valid_u:
-                await mass_fban(user, reason)
-            (user_n / len(input) * 100)
-            prog_1, prog_2, prog_3 = True, True, True
-            #  if prog >= 33 and prog_1:
-            #      fban_prog
-            await message.edit(
-                f"{fban_prog}\n"
-                f"**Fbanned:** {ban} out of {len(input)}\n"
-                f"**Failed:** {fail}\n"
-                f"**Can't fban:** {cant}"
-            )
-            if user_n == len(input):
-                await CHANNEL.log(
-                    f"#FBAN\n**Fbanned:** {ban} out of {len(input)}\n**Failed:** {fail}\n**Can't fban:** {cant}"
-                )
-                return
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
         user = input.split()[0]
@@ -189,37 +147,10 @@ async def fban_(message: Message):
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
-        if message.reply_to_message:
-            if "-p" in flag:
-                proof = message.reply_to_message.message_id
-                if chat_id != message.chat.id:
-                    fwd = await userge.forward_messages(
-                        chat_id=chat_id, from_chat_id=message.chat.id, message_ids=proof
-                    )
-                    await userge.send_message(
-                        chat_id,
-                        f"/fban {user} {reason}",
-                        reply_to_message_id=fwd.message_id,
-                    )
-                else:
-                    await userge.send_message(
-                        chat_id,
-                        f"/fban {user} {reason}",
-                        reply_to_message_id=message.reply_to_message.message_id,
-                    )
-            else:
-                await userge.send_message(
-                    chat_id,
-                    f"/fban {user} {reason}",
-                )
-        elif not message.reply_to_message and "-p" in flag:
-            await message.edit("Please reply to proof to send it...")
-            return
-        else:
-            await userge.send_message(
-                chat_id,
-                f"/fban {user} {reason}",
-            )
+        await userge.send_message(
+            chat_id,
+            f"/fban {user} {reason}",
+        )
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
@@ -313,11 +244,12 @@ async def fban_p(message: Message):
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
-        fwd = await userge.forward_messages(
-            chat_id=chat_id,
-            from_chat_id=from_,
-            message_ids=proof,
-        )
+        if chat_id != from_:
+            fwd = await userge.forward_messages(
+                chat_id=chat_id,
+                from_chat_id=from_,
+                message_ids=proof,
+            )
         await userge.send_message(
             chat_id,
             f"/fban {user} {reason}",
@@ -371,6 +303,46 @@ async def fban_p(message: Message):
 )
 async def fban_m(message: Message):
     """Mass fban list of users."""
+    if not message.reply_to_message:
+        await message.edit("Reply to a list of users...", del_in=5)
+        return
+    input = message.reply_to_message.text.split()
+    reason = message.filtered_input_str or "Not specified"
+    user_n = 0
+    ban, fail, cant = 0, 0, 0
+    fban_prog = fban_arg[0]
+    for user in input:
+        user_n += 1
+        if (
+            user in Config.SUDO_USERS
+            or user in Config.OWNER_ID
+            or user == (await message.client.get_me()).id
+        ):
+            cant += 1
+            continue
+        valid_u = True
+        try:
+            await userge.get_users(user)
+            ban += 1
+        except (PeerIdInvalid, IndexError):
+            valid_u = False
+            fail += 1
+        if valid_u:
+            await mass_fban(user, reason)
+        (user_n / len(input) * 100)
+        prog_1, prog_2, prog_3 = True, True, True
+     #  if prog >= 33 and prog_1:
+     #  fban_prog
+        await message.edit(
+            f"{fban_prog}\n"
+            f"**Fbanned:** {ban} out of {len(input)}\n"
+            f"**Failed:** {fail}\n"
+            f"**Can't fban:** {cant}"
+        )
+        if user_n == len(input):
+            await CHANNEL.log(
+                f"#FBAN\n**Fbanned:** {ban} out of {len(input)}\n**Failed:** {fail}\n**Can't fban:** {cant}"
+            )
 
 
 @userge.on_cmd(
