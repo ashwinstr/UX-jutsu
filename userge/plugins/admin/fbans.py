@@ -257,7 +257,6 @@ async def fban_(message: Message):
     await CHANNEL.log(msg_)
 
 
-
 @userge.on_cmd(
     "fbanp",
     about={
