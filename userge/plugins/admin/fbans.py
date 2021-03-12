@@ -322,7 +322,7 @@ async def fban_p(message: Message):
         chat_id = int(data["chat_id"])
         fwd = await userge.forward_messages(
             chat_id=chat_id,
-            from_chat_id=from,
+            from_chat_id=from_,
             message_ids=proof,
         )
         await userge.send_message(
