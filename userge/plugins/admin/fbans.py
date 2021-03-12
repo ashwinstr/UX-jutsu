@@ -105,13 +105,14 @@ async def fban_(message: Message):
         input = message.filtered_input_str
     else:
         if not message.reply_to_message:
-            await message.edit("Reply to list of users...", del_in=5)
+            await message.edit("Reply to a list of users...", del_in=5)
             return
         input = message.reply_to_message.text.split()
         reason = message.filtered_input_str or "Not specified"
         user_n = 0
         ban, fail, cant = 0, 0, 0
     if "-m" in flag:
+        fban_prog = fban_arg[0]
         for user in input:
             user_n += 1
             if (
@@ -130,7 +131,12 @@ async def fban_(message: Message):
                 fail += 1
             if valid_u:
                 await mass_fban(user, reason)
+            prog = (user_n / len(input) * 100)
+            prog_1, prog_2, prog_3 = True, True, True
+          #  if prog >= 33 and prog_1:
+          #      fban_prog
             await message.edit(
+                f"{fban_prog}\n"
                 f"**Fbanned:** {ban} out of {len(input)}\n"
                 f"**Failed:** {fail}\n"
                 f"**Can't fban:** {cant}"
@@ -271,6 +277,7 @@ async def fban_(message: Message):
 )
 async def fban_p(message: Message):
     """Fban user from connected feds with proof."""
+    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     if not message.reply_to_message:
         await message.err("Please reply to proof...", del_in=7)
         return
@@ -303,6 +310,60 @@ async def fban_p(message: Message):
             return await message.err(
                 "Can't fban user that exists in SUDO or OWNERS...", del_in=7
             )
+    await message.edit(fban_arg[0])
+    failed = []
+    total = 0
+    reason = reason or "Not specified"
+    await message.edit(fban_arg[1])
+    from = message.chat.id
+    proof = message.reply_to_message.message_id
+    async for data in FED_LIST.find():
+        total += 1
+        chat_id = int(data["chat_id"])
+        fwd = await userge.forward_messages(
+            chat_id=chat_id,
+            from_chat_id=from,
+            message_ids=proof,
+        )
+        await userge.send_message(
+            chat_id,
+            f"/fban {user} {reason}",
+            reply_to_message_id=fwd.message_id,
+        )
+        try:
+            async with userge.conversation(chat_id, timeout=8) as conv:
+                response = await conv.get_response(
+                    mark_read=True,
+                    filters=(filters.user([609517172]) & ~filters.service),
+                )
+                resp = response.text
+                if (
+                    ("New FedBan" not in resp)
+                    and ("Starting a federation ban" not in resp)
+                    and ("Start a federation ban" not in resp)
+                    and ("FedBan reason updated" not in resp)
+                ):
+                    failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+        except BaseException:
+            failed.append(data["fed_name"]) 
+    if total == 0:
+        return await message.err(
+            "You Don't have any feds connected!\nsee .help addf, for more info."
+        )
+    await message.edit(fban_arg[2])
+
+    if len(failed) != 0:
+        status = f"Failed to fban in {len(failed)}/{total} feds.\n"
+        for i in failed:
+            status += "• " + i + "\n"
+    else:
+        status = f"Success! Fbanned in `{total}` feds."
+    msg_ = (
+        fban_arg[3].format(user_.mention)
+        + f"\n**Reason:** {reason}\n**Status:** {status}"
+    )
+    await message.edit(msg_)
+    await CHANNEL.log(msg_)
 
 
 @userge.on_cmd(
@@ -397,3 +458,4 @@ async def mass_fban(user, reason):
             await asyncio.sleep(0.5)
         except FloodWait as e:
             await asyncio.sleep(e.x + 5)
+    
