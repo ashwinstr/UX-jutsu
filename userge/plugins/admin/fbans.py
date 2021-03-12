@@ -320,15 +320,12 @@ async def fban_m(message: Message):
         ):
             cant += 1
             continue
-        valid_u = True
         try:
             await userge.get_users(user)
             ban += 1
         except (PeerIdInvalid, IndexError):
-            valid_u = False
             fail += 1
-        if valid_u:
-            await mass_fban(user, reason)
+        await mass_fban(user, reason)
         (user_n / len(input) * 100)
         prog_1, prog_2, prog_3 = True, True, True
         #  if prog >= 33 and prog_1:
