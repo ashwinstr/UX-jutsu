@@ -437,10 +437,12 @@ async def unfban_(message: Message):
 async def fban_lst_(message: Message):
     """List all connected Feds."""
     out = ""
+    total = 0
     async for data in FED_LIST.find():
+        total += 1
         out += f"• Fed: <b>{data['fed_name']}</b>\n"
     await message.edit_or_send_as_file(
-        "**Connected federations:**\n\n" + out
+        "**Connected federations: [{total}]**\n\n" + out
         if out
         else "**You haven't connected to any federations yet!**",
         caption="Connected Fed List",
