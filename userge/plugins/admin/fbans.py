@@ -341,8 +341,8 @@ async def fban_m(message: Message):
             continue
         await mass_fban(user, reason)
         ban += 1
-        #(user_n / len(input) * 100)
-        #prog_1, prog_2, prog_3 = True, True, True
+        # (user_n / len(input) * 100)
+        # prog_1, prog_2, prog_3 = True, True, True
         #  if prog >= 33 and prog_1:
         #  fban_prog
         await message.edit(
