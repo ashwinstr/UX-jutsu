@@ -101,9 +101,8 @@ async def fban_(message: Message):
     """Bans a user from connected Feds."""
     flag = message.flags
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
-    if "-m" not in flag:
-        input = message.filtered_input_str
-    else:
+    input = message.filtered_input_str
+    if "-m" in flag:
         if not message.reply_to_message:
             await message.edit("Reply to a list of users...", del_in=5)
             return
@@ -111,7 +110,6 @@ async def fban_(message: Message):
         reason = message.filtered_input_str or "Not specified"
         user_n = 0
         ban, fail, cant = 0, 0, 0
-    if "-m" in flag:
         fban_prog = fban_arg[0]
         for user in input:
             user_n += 1
@@ -307,6 +305,7 @@ async def fban_p(message: Message):
             return await message.err(
                 "Can't fban user that exists in SUDO or OWNERS...", del_in=7
             )
+    user_ = userge.get_users(user)
     await message.edit(fban_arg[0])
     failed = []
     total = 0
