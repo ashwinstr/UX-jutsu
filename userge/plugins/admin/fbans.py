@@ -164,6 +164,7 @@ async def fban_(message: Message):
     ):
         if not input:
             await message.edit("Can't fban replied user, give user ID...", del_in=7)
+            return
         user = input.split()[0]
         reason = input.split()[1:]
         reason = " ".join(reason)
@@ -253,6 +254,53 @@ async def fban_(message: Message):
     await message.edit(msg_)
     await CHANNEL.log(msg_)
 
+
+### test command by @Kakashi_HTK
+@userge.on_cmd(
+    "fbanp",
+    about={
+        "header": "Fban with proof",
+        "description": "Fban user from the list of feds with replied message as proof",
+        "usage": {
+            "{tr}fbanp [direct reply to spammer] {reason}",
+            "{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
+        },
+    },
+    allow_bots=False,
+    allow_channels=False,
+)
+async def fban_p(message: Message):
+    """Fban user from connected feds with proof."""
+    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
+    if not message.reply_to_message:
+        await message.err("Please reply to proof...", del_in=7)
+        return
+    user = message.reply_to_message.from_user.id
+    input = message.input_str
+    reason = input
+    if (
+        user in Config.SUDO_USERS
+        or user in Config.OWNER_ID
+        or user == (await message.client.get_me()).id
+    ):
+        if not input:
+            await message.err("Can't fban replied user, give user ID...", del_in=7)
+            return
+        user = input.split()[0]
+        reason = input.split()[1:]
+        reason = " ".join(reason)
+        try:
+            user_ = userge.get_users(user)
+        except (PeerIdInvalid, IndexError):
+            return await message.err("Can't find the user {user}. Give a valid user ID or username...", del_in=7)
+        if (
+            user_.id in Config.SUDO_USERS
+            or user_.id in Config.OWNER_ID
+            or user_.id == (await message.client.get_me()).id
+        ):
+            return await message.err(
+                "Can't fban user that exists in SUDO or OWNERS...", del_in=7
+            )
 
 @userge.on_cmd(
     "unfban",
