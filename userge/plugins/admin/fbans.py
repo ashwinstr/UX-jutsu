@@ -316,7 +316,7 @@ async def fban_m(message: Message):
         return
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     input = message.reply_to_message.text.split()
-    reason = message.filtered_input_str or "Not specified"
+    reason = message.input_str or "Not specified"
     user_n = 0
     ban, fail, cant = 0, 0, 0
     fban_prog = fban_arg[0]
@@ -337,11 +337,12 @@ async def fban_m(message: Message):
             or user in Config.OWNER_ID
             or user == (await message.client.get_me()).id
         ):
-            #      cant += 1
+            cant += 1
             continue
         await mass_fban(user, reason)
-        (user_n / len(input) * 100)
-        prog_1, prog_2, prog_3 = True, True, True
+        ban += 1
+        #(user_n / len(input) * 100)
+        #prog_1, prog_2, prog_3 = True, True, True
         #  if prog >= 33 and prog_1:
         #  fban_prog
         await message.edit(
