@@ -220,12 +220,13 @@ async def fban_p(message: Message):
         reason = " ".join(reason)
         try:
             user_ = await userge.get_users(user)
+            user_ = user_.id
         except (PeerIdInvalid, IndexError):
             user_ = user
         if (
-            user_.id in Config.SUDO_USERS
-            or user_.id in Config.OWNER_ID
-            or user_.id == (await message.client.get_me()).id
+            user_ in Config.SUDO_USERS
+            or user_ in Config.OWNER_ID
+            or user_ == (await message.client.get_me()).id
         ):
             return await message.err(
                 "Can't fban user that exists in SUDO or OWNERS...", del_in=7
