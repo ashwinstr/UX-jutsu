@@ -269,7 +269,6 @@ async def fban_(message: Message):
 )
 async def fban_m(message: Message):
     """Mass fban list of users."""
-    
 
 
 @userge.on_cmd(
