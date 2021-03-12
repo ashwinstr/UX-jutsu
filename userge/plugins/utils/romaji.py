@@ -32,7 +32,7 @@ async def romaji_(message: Message):
     if message.reply_to_message:
         x = message.reply_to_message.text or message.reply_to_message.caption
     flag = message.flags
-    await message.reply(flag)
+    flag = list(flag)[0]
     flag = flag.replace("-", "")
     if not x:
         await message.edit("`No input found...`")
