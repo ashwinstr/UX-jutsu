@@ -267,7 +267,7 @@ async def fban_(message: Message):
     about={
         "header": "Fban user with proof",
         "description": "Fban user from the list of fed with proof",
-        "usage": "{tr}fbanp [reply to spammer] [reason (optional)]\n{tr} [reply to proof forwarded by you] [user id or username] [reason(optional)]",
+        "usage": "{tr}fbanp [reply to spammer] [reason (optional)]\n\n{tr}fbanp [reply to proof forwarded by you] [user id or username] [reason(optional)]",
     },
     allow_bots=False,
     allow_channels=False,
