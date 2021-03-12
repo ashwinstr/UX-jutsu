@@ -265,9 +265,9 @@ async def fban_(message: Message):
 @userge.on_cmd(
     "fbanp",
     about={
-        "header": "Fban with proof",
-        "description": "Fban user from the list of feds with replied message as proof",
-        "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
+        "header": "Fban user with proof",
+        "description": "Fban user from the list of fed with proof",
+        "usage": "{tr}fbanp [reply to spammer] [reason (optional)]\n{tr} [reply to proof forwarded by you] [user id or username] [reason(optional)]",
     },
     allow_bots=False,
     allow_channels=False,
