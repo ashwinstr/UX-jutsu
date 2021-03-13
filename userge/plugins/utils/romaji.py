@@ -44,9 +44,6 @@ async def romaji_(message: Message):
         if len(flags) == 1:
             tran = await _translate_this(x, flag, "auto")
             await message.edit("`romanising...`")
-            await message.edit(
-                f"**Translation...**\n{tran.text}\n\n**Pronunciation**\n{tran.pronunciation}"
-            )
             z = translator.detect(tran)
             y = tran.split("\n")
     else:
