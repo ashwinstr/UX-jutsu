@@ -232,7 +232,7 @@ async def fban_p(message: Message):
             await message.edit(
                 f"Failed to detect user **{user}**, sending fban anyways, might get error...",
             )
-            
+
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
