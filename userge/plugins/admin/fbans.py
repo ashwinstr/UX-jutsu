@@ -101,7 +101,7 @@ async def fban_(message: Message):
     """Bans a user from connected Feds."""
     message.flags
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
-    d_err = f"Failed to detect user **{}**, fban might not work...", 
+    d_err = "Failed to detect user **{}**, fban might not work...", 
     input = message.filtered_input_str
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
@@ -211,7 +211,7 @@ async def fban_(message: Message):
 async def fban_p(message: Message):
     """Fban user from connected feds with proof."""
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
-    d_err = f"Failed to detect user **{}**, fban might not work...",
+    d_err = "Failed to detect user **{}**, fban might not work...",
     if not message.reply_to_message:
         await message.err("Please reply to proof...", del_in=7)
         return
