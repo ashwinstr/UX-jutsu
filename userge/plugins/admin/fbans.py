@@ -101,7 +101,7 @@ async def fban_(message: Message):
     """Bans a user from connected Feds."""
     message.flags
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
-    d_err = "Failed to detect user **{}**, fban might not work...", 
+    d_err = ("Failed to detect user **{}**, fban might not work...",)
     input = message.filtered_input_str
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
@@ -133,9 +133,7 @@ async def fban_(message: Message):
             user_ = await message.client.get_users(user)
             user = user_.id
         except (PeerIdInvalid, IndexError):
-            await message.edit(
-                d_err.format(user)
-            )
+            await message.edit(d_err.format(user))
             await CHANNEL.log(d_err.format(user))
         if (
             user in Config.SUDO_USERS
@@ -148,7 +146,7 @@ async def fban_(message: Message):
     try:
         user_ = await userge.get_users(user)
         u_link = user_.mention
-    except:
+    except BaseException:
         u_link = user
     failed = []
     total = 0
@@ -190,10 +188,7 @@ async def fban_(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Fbanned in `{total}` feds."
-    msg_ = (
-        fban_arg[3].format(u_link)
-        + f"\n**Reason:** {reason}\n**Status:** {status}"
-    )
+    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
     await message.edit(msg_)
     await CHANNEL.log(msg_)
 
@@ -211,7 +206,7 @@ async def fban_(message: Message):
 async def fban_p(message: Message):
     """Fban user from connected feds with proof."""
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
-    d_err = "Failed to detect user **{}**, fban might not work...",
+    d_err = ("Failed to detect user **{}**, fban might not work...",)
     if not message.reply_to_message:
         await message.err("Please reply to proof...", del_in=7)
         return
@@ -233,9 +228,7 @@ async def fban_p(message: Message):
             user_ = await userge.get_users(user)
             user = user_.id
         except (PeerIdInvalid, IndexError):
-            await message.edit(
-                f_err.format(user)
-            )
+            await message.edit(f_err.format(user))
             await CHANNEL.log(d_err.format(user))
         if (
             user in Config.SUDO_USERS
@@ -248,7 +241,7 @@ async def fban_p(message: Message):
     try:
         user_ = await userge.get_users(user)
         u_link = user_.mention
-    except:
+    except BaseException:
         u_link = user
     await message.edit(fban_arg[0])
     failed = []
@@ -306,10 +299,7 @@ async def fban_p(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Fbanned in {total} feds."
-    msg_ = (
-        fban_arg[3].format(u_link)
-        + f"\n**Reason:** {reason}\n**Status:** {status}"
-    )
+    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
     await message.edit(msg_)
     await CHANNEL.log(msg_)
 
@@ -341,7 +331,7 @@ async def fban_m(message: Message):
             try:
                 user_ = await message.client.get_users(user)
                 user = user_.id
-            except:
+            except BaseException:
                 pass
         if (
             user in Config.SUDO_USERS
@@ -352,7 +342,7 @@ async def fban_m(message: Message):
             continue
         await mass_fban(user, reason)
         ban += 1
-        prog = (user_n / len(input) * 100)
+        prog = user_n / len(input) * 100
         prog_1, prog_2 = True, True
         if prog >= 33 and prog_1:
             fban_prog = fban_arg[1]
