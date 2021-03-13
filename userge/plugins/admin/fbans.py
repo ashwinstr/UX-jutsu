@@ -101,6 +101,7 @@ async def fban_(message: Message):
     """Bans a user from connected Feds."""
     message.flags
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
+    d_err = f"Failed to detect user **{}**, fban might not work...", 
     input = message.filtered_input_str
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
@@ -114,12 +115,9 @@ async def fban_(message: Message):
         return await message.err("Provide a user ID or reply to a user...", del_in=7)
     try:
         user_ = await message.client.get_users(user)
+        user = user_.id
     except (PeerIdInvalid, IndexError):
-        await message.edit(
-            f"User **{user}** not found, please give valid id or username...", del_in=7
-        )
-        return
-    user = user_.id
+        pass
     if (
         user in Config.SUDO_USERS
         or user in Config.OWNER_ID
@@ -133,20 +131,25 @@ async def fban_(message: Message):
         reason = " ".join(reason)
         try:
             user_ = await message.client.get_users(user)
+            user = user_.id
         except (PeerIdInvalid, IndexError):
             await message.edit(
-                f"User **{user}** not found, please give valid id or username...",
-                del_in=7,
+                d_err.format(user)
             )
-            return
+            await CHANNEL.log(d_err.format(user))
         if (
-            user_.id in Config.SUDO_USERS
-            or user_.id in Config.OWNER_ID
-            or user_.id == (await message.client.get_me()).id
+            user in Config.SUDO_USERS
+            or user in Config.OWNER_ID
+            or user == (await message.client.get_me()).id
         ):
             return await message.err(
                 "Can't fban user that exists in SUDO or OWNERS...", del_in=7
             )
+    try:
+        user_ = await userge.get_users(user)
+        u_link = user_.mention
+    except:
+        u_link = user
     failed = []
     total = 0
     reason = reason or "Not specified."
@@ -188,7 +191,7 @@ async def fban_(message: Message):
     else:
         status = f"Success! Fbanned in `{total}` feds."
     msg_ = (
-        fban_arg[3].format(user_.mention)
+        fban_arg[3].format(u_link)
         + f"\n**Reason:** {reason}\n**Status:** {status}"
     )
     await message.edit(msg_)
@@ -208,6 +211,7 @@ async def fban_(message: Message):
 async def fban_p(message: Message):
     """Fban user from connected feds with proof."""
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
+    d_err = f"Failed to detect user **{}**, fban might not work...",
     if not message.reply_to_message:
         await message.err("Please reply to proof...", del_in=7)
         return
@@ -230,9 +234,9 @@ async def fban_p(message: Message):
             user = user_.id
         except (PeerIdInvalid, IndexError):
             await message.edit(
-                f"Failed to detect user **{user}**, sending fban anyways, might get error...",
+                f_err.format(user)
             )
-
+            await CHANNEL.log(d_err.format(user))
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
@@ -241,7 +245,11 @@ async def fban_p(message: Message):
             return await message.err(
                 "Can't fban user that exists in SUDO or OWNERS...", del_in=7
             )
-    user_ = await userge.get_users(user)
+    try:
+        user_ = await userge.get_users(user)
+        u_link = user_.mention
+    except:
+        u_link = user
     await message.edit(fban_arg[0])
     failed = []
     total = 0
@@ -299,7 +307,7 @@ async def fban_p(message: Message):
     else:
         status = f"Success! Fbanned in {total} feds."
     msg_ = (
-        fban_arg[3].format(user_.mention)
+        fban_arg[3].format(u_link)
         + f"\n**Reason:** {reason}\n**Status:** {status}"
     )
     await message.edit(msg_)
@@ -321,17 +329,20 @@ async def fban_m(message: Message):
     if not message.reply_to_message:
         await message.edit("Reply to a list of users...", del_in=5)
         return
-    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
+    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBan complete</b>"]
     input = message.reply_to_message.text.split()
     reason = message.input_str or "Not specified"
     user_n = 0
-    ban, fail, cant = 0, 0, 0
+    ban, cant = 0, 0
     fban_prog = fban_arg[0]
     for user in input:
         user_n += 1
         if user.startswith("@"):
-            user_ = await message.client.get_users(user)
-            user = user_.id
+            try:
+                user_ = await message.client.get_users(user)
+                user = user_.id
+            except:
+                pass
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
@@ -341,14 +352,19 @@ async def fban_m(message: Message):
             continue
         await mass_fban(user, reason)
         ban += 1
-        # (user_n / len(input) * 100)
-        # prog_1, prog_2, prog_3 = True, True, True
-        #  if prog >= 33 and prog_1:
-        #  fban_prog
+        prog = (user_n / len(input) * 100)
+        prog_1, prog_2 = True, True
+        if prog >= 33 and prog_1:
+            fban_prog = fban_arg[1]
+            prog_1 = False
+        if prog >= 66 and prog_2:
+            fban_prog = fban_arg[2]
+            prog_2 = False
+        if prog == 100:
+            fban_prog = fban_arg[3]
         await message.edit(
             f"{fban_prog}\n"
             f"**Fbanned:** {ban} out of {len(input)}\n"
-            f"**Failed:** {fail}\n"
             f"**Can't fban:** {cant}"
         )
         if user_n == len(input):
