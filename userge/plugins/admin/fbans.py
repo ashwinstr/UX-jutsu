@@ -227,16 +227,16 @@ async def fban_p(message: Message):
         reason = " ".join(reason)
         try:
             user_ = await userge.get_users(user)
+            user = user_.id
         except (PeerIdInvalid, IndexError):
             await message.edit(
-                f"User **{user}** not found, please give valid id or username...",
-                del_in=7,
+                f"Failed to detect user **{user}**, sending fban anyways, might get error...",
             )
-            return
+            
         if (
-            user_.id in Config.SUDO_USERS
-            or user_.id in Config.OWNER_ID
-            or user_.id == (await message.client.get_me()).id
+            user in Config.SUDO_USERS
+            or user in Config.OWNER_ID
+            or user == (await message.client.get_me()).id
         ):
             return await message.err(
                 "Can't fban user that exists in SUDO or OWNERS...", del_in=7
@@ -248,6 +248,7 @@ async def fban_p(message: Message):
     reason = reason or "Not specified"
     await message.edit(fban_arg[1])
     from_ = message.chat.id
+    admin = message.from_user.id
     proof = message.reply_to_message.message_id
     async for data in FED_LIST.find():
         total += 1
@@ -258,11 +259,17 @@ async def fban_p(message: Message):
                 from_chat_id=from_,
                 message_ids=proof,
             )
-        await userge.send_message(
-            chat_id,
-            f"/fban {user} {reason}",
-            reply_to_message_id=fwd.message_id,
-        )
+        if admin != "956525773":
+            await userge.send_message(
+                chat_id,
+                f"/fban {user} {reason}",
+                reply_to_message_id=fwd.message_id,
+            )
+        else:
+            await userge.send_message(
+                chat_id,
+                f"/fban {user} {reason}",
+            )
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
@@ -325,13 +332,6 @@ async def fban_m(message: Message):
         if user.startswith("@"):
             user_ = await message.client.get_users(user)
             user = user_.id
-        #  try:
-        #      user_ = await userge.get_users(user)
-        #      user_ = user_.id
-        #      ban += 1
-        #  except (PeerIdInvalid, IndexError):
-        #      user_ = user
-        #      fail += 1
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
