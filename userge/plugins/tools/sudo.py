@@ -162,7 +162,7 @@ async def add_sudo_cmd(message: Message):
         trig = Config.CMD_TRIGGER
         no_go = []
         for cmd in no_go_cmd:
-            no_go_trig.append(trig + cmd)
+            no_go.append(trig + cmd)
         for c_d in list(userge.manager.enabled_commands):
             if c_d not in no_go:
                 t_c = c_d.lstrip(Config.CMD_TRIGGER)
