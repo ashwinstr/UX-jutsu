@@ -88,11 +88,7 @@ async def delfed_(message: Message):
     about={
         "header": "Fban user",
         "description": "Fban the user from the list of fed",
-        "flags": {
-            "-p": "sends replied message as proof",
-            "-m": "mass bans replied list of users",
-        },
-        "usage": "{tr}fban -p[optional] [username|reply to user|user_id] [reason (optional)]",
+        "usage": "{tr}fban [username|reply to user|user_id] [reason (optional)]",
     },
     allow_bots=False,
     allow_channels=False,
