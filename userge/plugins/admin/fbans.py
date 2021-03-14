@@ -256,7 +256,7 @@ async def fban_p(message: Message):
                 from_chat_id=from_,
                 message_ids=proof,
             )
-        if admin != "956525773":
+        if admin != 956525773:
             await userge.send_message(
                 chat_id,
                 f"/fban {user} {reason}",
