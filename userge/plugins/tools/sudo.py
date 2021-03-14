@@ -171,7 +171,7 @@ async def add_sudo_cmd(message: Message):
         await asyncio.gather(
             SUDO_CMDS_COLLECTION.insert_many(tmp_),
             message.edit(
-                f"**Added** all (`{len(tmp_)}`) safe commands to **SUDO** cmds!",
+                f"**Added** all (`{len(tmp_)}`) safe commands to **SUDO**!",
                 del_in=5,
                 log=__name__,
             ),
