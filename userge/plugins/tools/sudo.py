@@ -135,10 +135,12 @@ async def view_sudo(message: Message):
     if not Config.SUDO_USERS:
         await message.edit("**SUDO** users not found!", del_in=5)
         return
-    out_str = "🚷 **SUDO USERS** 🚷\n\n"
+    out_str = "🚷 **SUDO USERS**: **[{}]**🚷\n\n"
+    total = 0
     async for user in SUDO_USERS_COLLECTION.find():
+        total += 1
         out_str += f" 🙋‍♂️ {user['men']} 🆔 `{user['_id']}`\n"
-    await message.edit(out_str, del_in=0)
+    await message.edit(out_str.format(total), del_in=0)
 
 
 @userge.on_cmd(
@@ -156,14 +158,28 @@ async def add_sudo_cmd(message: Message):
         await SUDO_CMDS_COLLECTION.drop()
         Config.ALLOWED_COMMANDS.clear()
         tmp_ = []
+        no_go_cmd = [
+            "addscmd",
+            "delscmd",
+            "addsudo",
+            "delsudo",
+            "eval",
+            "term",
+            "exec"
+        ]
+        trig = Config.CMD_TRIGGER
+        no_go = []
+        for cmd in no_go_cmd:
+            no_go_trig.append(trig + cmd)
         for c_d in list(userge.manager.enabled_commands):
-            t_c = c_d.lstrip(Config.CMD_TRIGGER)
-            tmp_.append({"_id": t_c})
-            Config.ALLOWED_COMMANDS.add(t_c)
+            if c_d not in no_go:
+                t_c = c_d.lstrip(Config.CMD_TRIGGER)
+                tmp_.append({"_id": t_c})
+                Config.ALLOWED_COMMANDS.add(t_c)
         await asyncio.gather(
             SUDO_CMDS_COLLECTION.insert_many(tmp_),
             message.edit(
-                f"**Added** all (`{len(tmp_)}`) commands to **SUDO** cmds!",
+                f"**Added** all (`{len(tmp_)}`) safe commands to **SUDO** cmds!",
                 del_in=5,
                 log=__name__,
             ),
@@ -228,7 +244,9 @@ async def view_sudo_cmd(message: Message):
     if not Config.ALLOWED_COMMANDS:
         await message.edit("**SUDO** cmds not found!", del_in=5)
         return
-    out_str = f"⛔ **SUDO CMDS** ⛔\n\n**trigger** : `{Config.SUDO_TRIGGER}`\n\n"
+    total = 0
+    out_str = f"⛔ **SUDO CMDS**: **[{}]** ⛔\n\n**trigger** : `{Config.SUDO_TRIGGER}`\n\n"
     async for cmd in SUDO_CMDS_COLLECTION.find().sort("_id"):
+        total += 1
         out_str += f"`{cmd['_id']}`  "
-    await message.edit_or_send_as_file(out_str, del_in=0)
+    await message.edit_or_send_as_file(out_str.format(total), del_in=0)
