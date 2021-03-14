@@ -154,7 +154,7 @@ _setupPlugins() {
     editLastMessage "Checking $1 Plugins ..."
     if test $(grep -P '^'$2'$' <<< $3); then
         editLastMessage "\tLoading $1 Plugins ..."
-        replyLastMessage "\t\tClonning ..."
+        replyLastMessage "\t\tCloning ..."
         link=$(test $4 && echo $4 || echo $3)
         tmp=Temp-Plugins
         gitClone --depth=1 $link $tmp
