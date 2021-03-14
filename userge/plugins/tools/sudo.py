@@ -158,15 +158,7 @@ async def add_sudo_cmd(message: Message):
         await SUDO_CMDS_COLLECTION.drop()
         Config.ALLOWED_COMMANDS.clear()
         tmp_ = []
-        no_go_cmd = [
-            "addscmd",
-            "delscmd",
-            "addsudo",
-            "delsudo",
-            "eval",
-            "term",
-            "exec"
-        ]
+        no_go_cmd = ["addscmd", "delscmd", "addsudo", "delsudo", "eval", "term", "exec"]
         trig = Config.CMD_TRIGGER
         no_go = []
         for cmd in no_go_cmd:
