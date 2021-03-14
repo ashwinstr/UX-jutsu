@@ -22,7 +22,7 @@ async def search(message: Message):
     found = [i for i in sorted(list(userge.manager.enabled_commands)) if cmd in i]
     out_str = "`\n`".join(found)
     if found:
-        out = f"**--I found ({len(found)}) commands for-- : `{cmd}`**\n\n`{out_str}`"
+        out = f"**--I found [{len(found)}] commands for-- : `{cmd}`**\n\n`{out_str}`"
     else:
         out = f"__command not found for__ : `{cmd}`"
     await message.edit(text=out, del_in=0)
