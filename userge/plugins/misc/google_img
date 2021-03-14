@@ -107,6 +107,8 @@ async def gimg_down(message: Message):
         return
     if upload_:
         await message.edit(f"⬆️  Uploading {limit} {media_type} ...")
+        if "gif" in flags_:
+            for 
         try:
             await upload_image_grp(results, message, doc_)
         except Exception as err:
