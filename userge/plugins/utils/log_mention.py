@@ -24,7 +24,7 @@ async def grp_log(_, message: Message):
         if replied == me.id:
             try:
                 await userge.send_message(
-                    Config.PM_LOG_GROUP_ID, log, parse_mode="html"
+                    Config.PM_LOG_GROUP_ID, log, parse_mode="html", disable_web_page_preview=True
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
@@ -33,7 +33,7 @@ async def grp_log(_, message: Message):
                 await asyncio.sleep(e.x + 3)
     if ("@" + me.username) in message.text:
         try:
-            await userge.send_message(Config.PM_LOG_GROUP_ID, log, parse_mode="html")
+            await userge.send_message(Config.PM_LOG_GROUP_ID, log, parse_mode="html", disable_web_page_preview=True)
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
             )
@@ -48,28 +48,32 @@ async def pm_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return
     u_id = message.from_user.id
-    log = f"""
+    log1 = f"""
 👤 {message.from_user.first_name} sent a new message.
 <b>ID : </b><code>{u_id}</code>
+"""
+    log2 = f"""
+<b>#Conversation</b> with:
+[{chat.first_name}](tg://user?id={chat.id})
 """
     if chat.id != 777000:
         global RECENT_USER
         global COUNT
         if RECENT_USER != u_id or COUNT > 4:
             RECENT_USER = u_id
-            await userge.send_message(
-                Config.PM_LOG_GROUP_ID,
-                log,
-                parse_mode="html",
-            )
-            COUNT = 0
-            COUNT = COUNT + 1
             try:
+                await userge.send_message(
+                    Config.PM_LOG_GROUP_ID,
+                    log1,
+                    parse_mode="html",
+                    disable_web_page_preview=True
+                )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
+            COUNT = 0
         else:
             try:
                 await userge.forward_messages(
@@ -77,10 +81,8 @@ async def pm_log(_, message: Message):
                 )
                 await userge.send_message(
                     Config.PM_LOG_GROUP_ID,
-                    f"""
-<b>#Conversation</b> with:
-[{chat.first_name}](tg://user?id={chat.id})
-""",
+                    log2
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
+        COUNT += 1
