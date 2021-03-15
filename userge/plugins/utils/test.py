@@ -13,5 +13,6 @@ async def test(_, message: Message):
     if reply:
         if replied == me.id:
             await message.reply("Reply is working...")
+    await message.reply(f"outside mention, @{me.username} {message.text}")
     if ("@" + me.username) in message.text:
         await message.reply("Mention is working...")
