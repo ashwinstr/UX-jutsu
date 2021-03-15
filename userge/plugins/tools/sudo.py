@@ -118,7 +118,7 @@ async def del_sudo(message: Message):
         await message.err("invalid type!")
         return
     if user_id not in Config.SUDO_USERS:
-        await message.edit(f"user : `{user_id}` not in **SUDO**!", del_in=5)
+        await message.edit(f"user : `{user_id}` not in **SUDO** !", del_in=5)
     else:
         Config.SUDO_USERS.remove(user_id)
         await asyncio.gather(
@@ -147,14 +147,17 @@ async def view_sudo(message: Message):
     "addscmd",
     about={
         "header": "add sudo command",
-        "flags": {"-all": "add all commands to sudo"},
-        "usage": "{tr}addscmd [command name]\n{tr}addscmd -all",
+        "flags": {
+            "-all": "add all commands to sudo ",
+            "-full": "full sudo access [i.e '-all' + term, eval, exec ...] (Dangerous !)",
+        },
+        "usage": "{tr}addscmd [command name]\n{tr}addscmd -all\n{tr}addscmd -full",
     },
     allow_channels=False,
 )
 async def add_sudo_cmd(message: Message):
     """ add sudo cmd """
-    if "-all" in message.flags:
+    if "-all" in message.flags or "-full" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()
         Config.ALLOWED_COMMANDS.clear()
         tmp_ = []
@@ -164,14 +167,43 @@ async def add_sudo_cmd(message: Message):
         for cmd in no_go_cmd:
             no_go.append(trig + cmd)
         for c_d in list(userge.manager.enabled_commands):
+<<<<<<< HEAD
             if c_d not in no_go:
                 t_c = c_d.lstrip(Config.CMD_TRIGGER)
+=======
+            t_c = c_d.lstrip(Config.CMD_TRIGGER)
+            if "-all" in message.flags:
+                mode_ = "all"
+                if not (
+                    t_c
+                    in [
+                        "exec",
+                        "term",
+                        "eval",
+                        "addscmd",
+                        "delscmd",
+                        "load",
+                        "unload",
+                        "addsudo",
+                        "delsudo",
+                        "sudo",
+                    ]
+                ):
+                    tmp_.append({"_id": t_c})
+                    Config.ALLOWED_COMMANDS.add(t_c)
+            else:
+                mode_ = "full"
+>>>>>>> 25b3158fc2fbdda9878f59c9d7c1179f8ba0457d
                 tmp_.append({"_id": t_c})
                 Config.ALLOWED_COMMANDS.add(t_c)
         await asyncio.gather(
             SUDO_CMDS_COLLECTION.insert_many(tmp_),
             message.edit(
+<<<<<<< HEAD
                 f"**Added** all (`{len(tmp_)}`) safe commands to **SUDO**!",
+=======
+                f"**Added** {mode_} (`{len(tmp_)}`) commands to **SUDO** cmds!",
+>>>>>>> 25b3158fc2fbdda9878f59c9d7c1179f8ba0457d
                 del_in=5,
                 log=__name__,
             ),
