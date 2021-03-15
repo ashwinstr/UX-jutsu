@@ -25,7 +25,9 @@ async def test(_, message: Message):
                     ),
                     parse_mode="html",
                 )
-                await userge.forward_messages(Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id)
+                await userge.forward_messages(
+                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
+                )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
     if ("@" + me.username) in message.text:
@@ -39,6 +41,8 @@ async def test(_, message: Message):
                 ),
                 parse_mode="html",
             )
-            await userge.forward_messages(Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id)
+            await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
+            )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
