@@ -414,16 +414,11 @@ async def bot_users_(message: Message):
     msg = ""
     total = 0
     async for c in BOT_START.find():
-<<<<<<< HEAD
         total += 1
-        msg += f"• <i>ID:</i> <code>{c['user_id']}</code>\n   <b>Name:</b> {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
-
-=======
         msg += (
             f"• <i>ID:</i> <code>{c['user_id']}</code>\n   "
             f"<b>Name:</b> {c['firstname']},  <b>Date:</b> `{c['date']}`\n"
         )
->>>>>>> 25b3158fc2fbdda9878f59c9d7c1179f8ba0457d
     await message.edit_or_send_as_file(
         f"<u><i><b>Bot PM Userlist</b></i></u>: **[{total}]**\n\n{msg}"
         if msg
