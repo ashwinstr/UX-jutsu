@@ -49,7 +49,7 @@ async def grp_log(_, message: Message):
             await asyncio.sleep(e.x + 3)
 
 
-@userge.on_message(~filters.group, ~filters.bot)
+@userge.on_message(filters.private, ~filters.group, ~filters.bot)
 async def pm_log(_, message: Message):
     chat = message.chat.id
     id = message.message_id
@@ -85,9 +85,9 @@ async def pm_log(_, message: Message):
         else:
             try:
                 await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
+                    Config.PM_LOG_GROUP_ID, chat, id, parse_mode="html, disable_notification=True
                 )
-                await userge.send_message(Config.PM_LOG_GROUP_ID, log2)
+                await userge.send_message(Config.PM_LOG_GROUP_ID, log2, disable_web_page_preview=True)
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
         COUNT += 1
