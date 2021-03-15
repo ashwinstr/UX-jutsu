@@ -21,6 +21,7 @@ async def test(_, message: Message):
                     f"#TAGS<br><b>Sent by :</b> {message.from_user.mention}<br>"
                     f"<b>Group :</b> <code>{message.chat.title}</code><br>"
                     f"<b>Message :</b> <a href={message.link}>link</a>",
+                    parse_mode="html",
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
