@@ -23,10 +23,7 @@ async def grp_log(_, message: Message):
         if replied == me.id:
             try:
                 await userge.send_message(
-                    Config.PM_LOG_GROUP_ID,
-                    log,
-                    parse_mode="html",
-                    link_preview=False
+                    Config.PM_LOG_GROUP_ID, log, parse_mode="html", link_preview=False
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
@@ -36,11 +33,7 @@ async def grp_log(_, message: Message):
     if ("@" + me.username) in message.text:
         try:
             await userge.send_message(
-                Config.PM_LOG_GROUP_ID,
-                log,
-                parse_mode="html",
-                link_preview=False
-                
+                Config.PM_LOG_GROUP_ID, log, parse_mode="html", link_preview=False
             )
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
