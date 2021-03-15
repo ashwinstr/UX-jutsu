@@ -2,6 +2,7 @@
 
 from pyrogram import filters
 from pyrogram.errors import FloodWait
+
 from userge import Config, Message, userge
 
 
@@ -32,9 +33,7 @@ async def grp_log(_, message: Message):
                 await asyncio.sleep(e.x + 3)
     if ("@" + me.username) in message.text:
         try:
-            await userge.send_message(
-                Config.PM_LOG_GROUP_ID, log, parse_mode="html"
-            )
+            await userge.send_message(Config.PM_LOG_GROUP_ID, log, parse_mode="html")
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
             )
@@ -73,7 +72,9 @@ async def pm_log(_, message: Message):
                 await asyncio.sleep(e.x + 3)
         else:
             try:
-                await userge.forward_messages(Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True)
+                await userge.forward_messages(
+                    Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
+                )
                 await userge.send_message(
                     Config.PM_LOG_GROUP_ID,
                     f"""
