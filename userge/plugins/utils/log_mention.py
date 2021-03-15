@@ -23,7 +23,6 @@ async def test(_, message: Message):
                         f"<b>Group :</b> <code>{message.chat.title}</code>\n"
                         f"<b>Message :</b> <a href={message.link}>link</a>",
                     ),
-                    parse_mode="html",
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
