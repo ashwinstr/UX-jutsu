@@ -125,7 +125,7 @@ _checkGit() {
     editLastMessage "Checking GIT ..."
     if test ! -d .git; then
         if test ! -z $HEROKU_GIT_URL; then
-            replyLastMessage "\tClonning Heroku Git ..."
+            replyLastMessage "\tCloning Heroku Git ..."
             gitClone $HEROKU_GIT_URL tmp_git || quit "Invalid HEROKU_API_KEY or HEROKU_APP_NAME var !"
             mv tmp_git/.git .
             rm -rf tmp_git
