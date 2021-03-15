@@ -76,14 +76,15 @@ async def pm_log(_, message: Message):
                 await asyncio.sleep(e.x)
         else:
             try:
-                        await message.forward(
-                            Config.PM_LOG_GROUP_ID, disable_notification=True
-                        )
-                    except FloodWait as e:
-                        await asyncio.sleep(e.x)
-                    await userge.send_message(
-                        Config.PM_LOG_GROUP_ID,
-                        "#Conversation\n"
-                        + "With "
-                        + f"[{chat.first_name}](tg://user?id={chat.id})",
-                    )
+                await message.forward(
+                    Config.PM_LOG_GROUP_ID, disable_notification=True
+                )
+                await userge.send_message(
+                    Config.PM_LOG_GROUP_ID,
+                    f"""
+<b>#Conversation</b> with:
+[{chat.first_name}](tg://user?id={chat.id})
+""", 
+                ) 
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
