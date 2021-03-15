@@ -9,8 +9,8 @@ from userge import Message, userge
 async def test(_, message: Message):
     me = await userge.get_me()
     reply = message.reply_to_message
-    replied = reply.from_user.id
     if reply:
+        replied = reply.from_user.id
         if replied == me.id:
             await message.reply("Reply is working...")
     await message.reply(f"outside mention, @{me.username} {message.text}")
