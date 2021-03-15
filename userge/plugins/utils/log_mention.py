@@ -2,7 +2,7 @@
 
 from pyrogram import filters
 
-from userge import Message, userge
+from userge import Message, userge, Config
 
 
 @userge.on_message(filters.group & ~filters.bot & ~filters.me)
