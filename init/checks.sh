@@ -120,27 +120,6 @@ _checkPaths() {
     done
 }
 
-<<<<<<< HEAD
-_checkGit() {
-    editLastMessage "Checking GIT ..."
-    if test ! -d .git; then
-        if test ! -z $HEROKU_GIT_URL; then
-            replyLastMessage "\tCloning Heroku Git ..."
-            gitClone $HEROKU_GIT_URL tmp_git || quit "Invalid HEROKU_API_KEY or HEROKU_APP_NAME var !"
-            mv tmp_git/.git .
-            rm -rf tmp_git
-            editLastMessage "\tChecking Heroku Remote ..."
-            remoteIsExist heroku || addHeroku
-        else
-            replyLastMessage "\tInitializing Empty Git ..."
-            gitInit
-        fi
-        deleteLastMessage
-    fi
-}
-
-=======
->>>>>>> 25b3158fc2fbdda9878f59c9d7c1179f8ba0457d
 _checkUpstreamRepo() {
     remoteIsExist $UPSTREAM_REMOTE || addUpstream
     editLastMessage "Fetching Data From UPSTREAM_REPO ..."
@@ -152,12 +131,7 @@ _checkUpstreamRepo() {
 _setupPlugins() {
     local link path tmp
     if test $(grep -P '^'$2'$' <<< $3); then
-<<<<<<< HEAD
-        editLastMessage "\tLoading $1 Plugins ..."
-        replyLastMessage "\t\tCloning ..."
-=======
         editLastMessage "Cloning $1 Plugins ..."
->>>>>>> 25b3158fc2fbdda9878f59c9d7c1179f8ba0457d
         link=$(test $4 && echo $4 || echo $3)
         tmp=Temp-Plugins
         gitClone --depth=1 $link $tmp
