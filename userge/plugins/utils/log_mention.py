@@ -26,6 +26,7 @@ async def grp_log(_, message: Message):
                     Config.PM_LOG_GROUP_ID,
                     log,
                     parse_mode="html",
+                    link_preview=False
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
@@ -38,6 +39,8 @@ async def grp_log(_, message: Message):
                 Config.PM_LOG_GROUP_ID,
                 log,
                 parse_mode="html",
+                link_preview=False
+                
             )
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
@@ -73,7 +76,7 @@ async def pm_log(_, message: Message):
                     Config.PM_LOG_GROUP_ID, disable_notification=True
                 )
             except FloodWait as e:
-                await asyncio.sleep(e.x)
+                await asyncio.sleep(e.x + 3)
         else:
             try:
                 await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
@@ -85,4 +88,4 @@ async def pm_log(_, message: Message):
 """,
                 )
             except FloodWait as e:
-                await asyncio.sleep(e.x)
+                await asyncio.sleep(e.x + 3)
