@@ -63,21 +63,19 @@ async def pm_log(_, message: Message):
             RECENT_USER = u_id
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
-                            f"👤 {message.from_user.first_name} sent a new message.\
-                                \n<b>ID : </b><code>{u_id}</code>",
-                            parse_mode="html",
-                            link_preview=True,
-                        )
-                        COUNT = 0
-                    COUNT = COUNT + 1
-                    try:
-                        await message.forward(
-                            Config.PM_LOG_GROUP_ID, disable_notification=True
-                        )
-                    except FloodWait as e:
-                        await asyncio.sleep(e.x)
-                else:
-                    try:
+                log,
+                parse_mode="html",
+            )
+            COUNT = 0
+            COUNT = COUNT + 1
+            try:
+                await userge.forward_messages(
+                    Config.PM_LOG_GROUP_ID, disable_notification=True
+                )
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+        else:
+            try:
                         await message.forward(
                             Config.PM_LOG_GROUP_ID, disable_notification=True
                         )
