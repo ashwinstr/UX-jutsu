@@ -18,11 +18,9 @@ async def test(_, message: Message):
             try:
                 await userge.send_message(
                     Config.PM_LOG_GROUP_ID,
-                    (
-                        f"#TAGS\n<b>Sent by :</b> {message.from_user.mention}\n"
-                        f"<b>Group :</b> <code>{message.chat.title}</code>\n"
-                        f"<b>Message :</b> <a href={message.link}>link</a>",
-                    ),
+                    f"#TAGS<br><b>Sent by :</b> {message.from_user.mention}<br>"
+                    f"<b>Group :</b> <code>{message.chat.title}</code><br>"
+                    f"<b>Message :</b> <a href={message.link}>link</a>",
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
