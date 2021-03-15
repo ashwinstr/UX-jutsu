@@ -5,7 +5,7 @@ from pyrogram import filters
 from userge import Message, userge
 
 
-@userge.on_message(filters.group & ~filters.bot & filters.me)
+@userge.on_message(filters.group & ~filters.bot & ~filters.me)
 async def test(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return
