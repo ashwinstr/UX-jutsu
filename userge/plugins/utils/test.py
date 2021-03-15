@@ -15,4 +15,3 @@ async def test(_, message: Message):
             await message.reply("Reply is working...")
     if ("@" + me.username) in message.text:
         await message.reply("Mention is working...")
-
