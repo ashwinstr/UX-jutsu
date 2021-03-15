@@ -10,5 +10,9 @@ async def test(_, message: Message):
     me = await userge.get_me()
     reply = message.reply_to_message
     replied = reply.from_user.id
-    if replied == me.id or ("@" + me.username) in message.text:
-        await message.reply("Logging is working...")
+    if reply:
+        if replied == me.id:
+            await message.reply("Reply is working...")
+    if ("@" + me.username) in message.text:
+        await message.reply("Mention is working...")
+
