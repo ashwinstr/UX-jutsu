@@ -24,7 +24,10 @@ async def grp_log(_, message: Message):
         if replied == me.id:
             try:
                 await userge.send_message(
-                    Config.PM_LOG_GROUP_ID, log, parse_mode="html", disable_web_page_preview=True
+                    Config.PM_LOG_GROUP_ID,
+                    log,
+                    parse_mode="html",
+                    disable_web_page_preview=True,
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
@@ -33,7 +36,12 @@ async def grp_log(_, message: Message):
                 await asyncio.sleep(e.x + 3)
     if ("@" + me.username) in message.text:
         try:
-            await userge.send_message(Config.PM_LOG_GROUP_ID, log, parse_mode="html", disable_web_page_preview=True)
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                log,
+                parse_mode="html",
+                disable_web_page_preview=True,
+            )
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
             )
@@ -66,7 +74,7 @@ async def pm_log(_, message: Message):
                     Config.PM_LOG_GROUP_ID,
                     log1,
                     parse_mode="html",
-                    disable_web_page_preview=True
+                    disable_web_page_preview=True,
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
@@ -79,10 +87,7 @@ async def pm_log(_, message: Message):
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
                 )
-                await userge.send_message(
-                    Config.PM_LOG_GROUP_ID,
-                    log2
-                )
+                await userge.send_message(Config.PM_LOG_GROUP_ID, log2)
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
         COUNT += 1
