@@ -20,52 +20,6 @@ _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA = None, None
 
 LOGGER = userge.getLogger(__name__)
 
-<<<<<<< HEAD
-@userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
-async def alive_inline(message: Message):
-    me = await userge.get_me()
-    global CACHED_MEDIA
-    if message.client.is_bot:
-        if Config.ALIVE_MEDIA:
-            url_ = Config.ALIVE_MEDIA.strip()
-            if url_.lower() == "false":
-                await userge.bot.send_message(
-                    message.chat.id,
-                    Bot_Alive.alive_info(me),
-                    reply_markup=Bot_Alive.alive_buttons(),
-                    disable_web_page_preview=True,
-                )
-            else:
-                type_, media_ = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA)
-                if type_ == "url_gif":
-                    await userge.bot.send_animation(
-                        message.chat.id,
-                        animation=url_,
-                        caption=Bot_Alive.alive_info(me),
-                        reply_markup=Bot_Alive.alive_buttons(),
-                    )
-                elif type_ == "url_image":
-                    await userge.bot.send_photo(
-                        message.chat.id,
-                        photo=url_,
-                        caption=Bot_Alive.alive_info(me),
-                        reply_markup=Bot_Alive.alive_buttons(),
-                    )
-                elif type_ == "tg_media" and isinstance(media_, list):
-                    if not CACHED_MEDIA:
-                        try:
-                            CACHED_MEDIA = get_file_id(
-                                await userge.bot.get_messages(media_[0], media_[1])
-                            )
-                        except Exception as er:
-                            await message.err(er, del_in=7)
-                            return
-                    await userge.bot.send_cached_media(
-                        message.chat.id,
-                        file_id=CACHED_MEDIA,
-                        caption=Bot_Alive.alive_info(me),
-                        reply_markup=Bot_Alive.alive_buttons(),
-=======
 
 async def _init() -> None:
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
@@ -83,7 +37,6 @@ async def _init() -> None:
                 if userge.has_bot:
                     _BOT_CACHED_MEDIA = get_file_id(
                         await userge.bot.get_messages(am_link[0], am_link[1])
->>>>>>> 25b3158fc2fbdda9878f59c9d7c1179f8ba0457d
                     )
             except Exception as b_rr:
                 LOGGER.debug(b_rr)
@@ -97,13 +50,6 @@ async def alive_inline(message: Message):
         elif userge.has_bot:
             await send_inline_alive(message)
         else:
-<<<<<<< HEAD
-            await userge.bot.send_photo(
-                message.chat.id,
-                photo=Bot_Alive.alive_default_imgs(),
-                caption=Bot_Alive.alive_info(me),
-                reply_markup=Bot_Alive.alive_buttons(),
-=======
             await send_alive_message(message)
     except Exception as e_all:
         await message.err(str(e_all), del_in=10, log=__name__)
@@ -120,7 +66,6 @@ async def send_inline_alive(message: Message) -> None:
                     query_id=i_res.query_id,
                     result_id=i_res.results[0].id,
                 )
->>>>>>> 25b3158fc2fbdda9878f59c9d7c1179f8ba0457d
             )
             .updates[0]
             .id
@@ -278,19 +223,12 @@ class Bot_Alive:
         return link_type, link
 
     @staticmethod
-<<<<<<< HEAD
     def alive_info(me):
         u_name = " ".join([me.first_name, me.last_name or ""])
         alive_info = f"""
 ­<a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
-  🐍   <b>Python      :</b>    <code>v{versions.__python_version__}</code>
-=======
-    def alive_info() -> str:
-        alive_info_ = f"""
-<a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
 
-  🐍   <b>Python :</b>    <code>v{versions.__python_version__}</code>
->>>>>>> 25b3158fc2fbdda9878f59c9d7c1179f8ba0457d
+  🐍   <b>Python      :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
   🧬   <b>𝑿                :</b>    <code>v{get_version()}</code>
   👤   <b>User          :</b>    <code>{u_name}</code>
