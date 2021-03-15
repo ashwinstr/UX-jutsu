@@ -5,7 +5,7 @@ from pyrogram import filters
 from userge import Message, userge
 
 
-@userge.on_message(filters.incoming, filters.group, ~filtere.bot, ~filters.me, group=1)
+@userge.on_message(filters.incoming, filters.group, ~filters.bot, ~filters.me, group=1)
 async def test(_, message: Message):
     me = await userge.get_me()
     reply = message.reply_to_message
