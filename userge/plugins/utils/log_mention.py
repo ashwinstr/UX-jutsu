@@ -1,7 +1,7 @@
 # ported by @Kakashi_HTK/@ashwinstr
 
 from pyrogram import filters
-
+from pyrogram.errors import FloodWait
 from userge import Config, Message, userge
 
 
@@ -23,7 +23,7 @@ async def grp_log(_, message: Message):
         if replied == me.id:
             try:
                 await userge.send_message(
-                    Config.PM_LOG_GROUP_ID, log, parse_mode="html", link_preview=False
+                    Config.PM_LOG_GROUP_ID, log, parse_mode="html"
                 )
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
@@ -33,7 +33,7 @@ async def grp_log(_, message: Message):
     if ("@" + me.username) in message.text:
         try:
             await userge.send_message(
-                Config.PM_LOG_GROUP_ID, log, parse_mode="html", link_preview=False
+                Config.PM_LOG_GROUP_ID, log, parse_mode="html"
             )
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
@@ -45,6 +45,7 @@ async def grp_log(_, message: Message):
 @userge.on_message(~filters.group, ~filters.bot)
 async def pm_log(_, message: Message):
     chat = message.chat.id
+    id = message.message_id
     if not Config.PM_LOG_GROUP_ID:
         return
     u_id = message.from_user.id
@@ -66,13 +67,13 @@ async def pm_log(_, message: Message):
             COUNT = COUNT + 1
             try:
                 await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID, disable_notification=True
+                    Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
         else:
             try:
-                await message.forward(Config.PM_LOG_GROUP_ID, disable_notification=True)
+                await userge.forward_messages(Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True)
                 await userge.send_message(
                     Config.PM_LOG_GROUP_ID,
                     f"""
