@@ -108,6 +108,8 @@ async def grp_log(_, message: Message):
 
 @userge.on_message(filters.private & ~filters.bot & ~filters.edited & allLoggingFilter)
 async def pm_log(_, message: Message):
+    me = await userge.get_me()
+    sender_id = message.from_user.id 
     if not Config.PM_LOG_GROUP_ID:
         return
     if (message.text).startswith(Config.CMD_TRIGGER):
@@ -129,10 +131,10 @@ async def pm_log(_, message: Message):
 #⃣ <b>ID : </b><code>{chat_id}</code>
 """
     try:
-        me_id = (await userge.get_me()).id
-        sender_id = message.from_user.id
         await asyncio.sleep(0.5)
-        if sender_id != me_id:
+        if sender_id != me.id:
+            if (message.text).startswith(Config.CMD_TRIGGER):
+                return
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
                 log1,
