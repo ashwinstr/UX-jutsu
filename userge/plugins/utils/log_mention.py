@@ -7,7 +7,7 @@ from userge import Config, Message, userge
 
 RECENT_PM = None
 COUNT = 0
-
+SAVED_SETTINGS = get_collection("CONFIGS")
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "ALL_LOGGING"})
