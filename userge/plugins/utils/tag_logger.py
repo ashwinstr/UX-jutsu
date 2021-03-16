@@ -1,5 +1,6 @@
 # ported by @Kakashi_HTK/@ashwinstr
 
+import asyncio
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 
@@ -112,19 +113,30 @@ async def pm_log(_, message: Message):
     id = message.message_id
     if not Config.PM_LOG_GROUP_ID:
         return
-    log = f"""
+    log1 = f"""
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a> sent a new message.
 #⃣ <b>ID : </b><code>{chat_id}</code>
 ✉ <b>Message :</b> ⬇
 """
+    log2 = f"""
+<b>#Conversation</b> with:
+👤 <a href="tg://user?id={chat_id}">{chat_name}</a>
+#⃣ <b>ID : </b><code>{chat_id}</code>
     try:
         me_id = (await userge.get_me()).id
         sender_id = message.from_user.id
+        await asyncio.sleep(0.5)
         if sender_id != me_id:
-            await asyncio.sleep(0.5)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
-                log,
+                log1,
+                parse_mode="html",
+                disable_web_page_preview=True,
+            )
+        else:
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                log2,
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
