@@ -79,12 +79,14 @@ async def grp_log(_, message: Message):
                     parse_mode="html",
                     disable_web_page_preview=True,
                 )
+                await asyncio.sleep(0.5)
                 await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
-    if ("@" + me.username) in message.text:
+    mention = f"@{me.username}"
+    if mention in message.text:
         try:
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
@@ -92,6 +94,7 @@ async def grp_log(_, message: Message):
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
+            await asyncio.sleep(0.5)
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
             )
@@ -119,6 +122,7 @@ async def pm_log(_, message: Message):
             parse_mode="html",
             disable_web_page_preview=True,
         )
+        await asyncio.sleep(0.5)
         await userge.forward_messages(
             Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
         )
