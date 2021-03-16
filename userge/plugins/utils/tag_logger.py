@@ -110,6 +110,8 @@ async def grp_log(_, message: Message):
 async def pm_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return
+    if (message.text).startswith(Config.CMD_TRIGGER):
+        return
     chat_id = message.chat.id
     chat = await userge.get_chat(chat_id)
     if chat.type is "bot":
