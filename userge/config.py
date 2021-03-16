@@ -99,6 +99,7 @@ class Config:
     ALLOW_NSFW = os.environ.get("ALLOW_NSFW", "False")
     PM_LOG_GROUP_ID = int(os.environ.get("PM_LOG_GROUP_ID", 0))
     PM_LOGGING = False
+    ALL_LOGGING = False
     DEEP_AI = os.environ.get("DEEP_AI")
     LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME")
     LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
