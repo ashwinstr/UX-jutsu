@@ -109,13 +109,13 @@ async def pm_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return
     log1 = f"""
-👤 [{chat_name}](tg://user?id={chat_id}) sent a new message.
+👤 <a href="tg://user?id={chat_id}">{chat_name}</a> sent a new message.
 #⃣ <b>ID : </b><code>{chat_id}</code>
 ✉ <b>Message :</b> ⬇
 """
     log2 = f"""
 <b>#Conversation</b> with:
-👤 [{chat_name}](tg://user?id={chat_id})
+👤 <a href="tg://user?id={chat_id}">{chat_name}</a>
 ✉ <b>Message :</b> ⬇
 """
     global RECENT_PM
