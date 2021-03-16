@@ -44,14 +44,14 @@ async def all_log(message: Message):
             switch = "enabled"
         else:
             switch = "disabled"
-        await message.edit(f"The logger is {switch}.", del_in=3)
+        await message.edit(f"Tag logger is {switch}.", del_in=3)
         return
     if Config.ALL_LOGGING:
         Config.ALL_LOGGING = False
-        await message.edit("`ALL logger disabled !`", del_in=3)
+        await message.edit("`Tag logger disabled !`", del_in=3)
     else:
         Config.ALL_LOGGING = True
-        await message.edit("`ALL logger enabled !`", del_in=3)
+        await message.edit("`Tag logger enabled !`", del_in=3)
     await SAVED_SETTINGS.update_one(
         {"_id": "ALL_LOGGING"}, {"$set": {"is_active": Config.ALL_LOGGING}}, upsert=True
     )
