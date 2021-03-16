@@ -24,6 +24,9 @@ allLoggingFilter = filters.create(lambda _, __, ___: Config.ALL_LOGGING)
     about={
         "header": "Toggle logging of PM and groups[all]",
         "description": "Logs all PMs and group mentions",
+        "flag": {
+            "-c": "Check tag_log status",
+        },
         "usage": "{tr}tag_log",
     },
     allow_channels=False,
@@ -35,12 +38,19 @@ async def all_log(message: Message):
             "Make a group and provide it's ID in `PM_LOG_GROUP_ID` var.",
             del_in=5,
         )
+    flag = message.flags
+    if "-c" in flag:
+        if Config.ALL_LOGGING:
+            switch = "enabled"
+        else:
+            switch = "disabled"
+        await message.edit(f"The logger is {switch}.", del_in=3)
     if Config.ALL_LOGGING:
         Config.ALL_LOGGING = False
-        await message.edit("`ALL Logger disabled !`", del_in=3)
+        await message.edit("`ALL logger disabled !`", del_in=3)
     else:
         Config.ALL_LOGGING = True
-        await message.edit("`ALL Logger enabled !`", del_in=3)
+        await message.edit("`ALL logger enabled !`", del_in=3)
     await SAVED_SETTINGS.update_one(
         {"_id": "ALL_LOGGING"}, {"$set": {"is_active": Config.ALL_LOGGING}}, upsert=True
     )
@@ -116,7 +126,6 @@ async def pm_log(_, message: Message):
             Config.PM_LOG_GROUP_ID,
             chat_id,
             id,
-            parse_mode="html",
             disable_notification=True,
         )
     except FloodWait as e:
@@ -124,8 +133,8 @@ async def pm_log(_, message: Message):
 
     global RECENT_USER
     global COUNT
-    if RECENT_USER != u_id or COUNT > 4:
-        RECENT_USER = u_id
+    if RECENT_USER != id or COUNT > 4:
+        RECENT_USER = id
         try:
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
