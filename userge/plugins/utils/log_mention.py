@@ -5,12 +5,14 @@ from pyrogram.errors import FloodWait
 
 from userge import Config, Message, userge
 
-global RECENT_PM = None
-global COUNT = 0
+RECENT_PM = None
+COUNT = 0
 
 
 @userge.on_message(filters.group & ~filters.bot & ~filters.me)
 async def grp_log(_, message: Message):
+    global RECENT_PM
+    global COUNT
     if not Config.PM_LOG_GROUP_ID:
         return
     me = await userge.get_me()
