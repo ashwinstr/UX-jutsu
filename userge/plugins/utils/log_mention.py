@@ -20,7 +20,8 @@ async def grp_log(_, message: Message):
 #TAGS
 <b>Sent by :</b> {message.from_user.mention}
 <b>Group :</b> <code>{message.chat.title}</code>
-<b>Message :</b> <a href={message.link}>link</a>
+<b>Message link :</b> <a href={message.link}>link</a>
+<b>Message :</b> ⬇
 """
     if reply:
         replied = reply.from_user.id
@@ -61,11 +62,13 @@ async def pm_log(_, message: Message):
     u_id = message.from_user.id
     log1 = f"""
 👤 {message.from_user.first_name} sent a new message.
-<b>ID : </b><code>{u_id}</code>
+<b>#⃣ID : </b><code>{u_id}</code>
+<b>✉Message :</b> ⬇
 """
     log2 = f"""
 <b>#Conversation</b> with:
-[{chat.first_name}](tg://user?id={chat.id})
+👤[{chat.first_name}](tg://user?id={chat.id})
+<b>✉Message :</b> ⬇
 """
     global RECENT_USER
     global COUNT
@@ -86,15 +89,15 @@ async def pm_log(_, message: Message):
         COUNT = 0
     else:
         try:
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID, log2, disable_web_page_preview=True
+            )
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID,
                 chat,
                 id,
                 parse_mode="html",
                 disable_notification=True,
-            )
-            await userge.send_message(
-                Config.PM_LOG_GROUP_ID, log2, disable_web_page_preview=True
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
