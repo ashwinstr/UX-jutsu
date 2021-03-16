@@ -99,19 +99,21 @@ async def pm_log(_, message: Message):
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
-   #     COUNT = 0
-   # else:
-   #     try:
-   #         await userge.send_message(
-   #             Config.PM_LOG_GROUP_ID, log2, disable_web_page_preview=True
-   #         )
-   #         await userge.forward_messages(
-   #             Config.PM_LOG_GROUP_ID,
-   #             chat,
-   #             id,
-   #             parse_mode="html",
-   #             disable_notification=True,
-   #         )
-   #     except FloodWait as e:
-   #         await asyncio.sleep(e.x + 3)
-   # COUNT += 1
+
+
+#     COUNT = 0
+# else:
+#     try:
+#         await userge.send_message(
+#             Config.PM_LOG_GROUP_ID, log2, disable_web_page_preview=True
+#         )
+#         await userge.forward_messages(
+#             Config.PM_LOG_GROUP_ID,
+#             chat,
+#             id,
+#             parse_mode="html",
+#             disable_notification=True,
+#         )
+#     except FloodWait as e:
+#         await asyncio.sleep(e.x + 3)
+# COUNT += 1
