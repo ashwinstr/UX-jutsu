@@ -73,6 +73,7 @@ async def grp_log(_, message: Message):
         replied = reply.from_user.id
         if replied == me.id:
             try:
+                await asyncio.sleep(0.5)
                 await userge.send_message(
                     Config.PM_LOG_GROUP_ID,
                     log,
@@ -88,6 +89,7 @@ async def grp_log(_, message: Message):
     mention = f"@{me.username}"
     if mention in message.text:
         try:
+            await asyncio.sleep(0.5)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
                 log,
@@ -116,12 +118,16 @@ async def pm_log(_, message: Message):
 ✉ <b>Message :</b> ⬇
 """
     try:
-        await userge.send_message(
-            Config.PM_LOG_GROUP_ID,
-            log,
-            parse_mode="html",
-            disable_web_page_preview=True,
-        )
+        me_id = (await userge.get_me()).id
+        sender_id = message.from_user.id
+        if sender_id != me_id:
+            await asyncio.sleep(0.5)
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                log,
+                parse_mode="html",
+                disable_web_page_preview=True,
+            )
         await asyncio.sleep(0.5)
         await userge.forward_messages(
             Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
