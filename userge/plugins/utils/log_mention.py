@@ -3,7 +3,7 @@
 from pyrogram import filters
 from pyrogram.errors import FloodWait
 
-from userge import Config, Message, userge, get_collection
+from userge import Config, Message, get_collection, userge
 
 RECENT_PM = None
 COUNT = 0
