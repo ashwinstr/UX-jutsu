@@ -108,19 +108,21 @@ async def grp_log(_, message: Message):
 
 @userge.on_message(filters.private & ~filters.bot & ~filters.edited & allLoggingFilter)
 async def pm_log(_, message: Message):
+    if not Config.PM_LOG_GROUP_ID:
+        return 
     chat_id = message.chat.id
     chat = await userge.get_chat(chat_id)
+    if chat.type is "bot":
+        return
     chat_name = " ".join([chat.first_name, chat.last_name or ""])
     id = message.message_id
-    if not Config.PM_LOG_GROUP_ID:
-        return
     log1 = f"""
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a> sent a new message.
 #⃣ <b>ID : </b><code>{chat_id}</code>
 ✉ <b>Message :</b> ⬇
 """
     log2 = f"""
-<b>#Conversation</b> with:
+🗣 <b>#Conversation</b> with:
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a>
 #⃣ <b>ID : </b><code>{chat_id}</code>
 """
