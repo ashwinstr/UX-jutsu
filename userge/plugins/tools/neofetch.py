@@ -81,7 +81,8 @@ async def neo_image():
     photo = photo.resize(photo.size, Image.ANTIALIAS)
     if me.id in kakashi:
         photo.save(new_pic, format="PNG")
+        new_pic.name = "NeoFetch.png"
     else:
-        photo.save(new_pic, format="JPEG")
-    new_pic.name = "NeoFetch.jpg"
+        photo.save(new_pic, format="JPG")
+        new_pic.name = "NeoFetch.jpg"
     return new_pic
