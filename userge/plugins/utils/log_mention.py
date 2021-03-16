@@ -55,6 +55,7 @@ async def grp_log(_, message: Message):
 
 @userge.on_message(filters.private, ~filters.bot)
 async def pm_log(_, message: Message):
+    chat = message.chat.id
     id = message.message_id
     if not Config.PM_LOG_GROUP_ID:
         return
