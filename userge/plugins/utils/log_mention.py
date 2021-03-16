@@ -65,8 +65,8 @@ async def pm_log(_, message: Message):
 [{chat.first_name}](tg://user?id={chat.id})
 """
     if chat != 777000:
-        global RECENT_USER
-        global COUNT
+        RECENT_USER = None
+        COUNT = 0
         if RECENT_USER != u_id or COUNT > 4:
             RECENT_USER = u_id
             try:
