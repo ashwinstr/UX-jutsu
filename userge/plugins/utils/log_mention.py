@@ -62,13 +62,13 @@ async def pm_log(_, message: Message):
     u_id = message.from_user.id
     log1 = f"""
 👤 {message.from_user.first_name} sent a new message.
-<b>#⃣ID : </b><code>{u_id}</code>
-<b>✉Message :</b> ⬇
+#⃣ <b>ID : </b><code>{u_id}</code>
+✉ <b>Message :</b> ⬇
 """
     log2 = f"""
 <b>#Conversation</b> with:
-👤[{chat.first_name}](tg://user?id={chat.id})
-<b>✉Message :</b> ⬇
+👤 [{chat.first_name}](tg://user?id={chat.id})
+✉ <b>Message :</b> ⬇
 """
     global RECENT_USER
     global COUNT
