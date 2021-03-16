@@ -55,19 +55,20 @@ async def grp_log(_, message: Message):
 
 @userge.on_message(filters.private, ~filters.bot)
 async def pm_log(_, message: Message):
-    chat = message.chat.id
+    chat_id = message.chat.id
+    chat = await userge.get_chat(chat_id)
+    chat_name = " ".join([chat.first_name, chat.last_name or ""])
     id = message.message_id
     if not Config.PM_LOG_GROUP_ID:
         return
-    u_id = message.from_user.id
     log1 = f"""
-👤 {message.from_user.first_name} sent a new message.
-#⃣ <b>ID : </b><code>{u_id}</code>
+👤 [{chat_name}](tg://user?id={chat_id}) sent a new message.
+#⃣ <b>ID : </b><code>{chat_id}</code>
 ✉ <b>Message :</b> ⬇
 """
     log2 = f"""
 <b>#Conversation</b> with:
-👤 [{chat.first_name}](tg://user?id={chat.id})
+👤 [{chat_name}](tg://user?id={chat_id})
 ✉ <b>Message :</b> ⬇
 """
     try:
@@ -76,7 +77,7 @@ async def pm_log(_, message: Message):
         )
         await userge.forward_messages(
             Config.PM_LOG_GROUP_ID,
-            chat,
+            chat_id,
             id,
             parse_mode="html",
             disable_notification=True,
@@ -96,7 +97,7 @@ async def pm_log(_, message: Message):
                 disable_web_page_preview=True,
             )
             await userge.forward_messages(
-                Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
+                Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
