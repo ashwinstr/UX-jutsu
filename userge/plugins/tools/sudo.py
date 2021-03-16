@@ -135,7 +135,7 @@ async def view_sudo(message: Message):
     if not Config.SUDO_USERS:
         await message.edit("**SUDO** users not found!", del_in=5)
         return
-    out_str = "🚷 **SUDO USERS**: **[{}]**🚷\n\n"
+    out_str = "🚷 **SUDO USERS**: [{}] 🚷\n\n"
     total = 0
     async for user in SUDO_USERS_COLLECTION.find():
         total += 1
@@ -178,6 +178,7 @@ async def add_sudo_cmd(message: Message):
                         "addsudo",
                         "delsudo",
                         "sudo",
+                        "vsudo",
                     ]
                 ):
                     tmp_.append({"_id": t_c})
@@ -255,7 +256,7 @@ async def view_sudo_cmd(message: Message):
         await message.edit("**SUDO** cmds not found!", del_in=5)
         return
     total = 0
-    out_str = "⛔ **SUDO CMDS**: **[{}]** ⛔\n\n"
+    out_str = "⛔ **SUDO CMDS**: [{}] ⛔\n\n"
     async for cmd in SUDO_CMDS_COLLECTION.find().sort("_id"):
         total += 1
         out_str += f"`{cmd}`  "
