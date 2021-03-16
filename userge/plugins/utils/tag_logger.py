@@ -16,7 +16,7 @@ async def _init() -> None:
         Config.ALL_LOGGING = bool(data["is_active"])
 
 
-allLoggingFilter = filters.create(lambda _, __, ___: Config.ALL_LOGGING)
+tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
 
 
 @userge.on_cmd(
@@ -40,24 +40,24 @@ async def all_log(message: Message):
         )
     flag = message.flags
     if "-c" in flag:
-        if Config.ALL_LOGGING:
+        if Config.TAG_LOGGING:
             switch = "enabled"
         else:
             switch = "disabled"
         await message.edit(f"Tag logger is {switch}.", del_in=3)
         return
-    if Config.ALL_LOGGING:
-        Config.ALL_LOGGING = False
+    if Config.TAG_LOGGING:
+        Config.TAG_LOGGING = False
         await message.edit("`Tag logger disabled !`", del_in=3)
     else:
-        Config.ALL_LOGGING = True
+        Config.TAG_LOGGING = True
         await message.edit("`Tag logger enabled !`", del_in=3)
     await SAVED_SETTINGS.update_one(
-        {"_id": "ALL_LOGGING"}, {"$set": {"is_active": Config.ALL_LOGGING}}, upsert=True
+        {"_id": "TAG_LOGGING"}, {"$set": {"is_active": Config.TAG_LOGGING}}, upsert=True
     )
 
 
-@userge.on_message(filters.group & ~filters.bot & ~filters.me & allLoggingFilter)
+@userge.on_message(filters.group & ~filters.bot & ~filters.me & tagLoggingFilter)
 async def grp_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return
@@ -106,13 +106,11 @@ async def grp_log(_, message: Message):
             await asyncio.sleep(e.x + 3)
 
 
-@userge.on_message(filters.private & ~filters.bot & ~filters.edited & allLoggingFilter)
+@userge.on_message(filters.private & ~filters.bot & ~filters.edited & tagLoggingFilter)
 async def pm_log(_, message: Message):
     me = await userge.get_me()
     sender_id = message.from_user.id
     if not Config.PM_LOG_GROUP_ID:
-        return
-    if (message.text).startswith(Config.CMD_TRIGGER):
         return
     chat_id = message.chat.id
     chat = await userge.get_chat(chat_id)
@@ -133,8 +131,6 @@ async def pm_log(_, message: Message):
     try:
         await asyncio.sleep(0.5)
         if sender_id != me.id:
-            if (message.text).startswith(Config.CMD_TRIGGER):
-                return
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
                 log1,
