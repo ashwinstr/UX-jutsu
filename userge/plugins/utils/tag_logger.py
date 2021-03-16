@@ -100,7 +100,7 @@ async def grp_log(_, message: Message):
             await asyncio.sleep(e.x + 3)
 
 
-@userge.on_message(filters.private & ~filters.bot & allLoggingFilter)
+@userge.on_message(filters.private & ~filters.bot & ~filters.edited & allLoggingFilter)
 async def pm_log(_, message: Message):
     chat_id = message.chat.id
     chat = await userge.get_chat(chat_id)
