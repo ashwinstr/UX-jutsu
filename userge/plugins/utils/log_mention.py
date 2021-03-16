@@ -14,6 +14,7 @@ async def _init() -> None:
     if data:
         Config.ALL_LOGGING = bool(data["is_active"])
 
+
 allLoggingFilter = filters.create(lambda _, __, ___: Config.ALL_LOGGING)
 
 
@@ -42,7 +43,8 @@ async def all_log(message: Message):
     await SAVED_SETTINGS.update_one(
         {"_id": "ALL_LOGGING"}, {"$set": {"is_active": Config.ALL_LOGGING}}, upsert=True
     )
-        
+
+
 @userge.on_message(filters.group & ~filters.bot & ~filters.me & allLoggingFilter)
 async def grp_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
