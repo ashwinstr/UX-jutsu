@@ -11,8 +11,6 @@ COUNT = 0
 
 @userge.on_message(filters.group & ~filters.bot & ~filters.me)
 async def grp_log(_, message: Message):
-    global RECENT_PM
-    global COUNT
     if not Config.PM_LOG_GROUP_ID:
         return
     me = await userge.get_me()
@@ -69,8 +67,8 @@ async def pm_log(_, message: Message):
 <b>#Conversation</b> with:
 [{chat.first_name}](tg://user?id={chat.id})
 """
-    RECENT_USER = None
-    COUNT = 0
+    global RECENT_USER
+    global COUNT
     if RECENT_USER != u_id or COUNT > 4:
         RECENT_USER = u_id
         try:
