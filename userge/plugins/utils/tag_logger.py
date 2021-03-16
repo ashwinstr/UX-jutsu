@@ -109,7 +109,7 @@ async def grp_log(_, message: Message):
 @userge.on_message(filters.private & ~filters.bot & ~filters.edited & allLoggingFilter)
 async def pm_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
-        return 
+        return
     chat_id = message.chat.id
     chat = await userge.get_chat(chat_id)
     if chat.type is "bot":
