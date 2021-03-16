@@ -80,9 +80,10 @@ async def send_inline_alive(message: Message) -> None:
 
 async def send_alive_message(message: Message) -> None:
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
+    me = await userge.get_me()
     chat_id = message.chat.id
     client = message.client
-    caption = Bot_Alive.alive_info()
+    caption = Bot_Alive.alive_info(me)
     if client.is_bot:
         reply_markup = Bot_Alive.alive_buttons()
         file_id = _BOT_CACHED_MEDIA
