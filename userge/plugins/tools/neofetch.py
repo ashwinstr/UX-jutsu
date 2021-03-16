@@ -54,7 +54,7 @@ async def neo_image():
     me = await userge.get_me()
     kakashi = [1156425647, 1013414037]
     if me.id in kakashi:
-        base_url = "https://telegra.ph/file/614c1b1c9d8913b686d8b.png"
+        base_pic = "https://telegra.ph/file/614c1b1c9d8913b686d8b.png"
     photo = Image.open(BytesIO(get(base_pic).content))
     drawing = ImageDraw.Draw(photo)
     font = ImageFont.truetype(BytesIO(get(font_url).content), 14)
