@@ -5,6 +5,9 @@ from pyrogram.errors import FloodWait
 
 from userge import Config, Message, userge
 
+RECENT_PM = None
+COUNT = 0
+
 
 @userge.on_message(filters.group & ~filters.bot & ~filters.me)
 async def grp_log(_, message: Message):
@@ -64,36 +67,35 @@ async def pm_log(_, message: Message):
 <b>#Conversation</b> with:
 [{chat.first_name}](tg://user?id={chat.id})
 """
-    if chat != 777000:
-        RECENT_USER = None
+    RECENT_USER = None
+    COUNT = 0
+    if RECENT_USER != u_id or COUNT > 4:
+        RECENT_USER = u_id
+        try:
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                log1,
+                parse_mode="html",
+                disable_web_page_preview=True,
+            )
+            await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
+            )
+        except FloodWait as e:
+            await asyncio.sleep(e.x + 3)
         COUNT = 0
-        if RECENT_USER != u_id or COUNT > 4:
-            RECENT_USER = u_id
-            try:
-                await userge.send_message(
-                    Config.PM_LOG_GROUP_ID,
-                    log1,
-                    parse_mode="html",
-                    disable_web_page_preview=True,
-                )
-                await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID, chat, id, disable_notification=True
-                )
-            except FloodWait as e:
-                await asyncio.sleep(e.x + 3)
-            COUNT = 0
-        else:
-            try:
-                await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID,
-                    chat,
-                    id,
-                    parse_mode="html",
-                    disable_notification=True,
-                )
-                await userge.send_message(
-                    Config.PM_LOG_GROUP_ID, log2, disable_web_page_preview=True
-                )
-            except FloodWait as e:
-                await asyncio.sleep(e.x + 3)
-        COUNT += 1
+    else:
+        try:
+            await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID,
+                chat,
+                id,
+                parse_mode="html",
+                disable_notification=True,
+            )
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID, log2, disable_web_page_preview=True
+            )
+        except FloodWait as e:
+            await asyncio.sleep(e.x + 3)
+    COUNT += 1
