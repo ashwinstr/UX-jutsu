@@ -47,14 +47,14 @@ async def neo_image():
         base_pic = "https://i.imgur.com/iBJxExq.jpg"
         font_color = (87, 157, 255)  # Blue
     else:
-        base_pic = "https://telegra.ph/file/6cdadf4baddb83abfbed9.png"
+        base_pic = "https://telegra.ph/file/f3191b7ecdf13867788c2.jpg"
     font_url = (
         "https://raw.githubusercontent.com/code-rgb/AmongUs/master/FiraCode-Regular.ttf"
     )
     me = await userge.get_me()
     kakashi = [1156425647, 1013414037]
     if me.id in kakashi:
-        base_pic = "https://telegra.ph/file/642892903388082907d04.png"
+        base_pic = "https://telegra.ph/file/6cdadf4baddb83abfbed9.png"
     photo = Image.open(BytesIO(get(base_pic).content))
     drawing = ImageDraw.Draw(photo)
     font = ImageFont.truetype(BytesIO(get(font_url).content), 14)
