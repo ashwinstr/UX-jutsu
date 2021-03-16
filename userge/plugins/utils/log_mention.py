@@ -20,10 +20,12 @@ allLoggingFilter = filters.create(lambda _, __, ___: Config.ALL_LOGGING)
 @userge.on_cmd(
     "tag_log",
     about={
-        "header": "Toggle logging of PM and groups[all]"
-        "description": "Logs all PMs and group mentions"
-        "usage": "{tr}tag_log"
-}
+        "header": "Toggle logging of PM and groups[all]",
+        "description": "Logs all PMs and group mentions",
+        "usage": "{tr}tag_log",
+    },
+    allow_channels=False,
+)
 async def all_log(message: Message):
     """ enable / disable [all Logger] """
     if not Config.PM_LOG_GROUP_ID:
