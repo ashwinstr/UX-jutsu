@@ -109,7 +109,7 @@ async def grp_log(_, message: Message):
 @userge.on_message(filters.private & ~filters.bot & ~filters.edited & allLoggingFilter)
 async def pm_log(_, message: Message):
     me = await userge.get_me()
-    sender_id = message.from_user.id 
+    sender_id = message.from_user.id
     if not Config.PM_LOG_GROUP_ID:
         return
     if (message.text).startswith(Config.CMD_TRIGGER):
