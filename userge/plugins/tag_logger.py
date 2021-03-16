@@ -131,10 +131,10 @@ async def pm_log(_, message: Message):
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
 
-    global RECENT_USER
+    global RECENT_PM
     global COUNT
-    if RECENT_USER != id or COUNT > 4:
-        RECENT_USER = id
+    if RECENT_PM != id or COUNT > 4:
+        RECENT_PM = id
         try:
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
