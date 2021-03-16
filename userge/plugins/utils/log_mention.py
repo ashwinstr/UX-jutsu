@@ -5,8 +5,8 @@ from pyrogram.errors import FloodWait
 
 from userge import Config, Message, userge
 
-RECENT_PM = None
-COUNT = 0
+global RECENT_PM = None
+global COUNT = 0
 
 
 @userge.on_message(filters.group & ~filters.bot & ~filters.me)
