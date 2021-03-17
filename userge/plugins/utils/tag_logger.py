@@ -112,8 +112,8 @@ async def grp_log(_, message: Message):
     filters.private & ~filters.bot & ~filters.edited & tagLoggingFilter, group=5
 )
 async def pm_log(_, message: Message):
-    me = await userge.get_me()
-    sender_id = message.from_user.id
+    await userge.get_me()
+    message.from_user.id
     if not Config.PM_LOG_GROUP_ID:
         return
     chat_id = message.chat.id
@@ -150,7 +150,9 @@ async def pm_log(_, message: Message):
             Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
         )
     except FloodWait as e:
-        await asyncio.sleep(e.x + 3) 
+        await asyncio.sleep(e.x + 3)
+
+
 """   try:
         await asyncio.sleep(0.5)
         if sender_id != me.id:
