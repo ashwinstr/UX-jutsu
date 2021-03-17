@@ -58,8 +58,7 @@ async def all_log(message: Message):
 
 
 @userge.on_message(
-    ~filters.bot & ~filters.me & tagLoggingFilter,
-    group=5,
+    filters.group & ~filters.bot & ~filters.me & tagLoggingFilter,
 )
 async def grp_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
@@ -109,7 +108,7 @@ async def grp_log(_, message: Message):
             await asyncio.sleep(e.x + 3)
 
 
-@userge.on_message(filters.private & ~filters.bot & ~filters.edited & tagLoggingFilter)
+@userge.on_message(filters.private & ~filters.bot & ~filters.edited & tagLoggingFilter, group=5)
 async def pm_log(_, message: Message):
     me = await userge.get_me()
     sender_id = message.from_user.id
