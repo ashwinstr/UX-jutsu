@@ -107,10 +107,9 @@ async def gimg_down(message: Message):
         return
     if upload_:
         await message.edit(f"⬆️  Uploading {limit} {media_type} ...")
-        if "gif" in flags_:
-            for 
         try:
-            await upload_image_grp(results, message, doc_)
+            gif = True if "gif" in flags_ else False
+            await upload_image_grp(results, message, gif, doc_)
         except Exception as err:
             await message.err(str(err), del_in=7)
         else:
@@ -183,7 +182,7 @@ def gimg_downloader(arguments):
     return path_
 
 
-async def upload_image_grp(results, message: Message, doc: bool = False):
+async def upload_image_grp(results, message: Message, gif: bool = False, doc: bool = False):
     key_ = list(results[0])[0]
     medias_ = results[0][key_]
     if message.process_is_canceled:
@@ -192,7 +191,7 @@ async def upload_image_grp(results, message: Message, doc: bool = False):
         await message.err(f"No result Found `'{key_}'`", del_in=7)
     if len(medias_) == 1:
         path_ = Path(medias_[0])
-        if doc:
+        if doc or gif:
             await doc_upload(message=message, path=path_, del_path=True)
         else:
             await photo_upload(message=message, path=path_, del_path=True)
