@@ -134,7 +134,7 @@ async def pm_log(_, message: Message):
 """
     log3 = f"""
 🗣 <b>#Conversation</b> with:
-👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇ 
+👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇
 """
     try:
         if sender_id == me.id:
