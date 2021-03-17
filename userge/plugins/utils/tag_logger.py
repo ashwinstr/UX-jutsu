@@ -131,8 +131,13 @@ async def pm_log(_, message: Message):
 🗣 <b>#Conversation</b> with:
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a>
 #⃣ <b>ID : </b><code>{chat_id}</code>
+
 """
-    try:
+    log3 = f"""
+🗣 <b>#Conversation</b> with:
+👤 <a href="tg://user?id={chat_id}">{chat_name}</a>
+"""
+"""   try:
         await asyncio.sleep(0.5)
         if sender_id != me.id:
             await userge.send_message(
@@ -148,6 +153,21 @@ async def pm_log(_, message: Message):
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
+        await asyncio.sleep(0.5)
+        await userge.forward_messages(
+            Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
+        )
+    except FloodWait as e:
+        await asyncio.sleep(e.x + 3)
+"""
+    try:
+        await asyncio.sleep(0.5)
+        await userge.send_message(
+            Config.PM_LOG_GROUP_ID,
+            log3,
+            parse_mode="html",
+            disable_web_page_preview=True,
+        )
         await asyncio.sleep(0.5)
         await userge.forward_messages(
             Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
