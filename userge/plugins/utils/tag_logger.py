@@ -118,7 +118,7 @@ async def pm_log(_, message: Message):
         return
     chat_id = message.chat.id
     chat = await userge.get_chat(chat_id)
-    if chat.type is "bot":
+    if chat.type == "bot":
         return
     chat_name = " ".join([chat.first_name, chat.last_name or ""])
     id = message.message_id
