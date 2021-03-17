@@ -57,7 +57,7 @@ async def all_log(message: Message):
     )
 
 
-@userge.on_message(filters.group & ~filters.bot & ~filters.me & tagLoggingFilter)
+@userge.on_message(group=5 & ~filters.bot & ~filters.me & tagLoggingFilter)
 async def grp_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return
