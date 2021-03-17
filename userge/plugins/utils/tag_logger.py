@@ -11,9 +11,9 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 
 
 async def _init() -> None:
-    data = await SAVED_SETTINGS.find_one({"_id": "ALL_LOGGING"})
+    data = await SAVED_SETTINGS.find_one({"_id": "TAG_LOGGING"})
     if data:
-        Config.ALL_LOGGING = bool(data["is_active"])
+        Config.TAG_LOGGING = bool(data["is_active"])
 
 
 tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
