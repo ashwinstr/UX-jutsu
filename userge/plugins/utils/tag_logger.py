@@ -108,7 +108,9 @@ async def grp_log(_, message: Message):
             await asyncio.sleep(e.x + 3)
 
 
-@userge.on_message(filters.private & ~filters.bot & ~filters.edited & tagLoggingFilter, group=5)
+@userge.on_message(
+    filters.private & ~filters.bot & ~filters.edited & tagLoggingFilter, group=5
+)
 async def pm_log(_, message: Message):
     me = await userge.get_me()
     sender_id = message.from_user.id
