@@ -131,7 +131,6 @@ async def pm_log(_, message: Message):
 🗣 <b>#Conversation</b> with:
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a>
 #⃣ <b>ID : </b><code>{chat_id}</code>
-
 """
     log3 = f"""
 🗣 <b>#Conversation</b> with:
