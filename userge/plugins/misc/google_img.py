@@ -71,7 +71,7 @@ async def gimg_down(message: Message):
         text = reply.text or reply.caption
 
     if not text:
-        await message.err("`Input not found!...`", del_in=5)
+        await message.err("`Input not found...`", del_in=5)
         return
     await message.edit("🔎")
     start_t = datetime.now()
@@ -99,7 +99,7 @@ async def gimg_down(message: Message):
     else:
         arguments = await get_arguments(query=text)
     media_type = "Gifs" if allow_gif else "Pics"
-    await message.edit(f"⬇️  Downloading  {limit} {media_type} ...")
+    await message.edit(f"⬇️  Downloading {limit} {media_type} ...")
     try:
         results = await gimg_downloader(arguments)
     except Exception as e:
