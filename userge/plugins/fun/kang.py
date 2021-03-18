@@ -93,9 +93,9 @@ async def kang_(message: Message):
 
         u_name = user.username
         u_name = "@" + u_name if u_name else user.first_name or user.id
-        packname = f"a{user.id}_by_userge_{pack}"
+        packname = f"a{user.id}_by_{user.username}_{pack}"
         custom_packnick = Config.CUSTOM_PACK_NAME or f"{u_name}'s kang pack"
-        packnick = f"{custom_packnick} Vol.{pack}"
+        packnick = f"{custom_packnick} vol.{pack}"
         cmd = "/newpack"
         if resize:
             photo = resize_photo(photo)
