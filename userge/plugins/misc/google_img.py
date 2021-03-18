@@ -113,10 +113,11 @@ async def gimg_down(message: Message):
         except Exception as err:
             await message.err(str(err), del_in=7)
         else:
+            type_ = "gif/s" if gif else "pic/s"
             end_t = datetime.now()
             time_taken_s = (end_t - start_t).seconds
             await message.edit(
-                f"Uploaded {limit} Pics in {time_taken_s} sec with {results[1]} errors.",
+                f"Uploaded {limit} {type_} in {time_taken_s} sec with {results[1]} errors.",
                 del_in=5,
                 log=__name__,
             )
