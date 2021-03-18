@@ -215,7 +215,10 @@ async def upload_image_grp(
                 await message.edit(
                     f"⬆️  Uploading **{round(num / len(mgroups) * 100)} %** ..."
                 )
-                await message.client.send_media_group(message.chat.id, media=m_)
+                if gif:
+                    await userge.send_document(message.chat.id, m_)
+                else:
+                    await message.client.send_media_group(message.chat.id, media=m_)
                 await asyncio.sleep(len(m_))
             except FloodWait as f:
                 await asyncio.sleep(f.x + 5)
