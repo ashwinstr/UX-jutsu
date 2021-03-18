@@ -12,11 +12,10 @@ from userge import Message, userge
 async def botz(message: Message):
     """Check the bots present in group."""
     chat = message.chat.id
-    members = await userge.iter_chat_members(chat, filter="bots")
     admin_b = []
     member_b = []
     total = 0
-    for bot in members:
+    async for bot in userge.iter_chat_members(chat, filter="bot"):
         total += 1
         bot.user.mention
         if bot.status == "administrator":
