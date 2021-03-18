@@ -208,11 +208,11 @@ async def upload_image_grp(
         )
         if "gif":
             total = 0
-            for path_ in media_:
+            for path_ in medias_:
                 total += 1
                 try:
                     await message.edit(
-                        f"⬆️  Uploading **{round(total / len(media_) * 100)} %** ..."
+                        f"⬆️  Uploading **{round(total / len(medias_) * 100)} %** ..."
                     )
                     await userge.send_document(message.chat.id, path_)
                     os.remove(path_)
