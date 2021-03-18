@@ -202,11 +202,11 @@ async def upload_image_grp(
             [
                 (
                     InputMediaDocument(media=x)
-                    if (doc or gif)
+                    if (doc)
                     else InputMediaPhoto(media=x)
                 )
                 for x in medias_
-                if x.endswith((".jpg", ".jpeg", ".png", ".bmp", ".gif"))
+                if x.endswith((".jpg", ".jpeg", ".png", ".bmp"))
             ],
             width=10,
         )
