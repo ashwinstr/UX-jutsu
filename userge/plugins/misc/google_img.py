@@ -200,7 +200,11 @@ async def upload_image_grp(
     else:
         mgroups = sublists(
             [
-                (InputMediaDocument(media=x) if (doc or gif) else InputMediaPhoto(media=x))
+                (
+                    InputMediaDocument(media=x)
+                    if (doc or gif)
+                    else InputMediaPhoto(media=x)
+                )
                 for x in medias_
                 if x.endswith((".jpg", ".jpeg", ".png", ".bmp", ".gif"))
             ],
