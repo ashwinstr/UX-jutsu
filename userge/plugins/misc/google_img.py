@@ -193,7 +193,7 @@ async def upload_image_grp(
         await message.err(f"No result Found `'{key_}'`", del_in=7)
     if len(medias_) == 1:
         path_ = Path(medias_[0])
-        if doc or gif:
+        if doc:
             await doc_upload(message=message, path=path_, del_path=True)
         else:
             await photo_upload(message=message, path=path_, del_path=True)
@@ -210,15 +210,24 @@ async def upload_image_grp(
             ],
             width=10,
         )
+        if "gif":
+            total = 0
+            for path_ in media_:
+                total += 1
+                try:
+                    await message.edit(
+                        f"⬆️  Uploading **{round(total / len(media_) * 100)} %** ..."
+                    )
+                    await userge.send_document(message.chat.id, path_)
+                    os.remove(path_)
+                except FloodWait as f:
+                    await asyncio.sleep(f.x + 5)
         for num, m_ in enumerate(mgroups, start=1):
             try:
                 await message.edit(
                     f"⬆️  Uploading **{round(num / len(mgroups) * 100)} %** ..."
                 )
-                if gif:
-                    await userge.send_document(message.chat.id, m_)
-                else:
-                    await message.client.send_media_group(message.chat.id, media=m_)
+                await message.client.send_media_group(message.chat.id, media=m_)
                 await asyncio.sleep(len(m_))
             except FloodWait as f:
                 await asyncio.sleep(f.x + 5)
