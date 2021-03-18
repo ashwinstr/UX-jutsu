@@ -17,11 +17,11 @@ async def botz(message: Message):
     total = 0
     async for bot in userge.iter_chat_members(chat, filter="bots"):
         total += 1
-        bot.user.mention
+        mention = bot.user.mention
         if bot.status == "administrator":
-            admin_b.append(bot)
+            admin_b.append(mention)
         else:
-            member_b.append(bot)
+            member_b.append(mention)
     adm = len(admin_b)
     mem = len(member_b)
     out = f"<b>BOTS</b> in <b>{message.chat.title}</b>: [{total}]\n\n"
