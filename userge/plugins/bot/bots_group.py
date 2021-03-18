@@ -15,7 +15,7 @@ async def botz(message: Message):
     admin_b = []
     member_b = []
     total = 0
-    async for bot in userge.iter_chat_members(chat, filter="bot"):
+    async for bot in userge.iter_chat_members(chat, filter="bots"):
         total += 1
         bot.user.mention
         if bot.status == "administrator":
