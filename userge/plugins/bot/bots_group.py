@@ -1,4 +1,5 @@
-from userge import userge, Message
+from userge import Message, userge
+
 
 @userge.on_cmd(
     "bots",
@@ -17,7 +18,7 @@ async def botz(message: Message):
     total = 0
     for bot in members:
         total += 1
-        mention = bot.user.mention
+        bot.user.mention
         if bot.status == "administrator":
             admin_b.append(bot)
         else:
