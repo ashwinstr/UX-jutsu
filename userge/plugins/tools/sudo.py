@@ -139,7 +139,7 @@ async def view_sudo(message: Message):
     total = 0
     async for user in SUDO_USERS_COLLECTION.find():
         total += 1
-        out_str += f" 👤 {user['men']} 🆔 `{user['_id']}`\n"
+        out_str += f" 👤 {user['men']} #⃣ `{user['_id']}`\n"
     await message.edit(out_str.format(total), del_in=0)
 
 
