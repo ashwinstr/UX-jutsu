@@ -1,3 +1,50 @@
+"""blacklist types of messages"""
+
 # created for USERGE-X by @Kakashi_HTK/@ashwinstr
 
-from userge import userge, Message, 
+from pyrogram import filters
+from pyrogram.errors.exceptions.bad_request_400 import (
+    ChatAdminRequired,
+    UserAdminInvalid,
+)
+from userge import userge, Message
+
+@userge.on_cmd(
+    "bl",
+    about={
+        "header": "Blacklist",
+        "description": "Blacklist type of messages and take action when they are triggered.",
+        "usage": "{tr}bl stickers",
+        "types": [
+            "msg",
+            "media",
+            "polls",
+            "invite",
+            "pin",
+            "info",
+            "webprev",
+            "inlinebots",
+            "animations",
+            "games",
+            "stickers",
+        ],
+    },
+    
+)
+async def bl_(message: Message):
+    input = message.input_str
+    if not input:
+        await message.edit("Give input to blacklist/un-blacklist, see `{tr}help bl`...", del_in=5)
+        return
+    types_ = [
+        "msg",
+        "media",
+        "polls",
+        "invite",
+        "pin",
+        "info",
+        "webprev",
+        "inlinebots",
+        "animations",
+        "games",
+        "stickers",
