@@ -256,6 +256,8 @@ async def fban_p(message: Message):
                 from_chat_id=from_,
                 message_ids=proof,
             )
+        else:
+            fwd = message.reply_to_message
         if admin != 956525773:
             await userge.send_message(
                 chat_id,
