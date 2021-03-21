@@ -16,8 +16,9 @@ async def _init() -> None:
     if data:
         Config.TAG_LOGGING = bool(data["is_active"])
     async with aiofiles.open("userge/xcache/get_me.json", "w+") as fn:
-            json_data = await userge.get_me()
-            await fn.write(json_data)
+        json_data = await userge.get_me()
+        await fn.write(json_data)
+
 
 tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
 
