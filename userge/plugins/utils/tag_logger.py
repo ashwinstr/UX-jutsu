@@ -132,7 +132,7 @@ async def pm_log(_, message: Message):
 """
     try:
         me_id = user(info="id")
-        if sender_id == me.id:
+        if sender_id == me_id:
             await asyncio.sleep(0.5)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
