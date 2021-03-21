@@ -230,7 +230,7 @@ class Bot_Alive:
     def alive_info(me):
         u_name = " ".join([me.first_name, me.last_name or ""])
         alive_info = f"""
-­<a href="https://telegram.dog/x_xtests"><b>USERGE-X</a> is Up and Running.</b>
+­<a href="https://telegram.dog/x_xtests"><b>𝐒𝐇𝐀𝐑𝐈𝐍𝐆𝐀𝐍</a> is on and working.</b>
 
   🐍   <b>Python      :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
