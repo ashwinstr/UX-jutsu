@@ -76,13 +76,10 @@ async def grp_log(_, message: Message):
 <b>Message link :</b> <a href={message.link}>link</a>
 <b>Message :</b> ⬇
 """
-    try:
-        me = await userge.get_me()
-    except FloodWait as e:
-        await asyncio.sleep(e.x + 3)
     if reply:
         replied = reply.from_user.id
-        if replied == me.id:
+        me_id = user(info="id")
+        if replied == me_id:
             try:
                 await asyncio.sleep(0.5)
                 await userge.send_message(
@@ -97,7 +94,7 @@ async def grp_log(_, message: Message):
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
-    mention = f"@{me.username}"
+    mention = user(info="username")
     if mention in message.text:
         try:
             await asyncio.sleep(0.5)
@@ -133,7 +130,7 @@ async def pm_log(_, message: Message):
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇
 """
     try:
-        me = await userge.get_me()
+        me_id = user(info="id")
         if sender_id == me.id:
             await asyncio.sleep(0.5)
             await userge.send_message(
@@ -151,6 +148,6 @@ async def pm_log(_, message: Message):
 
 
 def user(info):
-    with open("userge/xcache/get_me.json", "r") as fp:
-        data = ujson.load(fp)
+    with open ("userge/xcache/get_me.json", "r") as fp:
+        data =  ujson.load(fp)
     return data[info]
