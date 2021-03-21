@@ -1,7 +1,7 @@
 # created for USERGE-X by @Kakashi_HTK/@ashwinstr
 
 import asyncio
-
+import ujson
 import aiofiles
 from pyrogram import filters
 from pyrogram.errors import FloodWait
