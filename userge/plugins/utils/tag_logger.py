@@ -148,6 +148,6 @@ async def pm_log(_, message: Message):
 
 
 def user(info):
-    with open ("userge/xcache/get_me.json", "r") as fp:
-        data =  ujson.load(fp)
+    with open("userge/xcache/get_me.json", "r") as fp:
+        data = ujson.load(fp)
     return data[info]
