@@ -148,3 +148,9 @@ async def pm_log(_, message: Message):
         )
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
+
+
+def user(info):
+    with open ("userge/xcache/get_me.json", "r") as fp:
+        data =  ujson.load(fp)
+    return data[info]
