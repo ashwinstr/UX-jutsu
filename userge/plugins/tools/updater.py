@@ -12,6 +12,12 @@ LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
 
 
+async def _init():
+    start = userge.uptime
+    if start == "0h, 0m, 1s":
+        await CHANNEL.log("Bot started...")
+
+
 @userge.on_cmd(
     "update",
     about={
