@@ -18,11 +18,11 @@ async def img(message: Message):
     if not message.reply_to_message:
         await message.edit("Reply to media...", del_in=5)
         return
-    message.reply_to_message.message_id
+    reply_to = message.reply_to_message.message_id
     await message.edit("Converting...", del_in=5)
     file_name = "image.jpg"
     down_file = os.path.join(Config.DOWN_PATH, file_name)
     if os.path.isfile(down_file):
         os.remove(down_file)
     image = await media_to_image(message)
-    await message.reply_photo(image)
+    await message.reply_photo(image, reply_to_message_id=reply_to)
