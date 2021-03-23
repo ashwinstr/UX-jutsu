@@ -3,35 +3,26 @@
 import os
 
 from userge import Config, Message, userge
+from userge.utils import media_to_image
 
 
 @userge.on_cmd(
     "imgs",
     about={
         "header": "Convert to image",
-        "description": "Convert GIF/sticker to jpg format image",
+        "description": "Convert GIF/sticker/video/music_thumbnail to jpg format image",
         "usage": "{tr}img [reply to media]",
     },
 )
 async def img(message: Message):
     if not message.reply_to_message:
-        print("Reply to media.")
+        await message.edit("Reply to media...",del_in=5)
         return
+    reply_to = message.reply_to_message.message_id
     await message.edit("Converting...", del_in=5)
-    stik = message.reply_to_message.message_id
-    if not os.path.isdir(Config.DOWN_PATH):
-        os.makedirs(Config.DOWN_PATH)
-    file_name = "stkr.jpg"
-    down_dir = Config.DOWN_PATH
-    down_file = os.path.join(down_dir, file_name)
-    reply_message = await userge.get_messages(message.chat.id, stik)
-    down_file = await userge.download_media(reply_message, down_file)
-    if os.path.exists(down_file):
-        pic = await userge.send_photo(
-            message.chat.id,
-            down_file,
-            reply_to_message_id=stik,
-        )
+    file_name = "image.jpg"
+    down_file = os.path.join(Config.DOWN_PATH, file_name)
+    if os.path.isfile(down_file):
         os.remove(down_file)
-    else:
-        await message.edit("Can't handle that...", del_in=5)
+    image = await media_to_image(message)
+    await message.reply_photo(image)
