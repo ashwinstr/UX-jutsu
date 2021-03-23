@@ -96,7 +96,8 @@ async def grp_log(_, message: Message):
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
     mention = f"""@{user(info="username")}"""
-    if mention in message.text:
+    text = message.text or message.caption
+    if text and mention in text:
         try:
             await asyncio.sleep(0.5)
             await userge.send_message(
