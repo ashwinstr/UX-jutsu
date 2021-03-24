@@ -89,6 +89,7 @@ async def grp_log(_, message: Message):
         sender_m_id = message.message_id
         replied = reply.from_user.id
         replied_m_id = reply.from_user.message_id
+        msgs = [sender_m_id, replied_m_id]
         me_id = user(info="id")
         if replied == me_id:
             try:
@@ -101,10 +102,7 @@ async def grp_log(_, message: Message):
                 )
                 await asyncio.sleep(0.5)
                 await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=replied_m_id
-                )
-                await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=sender_m_id
+                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=msgs
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
