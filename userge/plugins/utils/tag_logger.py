@@ -77,7 +77,7 @@ async def grp_log(_, message: Message):
     reply = message.reply_to_message
     sender = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
     sender_id = message.from_user.id
-    sender_m = f"<a href="tg://user?id={sender_id}">{sender}</a>"
+    sender_m = f"<a href='tg://user?id={sender_id}'>{sender}</a>"
     log = f"""
 #TAGS
 <b>Sent by :</b> {sender_m}
