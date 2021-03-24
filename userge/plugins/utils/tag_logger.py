@@ -38,6 +38,11 @@ tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
 )
 async def all_log(message: Message):
     """ enable / disable [all Logger] """
+    if not Config.TAG_LOGGING:
+        return await message.edit(
+            "Add <code>TAG_LOGGING = False</code> in config.py file...",
+            del_in=5,
+        )
     if not Config.PM_LOG_GROUP_ID:
         return await message.edit(
             "Make a group and provide it's ID in `PM_LOG_GROUP_ID` var.",
@@ -70,10 +75,14 @@ async def grp_log(_, message: Message):
         return
     id = message.message_id
     reply = message.reply_to_message
+    sender = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
+    sender_id = message.from_user.id
+    sender_m = f"<a href="tg://user?id={sender_id}">{sender}</a>"
     log = f"""
 #TAGS
-<b>Sent by :</b> {message.from_user.mention}
-<b>Group :</b> <code>{message.chat.title}</code>
+<b>Sent by :</b> {sender_m}
+<b>ID :</> <code>{sender_id}</code>
+<b>Group :</b> {message.chat.title}
 <b>Message link :</b> <a href={message.link}>link</a>
 <b>Message :</b> ⬇
 """
@@ -129,6 +138,7 @@ async def pm_log(_, message: Message):
     id = message.message_id
     log = f"""
 🗣 <b>#Conversation</b> with:
+#⃣ <b>ID :</b> <code>{chat_id}</code>
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇
 """
     try:
