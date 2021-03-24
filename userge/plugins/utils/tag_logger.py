@@ -81,7 +81,7 @@ async def grp_log(_, message: Message):
     log = f"""
 #TAGS
 <b>Sent by :</b> {sender_m}
-<b>ID :</> <code>{sender_id}</code>
+<b>ID :</b> <code>{sender_id}</code>
 <b>Group :</b> {message.chat.title}
 <b>Message link :</b> <a href={message.link}>link</a>
 <b>Message :</b> ⬇
