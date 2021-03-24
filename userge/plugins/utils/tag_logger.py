@@ -73,7 +73,6 @@ async def all_log(message: Message):
 async def grp_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return
-    id = message.message_id
     reply = message.reply_to_message
     sender = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
     sender_id = message.from_user.id
@@ -87,7 +86,9 @@ async def grp_log(_, message: Message):
 <b>Message :</b> ⬇
 """
     if reply:
+        sender_m_id = message.message_id 
         replied = reply.from_user.id
+        replied_m_id = reply.from_user.message_id
         me_id = user(info="id")
         if replied == me_id:
             try:
@@ -100,7 +101,10 @@ async def grp_log(_, message: Message):
                 )
                 await asyncio.sleep(0.5)
                 await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
+                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=replied_m_id
+                )
+                await userge.forward_messages(
+                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=sender_m_id
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
