@@ -86,7 +86,7 @@ async def grp_log(_, message: Message):
 <b>Message :</b> ⬇
 """
     if reply:
-        sender_m_id = message.message_id 
+        sender_m_id = message.message_id
         replied = reply.from_user.id
         replied_m_id = reply.from_user.message_id
         me_id = user(info="id")
