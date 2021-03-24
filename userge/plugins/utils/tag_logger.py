@@ -54,7 +54,7 @@ async def all_log(message: Message):
             switch = "enabled"
         else:
             switch = "disabled"
-        await message.edit(f"Tag logger is {switch}.", del_in=3)
+        await message.edit(f"Tag logger is {switch}...", del_in=3)
         return
     if Config.TAG_LOGGING:
         Config.TAG_LOGGING = False
