@@ -56,7 +56,6 @@ class Colors:
             "{tr}gimg -gif rain <download 5 gifs>",
         ],
     },
-    name="gimg",
     del_pre=True,
     check_downpath=True,
 )
@@ -207,7 +206,7 @@ async def upload_image_grp(
             ],
             width=10,
         )
-        if "gif":
+        if gif:
             total = 0
             for path_ in medias_:
                 total += 1
