@@ -31,7 +31,7 @@ async def romaji_(message: Message):
     reply = message.reply_to_message
     if reply:
         x = message.reply_to_message.text or message.reply_to_message.caption
-        replied = x.message_id
+        replied = reply.message_id
     if not x:
         await message.edit("`No input found...`")
         return
