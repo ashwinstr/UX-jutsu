@@ -618,7 +618,7 @@ async def pin_msgs(message: Message):
                 f"#PIN\n\nCHAT: `{message.from_user.first_name}` (`{message.from_user.id}`)"
             )
     except Exception as e_f:
-        await message.err(e_f + "\ndo .help pin for more info ...", del_in=7)
+        await message.err(f"{e_f}\ndo .help pin for more info ...", del_in=7)
 
 
 @userge.on_cmd(
