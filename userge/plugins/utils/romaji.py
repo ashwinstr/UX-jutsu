@@ -28,8 +28,10 @@ translator = google_translator()
 )
 async def romaji_(message: Message):
     x = message.filtered_input_str
-    if message.reply_to_message:
+    reply = message.reply_to_message
+    if reply:
         x = message.reply_to_message.text or message.reply_to_message.caption
+        replied = x.message_id
     if not x:
         await message.edit("`No input found...`")
         return
@@ -54,4 +56,9 @@ async def romaji_(message: Message):
     if k is None:
         result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
-    await message.reply(k.replace("', '", "\n").replace("['", "").replace("']", ""))
+    out = k.replace("', '", "\n").replace("['", "").replace("']", "").replace("[", "").replace("]", ".")
+    if reply:
+        await message.delete()
+        await userge.send_message(message.chat.id, out, reply_to_message_id=replied)
+    else:
+        await message.edit(out)
