@@ -56,7 +56,9 @@ async def romaji_(message: Message):
     if k is None:
         result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
-    out = (
+    lang = LANGUAGES[f"{reply_text.flag.lower()}"]
+    out = f"Transcribed to <b>{lang.title()}</b>:\n"
+    out += (
         k.replace("', '", "\n")
         .replace("['", "")
         .replace("']", "")
