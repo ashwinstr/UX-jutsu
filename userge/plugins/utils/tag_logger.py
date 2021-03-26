@@ -114,9 +114,7 @@ async def grp_log(_, message: Message):
                     disable_web_page_preview=True,
                 )
                 await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID,
-                    message.chat.id,
-                    message_ids=sender_m_id
+                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=sender_m_id
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
@@ -174,7 +172,10 @@ async def pm_log(_, message: Message):
                 Config.PM_LOG_GROUP_ID, chat_id, replied_id, disable_notification=True
             )
             await userge.send_message(
-                Config.PM_LOG_GROUP_ID, f"This message was replied with the message below...⬇", reply_to_message_id=fwd.message_id)
+                Config.PM_LOG_GROUP_ID,
+                f"This message was replied with the message below...⬇",
+                reply_to_message_id=fwd.message_id,
+            )
         await userge.forward_messages(
             Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
         )
