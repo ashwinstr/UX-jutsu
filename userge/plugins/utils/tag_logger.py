@@ -77,7 +77,15 @@ async def grp_log(_, message: Message):
     sender = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
     sender_id = message.from_user.id
     sender_m = f"<a href='tg://user?id={sender_id}'>{sender}</a>"
-    log = f"""
+    log1 = f"""
+#REPLIED
+<b>Replied by :</b> {sender_m}
+<b>ID :</b> <code>{sender_id}</code>
+<b>Group :</b> {message.chat.title}
+<b>Message link :</b> <a href={message.link}>link</a>
+<b>Message :</b> ⬇
+"""
+    log2 = f"""
 #TAGS
 <b>Sent by :</b> {sender_m}
 <b>ID :</b> <code>{sender_id}</code>
@@ -89,20 +97,26 @@ async def grp_log(_, message: Message):
         sender_m_id = message.message_id
         replied = reply.from_user.id
         replied_m_id = reply.message_id
-        msgs = [sender_m_id, replied_m_id]
         me_id = user(info="id")
         if replied == me_id:
             try:
                 await asyncio.sleep(0.5)
+                fwd = await userge.forward_messages(
+                    Config.PM_LOG_GROUP_ID,
+                    message.chat.id,
+                    message_ids=replied_m_id,
+                )
                 await userge.send_message(
                     Config.PM_LOG_GROUP_ID,
-                    log,
+                    log1,
                     parse_mode="html",
+                    reply_to_message_id=fwd.message_id,
                     disable_web_page_preview=True,
                 )
-                await asyncio.sleep(0.5)
                 await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=msgs
+                    Config.PM_LOG_GROUP_ID,
+                    message.chat.id,
+                    message_ids=sender_m_id
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
@@ -113,7 +127,7 @@ async def grp_log(_, message: Message):
             await asyncio.sleep(0.5)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
-                log,
+                log2,
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
@@ -154,6 +168,13 @@ async def pm_log(_, message: Message):
                 disable_web_page_preview=True,
             )
         await asyncio.sleep(0.5)
+        if message.reply_to_message:
+            replied_id = message.reply_to_message.message_id
+            fwd = await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID, chat_id, replied_id, disable_notification=True
+            )
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID, f"This message was replied with the message below...⬇", reply_to_message_id=fwd.message_id)
         await userge.forward_messages(
             Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
         )
