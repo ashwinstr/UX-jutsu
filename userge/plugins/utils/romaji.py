@@ -58,13 +58,14 @@ async def romaji_(message: Message):
         k = result[2]
     lang = LANGUAGES[f"{tran.dest.lower()}"]
     out = f"Transcribed to <b>{lang.title()}</b>:\n"
-    out += (
+    rom = (
         k.replace("', '", "\n")
         .replace("['", "")
         .replace("']", "")
         .replace("[", "")
         .replace("]", ".")
     )
+    out += f"`{rom}`"
     if reply:
         await message.delete()
         await userge.send_message(message.chat.id, out, reply_to_message_id=replied)
