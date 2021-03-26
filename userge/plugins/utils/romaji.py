@@ -7,7 +7,7 @@ import time
 from json import dumps
 
 from google_trans_new import google_translator
-from googletrans import LANGUAGES, Translator
+from googletrans import LANGUAGES
 
 from userge import Message, pool, userge
 from userge.plugins.utils.translate import _translate_this
@@ -56,14 +56,3 @@ async def romaji_(message: Message):
         result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
     await message.reply(k.replace("', '", "\n").replace("['", "").replace("']", ""))
-
-
-@pool.run_in_thread
-def _translate_this(x: str, dest: str, src: str):
-    for i in range(10):
-        try:
-            return Translator().translate(x, dest=dest, src=src)
-        except AttributeError:
-            if i == 9:
-                raise
-            time.sleep(0.3)
