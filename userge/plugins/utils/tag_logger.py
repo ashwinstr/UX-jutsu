@@ -78,20 +78,20 @@ async def grp_log(_, message: Message):
     sender_id = message.from_user.id
     sender_m = f"<a href='tg://user?id={sender_id}'>{sender}</a>"
     log1 = f"""
-#REPLIED
-<b>Replied by :</b> {sender_m}
-<b>ID :</b> <code>{sender_id}</code>
-<b>Group :</b> {message.chat.title}
-<b>Message link :</b> <a href={message.link}>link</a>
-<b>Message :</b> ⬇
+↪️ #REPLIED
+👤 <b>Replied by :</b> {sender_m}
+🔢 <b>ID :</b> <code>{sender_id}</code>
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
 """
     log2 = f"""
-#TAGS
-<b>Sent by :</b> {sender_m}
-<b>ID :</b> <code>{sender_id}</code>
-<b>Group :</b> {message.chat.title}
-<b>Message link :</b> <a href={message.link}>link</a>
-<b>Message :</b> ⬇
+#⃣ #TAGS
+👤 <b>Sent by :</b> {sender_m}
+🔢 <b>ID :</b> <code>{sender_id}</code>
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
 """
     if reply:
         sender_m_id = message.message_id
@@ -152,7 +152,7 @@ async def pm_log(_, message: Message):
     id = message.message_id
     log = f"""
 🗣 <b>#Conversation</b> with:
-#⃣ <b>ID :</b> <code>{chat_id}</code>
+🔢 <b>ID :</b> <code>{chat_id}</code>
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇
 """
     try:
@@ -173,7 +173,7 @@ async def pm_log(_, message: Message):
             )
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
-                f"This message was replied with the message below...⬇",
+                f"↪️ #Replied with...⬇",
                 reply_to_message_id=fwd.message_id,
             )
         await userge.forward_messages(
