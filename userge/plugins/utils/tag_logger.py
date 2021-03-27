@@ -121,7 +121,7 @@ async def grp_log(_, message: Message):
     mention = f"""@{user(info="username")}"""
     text = message.text or message.caption
     if text and mention in text:
-        text_id = message.message_id 
+        text_id = message.message_id
         try:
             await asyncio.sleep(0.5)
             await userge.send_message(
