@@ -121,6 +121,7 @@ async def grp_log(_, message: Message):
     mention = f"""@{user(info="username")}"""
     text = message.text or message.caption
     if text and mention in text:
+        text_id = message.message_id 
         try:
             await asyncio.sleep(0.5)
             await userge.send_message(
@@ -131,7 +132,7 @@ async def grp_log(_, message: Message):
             )
             await asyncio.sleep(0.5)
             await userge.forward_messages(
-                Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=id
+                Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=text_id
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
