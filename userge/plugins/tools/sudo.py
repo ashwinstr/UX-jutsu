@@ -257,7 +257,8 @@ async def view_sudo_cmd(message: Message):
         return
     total = 0
     out_str = "⛔ **SUDO CMDS**: [{}] ⛔\n\n"
+    out_str += f"**Trigger**: `{Config.SUDO_TRIGGER}\n\n`
     async for cmd in SUDO_CMDS_COLLECTION.find().sort("_id"):
         total += 1
-        out_str += f"`{cmd}`  "
+        out_str += f"`{cmd['_id']}`  "
     await message.edit_or_send_as_file(out_str.format(total), del_in=0)
