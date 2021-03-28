@@ -63,7 +63,7 @@ async def romaji_(message: Message):
         .replace("['", "")
         .replace("']", "")
         .replace("[", "")
-        .replace("]", ".")
+        .replace("]", "")
     )
     out += f"`{rom}`"
     if reply:
