@@ -38,19 +38,21 @@ async def romaji_(message: Message):
         return
     flags = message.flags
     if flags:
-        flag = list(flags)[0]
+        if "-s" in flags:
+            flag = list(flags)[1]
+        else:
+            flag = list(flags)[0]
         flag = flag.replace("-", "")
-        if len(flags) > 1:
-            await message.edit("`Only one flag please...`")
+        if len(flags) > 1 and "-s" not in flags:
+            await message.edit("`Only one language flag supported...`")
             return
-        if len(flags) == 1:
-            tran = await _translate_this(x, flag, "auto")
-            if "-s" not in message.flags:
-                await message.edit("`Transcribing...`")
-            z = translator.detect(tran.text)
-            y = (tran.text).split("\n")
+        tran = await _translate_this(x, flag, "auto")
+        if "-s" not in flags:
+            await message.edit("`Transcribing...`")
+        z = translator.detect(tran.text)
+        y = (tran.text).split("\n")
     else:
-        if "-s" not in message.flags:
+        if "-s" not in flags:
             await message.edit("`Transcribing...`")
         z = translator.detect(x)
         y = x.split("\n")
@@ -61,7 +63,7 @@ async def romaji_(message: Message):
         k = result[2]
     lang = LANGUAGES[f"{tran.dest.lower()}"]
     out = ""
-    if "-s" not in message.flags:
+    if "-s" not in flags:
         out += f"Transcribed to <b>{lang.title()}</b>:\n"
     rom = (
         k.replace("', '", "\n")
