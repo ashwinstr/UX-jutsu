@@ -19,6 +19,7 @@ translator = google_translator()
     about={
         "header": "Romaji Converter",
         "supported languages": dumps(LANGUAGES, indent=4, sort_keys=True),
+        "flags": {"-s": "transcribe secretly"},
         "usage": "[reply to message or text after cmd]",
         "examples": "for other language to latin\n"
         "{tr}rom こんばんは　or　{tr}rom [reply to msg]\n\n"
@@ -44,11 +45,13 @@ async def romaji_(message: Message):
             return
         if len(flags) == 1:
             tran = await _translate_this(x, flag, "auto")
-            await message.edit("`Transcribing...`")
+            if "-s" not in message.flags:
+                await message.edit("`Transcribing...`")
             z = translator.detect(tran.text)
             y = (tran.text).split("\n")
     else:
-        await message.edit("`Transcribing...`")
+        if "-s" not in message.flags:
+            await message.edit("`Transcribing...`")
         z = translator.detect(x)
         y = x.split("\n")
     result = translator.translate(y, lang_src=z, lang_tgt="en", pronounce=True)
@@ -57,7 +60,9 @@ async def romaji_(message: Message):
         result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
     lang = LANGUAGES[f"{tran.dest.lower()}"]
-    out = f"Transcribed to <b>{lang.title()}</b>:\n"
+    out = ""
+    if "-s" not in message.flags:
+        out += f"Transcribed to <b>{lang.title()}</b>:\n"
     rom = (
         k.replace("', '", "\n")
         .replace("['", "")
