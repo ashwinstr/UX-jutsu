@@ -72,6 +72,7 @@ async def romaji_(message: Message):
         .replace("[", "")
         .replace("]", "")
     )
+    rom = rom.strip()
     out += f"`{rom}`"
     if reply:
         await message.delete()
