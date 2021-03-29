@@ -146,6 +146,8 @@ async def pm_log(_, message: Message):
     if not Config.PM_LOG_GROUP_ID:
         return
     chat_id = message.chat.id
+    if chat_id in Config.TG_IDS:
+        return
     chat = await userge.get_chat(chat_id)
     if chat.type == "bot":
         return
