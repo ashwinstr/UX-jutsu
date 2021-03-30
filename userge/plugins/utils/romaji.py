@@ -68,6 +68,7 @@ async def romaji_(message: Message):
             f"Original text from <b>English</b>:\n"
             f"<code>{x}</code>\n"
             f"Transcribed to <b>{lang.title()}</b>:\n"
+        )
     rom = (
         k.replace("', '", "\n")
         .replace("['", "")
