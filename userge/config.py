@@ -98,8 +98,8 @@ class Config:
     IMGFLIP_PASS = os.environ.get('IMGFLIP_PASS')
     ALLOW_NSFW = os.environ.get("ALLOW_NSFW", "False")
     PM_LOG_GROUP_ID = int(os.environ.get("PM_LOG_GROUP_ID", 0))
-    PM_LOGGING = False
-    TAG_LOGGING = False
+    PM_LOGGING = True
+    TAG_LOGGING = True
     DEEP_AI = os.environ.get("DEEP_AI")
     LASTFM_USERNAME = os.environ.get("LASTFM_USERNAME")
     LASTFM_API_KEY = os.environ.get("LASTFM_API_KEY")
