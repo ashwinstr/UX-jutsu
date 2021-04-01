@@ -38,7 +38,7 @@ tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
 )
 async def all_log(message: Message):
     """ enable / disable [all Logger] """
-    if not Config.TAG_LOGGING:
+    if "TAG_LOGGING" not in dir(Config):
         return await message.edit(
             "Add <code>TAG_LOGGING = False</code> in config.py file...",
             del_in=5,
