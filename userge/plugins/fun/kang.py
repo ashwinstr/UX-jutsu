@@ -93,7 +93,11 @@ async def kang_(message: Message):
 
         u_name = user.username
         u_name = "@" + u_name if u_name else user.first_name or user.id
+<<<<<<< HEAD
         packname = f"a{user.id}_by_{user.username}_{pack}"
+=======
+        packname = f"a{user.id}_by_x_{pack}"
+>>>>>>> a414b9c05c3cd89b6ef7ad1bf65715af1fa03616
         custom_packnick = Config.CUSTOM_PACK_NAME or f"{u_name}'s kang pack"
         packnick = f"{custom_packnick} vol.{pack}"
         cmd = "/newpack"
