@@ -224,8 +224,9 @@ async def fban_p(message: Message):
             user_ = await userge.get_users(user)
             user = user_.id
         except (PeerIdInvalid, IndexError):
-            await message.edit(d_err.format(user))
-            await CHANNEL.log(d_err.format(user))
+            d_err = (f"Failed to detect user **{user}**, fban might not work...",)
+            await message.edit(d_err)
+            await CHANNEL.log(d_err)
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
