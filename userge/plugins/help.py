@@ -61,7 +61,7 @@ REPO_X = InlineQueryResultArticle(
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
     url="https://github.com/code-rgb/USERGE-X",
     description="Setup Your Own",
-    thumb_url="https://telegra.ph/file/8fa91f9c7f6f4f6b8fa6c.jpg",
+    thumb_url="https://telegra.ph/file/ffec47d3e9a82902b8ea4.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
             [
