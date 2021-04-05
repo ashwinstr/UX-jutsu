@@ -130,6 +130,7 @@ async def fban_(message: Message):
         except (PeerIdInvalid, IndexError):
             d_err = f"Failed to detect user **{user}**, fban might not work..."
             await message.edit(d_err, del_in=7)
+            await CHANNEL.log(d_err)
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
@@ -225,6 +226,7 @@ async def fban_p(message: Message):
         except (PeerIdInvalid, IndexError):
             d_err = f"Failed to detect user **{user}**, fban might not work..."
             await message.edit(d_err, del_in=7)
+            await CHANNEL.log(d_err)
         if (
             user in Config.SUDO_USERS
             or user in Config.OWNER_ID
