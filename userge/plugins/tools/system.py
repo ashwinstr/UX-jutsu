@@ -13,7 +13,7 @@ import os
 import shutil
 import time
 
-from dotenv import load_dotenv, set_key, unset_key, get_key
+from dotenv import get_key, load_dotenv, set_key, unset_key
 from pyrogram.types import User
 
 from userge import Config, Message, get_collection, userge
@@ -237,16 +237,12 @@ async def delvar_(message: Message) -> None:
     if heroku:
         heroku_vars = Config.HEROKU_APP.config()
         if var_key in heroku_vars:
-            await CHANNEL.log(
-                f"#HEROKU_VAR #DELETED\n\n`{var_key}`"
-            )
+            await CHANNEL.log(f"#HEROKU_VAR #DELETED\n\n`{var_key}`")
             await message.edit(
                 f"`Var {var_key} deleted and forwarded to log channel...`", del_in=3
             )
         else:
-            await message.edit(
-                f"`Var {var_key} doesn't exist...`", del_in=3
-            )
+            await message.edit(f"`Var {var_key} doesn't exist...`", del_in=3)
             return
         del heroku_vars[var_key]
     else:
@@ -258,9 +254,7 @@ async def delvar_(message: Message) -> None:
             )
             await CHANNEL.log(f"#CONFIG_VAR #DELETED\n\n`{var_key}`")
         else:
-            await message.edit(
-                f"`Var {var_key} doesn't exist...`", del_in=3
-            )
+            await message.edit(f"`Var {var_key} doesn't exist...`", del_in=3)
             return
         unset_key(file, var_key)
         load_dotenv(file, override=True)
@@ -295,13 +289,9 @@ async def getvar_(message: Message) -> None:
             await CHANNEL.log(
                 f"#HEROKU_VAR #GET\n\n`{var_key}` = `{heroku_vars[var_name]}`"
             )
-            await message.edit(
-                f"`Var {var_key} forwarded to log channel...`", del_in=3
-            )
+            await message.edit(f"`Var {var_key} forwarded to log channel...`", del_in=3)
         else:
-            await message.edit(
-                f"`Var {var_key} doesn't exist...`", del_in=3
-            )
+            await message.edit(f"`Var {var_key} doesn't exist...`", del_in=3)
             return
     else:
         file = "config.env"
@@ -312,9 +302,7 @@ async def getvar_(message: Message) -> None:
             )
             await CHANNEL.log(f"#CONFIG_VAR #GET\n\n`{var_key} = {get}`")
         else:
-            await message.edit(
-                f"`Var {var_key} doesn't exist...`", del_in=3
-            )
+            await message.edit(f"`Var {var_key} doesn't exist...`", del_in=3)
             return
 
 
