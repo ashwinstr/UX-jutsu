@@ -37,6 +37,7 @@ async def romaji_(message: Message):
         await message.edit("`No input found...`")
         return
     flags = message.flags
+    out = ""
     if flags:
         if "-s" in flags:
             flag = list(flags)[1]
@@ -47,30 +48,29 @@ async def romaji_(message: Message):
             await message.edit("`Only one language flag supported...`")
             return
         tran = await _translate_this(x, flag, "auto")
+        lang = LANGUAGES[f"{tran.dest.lower()}"]
         if "-s" not in flags:
             await message.edit("`Transcribing...`")
         z = translator.detect(tran.text)
         y = (tran.text).split("\n")
+        auto = False
     else:
+        tran = await _translate_this(x, "en", "auto")
+        lang_src = LANGUAGES[f"{tran.src.lower()}"]
         if "-s" not in flags:
             await message.edit("`Transcribing...`")
         z = translator.detect(x)
         y = x.split("\n")
+        auto = True
     result = translator.translate(y, lang_src=z, lang_tgt="en", pronounce=True)
     k = result[1]
     if k is None:
         result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
-    try:
-        lang = LANGUAGES[f"{tran.dest.lower()}"]
-    except BaseException:
-        lang = LANGUAGES[f"{z.src.lower()}"]
-        tran = False
-    out = ""
     if "-s" not in flags:
-        if not tran:
+        if auto:
             out += (
-                f"Original text from <b>{lang.title()}</b>:\n"
+                f"Original text from <b>{lang_src.title()}</b>:\n"
                 f"<code>{x}</code>\n"
                 f"Transcribed text:\n"
             )
