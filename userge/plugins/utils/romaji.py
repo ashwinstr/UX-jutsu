@@ -61,14 +61,25 @@ async def romaji_(message: Message):
     if k is None:
         result = translator.translate(y, lang_src="en", lang_tgt="ja", pronounce=True)
         k = result[2]
-    lang = LANGUAGES[f"{tran.dest.lower()}"]
+    try:
+        lang = LANGUAGES[f"{tran.dest.lower()}"]
+    except:
+        lang = LANGUAGES[f"{z.src.lower()}"]
+        tran = False
     out = ""
     if "-s" not in flags:
-        out += (
-            f"Original text from <b>English</b>:\n"
-            f"<code>{x}</code>\n"
-            f"Transcribed to <b>{lang.title()}</b>:\n"
-        )
+        if not tran:
+            out += (
+                f"Original text from <b>{lang.title()}</b>:\n"
+                f"<code>{x}</code>\n"
+                f"Transcribed text:\n"
+            )
+        else:
+            out += (
+                f"Original text from <b>English</b>:\n"
+                f"<code>{x}</code>\n"
+                f"Transcribed to <b>{lang.title()}</b>:\n"
+            )
     rom = (
         k.replace("', '", "\n")
         .replace("['", "")
