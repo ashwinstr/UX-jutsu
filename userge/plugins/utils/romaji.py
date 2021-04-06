@@ -63,7 +63,7 @@ async def romaji_(message: Message):
         k = result[2]
     try:
         lang = LANGUAGES[f"{tran.dest.lower()}"]
-    except:
+    except BaseException:
         lang = LANGUAGES[f"{z.src.lower()}"]
         tran = False
     out = ""
