@@ -71,13 +71,13 @@ async def romaji_(message: Message):
         if auto:
             out += (
                 f"Original text from <b>{lang_src.title()}</b>:\n"
-                f"<code>{x}</code>\n"
+                f"<code>{x}</code>\n\n"
                 f"Transcribed text:\n"
             )
         else:
             out += (
                 f"Original text from <b>English</b>:\n"
-                f"<code>{x}</code>\n"
+                f"<code>{x}</code>\n\n"
                 f"Transcribed to <b>{lang.title()}</b>:\n"
             )
     rom = (
