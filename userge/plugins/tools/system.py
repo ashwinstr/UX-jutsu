@@ -9,11 +9,11 @@
 
 
 import asyncio
+import os
 import shutil
 import time
-import os
-from dotenv import set_key, load_dotenv
 
+from dotenv import load_dotenv, set_key
 from pyrogram.types import User
 
 from userge import Config, Message, get_collection, userge
@@ -182,7 +182,9 @@ async def setvar_(message: Message) -> None:
     if heroku:
         heroku_vars = Config.HEROKU_APP.config()
         if var_key in heroku_vars:
-            await CHANNEL.log(f"#HEROKU_VAR #SET #UPDATED\n\n`{var_key}` = `{var_value}`")
+            await CHANNEL.log(
+                f"#HEROKU_VAR #SET #UPDATED\n\n`{var_key}` = `{var_value}`"
+            )
             await message.edit(
                 f"`Var {var_key} updated and forwarded to log channel...`", del_in=3
             )
@@ -204,10 +206,14 @@ async def setvar_(message: Message) -> None:
         set_key(file, var_key, var_value)
         load_dotenv(file, override=True)
         if exists:
-            await message.edit(f"Var {var_key} updated and forwarded to log channel...", del_in=3)
+            await message.edit(
+                f"Var {var_key} updated and forwarded to log channel...", del_in=3
+            )
             await CHANNEL.log(f"#CONFIG_VAR #UPDATED\n\n`{var_key} = {var_value}`")
         else:
-            await message.edit(f"Var {var_key} added and forwarded to log channel...", del_in=3)
+            await message.edit(
+                f"Var {var_key} added and forwarded to log channel...", del_in=3
+            )
             await CHANNEL.log(f"#CONFIG_VAR #ADDED\n\n`{var_key} = {var_value}`")
 
 
