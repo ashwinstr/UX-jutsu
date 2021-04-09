@@ -38,7 +38,7 @@ async def romaji_(message: Message):
     flags = message.flags
     out = ""
     secret = False
-    flag = True
+    flag = ""
     if "-s" in flags:
         secret = True
         if len(flags) > 2:
