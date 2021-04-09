@@ -48,6 +48,8 @@ async def romaji_(message: Message):
                 flag = list(flags)[1]
             else:
                 flag = list(flags)[0]
+        else:
+            no_f = True
     else:
         if len(flags) > 1:
             await message.edit("Only one language flag supported...", del_in=5)
@@ -56,7 +58,7 @@ async def romaji_(message: Message):
             flag = list(flags)[0]
     if not secret:
         await message.edit("Transcribing...")
-    flag = flag.replace("-", "") if flags else False
+    flag = flag.replace("-", "") if not no_f else False
     if flag:
         try:
             tran = await _translate_this(x, flag, "auto")
