@@ -38,7 +38,6 @@ async def romaji_(message: Message):
     flags = message.flags
     out = ""
     secret = False
-    flag = ""
     if "-s" in flags:
         secret = True
         if len(flags) > 2:
@@ -57,7 +56,7 @@ async def romaji_(message: Message):
             flag = list(flags)[0]
     if not secret:
         await message.edit("Transcribing...")
-    flag = flag.replace("-", "") if flag else False
+    flag = flag.replace("-", "") if flags else False
     if flag:
         try:
             tran = await _translate_this(x, flag, "auto")
