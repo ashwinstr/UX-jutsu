@@ -27,7 +27,12 @@ translator = google_translator()
     },
 )
 async def romaji_(message: Message):
-    x = message.filtered_input_str or message.reply_to_message or message.reply_to_message.text or message.reply_to_message.caption
+    x = (
+        message.filtered_input_str
+        or message.reply_to_message
+        or message.reply_to_message.text
+        or message.reply_to_message.caption
+    )
     if not x:
         await message.edit("`No input found...`")
         return
@@ -62,8 +67,10 @@ async def romaji_(message: Message):
             lang_src = LANGUAGES[f"{tran.src.lower()}"]
             lang_src = lang_src.title()
             tran = tran.text
-        except:
-            await message.edit("Language not supported, check <code>{tr}help rom</code>...", del_in=5)
+        except BaseException:
+            await message.edit(
+                "Language not supported, check <code>{tr}help rom</code>...", del_in=5
+            )
             return
     else:
         try:
@@ -71,18 +78,20 @@ async def romaji_(message: Message):
             lang_src = LANGUAGES[f"{tran.src.lower()}"]
             lang_src = lang_src.title()
             lang_dest = English
-        except:
+        except BaseException:
             await message.edit("There was some problem...", del_in=5)
             return
         tran = x
     tr_l = translator.detect(tran)
     tr_s = (tran).split("\n")
     try:
-        result = translator.translate(tr_s, lang_src=tr_l, lang_tgt="en", pronounce=True)
-    except:
+        result = translator.translate(
+            tr_s, lang_src=tr_l, lang_tgt="en", pronounce=True
+        )
+    except BaseException:
         await message.edit("Error in transcribing, check <code>{tr}help rom</code>...")
         return
-    result =  result[1]
+    result = result[1]
     if not secret:
         out += (
             f"Original text from <b>{lang_src}</b>:\n"
