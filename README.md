@@ -1,4 +1,4 @@
-<h2 align="center"><b>Owner: <a href="https://telegram.dog/Kakashi">𝙺𝙰𝙺𝙰𝚂𝙷𝙸</a></b></h2>
+<h2 align="center"><b>Owner: <a href="https://telegram.dog/Kakashi_HTK">𝙺𝙰𝙺𝙰𝚂𝙷𝙸</a></b></h2>
 <br>
 <p align="center">
    <a href="https://github.com/code-rgb/USERGE-X"><img src="https://i.imgur.com/53mdl2v.png" alt="Userge-x" width=400px></a>
