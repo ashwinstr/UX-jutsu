@@ -50,7 +50,7 @@ async def _init() -> None:
         "header": "Restarts the bot and reload all plugins",
         "flags": {
             "-h": "restart hard",
-            "-log": "reload userge-plugins repo (if "restart -h" doesn't update custom plugins)",
+            "-log": "reload userge-plugins repo (if 'restart -h' doesn't update custom plugins)",
             "-t": "clean temp loaded plugins",
             "-d": "clean working folder",
         },
