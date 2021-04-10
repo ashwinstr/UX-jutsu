@@ -50,7 +50,7 @@ async def _init() -> None:
         "header": "Restarts the bot and reload all plugins",
         "flags": {
             "-h": "restart hard",
-            "-rp": "reload userge-plugins repo (for zeet users)",
+            "-log": "reload userge-plugins repo (if "restart -h" doesn't update custom plugins)",
             "-t": "clean temp loaded plugins",
             "-d": "clean working folder",
         },
@@ -66,10 +66,11 @@ async def restart_(message: Message):
     LOG.info("USERGE-X Services - Restart initiated")
     if "t" in message.flags:
         shutil.rmtree(Config.TMP_PATH, ignore_errors=True)
-    if "rp" in message.flags:
-        await message.edit("Restarting <b>logs</b>...")
+    if "log" in message.flags:
+        await message.edit("Restarting <b>logs</b>...", del_in=5)
         await runcmd("bash run")
         asyncio.get_event_loop().create_task(userge.restart())
+        return
     if "d" in message.flags:
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
     if "h" in message.flags:
