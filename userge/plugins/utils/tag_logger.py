@@ -1,6 +1,5 @@
 # created for USERGE-X by @Kakashi_HTK/@ashwinstr
 
-import asyncio
 
 import aiofiles
 import ujson
@@ -38,11 +37,8 @@ tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
 )
 async def all_log(message: Message):
     """ enable / disable [all Logger] """
-    if "TAG_LOGGING" not in dir(Config):
-        return await message.edit(
-            "Add <code>TAG_LOGGING = False</code> in config.py file...",
-            del_in=5,
-        )
+    if not hasattr(Config, "TAG_LOGGING"):
+        setattr(Config, "TAG_LOGGING", False)
     if not Config.PM_LOG_GROUP_ID:
         return await message.edit(
             "Make a group and provide it's ID in `PM_LOG_GROUP_ID` var.",
@@ -100,7 +96,6 @@ async def grp_log(_, message: Message):
         me_id = user(info="id")
         if replied == me_id:
             try:
-                await asyncio.sleep(0.5)
                 fwd = await userge.forward_messages(
                     Config.PM_LOG_GROUP_ID,
                     message.chat.id,
@@ -123,14 +118,12 @@ async def grp_log(_, message: Message):
     if text and mention in text:
         text_id = message.message_id
         try:
-            await asyncio.sleep(0.5)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
                 log2,
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
-            await asyncio.sleep(0.5)
             await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=text_id
             )
@@ -161,14 +154,12 @@ async def pm_log(_, message: Message):
     try:
         me_id = user(info="id")
         if sender_id == me_id:
-            await asyncio.sleep(0.5)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
                 log,
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
-        await asyncio.sleep(0.5)
         if message.reply_to_message:
             replied_id = message.reply_to_message.message_id
             fwd = await userge.forward_messages(
