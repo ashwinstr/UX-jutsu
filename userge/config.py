@@ -74,10 +74,10 @@ class Config:
     G_DRIVE_INDEX_LINK = os.environ.get("G_DRIVE_INDEX_LINK")
     GOOGLE_CHROME_DRIVER = os.environ.get("GOOGLE_CHROME_DRIVER")
     GOOGLE_CHROME_BIN = os.environ.get("GOOGLE_CHROME_BIN")
+    GENIUS = os.environ.get("GENIUS")
     HEROKU_API_KEY = os.environ.get("HEROKU_API_KEY")
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
     G_DRIVE_IS_TD = os.environ.get("G_DRIVE_IS_TD") == "true"
-    GENIUS = os.environ.get("GENIUS")
     LOAD_UNOFFICIAL_PLUGINS = os.environ.get("LOAD_UNOFFICIAL_PLUGINS") == "true"
     THUMB_PATH = DOWN_PATH + "thumb_image.jpg"
     TMP_PATH = "userge/plugins/temp/"
