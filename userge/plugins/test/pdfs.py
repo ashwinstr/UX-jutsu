@@ -42,7 +42,7 @@ async def pdf_page(message: Message):
         lst = os.listdir("pdf/")
         for one in lst:
             lst_one = [f"pdf/{one}"]
-            await userge.send_document(message.chat.id, lst_one)
+            await userge.send_photo(message.chat.id, lst_one)
         shutil.rmtree("pdf/")
         await edt.delete()
     if input:
@@ -57,7 +57,7 @@ async def pdf_page(message: Message):
         with open(os.path.join("temp.png"), "wb") as file:
             write.write(file)
         os.remove(pdf_f)
-        await userge.send_document(
+        await userge.send_photo(
             message.chat.id, "temp.png", reply_to_message_id=reply.message_id
         )
         os.remove("temp.png")
