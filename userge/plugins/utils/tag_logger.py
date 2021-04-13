@@ -73,7 +73,6 @@ async def all_log(message: Message):
 async def grp_log(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
         return
-    await userge.send_message(Config.PM_LOG_GROUP_ID, "\u00ad")
     reply = message.reply_to_message
     sender = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
     sender_id = message.from_user.id
