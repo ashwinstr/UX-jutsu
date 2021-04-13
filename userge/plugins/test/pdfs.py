@@ -2,13 +2,14 @@
 
 import os
 import shutil
-from PyPDF2 import PdfFileMerger, PdfFileReader, PdfFileWriter
 
-from userge import userge, Message, Config
+from PyPDF2 import PdfFileReader, PdfFileWriter
 
+from userge import Message, userge
 
 if not os.path.exists("pdf/"):
     os.makedirs("pdf/")
+
 
 @userge.on_cmd(
     "pdf",
@@ -56,6 +57,8 @@ async def pdf_page(message: Message):
         with open(os.path.join("temp.png"), "wb") as file:
             write.write(file)
         os.remove(pdf_f)
-        await userge.send_document(message.chat.id, "temp.png", reply_to_message_id=reply.message_id)
+        await userge.send_document(
+            message.chat.id, "temp.png", reply_to_message_id=reply.message_id
+        )
         os.remove("temp.png")
         await edt.delete()
