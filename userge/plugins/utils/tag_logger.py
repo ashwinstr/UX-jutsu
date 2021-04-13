@@ -79,7 +79,7 @@ async def grp_log(_, message: Message):
     reply = message.reply_to_message
     me_id = user(info="id")
     if reply:
-        replied_m_id = reply.message_id
+        reply.message_id
         replied_id = reply.from_user.id
         try:
             await userge.send_message(GROUP_LOG_GROUP_ID, dash)
@@ -90,9 +90,11 @@ async def grp_log(_, message: Message):
                 disable_notification=True,
             )
         except FloodWait as e:
-            await asyncio.sleep(e.x + 3) 
+            await asyncio.sleep(e.x + 3)
         if sender_id == me_id:
-            replied_name = " ".join([reply.from_user.first_name, reply.from_user.last_name or ""])
+            replied_name = " ".join(
+                [reply.from_user.first_name, reply.from_user.last_name or ""]
+            )
             replied_men = f"<a href='tg://user?id={replied_id}'>{replied_name}</a>"
             log1 = f"""
 ↪️ #YOU_HAVE_REPLIED
@@ -103,7 +105,9 @@ async def grp_log(_, message: Message):
 💬 <b>Message :</b> ⬇
 """
         if replied_id == me_id:
-            sender_name = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
+            sender_name = " ".join(
+                [message.from_user.first_name, message.from_user.last_name or ""]
+            )
             sender_men = f"<a href='tg://user?id={sender_id}'>{sender_name}</a>"
             log1 = f"""
 ↪️ #YOU_ARE_REPLIED
@@ -230,5 +234,3 @@ def user(info):
     with open("userge/xcache/get_me.json", "r") as fp:
         data = ujson.load(fp)
     return data[info]
-
-    
