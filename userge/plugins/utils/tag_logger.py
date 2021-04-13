@@ -10,6 +10,8 @@ from userge import Config, Message, get_collection, userge
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 
+GROUP_LOG_GROUP_ID = int(os.environ.get("GROUP_LOG_GROUP_ID", 0))
+
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "TAG_LOGGING"})
@@ -67,23 +69,17 @@ async def all_log(message: Message):
     filters.group & ~filters.bot & ~filters.me & tagLoggingFilter,
 )
 async def grp_log(_, message: Message):
-    if not Config.PM_LOG_GROUP_ID:
+    if not GROUP_LOG_GROUP_ID:
         return
+    await userge.send_message(Config.PM_LOG_GROUP_ID, "\u00ad")
     reply = message.reply_to_message
     sender = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
     sender_id = message.from_user.id
-    sender_m = f"<a href='tg://user?id={sender_id}'>{sender}</a>"
-    log1 = f"""
-↪️ #REPLIED
-👤 <b>Replied by :</b> {sender_m}
-🔢 <b>ID :</b> <code>{sender_id}</code>
-👥 <b>Group :</b> {message.chat.title}
-🔗 <b>Message link :</b> <a href={message.link}>link</a>
-💬 <b>Message :</b> ⬇
-"""
+    sender_men = f"<a href='tg://user?id={sender_id}'>{sender}</a>"
+    log1 = ""
     log2 = f"""
 #⃣ #TAGS
-👤 <b>Sent by :</b> {sender_m}
+👤 <b>Sent by :</b> {sender_men}
 🔢 <b>ID :</b> <code>{sender_id}</code>
 👥 <b>Group :</b> {message.chat.title}
 🔗 <b>Message link :</b> <a href={message.link}>link</a>
@@ -91,42 +87,91 @@ async def grp_log(_, message: Message):
 """
     if reply:
         sender_m_id = message.message_id
-        replied = reply.from_user.id
+        replied_id = reply.from_user.id
         replied_m_id = reply.message_id
+        replied = " ".join([reply.from_user.first_name, reply.from_user.last_name or ""])
+        replied_men = f"<a href='tg://user?id={replied_id}'>{replied}</a>"
         me_id = user(info="id")
-        if replied == me_id:
+        i_am_sender = False
+        i_am_replied = False
+        if replied_id == me_id:
+            i_am_replied = True
+            log1 = f"""
+↪️ #YOU_ARE_REPLIED
+👤 <b>Replied by :</b> {sender_men}
+🔢 <b>ID :</b> <code>{sender_id}</code>
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
+""" 
+        if sender_id == me_id:
+            i_am_sender = True
+            log1 = f"""
+↪️ #YOU_HAVE_REPLIED
+👤 <b>Replied to :</b> {replied_men}
+🔢 <b>ID :</b> <code>{replied_id}</code>
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
+"""
+        if i_am_replied or i_am_sender:
             try:
                 fwd = await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID,
+                    GROUP_LOG_GROUP_ID,
                     message.chat.id,
                     message_ids=replied_m_id,
                 )
                 await userge.send_message(
-                    Config.PM_LOG_GROUP_ID,
+                    GROUP_LOG_GROUP_ID,
                     log1,
                     parse_mode="html",
                     reply_to_message_id=fwd.message_id,
                     disable_web_page_preview=True,
                 )
                 await userge.forward_messages(
-                    Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=sender_m_id
+                    GROUP_LOG_GROUP_ID, message.chat.id, message_ids=sender_m_id
                 )
+                await userge.send_message(GROUP_LOG_GROUP_ID, "\u00ad")
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
-    mention = f"""@{user(info="username")}"""
+    mention = f'@{user(info="username")}'
     text = message.text or message.caption
     if text and mention in text:
         text_id = message.message_id
         try:
             await userge.send_message(
-                Config.PM_LOG_GROUP_ID,
+                GROUP_LOG_GROUP_ID,
                 log2,
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
             await userge.forward_messages(
-                Config.PM_LOG_GROUP_ID, message.chat.id, message_ids=text_id
+                GROUP_LOG_GROUP_ID, message.chat.id, message_ids=text_id
             )
+            await userge.send_message(GROUP_LOG_GROUP_ID, "\u00ad")
+        except FloodWait as e:
+            await asyncio.sleep(e.x + 3)
+    if sender_id == me_id and not reply:
+        text_id = message.message_id
+        log3 = """
+#⃣ #MESSAGE_SENT_IN_GROUP
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
+"""
+        try:
+            await userge.send_message(
+                GROUP_LOG_GROUP_ID,
+                log3,
+                parse_mode="html",
+                disable_web_page_preview=True,
+            )
+            await userge.forward_messages(
+                GROUP_LOG_GROUP_ID,
+                message.chat.id,
+                message_ids=text_id,
+            )
+            await userge.send_message(GROUP_LOG_GROUP_ID, "\u00ad")
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
 
@@ -171,7 +216,7 @@ async def pm_log(_, message: Message):
                 reply_to_message_id=fwd.message_id,
             )
         await userge.forward_messages(
-            Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
+            group, chat_id, id, disable_notification=True
         )
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
