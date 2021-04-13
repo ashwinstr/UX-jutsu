@@ -36,7 +36,7 @@ async def pdf_page(message: Message):
         for page in range(pdf.numPages):
             write = PdfFileWriter()
             write.addPage(pdf.getPage(page))
-            with open(os.path.join("pdf/page{}.png".format(page + 1), "wb")) as file:
+            with open(os.path.join(f"pdf/page{page + 1}.png", "wb")) as file:
                 write.write(file)
         os.remove(pdf_f)
         lst = os.listdir("pdf/")
