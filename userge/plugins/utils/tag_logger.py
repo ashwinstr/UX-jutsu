@@ -89,7 +89,9 @@ async def grp_log(_, message: Message):
         sender_m_id = message.message_id
         replied_id = reply.from_user.id
         replied_m_id = reply.message_id
-        replied = " ".join([reply.from_user.first_name, reply.from_user.last_name or ""])
+        replied = " ".join(
+            [reply.from_user.first_name, reply.from_user.last_name or ""]
+        )
         replied_men = f"<a href='tg://user?id={replied_id}'>{replied}</a>"
         me_id = user(info="id")
         i_am_sender = False
@@ -103,7 +105,7 @@ async def grp_log(_, message: Message):
 👥 <b>Group :</b> {message.chat.title}
 🔗 <b>Message link :</b> <a href={message.link}>link</a>
 💬 <b>Message :</b> ⬇
-""" 
+"""
         if sender_id == me_id:
             i_am_sender = True
             log1 = f"""
@@ -215,9 +217,7 @@ async def pm_log(_, message: Message):
                 f"↪️ #Replied with...⬇",
                 reply_to_message_id=fwd.message_id,
             )
-        await userge.forward_messages(
-            group, chat_id, id, disable_notification=True
-        )
+        await userge.forward_messages(group, chat_id, id, disable_notification=True)
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
 
