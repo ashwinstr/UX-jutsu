@@ -41,7 +41,7 @@ async def pdf_page(message: Message):
         os.remove(pdf_f)
         lst = os.listdir("pdf/")
         for one in lst:
-            lst_one = [f"pdf/{one}"]
+            lst_one = f"pdf/{one}"
             await userge.send_photo(message.chat.id, lst_one)
         shutil.rmtree("pdf/")
         await edt.delete()
