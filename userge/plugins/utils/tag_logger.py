@@ -73,43 +73,27 @@ async def all_log(message: Message):
 async def grp_log(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
         return
-    reply = message.reply_to_message
     dash = "==========================="
-    sender = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
     sender_id = message.from_user.id
-    sender_men = f"<a href='tg://user?id={sender_id}'>{sender}</a>"
-    log1 = ""
-    log2 = f"""
-#⃣ #TAGS
-👤 <b>Sent by :</b> {sender_men}
-🔢 <b>ID :</b> <code>{sender_id}</code>
-👥 <b>Group :</b> {message.chat.title}
-🔗 <b>Message link :</b> <a href={message.link}>link</a>
-💬 <b>Message :</b> ⬇
-"""
+    sender_m_id = message.message_id
+    reply = message.reply_to_message
+    me_id = user(info="id")
     if reply:
-        sender_m_id = message.message_id
-        replied_id = reply.from_user.id
         replied_m_id = reply.message_id
-        replied = " ".join(
-            [reply.from_user.first_name, reply.from_user.last_name or ""]
-        )
-        replied_men = f"<a href='tg://user?id={replied_id}'>{replied}</a>"
-        me_id = user(info="id")
-        i_am_sender = False
-        i_am_replied = False
-        if replied_id == me_id:
-            i_am_replied = True
-            log1 = f"""
-↪️ #YOU_ARE_REPLIED
-👤 <b>Replied by :</b> {sender_men}
-🔢 <b>ID :</b> <code>{sender_id}</code>
-👥 <b>Group :</b> {message.chat.title}
-🔗 <b>Message link :</b> <a href={message.link}>link</a>
-💬 <b>Message :</b> ⬇
-"""
+        replied_id = reply.from_user.id
+        try:
+            await userge.send_message(GROUP_LOG_GROUP_ID, dash)
+            replied_msg = await userge.forward_messages(
+                GROUP_LOG_GROUP_ID,
+                message.chat.id,
+                reply_m_id,
+                disable_notification=True,
+            )
+        except FloodWait as e:
+            await asyncio.sleep(e.x + 3) 
         if sender_id == me_id:
-            i_am_sender = True
+            replied_name = " ".join([reply.from_user.first_name, reply.from_user.last_name or ""])
+            replied_men = f"<a href='tg://user?id={replied_id}'>{replied_name}</a>"
             log1 = f"""
 ↪️ #YOU_HAVE_REPLIED
 👤 <b>Replied to :</b> {replied_men}
@@ -118,31 +102,48 @@ async def grp_log(_, message: Message):
 🔗 <b>Message link :</b> <a href={message.link}>link</a>
 💬 <b>Message :</b> ⬇
 """
-        if i_am_replied or i_am_sender:
-            try:
-                fwd = await userge.forward_messages(
-                    GROUP_LOG_GROUP_ID,
-                    message.chat.id,
-                    message_ids=replied_m_id,
-                )
-                await userge.send_message(
-                    GROUP_LOG_GROUP_ID,
-                    log1,
-                    parse_mode="html",
-                    reply_to_message_id=fwd.message_id,
-                    disable_web_page_preview=True,
-                )
-                await userge.forward_messages(
-                    GROUP_LOG_GROUP_ID, message.chat.id, message_ids=sender_m_id
-                )
-                await userge.send_message(GROUP_LOG_GROUP_ID, dash)
-            except FloodWait as e:
-                await asyncio.sleep(e.x + 3)
+        if replied_id == me_id:
+            sender_name = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
+            sender_men = f"<a href='tg://user?id={sender_id}'>{sender_name}</a>"
+            log1 = f"""
+↪️ #YOU_ARE_REPLIED
+👤 <b>Replied by :</b> {sender_men}
+🔢 <b>ID :</b> <code>{sender_id}</code>
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
+"""
+        try:
+            await userge.send_message(
+                GROUP_LOG_GROUP_ID,
+                log1,
+                reply_to_message_id=replied_msg.message_id,
+                parse_mode="html",
+                disable_web_page_preview=True,
+            )
+            await userge.forward_messages(
+                GROUP_LOG_GROUP_ID,
+                message.chat.id,
+                sender_m_id,
+                disable_notification=True,
+            )
+        except FloodWait as e:
+            await asyncio.sleep(e.x + 3)
+        return
     mention = f'@{user(info="username")}'
     text = message.text or message.caption
     if text and mention in text:
         text_id = message.message_id
+        log2 = f"""
+#⃣ #TAGS
+👤 <b>Sent by :</b> {sender_men}
+🔢 <b>ID :</b> <code>{sender_id}</code>
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
+"""
         try:
+            await userge.send_message(GROUP_LOG_GROUP_ID, dash)
             await userge.send_message(
                 GROUP_LOG_GROUP_ID,
                 log2,
@@ -152,11 +153,11 @@ async def grp_log(_, message: Message):
             await userge.forward_messages(
                 GROUP_LOG_GROUP_ID, message.chat.id, message_ids=text_id
             )
-            await userge.send_message(GROUP_LOG_GROUP_ID, dash)
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
-    if sender_id == me_id and not reply:
-        text_id = message.message_id
+        return
+    if not reply and sender_id == me_id:
+        sent_m_id = message.message_id
         log3 = """
 #⃣ #MESSAGE_SENT_IN_GROUP
 👥 <b>Group :</b> {message.chat.title}
@@ -164,6 +165,7 @@ async def grp_log(_, message: Message):
 💬 <b>Message :</b> ⬇
 """
         try:
+            await userge.send_message(GROUP_LOG_GROUP_ID, dash)
             await userge.send_message(
                 GROUP_LOG_GROUP_ID,
                 log3,
@@ -173,11 +175,11 @@ async def grp_log(_, message: Message):
             await userge.forward_messages(
                 GROUP_LOG_GROUP_ID,
                 message.chat.id,
-                message_ids=text_id,
+                message_ids=sent_m_id,
             )
-            await userge.send_message(GROUP_LOG_GROUP_ID, dash)
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
+        return
 
 
 @userge.on_message(
@@ -228,3 +230,5 @@ def user(info):
     with open("userge/xcache/get_me.json", "r") as fp:
         data = ujson.load(fp)
     return data[info]
+
+    
