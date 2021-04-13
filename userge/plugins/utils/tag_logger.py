@@ -74,6 +74,7 @@ async def grp_log(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
         return
     reply = message.reply_to_message
+    dash = "==========================="
     sender = " ".join([message.from_user.first_name, message.from_user.last_name or ""])
     sender_id = message.from_user.id
     sender_men = f"<a href='tg://user?id={sender_id}'>{sender}</a>"
@@ -134,7 +135,7 @@ async def grp_log(_, message: Message):
                 await userge.forward_messages(
                     GROUP_LOG_GROUP_ID, message.chat.id, message_ids=sender_m_id
                 )
-                await userge.send_message(GROUP_LOG_GROUP_ID, "\u00ad")
+                await userge.send_message(GROUP_LOG_GROUP_ID, dash)
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
     mention = f'@{user(info="username")}'
@@ -151,7 +152,7 @@ async def grp_log(_, message: Message):
             await userge.forward_messages(
                 GROUP_LOG_GROUP_ID, message.chat.id, message_ids=text_id
             )
-            await userge.send_message(GROUP_LOG_GROUP_ID, "\u00ad")
+            await userge.send_message(GROUP_LOG_GROUP_ID, dash)
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
     if sender_id == me_id and not reply:
@@ -174,7 +175,7 @@ async def grp_log(_, message: Message):
                 message.chat.id,
                 message_ids=text_id,
             )
-            await userge.send_message(GROUP_LOG_GROUP_ID, "\u00ad")
+            await userge.send_message(GROUP_LOG_GROUP_ID, dash)
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
 
