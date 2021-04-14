@@ -79,7 +79,7 @@ async def grp_log(_, message: Message):
     reply = message.reply_to_message
     me_id = user(info="id")
     if reply:
-        reply.message_id
+        replied_m_id = reply.message_id
         replied_id = reply.from_user.id
         try:
             await userge.send_message(GROUP_LOG_GROUP_ID, dash)
