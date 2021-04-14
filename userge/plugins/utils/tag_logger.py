@@ -207,8 +207,10 @@ async def pm_log(_, message: Message):
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇
 """
     try:
+        dash = "==========================="
         me_id = user(info="id")
-        if sender_id == me_id:
+        if sender_id == me_id and not message.reply_to_message:
+            await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
                 log,
@@ -217,6 +219,7 @@ async def pm_log(_, message: Message):
             )
         if message.reply_to_message:
             replied_id = message.reply_to_message.message_id
+            await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
             fwd = await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, chat_id, replied_id, disable_notification=True
             )
