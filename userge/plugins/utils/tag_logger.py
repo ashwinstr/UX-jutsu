@@ -202,7 +202,7 @@ async def pm_log(_, message: Message):
     chat_name = " ".join([chat.first_name, chat.last_name or ""])
     id = message.message_id
     log = f"""
-🗣 <b>#Conversation</b> with:
+🗣 <b>#CONVERSATION_WITH</b>:
 🔢 <b>ID :</b> <code>{chat_id}</code>
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇
 """
@@ -225,7 +225,7 @@ async def pm_log(_, message: Message):
             )
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
-                f"↪️ #Replied with...⬇",
+                f"↪️ #REPLIED_WITH...⬇",
                 reply_to_message_id=fwd.message_id,
             )
         await userge.forward_messages(
