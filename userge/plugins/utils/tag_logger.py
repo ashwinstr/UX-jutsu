@@ -160,7 +160,7 @@ async def grp_log(_, message: Message):
         return
     if (not reply) and (sender_id == me_id) and (message.chat.id != -1001229974909):
         sent_m_id = message.message_id
-        log3 = """
+        log3 = f"""
 #⃣ #MESSAGE_SENT_IN_GROUP
 👥 <b>Group :</b> {message.chat.title}
 🔗 <b>Message link :</b> <a href={message.link}>link</a>
