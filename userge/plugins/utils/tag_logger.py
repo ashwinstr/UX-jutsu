@@ -225,7 +225,9 @@ async def pm_log(_, message: Message):
                 f"↪️ #Replied with...⬇",
                 reply_to_message_id=fwd.message_id,
             )
-        await userge.forward_messages(Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True)
+        await userge.forward_messages(
+            Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
+        )
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
 
