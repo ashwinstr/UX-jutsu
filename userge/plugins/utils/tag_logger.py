@@ -13,6 +13,7 @@ from userge import Config, Message, get_collection, userge
 SAVED_SETTINGS = get_collection("CONFIGS")
 
 GROUP_LOG_GROUP_ID = int(os.environ.get("GROUP_LOG_GROUP_ID", 0))
+NO_LOG_GROUP_ID = int(os.environ.get("NO_LOG_GROUP_ID", 0))
 
 
 async def _init() -> None:
