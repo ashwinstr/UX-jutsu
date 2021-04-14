@@ -73,7 +73,7 @@ async def grp_log(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
         return
     if NO_LOG_GROUP_ID:
-        if message.chat.id in NO_LOG_GROUP_ID:
+        if message.chat.id == NO_LOG_GROUP_ID:
             return
     dash = "==========================="
     sender_id = message.from_user.id
