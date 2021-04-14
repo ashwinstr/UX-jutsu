@@ -86,7 +86,7 @@ async def grp_log(_, message: Message):
             replied_msg = await userge.forward_messages(
                 GROUP_LOG_GROUP_ID,
                 message.chat.id,
-                reply_m_id,
+                replied_m_id,
                 disable_notification=True,
             )
         except FloodWait as e:
