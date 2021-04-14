@@ -158,7 +158,7 @@ async def grp_log(_, message: Message):
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
         return
-    if not reply and sender_id == me_id:
+    if (not reply) and (sender_id == me_id) and (message.chat.id != -1001229974909):
         sent_m_id = message.message_id
         log3 = """
 #⃣ #MESSAGE_SENT_IN_GROUP
