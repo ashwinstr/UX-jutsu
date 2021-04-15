@@ -35,6 +35,7 @@ async def true_c_(message: Message):
     if not num_check.isdigit():
         await message.edit("Provide a proper number...", del_in=5)
         return
+    await message.edit("Searching the database...")
     bot = "@RespawnRobot"
     async with userge.conversation(bot) as conv:
         try:
