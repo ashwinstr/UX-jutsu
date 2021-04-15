@@ -44,7 +44,7 @@ async def true_c_(message: Message):
             await asyncio.sleep(5)
             check = await conv.get_response()
             info = check.text
-            await userge.send_read_acknowledge(conv.chat.id)
+            await userge.send_read_acknowledge(conv.chat_id)
         except BaseException:
             await message.edit(
                 "Please unblock <code>@RespawnRobot</code> and try again...", del_in=5
