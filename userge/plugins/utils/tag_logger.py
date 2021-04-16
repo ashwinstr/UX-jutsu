@@ -202,7 +202,7 @@ async def pm_log(_, message: Message):
     chat_name = " ".join([chat.first_name, chat.last_name or ""])
     id = message.message_id
     log = f"""
-🗣 <b>#CONVERSATION_WITH</b>:
+🗣 #CONVERSATION_WITH:
 🔢 <b>ID :</b> <code>{chat_id}</code>
 👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇
 """
