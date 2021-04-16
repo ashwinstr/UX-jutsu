@@ -102,7 +102,7 @@ async def grp_log(_, message: Message):
             )
             sender_men = f"<a href='tg://user?id={sender_id}'>{sender_name}</a>"
             log1 = f"""
-↪️ #GOT_REPLY
+↪️ #GOT_A_REPLY
 👤 <b>Replied by :</b> {sender_men}
 🔢 <b>ID :</b> <code>{sender_id}</code>
 👥 <b>Group :</b> {message.chat.title}
