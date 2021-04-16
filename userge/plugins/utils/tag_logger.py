@@ -89,7 +89,7 @@ async def grp_log(_, message: Message):
             )
             replied_men = f"<a href='tg://user?id={replied_id}'>{replied_name}</a>"
             log1 = f"""
-↪️ #YOU_HAVE_REPLIED
+↪️ #YOU_REPLIED
 👤 <b>Replied to :</b> {replied_men}
 🔢 <b>ID :</b> <code>{replied_id}</code>
 👥 <b>Group :</b> {message.chat.title}
@@ -102,7 +102,7 @@ async def grp_log(_, message: Message):
             )
             sender_men = f"<a href='tg://user?id={sender_id}'>{sender_name}</a>"
             log1 = f"""
-↪️ #YOU_ARE_REPLIED
+↪️ #GOT_REPLY
 👤 <b>Replied by :</b> {sender_men}
 🔢 <b>ID :</b> <code>{sender_id}</code>
 👥 <b>Group :</b> {message.chat.title}
@@ -163,7 +163,7 @@ async def grp_log(_, message: Message):
     if (not reply) and (sender_id == me_id) and (message.chat.id != -1001229974909):
         sent_m_id = message.message_id
         log3 = f"""
-#⃣ #MESSAGE_SENT_IN_GROUP
+#⃣ #MESSAGE_SENT
 👥 <b>Group :</b> {message.chat.title}
 🔗 <b>Message link :</b> <a href={message.link}>link</a>
 💬 <b>Message :</b> ⬇
