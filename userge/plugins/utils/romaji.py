@@ -27,14 +27,17 @@ translator = google_translator()
     },
 )
 async def romaji_(message: Message):
-    x = (
-        message.filtered_input_str
-        or message.reply_to_message.text
-        or message.reply_to_message.caption
-    )
+    x = message.filtered_input_str
     if not x:
-        await message.edit("`No input found...`")
-        return
+        reply = message.reply_to_message
+        if reply:
+            x = (
+                message.reply_to_message.text
+                or message.reply_to_message.caption
+            )
+        else:
+            await message.edit("`No input found...`")
+            return
     flags = message.flags
     out = ""
     secret = False
