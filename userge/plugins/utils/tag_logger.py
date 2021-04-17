@@ -2,6 +2,7 @@
 
 
 import os
+import asyncio
 
 import aiofiles
 import ujson
@@ -111,13 +112,16 @@ async def grp_log(_, message: Message):
 """
         if replied_id == me_id or sender_id == me_id:
             try:
+                await asyncio.sleep(0.2)
                 await userge.send_message(GROUP_LOG_GROUP_ID, dash)
+                await asyncio.sleep(0.2)
                 replied_msg = await userge.forward_messages(
                     GROUP_LOG_GROUP_ID,
                     message.chat.id,
                     replied_m_id,
                     disable_notification=True,
                 )
+                await asyncio.sleep(0.2)
                 await userge.send_message(
                     GROUP_LOG_GROUP_ID,
                     log1,
@@ -125,6 +129,7 @@ async def grp_log(_, message: Message):
                     parse_mode="html",
                     disable_web_page_preview=True,
                 )
+                await asyncio.sleep(0.2)
                 await userge.forward_messages(
                     GROUP_LOG_GROUP_ID,
                     message.chat.id,
@@ -147,20 +152,23 @@ async def grp_log(_, message: Message):
 💬 <b>Message :</b> ⬇
 """
         try:
+            await asyncio.sleep(0.2)
             await userge.send_message(GROUP_LOG_GROUP_ID, dash)
+            await asyncio.sleep(0.2)
             await userge.send_message(
                 GROUP_LOG_GROUP_ID,
                 log2,
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
+            await asyncio.sleep(0.2)
             await userge.forward_messages(
                 GROUP_LOG_GROUP_ID, message.chat.id, message_ids=text_id
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
         return
-    if (not reply) and (sender_id == me_id) and (message.chat.id != -1001229974909):
+    if (not reply) and (sender_id == me_id):
         sent_m_id = message.message_id
         log3 = f"""
 #⃣ #MESSAGE_SENT
@@ -169,13 +177,16 @@ async def grp_log(_, message: Message):
 💬 <b>Message :</b> ⬇
 """
         try:
+            await asyncio.sleep(0.2)
             await userge.send_message(GROUP_LOG_GROUP_ID, dash)
+            await asyncio.sleep(0.2)
             await userge.send_message(
                 GROUP_LOG_GROUP_ID,
                 log3,
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
+            await asyncio.sleep(0.2)
             await userge.forward_messages(
                 GROUP_LOG_GROUP_ID,
                 message.chat.id,
@@ -210,7 +221,9 @@ async def pm_log(_, message: Message):
         dash = "==========================="
         me_id = user(info="id")
         if sender_id == me_id and not message.reply_to_message:
+            await asyncio.sleep(0.2)
             await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
+            await asyncio.sleep(0.2)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
                 log,
@@ -219,15 +232,19 @@ async def pm_log(_, message: Message):
             )
         if message.reply_to_message:
             replied_id = message.reply_to_message.message_id
+            await asyncio.sleep(0.2)
             await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
+            await asyncio.sleep(0.2)
             fwd = await userge.forward_messages(
                 Config.PM_LOG_GROUP_ID, chat_id, replied_id, disable_notification=True
             )
+            await asyncio.sleep(0.2)
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
                 f"↪️ #REPLIED_WITH...⬇",
                 reply_to_message_id=fwd.message_id,
             )
+        await asyncio.sleep(0.2)
         await userge.forward_messages(
             Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
         )
