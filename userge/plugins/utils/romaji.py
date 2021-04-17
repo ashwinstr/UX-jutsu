@@ -38,6 +38,7 @@ async def romaji_(message: Message):
     flags = message.flags
     out = ""
     secret = False
+    no_f = False
     if "-s" in flags:
         secret = True
         if len(flags) > 2:
@@ -56,6 +57,8 @@ async def romaji_(message: Message):
             return
         elif len(flags) == 1:
             flag = list(flags)[0]
+        else:
+            no_f = True
     if not secret:
         await message.edit("Transcribing...")
     flag = flag.replace("-", "") if not no_f else False
