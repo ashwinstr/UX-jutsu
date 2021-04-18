@@ -80,7 +80,7 @@ async def romaji_(message: Message):
             tran = await _translate_this(x, "en", "auto")
             lang_src = LANGUAGES[f"{tran.src.lower()}"]
             lang_src = lang_src.title()
-            lang_dest = English
+            lang_dest = "English"
         except BaseException:
             await message.edit("There was some problem...", del_in=5)
             return
