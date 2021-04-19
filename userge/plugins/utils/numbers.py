@@ -31,6 +31,6 @@ async def num_(message: Message):
     list = "</code>\n<code>".join(list)
     out = ""
     if "-s" not in message.flags:
-        out += f"<b>Filtered numbers from message</b>:[<b>{total}</b>]\n"
+        out += f"<b>Filtered numbers from message</b>: [<b>{total}</b>]\n"
     out += f"<code>{list}</code>"
     await message.edit(out)
