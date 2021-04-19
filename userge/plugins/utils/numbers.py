@@ -8,6 +8,9 @@ from userge import Message, userge
     about={
         "header": "Filter numbers",
         "description": "Filter numbers from replied message",
+        "flags": {
+            "-s": "Show only numbers in output",
+        },
         "usage": "{tr}num [reply to message]",
     },
 )
@@ -17,7 +20,12 @@ async def num_(message: Message):
         await message.edit("Please reply to a message...", del_in=5)
         return
     msg = reply.text or reply.caption
-    msg = msg.replace(",", "").replace(".", "").replace('"', "").replace("'", "")
+    msg = (
+        msg.replace(",", "")
+        .replace(".", "")
+        .replace('"', '')
+        .replace("'", "")
+    )
     msg = msg.split()
     list = []
     total = 0
@@ -25,5 +33,9 @@ async def num_(message: Message):
         if num.isdigit():
             total += 1
             list.append(num)
-    list = "\n".join(list)
-    await message.edit(f"<b>Filtered numbers from message</b>:[<b>{total}</b>]\n{list}")
+    list = "</code>\n<code>".join(list)
+    out = ""
+    if "s" not in message.flags:
+        out += f"<b>Filtered numbers from message</b>:[<b>{total}</b>]\n"
+    out += f"<code>{list}</code>"
+    await message.edit(out)
