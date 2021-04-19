@@ -17,12 +17,7 @@ async def num_(message: Message):
         await message.edit("Please reply to a message...", del_in=5)
         return
     msg = reply.text or reply.caption
-    msg = (
-        msg.replace(",", "")
-        .replace(".", "")
-        .replace('"', '')
-        .replace("'", "")
-    )
+    msg = msg.replace(",", "").replace(".", "").replace('"', "").replace("'", "")
     msg = msg.split()
     list = []
     total = 0
@@ -31,6 +26,4 @@ async def num_(message: Message):
             total += 1
             list.append(num)
     list = "\n".join(list)
-    await message.edit(
-        f"<b>Filtered numbers from message</b>:[<b>{total}</b>]\n{list}"
-    )
+    await message.edit(f"<b>Filtered numbers from message</b>:[<b>{total}</b>]\n{list}")
