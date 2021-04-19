@@ -8,7 +8,7 @@ from userge import userge, Message
     about={
         "header": "Filter numbers",
         "description": "Filter numbers from replied message",
-        "usage": "{tr}num [reply to message],
+        "usage": "{tr}num [reply to message]",
     },
 )
 async def num_(message: Message):
