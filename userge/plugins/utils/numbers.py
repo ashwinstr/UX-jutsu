@@ -1,6 +1,6 @@
 # made for USERGE-X by @Kakashi_HTK/@ashwinstr
 
-from userge import userge, Message
+from userge import Message, userge
 
 
 @userge.on_cmd(
@@ -27,6 +27,5 @@ async def num_(message: Message):
             list.append(num)
     list = "\n".join(list)
     await message.edit(
-        f"<b>Filtered numbers from message</b>:[<b>{total}</b>\n"
-        f"{list}"
+        f"<b>Filtered numbers from message</b>:[<b>{total}</b>\n" f"{list}"
     )
