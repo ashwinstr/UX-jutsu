@@ -1,4 +1,4 @@
-﻿"""Fun plugin"""
+"""Fun plugin"""
 
 import asyncio
 from datetime import datetime
