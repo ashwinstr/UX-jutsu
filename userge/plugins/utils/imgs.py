@@ -11,7 +11,7 @@ from userge.utils import media_to_image
     about={
         "header": "Convert to image",
         "description": "Convert GIF/sticker/video/music_thumbnail to jpg format image",
-        "usage": "{tr}img [reply to media]",
+        "usage": "{tr}imgs [reply to media]",
     },
 )
 async def img(message: Message):
