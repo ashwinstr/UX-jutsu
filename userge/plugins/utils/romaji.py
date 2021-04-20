@@ -27,17 +27,18 @@ translator = google_translator()
     },
 )
 async def romaji_(message: Message):
-    x = (
-        message.filtered_input_str
-        or message.reply_to_message.text
-        or message.reply_to_message.caption
-    )
+    x = message.filtered_input_str
     if not x:
-        await message.edit("`No input found...`")
-        return
+        reply = message.reply_to_message
+        if reply:
+            x = message.reply_to_message.text or message.reply_to_message.caption
+        else:
+            await message.edit("`No input found...`")
+            return
     flags = message.flags
     out = ""
     secret = False
+    no_f = False
     if "-s" in flags:
         secret = True
         if len(flags) > 2:
@@ -56,6 +57,8 @@ async def romaji_(message: Message):
             return
         elif len(flags) == 1:
             flag = list(flags)[0]
+        else:
+            no_f = True
     if not secret:
         await message.edit("Transcribing...")
     flag = flag.replace("-", "") if not no_f else False
@@ -77,7 +80,7 @@ async def romaji_(message: Message):
             tran = await _translate_this(x, "en", "auto")
             lang_src = LANGUAGES[f"{tran.src.lower()}"]
             lang_src = lang_src.title()
-            lang_dest = English
+            lang_dest = "English"
         except BaseException:
             await message.edit("There was some problem...", del_in=5)
             return
