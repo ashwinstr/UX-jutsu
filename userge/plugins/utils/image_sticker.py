@@ -26,7 +26,7 @@ async def stik_(message: Message):
     reply_m = await userge.get_messages(message.chat.id, reply_m_id)
     down_to = Config.DOWN_PATH
     down_file_n = os.path.join(down_to, file_n)
-    down_file_n = await userge.bot.download_media(reply_m, down_file_n)
+    down_file_n = await userge.bot.download_media(reply_m_id, down_file_n)
     if os.path.exists(down_file_n):
         stikk = await userge.send_document(
             message.chat.id,
