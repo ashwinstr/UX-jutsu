@@ -109,5 +109,8 @@ async def romaji_(message: Message):
         .replace("]", "")
     )
     rom = rom.strip()
-    out += f"<code>{rom}</code>"
+    if secret:
+        out += rom
+    else:
+        out += f"<code>{rom}</code>"
     await message.edit(out)
