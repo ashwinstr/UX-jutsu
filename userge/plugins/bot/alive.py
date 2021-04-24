@@ -261,7 +261,7 @@ class Bot_Alive:
             [
                 InlineKeyboardButton(text="✖️  Xplugin", url="t.me/xplugin"),
                 InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
-            ] 
+            ]
         ]
         return InlineKeyboardMarkup(buttons)
 
