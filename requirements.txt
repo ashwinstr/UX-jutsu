@@ -16,7 +16,9 @@ heroku3>=4.2.3
 html-telegraph-poster>=0.2.31
 lyricsgenius>=3.0.0
 motor>=2.3.0
+numpy
 oauth2client>=4.1.3
+opencv
 Pillow==8.2.0
 psutil>=5.7.3
 pybase64>=1.1.1
@@ -24,6 +26,7 @@ PyDictionary>=2.0.1
 PyPDF2
 git+https://github.com/code-rgb/pyrogram.git@x21
 pySmartDL>=1.3.4
+python-constraint
 python-dotenv>=0.15.0
 pytz>=2020.4
 rarfile>=4.0
