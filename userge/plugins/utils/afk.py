@@ -1,4 +1,4 @@
-""" Setup AFK Mode """
+""" setup AFK mode """
 
 import asyncio
 import time
@@ -46,8 +46,8 @@ async def active_afk(message: Message) -> None:
     TIME = time.time()
     REASON = message.input_str
     await asyncio.gather(
-        CHANNEL.log(f"You Went AFK! : `{REASON}`"),
-        message.edit("`You Went AFK!`", del_in=1),
+        CHANNEL.log(f"You went AFK! : `{REASON}`"),
+        message.edit("`You went AFK!`", del_in=1),
         AFK_COLLECTION.drop(),
         SAVED_SETTINGS.update_one(
             {"_id": "AFK"},
@@ -59,16 +59,16 @@ async def active_afk(message: Message) -> None:
 
 @userge.on_filters(
     IS_AFK_FILTER
-    and ~filters.me
-    and ~filters.bot
-    and ~filters.user(Config.TG_IDS)
-    and ~filters.edited
-    and (
+    & ~filters.me
+    & ~filters.bot
+    & ~filters.user(Config.TG_IDS)
+    & ~filters.edited
+    & (
         filters.mentioned
         | (
             filters.private
-            and ~filters.service
-            and (
+            & ~filters.service
+            & (
                 filters.create(lambda _, __, ___: Config.ALLOW_ALL_PMS)
                 | Config.ALLOWED_CHATS
             )
@@ -143,13 +143,13 @@ async def handle_afk_incomming(message: Message) -> None:
     await asyncio.gather(*coro_list)
 
 
-@userge.on_filters(IS_AFK_FILTER and filters.outgoing, group=-1, allow_via_bot=False)
+@userge.on_filters(IS_AFK_FILTER & filters.outgoing, group=-1, allow_via_bot=False)
 async def handle_afk_outgoing(message: Message) -> None:
     """ handle outgoing messages when you afk """
     global IS_AFK  # pylint: disable=global-statement
     IS_AFK = False
     afk_time = time_formatter(round(time.time() - TIME))
-    replied: Message = await message.reply("`My PeruASF! Master Is No Longer AFK!`", log=__name__)
+    replied: Message = await message.reply("`I'm no longer AFK!`", log=__name__)
     coro_list = []
     if USERS:
         p_msg = ""
@@ -165,14 +165,14 @@ async def handle_afk_outgoing(message: Message) -> None:
                 g_count += gcount
         coro_list.append(
             replied.edit(
-                f"`:You Recieved {p_count + g_count} Messages While Youou Were AFKway. "
-                f"Check Log For More Details.`\n\n**AFK Time** : __{afk_time}__",
+                f"`You recieved {p_count + g_count} messages while you were away. "
+                f"Check log for more details.`\n\n**AFK time** : __{afk_time}__",
                 del_in=3,
             )
         )
         out_str = (
-            f"You've Recieved **{p_count + g_count}** Messages "
-            + f"From **{len(USERS)}** Users While You Were Away!\n\n**AFK Time** : __{afk_time}__\n"
+            f"You've recieved **{p_count + g_count}** messages "
+            + f"from **{len(USERS)}** users while you were away!\n\n**AFK time** : __{afk_time}__\n"
         )
         if p_count:
             out_str += f"\n**{p_count} Private Messages:**\n\n{p_msg}"
@@ -187,7 +187,7 @@ async def handle_afk_outgoing(message: Message) -> None:
         asyncio.gather(
             AFK_COLLECTION.drop(),
             SAVED_SETTINGS.update_one(
-                {"_id": "AFK"}, {"$Set": {"On": False}}, upsert=True
+                {"_id": "AFK"}, {"$set": {"on": False}}, upsert=True
             ),
         )
     )
