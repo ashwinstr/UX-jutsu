@@ -255,7 +255,7 @@ class Bot_Alive:
                 InlineKeyboardButton(text="🔧  SETTINGS", callback_data="settings_btn"),
             ],
             [
-                InlineKeyboardButton(text="✖️  XPLUGIN", url="t.me/xplugin_support"),
+                InlineKeyboardButton(text="✖️  XPLUGINS", url="t.me/xplugin_support"),
                 InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
             ],
         ]
