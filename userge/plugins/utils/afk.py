@@ -149,7 +149,13 @@ async def handle_afk_outgoing(message: Message) -> None:
     global IS_AFK  # pylint: disable=global-statement
     IS_AFK = False
     afk_time = time_formatter(round(time.time() - TIME))
+<<<<<<< ours
     replied: Message = await message.reply("`I'm no longer AFK!`", log=__name__)
+=======
+    replied: Message = await message.reply(
+        "`My PeruASF! Master Is No Longer AFK!`", log=__name__
+    )
+>>>>>>> theirs
     coro_list = []
     if USERS:
         p_msg = ""
@@ -222,5 +228,5 @@ AFK_REASONS = (
 I'll Get Back To You Later.",
     "I Bet You Were Expecting An Fuckin'Shieeety Away Message!",
     "Life Is So Short, There Are So Many Things To Do...\nI'm Away Doing One Of Them..",
-    "I Am Not Here Fuckin' Right Now...\nBut If I Was...\n\nWouldn't That Be Awesome?",
+    "I Am Not Here Fuckin' Right Now...\nBut If I Was...\n\nWouldn't That Be Awesome...?",
 )
