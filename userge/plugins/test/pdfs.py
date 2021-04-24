@@ -123,7 +123,7 @@ async def pdf_text_(message: Message):
         file = await userge.download_media(reply)
         read = PdfFileReader(file)
         str_ = read.getPage(page).extractText()
-        text = f"{file.split('.')[0]} Page-{page}.txt"
+        text = f"{file.split('.')[0]} Page-{input_}.txt"
         with open(text, "w") as t:
             t.write(str_)
         await userge.send_document(
