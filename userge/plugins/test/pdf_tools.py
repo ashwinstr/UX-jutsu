@@ -194,7 +194,7 @@ async def pdf_scan_(message: Message):
     im1 = image1.convert("RGB")
     scann = f"Scanned {media.split('.')[0]}.pdf"
     im1.save(scann)
-    await userge.send_document(message.chat.id, scann reply_to_message_id=reply.message_id)
+    await userge.send_document(message.chat.id, scann, reply_to_message_id=reply.message_id)
     await message.delete()
     os.remove(media)
     os.remove("png.png")
