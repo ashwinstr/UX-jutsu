@@ -197,7 +197,7 @@ async def handle_afk_outgoing(message: Message) -> None:
 AFK_REASONS = (
     "I'm Busy Right Now. Please Talk In A Fuckin' Bag And When I Come Back You Can Just Give Me The Bag!",
     "I'm Away Right Now. If You Need Anything, Leave A Message After The Beep: \
-`BeeeeeeeeeeeeeeeeFuuuuuckkkkkkeeeeeeeeeeeeeeeeep!`",
+`BeeeeeeeeeeeeeeeeFuuuuuuuuuckkkkkkkeeeeeeeeeeeeeeeeep!`",
     "You Missed Me, Next Time Aim Fuckin Better.",
     "I'll Be Back In A Few Minutes And If I'm Not...,\nWait Longer Or Die Bish! BEZZ+.",
     "I'm Not Here Fuckin Right Now, So I'm Probably Somewhere Else In A Hell!.",
