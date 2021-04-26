@@ -209,8 +209,7 @@ AFK_REASONS = (
 7 Plains And 7 Mounds,\n7 Pools And 7 Lakes,\n7 Springs And 7 Meadows,\
 7 Cities And 7 Neighborhoods,\n7 Blocks And 7 Houses...\
     Where Not Even Your Fuckin Messages Can Reach Me!",
-    "I'm Fucking Away From The Fuckin Keyboard At The Fucking Moment, But If You'll Fucking screammmmm LoudASF! Enough At Your Fuckin Shieety Screen,\
-    I Might Just Fuckin' Hear You!.",
+    "I'm Fucking Away From The Fuckin Keyboard At The Fucking Moment, But If You'll Fucking Screammmmm LoudASF! Enough At Your Fuckin Shieety Screen,\I Might Just Fuckin' Hear You!.",
     "I Went That Fuckin' Way\n>>>>>",
     "I Went This Fuckin' Way\n<<<<<",
     "Please Leave A Fuckin'Sheeity Message And Make Me Feel Even More Important Than I Already Fuckin'EM!.",
