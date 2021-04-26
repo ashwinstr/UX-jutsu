@@ -195,7 +195,8 @@ async def pdf_scan_(message: Message):
     cv2.imwrite("png.png", ok)
     image1 = PIL.Image.open("png.png")
     im1 = image1.convert("RGB")
-    scann = f"Scanned {media.split('.')[0]}.pdf"
+    scann = media.split("/")[3]
+    scann = f"Scanned {scann.split('.')[0]}.pdf"
     im1.save(scann)
     await userge.send_document(
         message.chat.id, scann, reply_to_message_id=reply.message_id
