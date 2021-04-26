@@ -2,12 +2,12 @@
 
 import os
 import shutil
-import PIL
 
 import cv2
 import imutils
-from imutils.perspective import four_point_transform
 import numpy as np
+import PIL
+from imutils.perspective import four_point_transform
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from skimage.filters import threshold_local
 
