@@ -39,7 +39,7 @@ async def _init():
     allow_channels=False,
 )
 async def check_update(message: Message):
-    """ check or do updates """
+    """check or do updates"""
     await message.edit("`Checking for updates, please wait....`")
     if Config.HEROKU_ENV:
         await message.edit(

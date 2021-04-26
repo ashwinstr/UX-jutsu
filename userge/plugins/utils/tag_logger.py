@@ -42,7 +42,7 @@ tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
     allow_channels=False,
 )
 async def all_log(message: Message):
-    """ enable / disable [all Logger] """
+    """enable / disable [all Logger]"""
     if not hasattr(Config, "TAG_LOGGING"):
         setattr(Config, "TAG_LOGGING", False)
     if not Config.PM_LOG_GROUP_ID:

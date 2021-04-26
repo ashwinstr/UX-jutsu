@@ -59,7 +59,7 @@ async def _init() -> None:
     allow_via_bot=False,
 )
 async def allow(message: Message):
-    """ allows to pm """
+    """allows to pm"""
     userid = await get_id(message)
     if userid:
         if userid in pmCounter:
@@ -98,7 +98,7 @@ async def allow(message: Message):
     allow_via_bot=False,
 )
 async def denyToPm(message: Message):
-    """ disallows to pm """
+    """disallows to pm"""
     userid = await get_id(message)
     if userid:
         if userid in Config.ALLOWED_CHATS:
@@ -142,7 +142,7 @@ async def get_id(message: Message):
     allow_channels=False,
 )
 async def pmguard(message: Message):
-    """ enable or disable auto pm handler """
+    """enable or disable auto pm handler"""
     global pmCounter  # pylint: disable=global-statement
     if Config.ALLOW_ALL_PMS:
         Config.ALLOW_ALL_PMS = False
@@ -176,7 +176,7 @@ async def pmguard(message: Message):
     allow_channels=False,
 )
 async def set_custom_nopm_message(message: Message):
-    """ setup custom pm message """
+    """setup custom pm message"""
     global noPmMessage  # pylint: disable=global-statement
     if "-r" in message.flags:
         await message.edit("`Custom NOpm message reset`", del_in=3, log=True)
@@ -213,7 +213,7 @@ async def set_custom_nopm_message(message: Message):
     allow_channels=False,
 )
 async def set_custom_blockpm_message(message: Message):
-    """ setup custom blockpm message """
+    """setup custom blockpm message"""
     global blocked_message  # pylint: disable=global-statement
     if "-r" in message.flags:
         await message.edit("`Custom BLOCKpm message reset`", del_in=3, log=True)
@@ -239,7 +239,7 @@ async def set_custom_blockpm_message(message: Message):
     allow_channels=False,
 )
 async def view_current_noPM_msg(message: Message):
-    """ view current pm message """
+    """view current pm message"""
     reply = message.reply_to_message
     if reply:
         reply_to = reply.message_id
@@ -257,7 +257,7 @@ async def view_current_noPM_msg(message: Message):
     allow_channels=False,
 )
 async def view_current_blockPM_msg(message: Message):
-    """ view current block pm message """
+    """view current block pm message"""
     reply = message.reply_to_message
     if reply:
         reply_to = reply.message_id
@@ -281,7 +281,7 @@ async def view_current_blockPM_msg(message: Message):
     group=-1,
 )
 async def uninvitedPmHandler(message: Message):
-    """ pm message handler """
+    """pm message handler"""
     me = await userge.get_me()
     owner = " ".join([me.first_name, me.last_name or ""])
     user_dict = await userge.get_user_dict(message.from_user.id)
@@ -325,7 +325,7 @@ async def uninvitedPmHandler(message: Message):
     allow_via_bot=False,
 )
 async def outgoing_auto_approve(message: Message):
-    """ outgoing handler """
+    """outgoing handler"""
     userID = message.chat.id
     if userID in pmCounter:
         del pmCounter[userID]

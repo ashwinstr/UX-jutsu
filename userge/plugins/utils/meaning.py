@@ -13,7 +13,7 @@ from userge import Message, userge
     },
 )
 async def meaning_wrd(message: Message):
-    """ meaning of word """
+    """meaning of word"""
     await message.edit("`Searching for meaning...`")
     word = message.input_str or message.reply_to_message.text
     if not word:
@@ -42,7 +42,7 @@ async def meaning_wrd(message: Message):
     },
 )
 async def synonym_wrd(message: Message):
-    """ synonym of word """
+    """synonym of word"""
     await message.edit("`Searching for synonyms...`")
     word = message.input_str or message.reply_to_message.text
     if not word:
@@ -69,7 +69,7 @@ async def synonym_wrd(message: Message):
     },
 )
 async def antonym_wrd(message: Message):
-    """ antonym of word """
+    """antonym of word"""
     await message.edit("`Searching for antonyms...`")
     word = message.input_str or message.reply_to_message.text
     if not word:
