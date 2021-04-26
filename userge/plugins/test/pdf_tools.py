@@ -2,10 +2,10 @@
 
 import os
 import shutil
+
 import cv2
 import imutils
 import numpy as np
-
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
 from userge import Message, userge
@@ -157,7 +157,7 @@ async def pdf_scan_(message: Message):
         await message.edit("Please reply to an image...", del_in=5)
         os.remove(media)
         return
-    edt = await message.edit("Processing...")
+    await message.edit("Processing...")
     image = cv2.imread(media)
     original_image = image.copy()
     ratio = image.shape[0] / 500.0
@@ -194,7 +194,9 @@ async def pdf_scan_(message: Message):
     im1 = image1.convert("RGB")
     scann = f"Scanned {media.split('.')[0]}.pdf"
     im1.save(scann)
-    await userge.send_document(message.chat.id, scann, reply_to_message_id=reply.message_id)
+    await userge.send_document(
+        message.chat.id, scann, reply_to_message_id=reply.message_id
+    )
     await message.delete()
     os.remove(media)
     os.remove("png.png")
