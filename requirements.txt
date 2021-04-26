@@ -14,6 +14,7 @@ google_trans_new
 hachoir>=3.1.1
 heroku3>=4.2.3
 html-telegraph-poster>=0.2.31
+imutils
 lyricsgenius>=3.0.0
 motor>=2.3.0
 oauth2client>=4.1.3
