@@ -18,12 +18,12 @@ translator = google_translator()
     about={
         "header": "Romaji transcriber",
         "supported languages": dumps(LANGUAGES, indent=4, sort_keys=True),
-        "flags": {"-s": "transcribe secretly"},
-        "usage": "{tr}rom [reply to message or text]",
+        "flags": {"-s": "transcribe silently"},
+        "usage": "{tr}rom [-s (optional)] [src lang] [dest lang] [reply to message or text]",
         "examples": "for other language to latin\n"
-        "{tr}rom こんばんは　or　{tr}rom [reply to msg]\n\n"
+        "{tr}rom [text or reply to text]\n\n"
         "for english to other language translation then script to latin\n"
-        "{tr}rom [flag] [[text] or [reply to msg]]",
+        "{tr}rom [flag] [text or reply to msg]",
     },
 )
 async def romaji_(message: Message):
