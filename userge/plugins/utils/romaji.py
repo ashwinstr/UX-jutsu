@@ -41,30 +41,44 @@ async def romaji_(message: Message):
     no_f = False
     if "-s" in flags:
         secret = True
-        if len(flags) > 2:
-            await message.edit("Only one language flag supported...", del_in=5)
+        if len(flags) > 3:
+            await message.edit("Maximum two language flags supported...", del_in=5)
             return
+        elif len(flags) == 3:
+            if list(flags)[0] == "-s":
+                src = list(flags)[1]
+                dest = list(flags)[2]
+            else:
+                await message.edit("Keep secret flag at start...", del_in=5)
+                return
         elif len(flags) == 2:
             if list(flags)[0] == "-s":
-                flag = list(flags)[1]
+                src = "auto"
+                dest = list(flags)[1]
             else:
-                flag = list(flags)[0]
+                await message.edit("Keep secret flag at start...", del_in=5)
+                return
         else:
             no_f = True
     else:
-        if len(flags) > 1:
-            await message.edit("Only one language flag supported...", del_in=5)
+        if len(flags) > 2:
+            await message.edit("Maximum two language flags supported...", del_in=5)
             return
+        elif len(flags) == 2:
+            src = list(flags)[0]
+            dest = list(flags)[1]
         elif len(flags) == 1:
-            flag = list(flags)[0]
+            src = "auto"
+            dest = flags
         else:
             no_f = True
     if not secret:
         await message.edit("Transcribing...")
-    flag = flag.replace("-", "") if not no_f else False
-    if flag:
+    src = src.replace("-", "") if not no_f else False
+    dest = dest.replace("-", "") if not no_f else False
+    if src and dest:
         try:
-            tran = await _translate_this(x, flag, "auto")
+            tran = await _translate_this(x, dest, src)
             lang_dest = LANGUAGES[f"{tran.dest.lower()}"]
             lang_dest = lang_dest.title()
             lang_src = LANGUAGES[f"{tran.src.lower()}"]
