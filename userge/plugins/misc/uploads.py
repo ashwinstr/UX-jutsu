@@ -86,9 +86,15 @@ async def convert_(message: Message):
 )
 async def upload_to_tg(message: Message):
     """upload to telegram"""
+<<<<<<< HEAD:userge/plugins/misc/uploads.py
     input = message.filtered_input_str
     if not input:
         await message.edit("invalid input!, check `{tr}help upload`", del_in=5)
+=======
+    path_ = message.filtered_input_str
+    if not path_:
+        await message.edit("invalid input!, check `.help .upload`", del_in=5)
+>>>>>>> 742e019bf21721f53737be21810269cf03ad13ae:userge/plugins/misc/upload.py
         return
     try:
         path_ = input.replace("/", " ").split()[0]
