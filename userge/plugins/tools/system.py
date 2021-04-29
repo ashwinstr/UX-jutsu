@@ -162,12 +162,8 @@ async def die_(message: Message) -> None:
     },
 )
 async def setvar_(message: Message) -> None:
-<<<<<<< HEAD
     """set var"""
     heroku = True
-=======
-    """set var (heroku)"""
->>>>>>> 742e019bf21721f53737be21810269cf03ad13ae
     if not Config.HEROKU_APP:
         heroku = False
         if os.path.exists("config.env"):
@@ -225,12 +221,8 @@ async def setvar_(message: Message) -> None:
     },
 )
 async def delvar_(message: Message) -> None:
-<<<<<<< HEAD
     """del var"""
     heroku = True
-=======
-    """del var (heroku)"""
->>>>>>> 742e019bf21721f53737be21810269cf03ad13ae
     if not Config.HEROKU_APP:
         heroku = False
         if os.path.exists("config.env"):
@@ -278,12 +270,8 @@ async def delvar_(message: Message) -> None:
     },
 )
 async def getvar_(message: Message) -> None:
-<<<<<<< HEAD
     """get var"""
     heroku = True
-=======
-    """get var (heroku)"""
->>>>>>> 742e019bf21721f53737be21810269cf03ad13ae
     if not Config.HEROKU_APP:
         heroku = False
         if os.path.exists("config.env"):
