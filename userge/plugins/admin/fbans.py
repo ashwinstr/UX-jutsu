@@ -162,11 +162,11 @@ async def fban_(message: Message):
                     filters=(filters.user([609517172]) & ~filters.service),
                 )
                 resp = response.text
-                if (
-                    ("New FedBan" not in resp)
-                    and ("Starting a federation ban" not in resp)
-                    and ("Start a federation ban" not in resp)
-                    and ("FedBan reason updated" not in resp)
+                if not (
+                    ("New FedBan" in resp)
+                    or ("starting a federation ban" in resp)
+                    or ("start a federation ban" in resp)
+                    or ("fedban reason updated" in resp)
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
 
@@ -248,17 +248,31 @@ async def fban_p(message: Message):
     from_ = message.chat.id
     admin = message.from_user.id
     proof = message.reply_to_message.message_id
+    log_fwd = await userge.forward_messages(
+        Config.LOG_CHANNEL_ID,
+        from_chat_id=from_,
+        message_ids=proof,
+    )
+    log_msg_ = f"Proof of the fban of {u_link}:\n<a href='{proof.link}'>Link</b> from {message.chat.title}."
+    await userge.send_message(
+        Config.LOG_CHANNEL_ID,
+        log_msg_,
+        reply_to_message_id=log_fwd.message_id,
+    )
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
-        if chat_id != from_:
-            fwd = await userge.forward_messages(
-                chat_id=chat_id,
-                from_chat_id=from_,
-                message_ids=proof,
-            )
-        else:
-            fwd = message.reply_to_message
+        try:
+            if chat_id != from_:
+                fwd = await userge.forward_messages(
+                    chat_id=chat_id,
+                    from_chat_id=from_,
+                    message_ids=proof,
+                )
+            else:
+                fwd = message.reply_to_message
+        except Forbidden:
+            pass
         if admin != 1156425647:
             await userge.send_message(
                 chat_id,
@@ -277,13 +291,15 @@ async def fban_p(message: Message):
                     filters=(filters.user([609517172]) & ~filters.service),
                 )
                 resp = response.text
-                if (
-                    ("New FedBan" not in resp)
-                    and ("Starting a federation ban" not in resp)
-                    and ("Start a federation ban" not in resp)
-                    and ("FedBan reason updated" not in resp)
+                if not (
+                    ("New FedBan" in resp)
+                    or ("starting a federation ban" in resp)
+                    or ("start a federation ban" in resp)
+                    or ("fedban reason updated" in resp)
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: {data['chat_id']}")
+        except FloodWait as f:
+            await asyncio.sleep(f.x + 3)
         except BaseException:
             failed.append(data["fed_name"])
     if total == 0:
@@ -298,7 +314,7 @@ async def fban_p(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Fbanned in {total} feds."
-    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
+    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}\n\n<b>Proof:</b> <a href='{log_fwd.link}'>link</a>"
     await message.edit(msg_)
     await CHANNEL.log(msg_)
 
