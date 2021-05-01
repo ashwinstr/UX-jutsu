@@ -169,7 +169,8 @@ async def fban_(message: Message):
                     or ("fedban reason updated" in resp)
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
-
+        except FloodWait as f:
+            await asyncio.sleep(f.x + 3)
         except BaseException:
             failed.append(data["fed_name"])
     if total == 0:
