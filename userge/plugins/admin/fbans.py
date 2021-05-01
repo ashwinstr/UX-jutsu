@@ -314,7 +314,10 @@ async def fban_p(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Fbanned in {total} feds."
-    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}\n\n<b>Proof:</b> <a href='{log_fwd.link}'>link</a>"
+    msg_ = (
+        fban_arg[3].format(u_link)
+        + f"\n**Reason:** {reason}\n**Status:** {status}\n\n<b>Proof:</b> <a href='{log_fwd.link}'>link</a>"
+    )
     await message.edit(msg_)
     await CHANNEL.log(msg_)
 
