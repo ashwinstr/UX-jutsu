@@ -4,7 +4,7 @@ import asyncio
 
 from userge import Message, userge
 
-LOG = userge.getLogger(__name__)
+CHANNEL = userge.getLogger(__name__)
 
 
 @userge.on_cmd(
@@ -52,7 +52,7 @@ async def true_c_(message: Message):
             await message.edit(
                 "Please unblock <code>@RespawnRobot</code> and try again...", del_in=5
             )
-            await LOG.channel(e)
+            await CHANNEL.log(e)
             return
         await userge.send_message(message.chat.id, info, reply_to_message_id=reply_to)
     await message.delete()
