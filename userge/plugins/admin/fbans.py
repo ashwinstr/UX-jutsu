@@ -248,13 +248,14 @@ async def fban_p(message: Message):
     await message.edit(fban_arg[1])
     from_ = message.chat.id
     admin = message.from_user.id
-    proof = message.reply_to_message.message_id
+    reply = message.reply_to_message
+    proof = reply.message_id
     log_fwd = await userge.forward_messages(
         Config.LOG_CHANNEL_ID,
         from_chat_id=from_,
         message_ids=proof,
     )
-    log_msg_ = f"Proof of the fban of {u_link}:\n<a href='{proof.link}'>Link</b> from {message.chat.title}."
+    log_msg_ = f"Proof of the fban of {u_link}:\n<a href='{reply.link}'>Link</b> from {message.chat.title}."
     await userge.send_message(
         Config.LOG_CHANNEL_ID,
         log_msg_,
