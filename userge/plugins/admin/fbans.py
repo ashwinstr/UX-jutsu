@@ -255,7 +255,7 @@ async def fban_p(message: Message):
         from_chat_id=from_,
         message_ids=proof,
     )
-    log_msg_ = f"Proof of the fban of {u_link}:\n<a href='{reply.link}'>Link</b> from {message.chat.title}."
+    log_msg_ = f"###FBAN_PROOF###\n\nProof of the fban of {u_link}:\n<a href='{reply.link}'>Link</b> from {message.chat.title}."
     await userge.send_message(
         Config.LOG_CHANNEL_ID,
         log_msg_,
