@@ -10,7 +10,7 @@
 import asyncio
 
 from pyrogram import filters
-from pyrogram.errors import FloodWait, PeerIdInvalid, Forbidden
+from pyrogram.errors import FloodWait, Forbidden, PeerIdInvalid
 
 from userge import Config, Message, get_collection, userge
 
