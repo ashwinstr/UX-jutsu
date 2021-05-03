@@ -76,7 +76,7 @@ async def delfed_(message: Message):
             if not id_.isdigit() or not chat_id.startswith("-"):
                 return await message.err("Provide a valid chat ID...", del_in=7)
         out = f"{title}\nChat ID: {chat_id}\n"
-        found = await FED_LIST.find_one({"chat_id": chat_id})
+        found = await FED_LIST.find_one({"chat_id": int(chat_id)})
         if found:
             msg_ = out + f"Successfully Removed Fed: **{found['fed_name']}**"
             await message.edit(msg_, del_in=7)
