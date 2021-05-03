@@ -69,8 +69,6 @@ async def delfed_(message: Message):
             chat_ = await message.client.get_chat(message.input_str or message.chat.id)
             chat_id = chat_.id
         except (PeerIdInvalid, IndexError):
-            return await message.err("Provide a valid Chat ID", del_in=7)
-        except ChannelInvalid:
             chat_id = message.input_str
             id_ = chat_id.replace("-", "")
             if not id_.isdigit() or not chat_id.startswith("-"):
