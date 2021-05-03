@@ -67,9 +67,14 @@ async def delfed_(message: Message):
     else:
         try:
             chat_ = await message.client.get_chat(message.input_str or message.chat.id)
+            chat_id = chat_.id
         except (PeerIdInvalid, IndexError):
             return await message.err("Provide a valid Chat ID", del_in=7)
-        chat_id = chat_.id
+        except ChannelInvalid:
+            chat_id = message.input_str
+            id_ = chat_id.replace("-", "")
+            if not id_.isdigit() or not chat_id.startswith("-"):
+                return await message.err("Provide a valid chat ID...", del_in=7)
         out = f"{chat_.title}\nChat ID: {chat_id}\n"
         found = await FED_LIST.find_one({"chat_id": chat_id})
         if found:
