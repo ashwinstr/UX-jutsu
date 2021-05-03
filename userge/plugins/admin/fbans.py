@@ -68,12 +68,14 @@ async def delfed_(message: Message):
         try:
             chat_ = await message.client.get_chat(message.input_str or message.chat.id)
             chat_id = chat_.id
+            title = chat_.title
         except (PeerIdInvalid, IndexError):
             chat_id = message.input_str
+            title = "Unknown/deleted chat"
             id_ = chat_id.replace("-", "")
             if not id_.isdigit() or not chat_id.startswith("-"):
                 return await message.err("Provide a valid chat ID...", del_in=7)
-        out = f"{chat_.title}\nChat ID: {chat_id}\n"
+        out = f"{title}\nChat ID: {chat_id}\n"
         found = await FED_LIST.find_one({"chat_id": chat_id})
         if found:
             msg_ = out + f"Successfully Removed Fed: **{found['fed_name']}**"
