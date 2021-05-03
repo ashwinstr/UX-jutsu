@@ -273,7 +273,7 @@ async def fban_p(message: Message):
                 )
             else:
                 fwd = message.reply_to_message
-        except Forbidden:
+        except (Forbidden, ChannelInvalid):
             pass
         if admin != 1156425647:
             await userge.send_message(
