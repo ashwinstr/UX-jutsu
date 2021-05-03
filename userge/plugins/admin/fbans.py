@@ -260,12 +260,6 @@ async def fban_p(message: Message):
         from_chat_id=from_,
         message_ids=proof,
     )
-    log_msg_ = f"### FBAN_PROOF ###\n\nProof of the fban of {u_link}:\n<a href='{reply.link}'>Link</b> from {message.chat.title}."
-    await userge.send_message(
-        Config.LOG_CHANNEL_ID,
-        log_msg_,
-        reply_to_message_id=log_fwd.message_id,
-    )
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
@@ -323,10 +317,12 @@ async def fban_p(message: Message):
         status = f"Success! Fbanned in {total} feds."
     msg_ = (
         fban_arg[3].format(u_link)
-        + f"\n**Reason:** {reason}\n**Status:** {status}\n\n<b>Proof:</b> <a href='{log_fwd.link}'>link</a>"
+        + f"\n**Reason:** {reason}\n**Status:** {status}"
     )
-    await message.edit(msg_)
-    await CHANNEL.log(msg_)
+    chat_msg_ = f"{msg_}\n<b>Proof in log channel:</b> <a href='{log_fwd.link}'>link</a>"
+    log_msg_ = f"{msg_}\n<Proof in chat <a href='{reply.link}'>{message.chat.title}</a>"
+    await message.edit(chat_msg_)
+    await CHANNEL.log(log_msg_)
 
 
 @userge.on_cmd(
