@@ -230,6 +230,11 @@ async def pm_log(_, message: Message):
                 parse_mode="html",
                 disable_web_page_preview=True,
             )
+            await asyncio.sleep(0.2)
+            await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
+            )
+            return
         if message.reply_to_message:
             replied_id = message.reply_to_message.message_id
             await asyncio.sleep(0.2)
@@ -244,6 +249,13 @@ async def pm_log(_, message: Message):
                 f"↪️ #REPLIED_WITH...⬇",
                 reply_to_message_id=fwd.message_id,
             )
+            await asyncio.sleep(0.2)
+            await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
+            )
+            return
+        await asyncio.sleep(0.2)
+        await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
         await asyncio.sleep(0.2)
         await userge.forward_messages(
             Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
