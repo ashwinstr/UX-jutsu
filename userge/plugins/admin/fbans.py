@@ -451,7 +451,9 @@ async def unfban_(message: Message):
     about={
         "header": "Fed Chat List",
         "description": "Get a list of chats added in fed",
-        "flags": {"-id": "Show fed group id in list.",},
+        "flags": {
+            "-id": "Show fed group id in list.",
+        },
         "usage": "{tr}listf",
     },
 )
