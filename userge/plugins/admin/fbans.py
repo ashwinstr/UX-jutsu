@@ -451,6 +451,7 @@ async def unfban_(message: Message):
     about={
         "header": "Fed Chat List",
         "description": "Get a list of chats added in fed",
+        "flags": {"-id": "Show fed group id in list.",},
         "usage": "{tr}listf",
     },
 )
@@ -460,7 +461,8 @@ async def fban_lst_(message: Message):
     total = 0
     async for data in FED_LIST.find():
         total += 1
-        out += f"• Fed: <b>{data['fed_name']}</b>\n"
+        id_ = f"[{data['chat_id']}]" if "-id" in message.flags else ""
+        out += f"• Fed: <b>{data['fed_name']}</b> {id_}\n"
     await message.edit_or_send_as_file(
         f"**Connected federations: [{total}]**\n\n" + out
         if out
