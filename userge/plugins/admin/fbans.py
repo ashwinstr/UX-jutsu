@@ -67,7 +67,7 @@ async def delfed_(message: Message):
         try:
             chat_ = await message.client.get_chat(message.input_str or message.chat.id)
             chat_id = chat_.id
-            title = chat_.title
+            chat_.title
         except (PeerIdInvalid, IndexError):
             chat_id = message.input_str
             id_ = chat_id.replace("-", "")
