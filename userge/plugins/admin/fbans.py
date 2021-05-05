@@ -466,8 +466,9 @@ async def fban_lst_(message: Message):
     total = 0
     async for data in FED_LIST.find():
         total += 1
-        id_ = f"[{data['chat_id']}]" if "-id" in message.flags else ""
-        out += f"• Fed: <b>{data['fed_name']}</b> {id_}\n"
+        id_ = f"{data['chat_id']}" if "-id" in message.flags else ""
+        br_line = "\n    " if "-id" in message.flags else ""
+        out += f"• Fed: <b>{data['fed_name']}</b>{br_line}{id_}\n"
     await message.edit_or_send_as_file(
         f"**Connected federations: [{total}]**\n\n" + out
         if out
