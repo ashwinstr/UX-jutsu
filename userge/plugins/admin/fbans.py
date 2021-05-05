@@ -319,7 +319,7 @@ async def fban_p(message: Message):
     break_line = "\n" if success else ""
     chat_msg_ = f"{msg_}{break_line}<b>Proof in log channel:</b> <a href='{log_fwd.link}'>link</a>"
     log_msg_ = (
-        f"{msg_}\n<b>Proof</b> in chat <a href='{reply.link}'>{message.chat.title}</a>"
+        f"{msg_}{break_line}<b>Proof</b> in chat <a href='{reply.link}'>{message.chat.title}</a>"
     )
     await message.edit(chat_msg_)
     await CHANNEL.log(log_msg_)
