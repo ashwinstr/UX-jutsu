@@ -50,7 +50,7 @@ class ChannelLogger:
         return "<b><a href='https://t.me/c/{}/{}'>Preview</a></b>".format(
             str(Config.LOG_CHANNEL_ID)[4:], message_id)
 
-    async def log(self, text: str, name: str = '') -> int:
+    async def log(self, text: str, name: str = '', preview: False) -> int:
         """\nsend text message to log channel.
 
         Parameters:
@@ -69,7 +69,8 @@ class ChannelLogger:
         _LOG.debug(_LOG_STR, f"logging text : {text} to channel : {self._id}")
         try:
             msg = await self._client.send_message(chat_id=self._id,
-                                                  text=string.format(text.strip()))
+                                                  text=string.format(text.strip()),
+                                                  disable_web_page_preview=preview)
         except MessageTooLong:
             msg = await self._client.send_as_file(chat_id=self._id,
                                                   text=string.format(text.strip()),
