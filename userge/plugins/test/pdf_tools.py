@@ -262,14 +262,14 @@ async def save_pdf(message: Message):
         cv2.imwrite("png.png", ok)
         image1 = PIL.Image.open("png.png")
         im1 = image1.convert("RGB")
-        abc = "pdf/scan.pdf"
+        abc = "scan.pdf"
         im1.save(abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
         )
         os.remove("png.png")
     elif media.endswith(".pdf"):
-        abc = "pdf/scan.pdf"
+        abc = "scan.pdf"
         await userge.download_media(reply, abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
@@ -301,8 +301,8 @@ async def send_pdf(message: Message):
     else:
         name_ = "My_PDF.pdf"
     merger = PdfFileMerger()
-    for item in os.listdir(Config.DOWN_PATH):
-        if item.endswith(Config.DOWN_PATH):
+    for item in os.listdir("pdf/"):
+        if item.endswith("pdf/"):
             merger.append(f"pdf/{item}")
     merger.write(name_)
     await userge.send_document(message.chat.id, name_, reply_to_message_id=reply)
