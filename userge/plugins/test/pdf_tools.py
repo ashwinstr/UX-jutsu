@@ -289,7 +289,7 @@ async def save_pdf(message: Message):
 )
 async def send_pdf(message: Message):
     """merge and send pdf"""
-    reply = message.reply_to_message.message_id or None
+    reply = message.reply_to_message.message_id if message.reply_to_message else None
     if not os.path.exists("pdf/scan.pdf"):
         await message.edit(
             "First select pages by replying {tr}pdf_save to image/pdf(s) which you want to make multi-page pdf file...",
