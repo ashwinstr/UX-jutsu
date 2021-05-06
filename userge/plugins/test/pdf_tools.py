@@ -271,7 +271,13 @@ async def save_pdf(message: Message):
         )
         os.remove("png.png")
     elif media.endswith(".pdf"):
-        abc = f"{Config.DOWN_PATH}/pdf/scan.pdf"
+        num = 1
+        while True:
+            abc = f"{Config.DOWN_PATH}/pdf/scan{num}.pdf"
+            if os.path.exists(abc):
+                num += 1
+            else:
+                break
         await userge.download_media(reply, abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
