@@ -157,7 +157,7 @@ async def scan_pdf(message: Message):
     if not reply or not reply.media:
         await message.edit("Please reply to an image...", del_in=5)
         return
-    media = await userge.download_media(reply)
+    media = await reply.download()
     if not media.endswith((".jpg", ".jpeg", ".png", ".webp")):
         await message.edit("Please reply to an image...", del_in=5)
         os.remove(media)
@@ -223,7 +223,7 @@ async def save_pdf(message: Message):
     if not reply or not reply.media:
         await message.edit("Please reply to an image...", del_in=5)
         return
-    media = await userge.download_media(reply)
+    media = await reply.download()
     if media.endswith((".jpg", ".jpeg", ".png", ".webp")):
         await message.edit("Processing...")
         image = cv2.imread(media)
@@ -262,14 +262,14 @@ async def save_pdf(message: Message):
         cv2.imwrite("png.png", ok)
         image1 = PIL.Image.open("png.png")
         im1 = image1.convert("RGB")
-        abc = "scan.pdf"
+        abc = "pdf/scan.pdf"
         im1.save(abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
         )
         os.remove("png.png")
     elif media.endswith(".pdf"):
-        abc = "scan.pdf"
+        abc = "pdf/scan.pdf"
         await userge.download_media(reply, abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
@@ -290,7 +290,7 @@ async def save_pdf(message: Message):
 async def send_pdf(message: Message):
     """merge and send pdf"""
     reply = message.reply_to_message.message_id if message.reply_to_message else None
-    if not os.path.exists("scan.pdf"):
+    if not os.path.exists("pdf/scan.pdf"):
         await message.edit(
             "First select pages by replying {Config.DOWN_PATH}pdf_save to image/pdf(s) which you want to make multi-page pdf file...",
         )
