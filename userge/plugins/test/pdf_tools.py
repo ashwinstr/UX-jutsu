@@ -42,7 +42,9 @@ async def img_pdf(message: Message):
         for page in range(pdf.numPages):
             write = PdfFileWriter()
             write.addPage(pdf.getPage(page))
-            with open(os.path.join(f"{Config.DOWN_PATH}/pdf/page{page + 1}.png"), "wb") as file:
+            with open(
+                os.path.join(f"{Config.DOWN_PATH}/pdf/page{page + 1}.png"), "wb"
+            ) as file:
                 write.write(file)
         os.remove(pdf_f)
         lst = os.listdir(f"{Config.DOWN_PATH}/pdf/")
