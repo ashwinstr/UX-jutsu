@@ -8,10 +8,10 @@ import imutils
 import numpy as np
 import PIL
 from imutils.perspective import four_point_transform
-from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
+from PyPDF2 import PdfFileMerger, PdfFileReader, PdfFileWriter
 from skimage.filters import threshold_local
 
-from userge import Message, userge, Config
+from userge import Config, Message, userge
 
 if not os.path.exists("pdf/"):
     os.makedirs("pdf/")
