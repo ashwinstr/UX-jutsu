@@ -8,7 +8,7 @@ import imutils
 import numpy as np
 import PIL
 from imutils.perspective import four_point_transform
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 from skimage.filters import threshold_local
 
 from userge import Message, userge, Config
