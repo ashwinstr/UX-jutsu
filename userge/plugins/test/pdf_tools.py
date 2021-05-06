@@ -302,7 +302,7 @@ async def send_pdf(message: Message):
         name_ = "My_PDF.pdf"
     merger = PdfFileMerger()
     for item in os.listdir("pdf/"):
-        if item.endswith("pdf/"):
+        if item.endswith("pdf"):
             merger.append(f"pdf/{item}")
     merger.write(name_)
     await userge.send_document(message.chat.id, name_, reply_to_message_id=reply)
