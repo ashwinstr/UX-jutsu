@@ -25,7 +25,7 @@ if not os.path.exists("pdf/"):
         "usage": "{tr}pdf_img [reply to pdf] [page number (optional)]",
     },
 )
-async def pdf_img_(message: Message):
+async def img_pdf(message: Message):
     """Upload pdf page as image"""
     reply = message.reply_to_message
     input_ = message.filtered_input_str
@@ -78,7 +78,8 @@ async def pdf_img_(message: Message):
         "usage": "{tr}pdf_text [reply to pdf] [page number OR (from - to) page number (optional)]",
     },
 )
-async def pdf_text_(message: Message):
+async def text_pdf(message: Message):
+    """extract text from pdf"""
     input_ = message.input_str
     reply = message.reply_to_message
     if not (reply or reply.document or reply.document.mime_type == "application/pdf"):
@@ -150,7 +151,8 @@ async def pdf_text_(message: Message):
         "usage": "{tr}pdf_scan [reply to image]",
     },
 )
-async def pdf_scan_(message: Message):
+async def scan_pdf(message: Message):
+    """image to pdf conversion"""
     reply = message.reply_to_message
     if not reply or not reply.media:
         await message.edit("Please reply to an image...", del_in=5)
@@ -205,3 +207,105 @@ async def pdf_scan_(message: Message):
     os.remove(media)
     os.remove("png.png")
     os.remove(scann)
+
+
+@userge.on_cmd(
+    "pdf_save",
+    about={
+        "header": "Save image/pdf(s)",
+        "description": "Save image/pdf(s) to merge later",
+        "usage": "{tr}pdf_save [reply to image/pdf]",
+    },
+)
+async def save_pdf(message: Message):
+    """save and merge image/pdf(s)"""
+    reply = message.reply_to_message
+    if not reply or not reply.media:
+        await message.edit("Please reply to an image...", del_in=5)
+        return
+    media = await userge.download_media(reply)
+    if not media.endswith((".jpg", ".jpeg", ".png", ".webp")):
+        await message.edit("Processing...")
+        image = cv2.imread(media)
+        original_image = image.copy()
+        ratio = image.shape[0] / 500.0
+        image = imutils.resize(image, height=500)
+        image_yuv = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
+        image_y = np.zeros(image_yuv.shape[0:2], np.uint8)
+        image_y[:, :] = image_yuv[:, :, 0]
+        image_blurred = cv2.GaussianBlur(image_y, (3, 3), 0)
+        edges = cv2.Canny(image_blurred, 50, 200, apertureSize=3)
+        contours, hierarchy = cv2.findContours(
+            edges,
+            cv2.RETR_EXTERNAL,
+            cv2.CHAIN_APPROX_SIMPLE,
+        )
+        polygons = []
+        for cnt in contours:
+            hull = cv2.convexHull(cnt)
+            polygons.append(
+                cv2.approxPolyDP(hull, 0.01 * cv2.arcLength(hull, True), False),
+            )
+            sortedPoly = sorted(polygons, key=cv2.contourArea, reverse=True)
+            cv2.drawContours(image, sortedPoly[0], -1, (0, 0, 255), 5)
+            simplified_cnt = sortedPoly[0]
+        if len(simplified_cnt) == 4:
+            cropped_image = four_point_transform(
+                original_image,
+                simplified_cnt.reshape(4, 2) * ratio,
+            )
+            gray_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+            T = threshold_local(gray_image, 11, offset=10, method="gaussian")
+            ok = (gray_image > T).astype("uint8") * 255
+        if len(simplified_cnt) != 4:
+            ok = cv2.detailEnhance(original_image, sigma_s=10, sigma_r=0.15)
+        cv2.imwrite("png.png", ok)
+        image1 = PIL.Image.open("png.png")
+        im1 = image1.convert("RGB")
+        abc = dani_ck("pdf/scan.pdf")
+        im1.save(abc)
+        await message.edit(
+            f"Done, now reply another image/pdf, if completed then use {tr}pdf_send to merge and send all as pdf...",
+        )
+        os.remove("png.png")
+    elif media.endswith(".pdf"):
+        abc = dani_ck("pdf/scan.pdf")
+        await userge.download_media(reply, abc)
+        await message.edit(
+            f"Done, now reply another image/pdf, if completed then use {tr}pdf_send to merge and send all as pdf...",
+        )
+    else:
+        await message.edit("`Reply to a image or pdf only...`", del_in=5)
+    os.remove(media)
+
+
+@userge.on_cmd(
+    "pdf_send",
+    about={
+        "header": "merge and send pdf",
+        "description": "Merge the downloaded image/pdf(s) and send as final pdf file",
+        "usage": "{tr}pdf_send",
+    },
+)
+async def send_pdf(message: Message):
+    """merge and send pdf"""
+    reply = message.reply_to_message.message_id or None
+    if not os.path.exists("pdf/scan.pdf"):
+        await message.edit(
+            "First select pages by replying {tr}pdf_save to image/pdf(s) which you want to make multi-page pdf file...",
+        )
+        return
+    msg = message.input_str
+    if msg:
+        name_ = f"{msg}.pdf"
+    else:
+        name_ = "My_PDF.pdf"
+    merger = PdfFileMerger()
+    for item in os.listdir("pdf/"):
+        if item.endswith("pdf"):
+            merger.append(f"pdf/{item}")
+    merger.write(name_)
+    await userge.send_document(message.chat.id, name_, reply_to_message_id=reply)
+    os.remove(name_)
+    shutil.rmtree("pdf/")
+    os.makedirs("pdf/")
