@@ -225,6 +225,9 @@ async def save_pdf(message: Message):
     if not reply or not reply.media:
         await message.edit("Please reply to an image...", del_in=5)
         return
+    merge_path = f"{Config.DOWN_PATH}/pdf_merge/"
+    if not os.path.exists(merge_path):
+        os.makedirs(merge_path)
     media = await reply.download()
     if media.endswith((".jpg", ".jpeg", ".png", ".webp")):
         await message.edit("Processing...")
@@ -264,7 +267,13 @@ async def save_pdf(message: Message):
         cv2.imwrite("png.png", ok)
         image1 = PIL.Image.open("png.png")
         im1 = image1.convert("RGB")
-        abc = f"{Config.DOWN_PATH}/pdf/scan.pdf"
+        num = 1
+        while True:
+            abc = f"{merge_path}scan{num}.pdf"
+            if os.path.exists(abc):
+                num += 1
+            else:
+                break
         im1.save(abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
@@ -273,7 +282,7 @@ async def save_pdf(message: Message):
     elif media.endswith(".pdf"):
         num = 1
         while True:
-            abc = f"{Config.DOWN_PATH}/pdf/scan{num}.pdf"
+            abc = f"{merge_path}scan{num}.pdf"
             if os.path.exists(abc):
                 num += 1
             else:
@@ -298,22 +307,40 @@ async def save_pdf(message: Message):
 async def send_pdf(message: Message):
     """merge and send pdf"""
     reply = message.reply_to_message.message_id if message.reply_to_message else None
-    if not os.path.exists(f"{Config.DOWN_PATH}/pdf/scan.pdf"):
+    if not os.path.exists(f"{Config.DOWN_PATH}/pdf_merge/scan.pdf"):
         await message.edit(
-            "First select pages by replying {Config.DOWN_PATH}pdf_save to image/pdf(s) which you want to make multi-page pdf file...",
+            "First select pages by replying {Config.CMD_TRIGGER}pdf_save to image/pdf(s) which you want to make multi-page pdf file...",
         )
         return
     msg = message.input_str
+    await message.edit("Merging image/pdf(s)...", del_in=5)
     if msg:
         name_ = f"{msg}.pdf"
     else:
         name_ = "My_PDF.pdf"
     merger = PdfFileMerger()
-    for item in os.listdir(f"{Config.DOWN_PATH}/pdf/"):
+    for item in os.listdir(f"{Config.DOWN_PATH}/pdf_merge/"):
         if item.endswith("pdf"):
-            merger.append(f"{Config.DOWN_PATH}/pdf/{item}")
+            merger.append(f"{Config.DOWN_PATH}/pdf_merge/{item}")
     merger.write(name_)
     await userge.send_document(message.chat.id, name_, reply_to_message_id=reply)
     os.remove(name_)
-    shutil.rmtree(f"{Config.DOWN_PATH}/pdf/")
-    os.makedirs(f"{Config.DOWN_PATH}/pdf/")
+
+
+@userge.on_cmd(
+    "del_merge",
+    about={
+        "header": "clear pdf_merge folder",
+        "description": "delete all pdf(s) in pdf_merge folder to start fresh",
+        "usage": "{tr}del_merge",
+    },
+)
+async def delete_merge(message: Message):
+    """clear pdf_merge folder"""
+    path_ = f"{Config.DOWN_PATH}/pdf_merge/"
+    if not os.path.exists(path_):
+        await message.edit("Already empty...", del_in=5)
+        return
+    shutil.rmtree(path_)
+    os.makedirs(path_
+    await message.edit("Deleted all pdf(s) from pdf_merge...")
