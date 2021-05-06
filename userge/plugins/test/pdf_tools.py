@@ -224,7 +224,7 @@ async def save_pdf(message: Message):
         await message.edit("Please reply to an image...", del_in=5)
         return
     media = await userge.download_media(reply)
-    if not media.endswith((".jpg", ".jpeg", ".png", ".webp")):
+    if media.endswith((".jpg", ".jpeg", ".png", ".webp")):
         await message.edit("Processing...")
         image = cv2.imread(media)
         original_image = image.copy()
