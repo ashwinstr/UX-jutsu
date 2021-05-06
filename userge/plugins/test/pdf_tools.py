@@ -262,14 +262,14 @@ async def save_pdf(message: Message):
         cv2.imwrite("png.png", ok)
         image1 = PIL.Image.open("png.png")
         im1 = image1.convert("RGB")
-        abc = dani_ck("pdf/scan.pdf")
+        abc = "pdf/scan.pdf"
         im1.save(abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {tr}pdf_send to merge and send all as pdf...",
         )
         os.remove("png.png")
     elif media.endswith(".pdf"):
-        abc = dani_ck("pdf/scan.pdf")
+        abc = "pdf/scan.pdf"
         await userge.download_media(reply, abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {tr}pdf_send to merge and send all as pdf...",
