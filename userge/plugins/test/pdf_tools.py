@@ -342,5 +342,5 @@ async def delete_merge(message: Message):
         await message.edit("Already empty...", del_in=5)
         return
     shutil.rmtree(path_)
-    os.makedirs(path_
+    os.makedirs(path_)
     await message.edit("Deleted all pdf(s) from pdf_merge...")
