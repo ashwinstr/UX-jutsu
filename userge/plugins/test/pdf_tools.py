@@ -11,7 +11,7 @@ from imutils.perspective import four_point_transform
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from skimage.filters import threshold_local
 
-from userge import Message, userge
+from userge import Message, userge, Config
 
 if not os.path.exists("pdf/"):
     os.makedirs("pdf/")
@@ -265,14 +265,14 @@ async def save_pdf(message: Message):
         abc = "pdf/scan.pdf"
         im1.save(abc)
         await message.edit(
-            f"Done, now reply another image/pdf, if completed then use {tr}pdf_send to merge and send all as pdf...",
+            f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
         )
         os.remove("png.png")
     elif media.endswith(".pdf"):
         abc = "pdf/scan.pdf"
         await userge.download_media(reply, abc)
         await message.edit(
-            f"Done, now reply another image/pdf, if completed then use {tr}pdf_send to merge and send all as pdf...",
+            f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
         )
     else:
         await message.edit("`Reply to a image or pdf only...`", del_in=5)
