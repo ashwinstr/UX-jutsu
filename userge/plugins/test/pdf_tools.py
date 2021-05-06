@@ -13,8 +13,8 @@ from skimage.filters import threshold_local
 
 from userge import Config, Message, userge
 
-if not os.path.exists(f"{Config.DOWN_PATH}/pdf/"):
-    os.makedirs(f"{Config.DOWN_PATH}/pdf/")
+if not os.path.exists(f"{Config.DOWN_PATH}/pdf_merge/"):
+    os.makedirs(f"{Config.DOWN_PATH}/pdf_merge/")
 
 
 @userge.on_cmd(
@@ -307,7 +307,7 @@ async def save_pdf(message: Message):
 async def send_pdf(message: Message):
     """merge and send pdf"""
     reply = message.reply_to_message.message_id if message.reply_to_message else None
-    if not os.path.exists(f"{Config.DOWN_PATH}/pdf_merge/scan.pdf"):
+    if not os.path.exists(f"{Config.DOWN_PATH}/pdf_merge/scan1.pdf"):
         await message.edit(
             "First select pages by replying {Config.CMD_TRIGGER}pdf_save to image/pdf(s) which you want to make multi-page pdf file...",
         )
