@@ -13,8 +13,8 @@ from skimage.filters import threshold_local
 
 from userge import Config, Message, userge
 
-if not os.path.exists("pdf/"):
-    os.makedirs("pdf/")
+if not os.path.exists(f"{Config.DOWN_PATH}/pdf/"):
+    os.makedirs(f"{Config.DOWN_PATH}/pdf/")
 
 
 @userge.on_cmd(
@@ -34,28 +34,28 @@ async def img_pdf(message: Message):
         return
     edt = await message.edit("Processing...")
     if not input_:
-        path = os.path.join("pdf/", "temp.pdf")
+        path = os.path.join(f"{Config.DOWN_PATH}/pdf/", "temp.pdf")
         await userge.download_media(reply, path)
-        pdf_f = "pdf/temp.pdf"
+        pdf_f = f"{Config.DOWN_PATH}/pdf/temp.pdf"
         pdf_f.replace(".pdf", "")
         pdf = PdfFileReader(pdf_f)
         for page in range(pdf.numPages):
             write = PdfFileWriter()
             write.addPage(pdf.getPage(page))
-            with open(os.path.join(f"pdf/page{page + 1}.png"), "wb") as file:
+            with open(os.path.join(f"{Config.DOWN_PATH}/pdf/page{page + 1}.png"), "wb") as file:
                 write.write(file)
         os.remove(pdf_f)
-        lst = os.listdir("pdf/")
+        lst = os.listdir(f"{Config.DOWN_PATH}/pdf/")
         for one in lst:
-            lst_one = f"pdf/{one}"
+            lst_one = f"{Config.DOWN_PATH}/pdf/{one}"
             await userge.send_photo(message.chat.id, lst_one)
-        shutil.rmtree("pdf/")
+        shutil.rmtree(f"{Config.DOWN_PATH}/pdf/")
         await edt.delete()
     if input_:
         page = int(input_) - 1
-        path = os.path.join("pdf/", "temp.pdf")
+        path = os.path.join(f"{Config.DOWN_PATH}/pdf/", "temp.pdf")
         await userge.download_media(reply, path)
-        pdf_f = "pdf/temp.pdf"
+        pdf_f = f"{Config.DOWN_PATH}/pdf/temp.pdf"
         pdf_f.replace(".pdf", "")
         pdf = PdfFileReader(pdf_f)
         write = PdfFileWriter()
@@ -262,14 +262,14 @@ async def save_pdf(message: Message):
         cv2.imwrite("png.png", ok)
         image1 = PIL.Image.open("png.png")
         im1 = image1.convert("RGB")
-        abc = "pdf/scan.pdf"
+        abc = f"{Config.DOWN_PATH}/pdf/scan.pdf"
         im1.save(abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
         )
         os.remove("png.png")
     elif media.endswith(".pdf"):
-        abc = "pdf/scan.pdf"
+        abc = f"{Config.DOWN_PATH}/pdf/scan.pdf"
         await userge.download_media(reply, abc)
         await message.edit(
             f"Done, now reply another image/pdf, if completed then use {Config.CMD_TRIGGER}pdf_send to merge and send all as pdf...",
@@ -290,7 +290,7 @@ async def save_pdf(message: Message):
 async def send_pdf(message: Message):
     """merge and send pdf"""
     reply = message.reply_to_message.message_id if message.reply_to_message else None
-    if not os.path.exists("pdf/scan.pdf"):
+    if not os.path.exists(f"{Config.DOWN_PATH}/pdf/scan.pdf"):
         await message.edit(
             "First select pages by replying {Config.DOWN_PATH}pdf_save to image/pdf(s) which you want to make multi-page pdf file...",
         )
@@ -301,11 +301,11 @@ async def send_pdf(message: Message):
     else:
         name_ = "My_PDF.pdf"
     merger = PdfFileMerger()
-    for item in os.listdir("pdf/"):
+    for item in os.listdir(f"{Config.DOWN_PATH}/pdf/"):
         if item.endswith("pdf"):
-            merger.append(f"pdf/{item}")
+            merger.append(f"{Config.DOWN_PATH}/pdf/{item}")
     merger.write(name_)
     await userge.send_document(message.chat.id, name_, reply_to_message_id=reply)
     os.remove(name_)
-    shutil.rmtree("pdf/")
-    os.makedirs("pdf/")
+    shutil.rmtree(f"{Config.DOWN_PATH}/pdf/")
+    os.makedirs(f"{Config.DOWN_PATH}/pdf/")
