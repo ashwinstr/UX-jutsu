@@ -248,6 +248,8 @@ async def fban_p(message: Message):
     failed = []
     total = 0
     reason = reason or "Not specified"
+    reason = reason.strip()
+    reason = f"{reason} <a href='{log_fwd.link}'><b>PROOF</b></a>"
     await message.edit(fban_arg[1])
     from_ = message.chat.id
     admin = message.from_user.id
@@ -315,8 +317,6 @@ async def fban_p(message: Message):
     else:
         status = f"Success! Fbanned in {total} feds."
         success = True
-    reason = reason.strip()
-    reason += f" <a href='{log_fwd.link}'><b>proof</b></a>"
     msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
     break_line = "\n" if success else ""
     log_msg_ = f"{msg_}{break_line}<b>Proof</b> in chat <a href='{reply.link}'>{message.chat.title}</a>"
