@@ -247,9 +247,6 @@ async def fban_p(message: Message):
     await message.edit(fban_arg[0])
     failed = []
     total = 0
-    reason = reason or "Not specified"
-    reason = reason.strip()
-    reason = f"{reason} <a href='{log_fwd.link}'><b>PROOF</b></a>"
     await message.edit(fban_arg[1])
     from_ = message.chat.id
     admin = message.from_user.id
@@ -260,6 +257,9 @@ async def fban_p(message: Message):
         from_chat_id=from_,
         message_ids=proof,
     )
+    reason = reason or "Not specified"
+    reason = reason.strip()
+    reason = f"{reason} <a href='{log_fwd.link}'><b>PROOF</b></a>" 
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
