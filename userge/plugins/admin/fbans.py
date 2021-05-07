@@ -259,7 +259,7 @@ async def fban_p(message: Message):
     )
     reason = reason or "Not specified"
     reason = reason.strip()
-    reason = f"{reason} <a href='{log_fwd.link}'><b>PROOF</b></a>" 
+    reason = f"{reason} <a href='{log_fwd.link}'><b>PROOF</b></a>"
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
