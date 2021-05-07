@@ -315,11 +315,12 @@ async def fban_p(message: Message):
     else:
         status = f"Success! Fbanned in {total} feds."
         success = True
+    reason = reason.strip()
+    reason += f" <a href='{log_fwd.link}'><b>proof</b></a>"
     msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
     break_line = "\n" if success else ""
-    chat_msg_ = f"{msg_}{break_line}<b>Proof in log channel:</b> <a href='{log_fwd.link}'>link</a>"
     log_msg_ = f"{msg_}{break_line}<b>Proof</b> in chat <a href='{reply.link}'>{message.chat.title}</a>"
-    await message.edit(chat_msg_)
+    await message.edit(msg_)
     await CHANNEL.log(log_msg_)
 
 
