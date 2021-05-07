@@ -169,7 +169,7 @@ async def fban_(message: Message):
                     ("New FedBan" in resp)
                     or ("starting a federation ban" in resp)
                     or ("start a federation ban" in resp)
-                    or ("fedban reason updated" in resp)
+                    or ("fedban reason update" in resp)
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
         except FloodWait as f:
@@ -295,7 +295,7 @@ async def fban_p(message: Message):
                     ("New FedBan" in resp)
                     or ("starting a federation ban" in resp)
                     or ("start a federation ban" in resp)
-                    or ("fedban reason updated" in resp)
+                    or ("fedban reason update" in resp)
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: {data['chat_id']}")
         except FloodWait as f:
