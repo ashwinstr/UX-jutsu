@@ -115,11 +115,7 @@ async def grp_log1(_, message: Message):
 
 
 @userge.on_message(
-    filters.group
-    & ~filters.bot
-    & ~filters.service
-    & filters.reply
-    & tagLoggingFilter,
+    filters.group & ~filters.bot & ~filters.service & filters.reply & tagLoggingFilter,
     group=5,
 )
 async def grp_log2(_, message: Message):
