@@ -11,7 +11,6 @@ from pyrogram import filters
 from pyrogram.errors import FloodWait, Forbidden, PeerIdInvalid
 
 from userge import Config, Message, get_collection, userge
-from userge.utils import escape_markdown
 
 FED_LIST = get_collection("FED_LIST")
 CHANNEL = userge.getCLogger(__name__)
@@ -164,7 +163,7 @@ async def fban_(message: Message):
     )
     if with_proof:
         proof_link = (await reply.forward(Config.LOG_CHANNEL_ID)).link
-        msg_ += f"\n\n#Proof =>  **[{escape_markdown(f'[link]({proof_link})')}]**"
+        msg_ += f"\n\n<b>[ [PROOF]({proof_link}) ]</b>"
     await message.edit(msg_, log=__name__)
 
 
