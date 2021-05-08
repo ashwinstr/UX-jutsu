@@ -69,7 +69,7 @@ async def romaji_(message: Message):
             dest = list(flags)[1]
         elif len(flags) == 1:
             src = "auto"
-            dest = flags
+            dest = flags[0]
         else:
             no_f = True
     if not secret:
