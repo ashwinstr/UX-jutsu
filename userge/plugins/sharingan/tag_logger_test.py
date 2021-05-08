@@ -76,7 +76,7 @@ async def all_log(message: Message):
     & ~filters.service
     & ~filters.reply
     & tagLoggingFilter,
-    group=5
+    group=5,
 )
 async def grp_log1(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
@@ -85,7 +85,7 @@ async def grp_log1(_, message: Message):
         if message.chat.id == NO_LOG_GROUP_ID:
             return
     dash = "==========================="
-    sender_m_id = message.message_id
+    message.message_id
     log = f"""
 #⃣ #MESSAGE_SENT
 👥 <b>Group :</b> {message.chat.title}
@@ -101,7 +101,7 @@ async def grp_log1(_, message: Message):
             log,
             parse_mode="html",
             disable_web_page_preview=True,
-            )
+        )
         await asyncio.sleep(0.5)
         await userge.forward_messages(
             GROUP_LOG_GROUP_ID,
@@ -121,7 +121,7 @@ async def grp_log1(_, message: Message):
     & ~filters.service
     & filters.reply
     & tagLoggingFilter,
-    group=5
+    group=5,
 )
 async def grp_log2(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
@@ -136,7 +136,7 @@ async def grp_log2(_, message: Message):
         reply = message.reply_to_message
         replied_id = reply.from_user.id
         replied_m_id = reply.message_id
-    except:
+    except BaseException:
         return
     me_id = user(info="id")
     if sender_id == me_id:
@@ -203,7 +203,7 @@ async def grp_log2(_, message: Message):
     & ~filters.bot
     & ~filters.service
     & tagLoggingFilter,
-    group=5
+    group=5,
 )
 async def grp_log3(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
@@ -250,12 +250,7 @@ async def grp_log3(_, message: Message):
             pass
 
 
-@userge.on_message(
-    filters.private
-    & ~filters.bot
-    & tagLoggingFilter,
-    group=5
-)
+@userge.on_message(filters.private & ~filters.bot & tagLoggingFilter, group=5)
 async def pm_log(_, message: Message):
     sender_id = message.from_user.id
     if not Config.PM_LOG_GROUP_ID:
