@@ -269,7 +269,7 @@ async def pm_log(_, message: Message):
         if message.sticker:
             await userge.send_message(
                 Config.PM_LOG_GROUP_ID,
-                f"👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇",
+                f"👤 <a href='tg://user?id={chat_id}'>{chat_name}</a> ⬇",
             )
         await asyncio.sleep(0.2)
         await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
