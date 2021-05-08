@@ -16,8 +16,6 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 GROUP_LOG_GROUP_ID = int(os.environ.get("GROUP_LOG_GROUP_ID", 0))
 NO_LOG_GROUP_ID = int(os.environ.get("NO_LOG_GROUP_ID", 0))
 
-CHANNEL = userge.getCLogger(__name__)
-
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "TAG_LOGGING"})
@@ -83,15 +81,17 @@ async def grp_log(_, message: Message):
     dash = "==========================="
     try:
         sender_id = message.from_user.id
-    except BaseException as be:
-        await CHANNEL.log(be)
+    except BaseException:
         return
     sender_m_id = message.message_id
     reply = message.reply_to_message
     me_id = user(info="id")
     if reply:
         replied_m_id = reply.message_id
-        replied_id = reply.from_user.id
+        try:
+            replied_id = reply.from_user.id
+        except:
+            return
         if sender_id == me_id:
             replied_name = " ".join(
                 [reply.from_user.first_name, reply.from_user.last_name or ""]
