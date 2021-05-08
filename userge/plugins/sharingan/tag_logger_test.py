@@ -76,7 +76,7 @@ async def all_log(message: Message):
     & ~filters.service
     & ~filters.reply
     & tagLoggingFilter,
-    group=5,
+    group=5
 )
 async def grp_log1(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
@@ -85,7 +85,7 @@ async def grp_log1(_, message: Message):
         if message.chat.id == NO_LOG_GROUP_ID:
             return
     dash = "==========================="
-    message.message_id
+    sender_m_id = message.message_id
     log = f"""
 #⃣ #MESSAGE_SENT
 👥 <b>Group :</b> {message.chat.title}
@@ -101,7 +101,7 @@ async def grp_log1(_, message: Message):
             log,
             parse_mode="html",
             disable_web_page_preview=True,
-        )
+            )
         await asyncio.sleep(0.5)
         await userge.forward_messages(
             GROUP_LOG_GROUP_ID,
@@ -121,7 +121,7 @@ async def grp_log1(_, message: Message):
     & ~filters.service
     & filters.reply
     & tagLoggingFilter,
-    group=5,
+    group=5
 )
 async def grp_log2(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
@@ -136,7 +136,7 @@ async def grp_log2(_, message: Message):
         reply = message.reply_to_message
         replied_id = reply.from_user.id
         replied_m_id = reply.message_id
-    except BaseException:
+    except:
         return
     me_id = user(info="id")
     if sender_id == me_id:
@@ -203,7 +203,7 @@ async def grp_log2(_, message: Message):
     & ~filters.bot
     & ~filters.service
     & tagLoggingFilter,
-    group=5,
+    group=5
 )
 async def grp_log3(_, message: Message):
     if not GROUP_LOG_GROUP_ID:
@@ -248,6 +248,83 @@ async def grp_log3(_, message: Message):
             await asyncio.sleep(e.x + 3)
         except MessageIdInvalid:
             pass
+
+
+@userge.on_message(
+    filters.private
+    & ~filters.bot
+    & tagLoggingFilter,
+    group=5
+)
+async def pm_log(_, message: Message):
+    sender_id = message.from_user.id
+    if not Config.PM_LOG_GROUP_ID:
+        return
+    chat_id = message.chat.id
+    if chat_id in Config.TG_IDS:
+        return
+    chat = await userge.get_chat(chat_id)
+    if chat.type == "bot":
+        return
+    chat_name = " ".join([chat.first_name, chat.last_name or ""])
+    id = message.message_id
+    log = f"""
+🗣 #CONVERSATION_WITH:
+🔢 <b>ID :</b> <code>{chat_id}</code>
+👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇
+"""
+    try:
+        dash = "==========================="
+        me_id = user(info="id")
+        if sender_id == me_id and not message.reply_to_message:
+            await asyncio.sleep(0.5)
+            await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
+            await asyncio.sleep(0.5)
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                log,
+                parse_mode="html",
+                disable_web_page_preview=True,
+            )
+            await asyncio.sleep(0.5)
+            await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
+            )
+            return
+        if message.reply_to_message:
+            replied_id = message.reply_to_message.message_id
+            await asyncio.sleep(0.5)
+            await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
+            await asyncio.sleep(0.5)
+            fwd = await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID, chat_id, replied_id, disable_notification=True
+            )
+            await asyncio.sleep(0.5)
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                f"↪️ #REPLIED_WITH...⬇",
+                reply_to_message_id=fwd.message_id,
+            )
+            await asyncio.sleep(0.5)
+            await userge.forward_messages(
+                Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
+            )
+            return
+        if message.sticker:
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                f"👤 <a href='tg://user?id={chat_id}'>{chat_name}</a> ⬇",
+            )
+        await asyncio.sleep(0.5)
+        await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
+        await asyncio.sleep(0.5)
+        await userge.forward_messages(
+            Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
+        )
+    except FloodWait as e:
+        await asyncio.sleep(e.x + 3)
+    except MessageIdInvalid:
+        pass
 
 
 def user(info):
