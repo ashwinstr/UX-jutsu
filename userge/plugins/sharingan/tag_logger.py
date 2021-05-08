@@ -29,7 +29,6 @@ async def _init() -> None:
 tagLoggingFilter = filters.create(lambda _, __, ___: Config.TAG_LOGGING)
 
 
-
 @userge.on_message(
     filters.group & ~filters.bot & ~filters.service & tagLoggingFilter, group=5
 )
