@@ -145,6 +145,10 @@ async def grp_log(_, message: Message):
     text = message.text or message.caption
     if text and mention in text:
         text_id = message.message_id
+        sender_name = " ".join(
+            [message.from_user.first_name, message.from_user.last_name or ""]
+        )
+        sender_men = f"<a href='tg://user?id={sender_id}'>{sender_name}</a>"
         log2 = f"""
 #⃣ #TAGS
 👤 <b>Sent by :</b> {sender_men}
