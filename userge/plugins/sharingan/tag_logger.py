@@ -90,7 +90,7 @@ async def grp_log(_, message: Message):
         replied_m_id = reply.message_id
         try:
             replied_id = reply.from_user.id
-        except:
+        except BaseException:
             return
         if sender_id == me_id:
             replied_name = " ".join(
