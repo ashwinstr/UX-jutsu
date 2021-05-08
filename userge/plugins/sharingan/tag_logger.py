@@ -266,6 +266,11 @@ async def pm_log(_, message: Message):
                 Config.PM_LOG_GROUP_ID, chat_id, id, disable_notification=True
             )
             return
+        if message.sticker:
+            await userge.send_message(
+                Config.PM_LOG_GROUP_ID,
+                f"👤 <a href="tg://user?id={chat_id}">{chat_name}</a> ⬇",
+            )
         await asyncio.sleep(0.2)
         await userge.send_message(Config.PM_LOG_GROUP_ID, dash)
         await asyncio.sleep(0.2)
