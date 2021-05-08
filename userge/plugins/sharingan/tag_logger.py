@@ -7,7 +7,7 @@ import os
 import aiofiles
 import ujson
 from pyrogram import filters
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, MessageIdInvalid
 
 from userge import Config, Message, get_collection, userge
 
@@ -140,6 +140,8 @@ async def grp_log(_, message: Message):
                 )
             except FloodWait as e:
                 await asyncio.sleep(e.x + 3)
+            except MessageIdInvalid:
+                pass
             return
     mention = f'@{user(info="username")}'
     text = message.text or message.caption
@@ -173,6 +175,8 @@ async def grp_log(_, message: Message):
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
+        except MessageIdInvalid:
+            pass
         return
     if (not reply) and (sender_id == me_id):
         sent_m_id = message.message_id
@@ -200,6 +204,8 @@ async def grp_log(_, message: Message):
             )
         except FloodWait as e:
             await asyncio.sleep(e.x + 3)
+        except MessageIdInvalid:
+            pass
         return
 
 
@@ -268,6 +274,8 @@ async def pm_log(_, message: Message):
         )
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
+    except MessageIdInvalid:
+        pass
 
 
 def user(info):
