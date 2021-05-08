@@ -10,7 +10,7 @@
 import asyncio
 
 from pyrogram import filters
-from pyrogram.errors import ChannelInvalid, FloodWait, Forbidden, PeerIdInvalid
+from pyrogram.errors import ChannelInvalid, FloodWait, Forbidden, PeerIdInvalid, UserBannedInChannel
 
 from userge import Config, Message, get_collection, userge
 
@@ -154,10 +154,13 @@ async def fban_(message: Message):
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
-        await userge.send_message(
-            chat_id,
-            f"/fban {user} {reason}",
-        )
+        try:
+            await userge.send_message(
+                chat_id,
+                f"/fban {user} {reason}",
+            )
+        except UserBannedInChannel:
+            pass
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
@@ -270,19 +273,22 @@ async def fban_p(message: Message):
                 )
             else:
                 fwd = message.reply_to_message
-        except (Forbidden, ChannelInvalid):
+        except (Forbidden, ChannelInvalid, UserBannedInChannel):
             pass
-        if admin != 1156425647:
-            await userge.send_message(
-                chat_id,
-                f"/fban {user} {reason}",
-                reply_to_message_id=fwd.message_id,
-            )
-        else:
-            await userge.send_message(
-                chat_id,
-                f"/fban {user} {reason}",
-            )
+        try:
+            if admin != 1156425647:
+                await userge.send_message(
+                    chat_id,
+                    f"/fban {user} {reason}",
+                    reply_to_message_id=fwd.message_id,
+                )
+            else:
+                await userge.send_message(
+                    chat_id,
+                    f"/fban {user} {reason}",
+                )
+        except UserBannedInChannel:
+            pass
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
