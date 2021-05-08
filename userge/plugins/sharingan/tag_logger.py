@@ -7,7 +7,7 @@ import os
 import aiofiles
 import ujson
 from pyrogram import filters
-from pyrogram.errors import FloodWait, MessageIdInvalid
+from pyrogram.errors import FloodWait
 
 from userge import Config, Message, get_collection, userge
 
