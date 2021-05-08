@@ -70,6 +70,133 @@ async def all_log(message: Message):
 
 
 @userge.on_message(
+    filters.group
+    & filters.me
+    & ~filters.bot
+    & ~filters.service
+    & ~filters.reply
+    & tagLoggingFilter,
+    group=5
+)
+async def grp_log1(_, message: Message):
+    if not GROUP_LOG_GROUP_ID:
+        return
+    if NO_LOG_GROUP_ID:
+        if message.chat.id == NO_LOG_GROUP_ID:
+            return
+    dash = "==========================="
+    sender_m_id = message.message_id
+    log = f"""
+#⃣ #MESSAGE_SENT
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
+"""
+    try:
+        await asyncio.sleep(0.5)
+        await userge.send_message(GROUP_LOG_GROUP_ID, dash)
+        await asyncio.sleep(0.5)
+        await userge.send_message(
+            GROUP_LOG_GROUP_ID,
+            log,
+            parse_mode="html",
+            disable_web_page_preview=True,
+            )
+        await asyncio.sleep(0.5)
+        await userge.forward_messages(
+            GROUP_LOG_GROUP_ID,
+            message.chat.id,
+            message_ids=sent_m_id,
+        )
+    except FloodWait as e:
+        await asyncio.sleep(e.x + 3)
+    except MessageIdInvalid:
+        pass
+
+
+@userge.on_message(
+    filters.group
+    & ~filters.me
+    & ~filters.bot
+    & ~filters.service
+    & filters.reply
+    & tagLoggingFilter,
+    group=5
+)
+async def grp_log2(_, message: Message):
+    if not GROUP_LOG_GROUP_ID:
+        return
+    if NO_LOG_GROUP_ID:
+        if message.chat.id == NO_LOG_GROUP_ID:
+            return
+    dash = "==========================="
+    try:
+        sender_id = message.from_user.id
+        sender_m_id = message.message_id
+        reply = message.reply_to_message
+        replied_id = reply.from_user.id
+        replied_m_id = reply.message_id
+    except:
+        return
+    me_id = user(info="id")
+    if sender_id == me_id:
+        replied_name = " ".join(
+            [reply.from_user.first_name, reply.from_user.last_name or ""]
+        )
+        replied_men = f"<a href='tg://user?id={replied_id}'>{replied_name}</a>"
+        log = f"""
+↪️ #YOU_REPLIED
+👤 <b>Replied to :</b> {replied_men}
+🔢 <b>ID :</b> <code>{replied_id}</code>
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
+"""
+    if replied_id == me_id:
+        sender_name = " ".join(
+            [message.from_user.first_name, message.from_user.last_name or ""]
+        )
+        sender_men = f"<a href='tg://user?id={sender_id}'>{sender_name}</a>"
+        log = f"""
+↪️ #GOT_A_REPLY
+👤 <b>Replied by :</b> {sender_men}
+🔢 <b>ID :</b> <code>{sender_id}</code>
+👥 <b>Group :</b> {message.chat.title}
+🔗 <b>Message link :</b> <a href={message.link}>link</a>
+💬 <b>Message :</b> ⬇
+"""
+    try:
+                await asyncio.sleep(0.2)
+                await userge.send_message(GROUP_LOG_GROUP_ID, dash)
+                await asyncio.sleep(0.2)
+                replied_msg = await userge.forward_messages(
+                    GROUP_LOG_GROUP_ID,
+                    message.chat.id,
+                    replied_m_id,
+                    disable_notification=True,
+                )
+                await asyncio.sleep(0.2)
+                await userge.send_message(
+                    GROUP_LOG_GROUP_ID,
+                    log1,
+                    reply_to_message_id=replied_msg.message_id,
+                    parse_mode="html",
+                    disable_web_page_preview=True,
+                )
+                await asyncio.sleep(0.2)
+                await userge.forward_messages(
+                    GROUP_LOG_GROUP_ID,
+                    message.chat.id,
+                    sender_m_id,
+                    disable_notification=True,
+                )
+            except FloodWait as e:
+                await asyncio.sleep(e.x + 3)
+            except MessageIdInvalid:
+                pass
+
+
+@userge.on_message(
     filters.group & ~filters.bot & ~filters.service & tagLoggingFilter, group=5
 )
 async def grp_log(_, message: Message):
