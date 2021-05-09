@@ -117,8 +117,9 @@ async def lyrics(message: Message):
         lyr = lyr["lyrics"]
         if not lyr:
             await message.edit(
-                "Sorry, couldn't find lyrics for <code>{title}</code>..."
+                f"Sorry, couldn't find lyrics for <code>{title}</code>..."
             )
+            return
         lyrics = f"\n{lyr}"
         lyrics += f"\n\n<b>Written by:</b> <code>{writers}</code>"
         lyrics += f"\n<b>Source:</b> <code>genius.com</code>"
