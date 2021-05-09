@@ -115,6 +115,8 @@ async def lyrics(message: Message):
             lyric = await result.text()
         lyr = json.loads(lyric)
         lyr = lyr["lyrics"]
+        if not lyr:
+            await message.edit("<code>Sorry, couldn't find the lyrics...</code>")
         lyrics = f"\n{lyr}"
         lyrics += f"\n\n<b>Written by:</b> <code>{writers}</code>"
         lyrics += f"\n<b>Source:</b> <code>genius.com</code>"
@@ -126,7 +128,7 @@ async def lyrics(message: Message):
             lyrics = lyrics.replace("\n", "<br>")
             link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
             await message.edit(
-                f"Lyrics for <a href='{link}'><b>{title}</b></a> by genius.com...\n[<b>LINK</b>]({link})",
+                f"Lyrics for [<b>{title}</b>]({link}) by genius.com...",
                 disable_web_page_preview=True,
             )
         return
@@ -146,6 +148,6 @@ async def lyrics(message: Message):
         lyrics = lyrics.replace("\n", "<br>")
         link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
         await message.edit(
-            f"Lyrics for <a href='{link}'><b>{title}</b></a> by genius.com...\n<a href='{link}'>Link</a>",
+            f"Lyrics for [<b>{title}</b>]({link}) by genius.com...",
             disable_web_page_preview=True,
         )
