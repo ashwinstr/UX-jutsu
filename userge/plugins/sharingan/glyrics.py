@@ -132,7 +132,6 @@ async def lyrics(message: Message):
             link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
             await message.edit(
                 f"Lyrics for [<b>{title}</b>]({link}) by genius.com...",
-                disable_web_page_preview=True,
             )
         return
     if lyr is None:
@@ -152,5 +151,4 @@ async def lyrics(message: Message):
         link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
         await message.edit(
             f"Lyrics for [<b>{title}</b>]({link}) by genius.com...",
-            disable_web_page_preview=True,
         )
