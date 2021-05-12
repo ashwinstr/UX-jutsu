@@ -119,7 +119,7 @@ async def lyrics(message: Message):
         lyr = lyr["lyrics"]
         if not lyr:
             await message.edit(
-                f"Sorry, couldn't find lyrics for <code>{title}</code>..."
+                f"Sorry, couldn't find lyrics for <code>{title}</code>...", del_in=5
             )
             return
         lyrics = f"\n{lyr}"
