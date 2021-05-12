@@ -25,6 +25,7 @@ if GENIUS is not None:
         "description": "Song lyrics from Genius.com",
         "flags": {
             "-t": "With telegra.ph link...",
+            "-pre": "telegr.ph link with preview",
             "-s": "Search song names...",
         },
         "usage": "{tr}glyrics [Artist name] - [Song name]",
@@ -99,6 +100,7 @@ async def lyrics(message: Message):
     else:
         title = f"{artist} - {song}"
     await message.edit(f"Searching lyrics for **{title}** on Genius...`")
+    dis_pre = True
     try:
         lyr = genius.search_song(song, artist)
     except Exception:
@@ -125,13 +127,15 @@ async def lyrics(message: Message):
         lyrics += f"\n<b>Source:</b> <code>genius.com</code>"
         lyrics = lyrics.replace("[", "<b>[").replace("]", "]</b>")
         full_lyr = f"Lyrics for **{title}** by Genius.com...\n\n{lyrics}"
-        if len(full_lyr) <= 4096 and "-t" not in flag:
+        if len(full_lyr) <= 4096 and "-t" not in flag and "-pre" not in flag:
             await message.edit(full_lyr)
         else:
+            if "-pre" in flag:
+                dis_pre = False
             lyrics = lyrics.replace("\n", "<br>")
             link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
             await message.edit(
-                f"Lyrics for [<b>{title}</b>]({link}) by genius.com...",
+                f"Lyrics for [<b>{title}</b>]({link}) by genius.com...", disable_web_page_preview=dis_pre,
             )
         return
     if lyr is None:
@@ -144,11 +148,13 @@ async def lyrics(message: Message):
     lyrics = lyrics.replace("[", "<b>[")
     lyrics = lyrics.replace("]", "]</b>")
     lyr_msg = f"Lyrics for <b>{title}</b>...\n\n{lyrics}"
-    if len(lyr_msg) <= 4096 and "-t" not in flag:
+    if len(lyr_msg) <= 4096 and "-t" not in flag and "-pre" not in flag:
         await message.edit(f"{lyr_msg}")
     else:
+        if "-pre" in flag:
+            dis_pre = False
         lyrics = lyrics.replace("\n", "<br>")
         link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
         await message.edit(
-            f"Lyrics for [<b>{title}</b>]({link}) by genius.com...",
+            f"Lyrics for [<b>{title}</b>]({link}) by genius.com...", disable_web_page_preview=dis_pre,
         )
