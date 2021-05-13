@@ -112,6 +112,9 @@ async def prof_ile(message: Message):
         user_ = await userge.get_users(id_)
         name = " ".join([user_.first_name, user_.last_name or ""])
     except BaseException:
-        name = "Stranger"
-    out = f"<b>Profile link</b> to the user with id <code>{id_}</code>: <a href='tg://user?id={id_}'><b>{name}</b></a>"
+        name = "Unknown"
+    out = (
+        f"<b>👤 User:</b> [</b>{name}</b>](tg://user?id={id_})\n"
+        f"<b>#⃣ ID:</b> <code>{id_}</code>"
+    )
     await message.edit(out)
