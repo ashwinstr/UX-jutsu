@@ -114,7 +114,7 @@ async def prof_ile(message: Message):
     except BaseException:
         name = "Unknown"
     out = (
-        f"<b>👤 User:</b> [</b>{name}</b>](tg://user?id={id_})\n"
+        f"<b>👤 User:</b> [</b>{name}</b>](tg://user?id={int(id_)})\n"
         f"<b>#⃣ ID:</b> <code>{id_}</code>"
     )
     await message.edit(out)
