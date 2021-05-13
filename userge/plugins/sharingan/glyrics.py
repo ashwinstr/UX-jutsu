@@ -120,7 +120,7 @@ async def lyrics(message: Message):
         lyr = json.loads(lyric)
         lyr = lyr["lyrics"]
         if not lyr:
-            await message.err(
+            await message.edit(
                 f"Sorry, couldn't find lyrics for <code>{title}</code>...", del_in=5
             )
             return
