@@ -92,3 +92,26 @@ async def who_is(message: Message):
                 cuz = "Chat Send Media Forbidden"
             message_out_str = "<b>📷 " + cuz + " 📷</b>\n\n" + message_out_str
             await message.edit(message_out_str)
+
+
+@userge.on_cmd(
+    "prof",
+    about={
+        "header": "Get profile link",
+        "description": "Get known/unknown profile link using user_id",
+        "usage": "{tr}prof [user_id]",
+    },
+)
+async def prof_ile(message: Message):
+    """Get known/unknown profile links"""
+    id_ = message.input_str
+    if not id_:
+        await message.err("Please provide user id...", del_in=5)
+        return
+    try:
+        user_ = await userge.get_users(id_)
+        name = " ".join([user_.first_name, user_.last_name or ""])
+    except:
+        name = "Stranger"
+    out = f"<b>Profile link</b> to the user with id <code>{id_}</code>: <a href='tg://user?id={id_}'><b>{name}</b></a>"
+    await message.edit(out)
