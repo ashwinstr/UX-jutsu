@@ -10,7 +10,7 @@ import os
 
 from pyrogram.errors.exceptions.bad_request_400 import BotMethodInvalid
 
-from userge import Message, userge, Config
+from userge import Config, Message, userge
 
 
 @userge.on_cmd(
@@ -111,7 +111,7 @@ async def prof_ile(message: Message):
     try:
         user_ = await userge.get_users(id_)
         name = " ".join([user_.first_name, user_.last_name or ""])
-    except:
+    except BaseException:
         name = "Stranger"
     out = f"<b>Profile link</b> to the user with id <code>{id_}</code>: <a href='tg://user?id={id_}'><b>{name}</b></a>"
     await message.edit(out)
