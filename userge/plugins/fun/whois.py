@@ -31,7 +31,7 @@ async def who_is(message: Message):
             from_chat = await message.client.get_chat(user_id)
         except Exception:
             await message.err(
-                "no valid user_id or message specified, do .help whois for more info"
+                f"No valid user_id or message specified, do <code>{Config.CMD_TRIGGER}help whois</code> for more info..."
             )
             return
     elif message.reply_to_message:
@@ -41,7 +41,7 @@ async def who_is(message: Message):
         from_chat = await message.client.get_chat(message.reply_to_message.from_user.id)
     else:
         await message.err(
-            "no valid user_id or message specified, do .help whois for more info"
+            f"No valid user_id or message specified, do <code>{Config.CMD_TRIGGER}help whois</code> for more info..."
         )
         return
     if from_user or from_chat is not None:
