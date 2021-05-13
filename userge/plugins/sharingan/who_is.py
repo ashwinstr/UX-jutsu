@@ -10,7 +10,7 @@ import os
 
 from pyrogram.errors.exceptions.bad_request_400 import BotMethodInvalid
 
-from userge import Message, userge
+from userge import Message, userge, Config
 
 
 @userge.on_cmd(
