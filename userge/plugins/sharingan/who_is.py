@@ -10,7 +10,7 @@ import os
 
 from pyrogram.errors.exceptions.bad_request_400 import BotMethodInvalid
 
-from userge import Message, userge
+from userge import Config, Message, userge
 
 
 @userge.on_cmd(
@@ -31,7 +31,7 @@ async def who_is(message: Message):
             from_chat = await message.client.get_chat(user_id)
         except Exception:
             await message.err(
-                "no valid user_id or message specified, do .help whois for more info"
+                f"No valid user_id or message specified, do <code>{Config.CMD_TRIGGER}help whois</code> for more info..."
             )
             return
     elif message.reply_to_message:
@@ -41,7 +41,7 @@ async def who_is(message: Message):
         from_chat = await message.client.get_chat(message.reply_to_message.from_user.id)
     else:
         await message.err(
-            "no valid user_id or message specified, do .help whois for more info"
+            f"No valid user_id or message specified, do <code>{Config.CMD_TRIGGER}help whois</code> for more info..."
         )
         return
     if from_user or from_chat is not None:
@@ -92,3 +92,29 @@ async def who_is(message: Message):
                 cuz = "Chat Send Media Forbidden"
             message_out_str = "<b>📷 " + cuz + " 📷</b>\n\n" + message_out_str
             await message.edit(message_out_str)
+
+
+@userge.on_cmd(
+    "prof",
+    about={
+        "header": "Get profile link",
+        "description": "Get known/unknown profile link using user_id",
+        "usage": "{tr}prof [user_id]",
+    },
+)
+async def prof_ile(message: Message):
+    """Get known/unknown profile links"""
+    id_ = message.input_str
+    if not id_:
+        await message.err("Please provide user id...", del_in=5)
+        return
+    try:
+        user_ = await userge.get_users(id_)
+        name = " ".join([user_.first_name, user_.last_name or ""])
+    except BaseException:
+        name = "Unknown"
+    out = (
+        f"<b>👤 User:</b> [</b>{name}</b>](tg://user?id={int(id_)})\n"
+        f"<b>#⃣ ID:</b> <code>{id_}</code>"
+    )
+    await message.edit(out)

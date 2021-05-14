@@ -117,14 +117,12 @@ async def lyrics(message: Message):
             data=json.dumps(data),
         ) as result:
             lyric = await result.text()
-        try:
-            lyr = json.loads(lyric)
-            lyr = lyr["lyrics"]
-        except Exception as e:
-            await message.err(
+        lyr = json.loads(lyric)
+        lyr = lyr["lyrics"]
+        if not lyr:
+            await message.edit(
                 f"Sorry, couldn't find lyrics for <code>{title}</code>...", del_in=5
             )
-            await CHANNEL.log(text=e)
             return
         lyrics = f"\n{lyr}"
         lyrics += f"\n\n<b>Written by:</b> <code>{writers}</code>"
