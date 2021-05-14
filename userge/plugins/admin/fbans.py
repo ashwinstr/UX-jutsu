@@ -19,9 +19,10 @@ from pyrogram.errors import (
     UserBannedInChannel,
 )
 
+from userge import Config, Message, get_collection, userge
+
 FBAN_LOG_CHANNEL = os.environ.get("FBAN_LOG_CHANNEL")
 
-from userge import Config, Message, get_collection, userge
 
 FED_LIST = get_collection("FED_LIST")
 CHANNEL = userge.getCLogger(__name__)
@@ -211,7 +212,9 @@ async def fban_(message: Message):
     about={
         "header": "Fban with proof",
         "description": "Fban user from the list of feds with replied message as proof",
-        "flags": {"-nsfw": "won't send nsfw or gore proof to feds, but will log in log channel",},
+        "flags": {
+            "-nsfw": "won't send nsfw or gore proof to feds, but will log in log channel",
+        },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
     },
     allow_bots=False,
@@ -402,7 +405,7 @@ async def fban_m(message: Message):
         if user_n == len(input):
             await userge.send_message(
                 PROOF_CHANNEL,
-                f"#FBAN\n**Fbanned:** {ban} out of {len(input)}\n**Failed:** {fail}\n**Can't fban:** {cant}"
+                f"#FBAN\n**Fbanned:** {ban} out of {len(input)}\n**Failed:** {fail}\n**Can't fban:** {cant}",
             )
 
 
