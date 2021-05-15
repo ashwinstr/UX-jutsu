@@ -1,7 +1,8 @@
 # plugin for USERGE-X by @Kakashi_HTK/@ashwinstr
 
 from pyrogram.errors import YouBlockedUser
-from userge import userge, Message
+
+from userge import Message, userge
 
 
 @userge.on_cmd(
