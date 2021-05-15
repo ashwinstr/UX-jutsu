@@ -120,11 +120,13 @@ async def prof_ile(message: Message):
     if pass_ in u_info:
         name_l = u_info.split("\n")[2]
     else:
-        await message.err(f"Sorry, ID <code>{id_}</code> was not found in database...", del_in=5)
+        await message.err(
+            f"Sorry, ID <code>{id_}</code> was not found in database...", del_in=5
+        )
     name_s = name_l.split(":")
     name = name_s[1] if (len(name_s) == 2) else "<b>Deleted account</b> (or blank name)"
     out = (
         f"<b>👤 User:</b> [{name}](tg://user?id={(id_)})\n"
         f"<b>#⃣ ID:</b> <code>{id_}</code>"
     )
-    await message.edit(out) 
+    await message.edit(out)
