@@ -8,7 +8,7 @@
 
 import os
 
-from pyrogram.errors.exceptions.bad_request_400 import BotMethodInvalid, YouBlockedUser
+from pyrogram.errors.exceptions.bad_request_400 import BotMethodInvalid
 
 from userge import Config, Message, userge
 
@@ -92,4 +92,3 @@ async def who_is(message: Message):
                 cuz = "Chat Send Media Forbidden"
             message_out_str = "<b>📷 " + cuz + " 📷</b>\n\n" + message_out_str
             await message.edit(message_out_str)
-
