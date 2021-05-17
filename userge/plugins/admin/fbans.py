@@ -343,7 +343,7 @@ async def fban_p(message: Message):
     break_line = "\n" if success else ""
     log_proof = f"<a href='{log_fwd.link}'><b>channel</b></a>"
     chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof}."
-    log_msg_ = f"{msg_}{break_line}<b>Proof</b> in chat <a href='{reply.link}'>{message.chat.title}</a>"
+    log_msg_ = f"{msg_}{break_line}<b>Proof</b> in chat <a href='{reply.link}'><b>{message.chat.title}</b></a>"
     await message.edit(chat_msg_)
     await userge.send_message(PROOF_CHANNEL, log_msg_)
 
