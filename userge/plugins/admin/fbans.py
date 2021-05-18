@@ -21,7 +21,7 @@ from pyrogram.errors import (
 
 from userge import Config, Message, get_collection, userge
 
-FBAN_LOG_CHANNEL = os.environ.get("FBAN_LOG_CHANNEL")
+FBAN_LOG_CHANNEL = int(os.environ.get("FBAN_LOG_CHANNEL"))
 
 
 FED_LIST = get_collection("FED_LIST")
