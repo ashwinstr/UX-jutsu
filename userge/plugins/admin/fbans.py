@@ -156,8 +156,10 @@ async def fban_(message: Message):
     try:
         user_ = await userge.get_users(user)
         u_link = user_.mention
+        u_id = user_.id
     except BaseException:
         u_link = user
+        u_id = user
     failed = []
     total = 0
     reason = reason or "Not specified."
@@ -202,7 +204,7 @@ async def fban_(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Fbanned in `{total}` feds."
-    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
+    msg_ = fban_arg[3].format(u_link) + f"\n**ID:** {u_id}\n**Reason:** {reason}\n**Status:** {status}"
     await message.edit(msg_)
     await userge.send_message(PROOF_CHANNEL, msg_)
 
@@ -260,8 +262,10 @@ async def fban_p(message: Message):
     try:
         user_ = await userge.get_users(user)
         u_link = user_.mention
+        u_id = user_.id
     except BaseException:
         u_link = user
+        u_id = user
     await message.edit(fban_arg[0])
     failed = []
     total = 0
@@ -339,7 +343,7 @@ async def fban_p(message: Message):
     else:
         status = f"Success! Fbanned in {total} feds."
         success = True
-    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
+    msg_ = fban_arg[3].format(u_link) + f"\n**ID:** {u_id}\n**Reason:** {reason}\n**Status:** {status}"
     break_line = "\n" if success else ""
     log_proof = f"<a href='{log_fwd.link}'><b>channel</b></a>"
     chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof}."
