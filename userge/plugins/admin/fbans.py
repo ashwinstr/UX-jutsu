@@ -434,6 +434,11 @@ async def unfban_(message: Message):
     user = (message.extract_user_and_text)[0]
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>Un-FBanned {}</b>"]
     await message.edit(fban_arg[0])
+    input = message.input_str
+    if message.reply_to_message:
+        reason = input
+    else:
+        reason = input[1:]
     PROOF_CHANNEL = FBAN_LOG_CHANNEL if FBAN_LOG_CHANNEL else Config.LOG_CHANNEL_ID
     error_msg = "Provide a User ID or reply to a User"
     if user is None:
@@ -443,6 +448,7 @@ async def unfban_(message: Message):
     except (PeerIdInvalid, IndexError):
         return await message.err(error_msg, del_in=7)
     user = user_.id
+    reason = reason or "Not specified"
     failed = []
     total = 0
     await message.edit(fban_arg[1])
@@ -451,7 +457,7 @@ async def unfban_(message: Message):
         chat_id = int(data["chat_id"])
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
-                await conv.send_message(f"/unfban {user}")
+                await conv.send_message(f"/unfban {user} {reason}")
                 response = await conv.get_response(
                     mark_read=True,
                     filters=(filters.user([609517172]) & ~filters.service),
