@@ -278,7 +278,7 @@ async def fban_p(message: Message):
     reply = message.reply_to_message
     proof = reply.message_id
     log_fwd = await userge.forward_messages(
-        PROOF_CHANNEL,
+        int(PROOF_CHANNEL),
         from_chat_id=from_,
         message_ids=proof,
     )
