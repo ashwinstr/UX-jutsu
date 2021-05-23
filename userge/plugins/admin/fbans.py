@@ -484,7 +484,10 @@ async def unfban_(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Un-Fbanned in `{total}` feds."
-    msg_ = fban_arg[3].format(user_.mention) + f"\n<b>ID:</b> <code>{user}</code>\n<b>Reason:</b> {reason}\n**Status:** {status}"
+    msg_ = (
+        fban_arg[3].format(user_.mention)
+        + f"\n<b>ID:</b> <code>{user}</code>\n<b>Reason:</b> {reason}\n**Status:** {status}"
+    )
     await message.edit(msg_)
     await userge.send_message(PROOF_CHANNEL, msg_)
 
