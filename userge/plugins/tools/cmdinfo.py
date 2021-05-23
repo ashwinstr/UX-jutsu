@@ -76,7 +76,7 @@ async def see_info(message: Message):
         plugin_link = False
     elif plugin_loc == "/xtra":
         me = await userge.get_me()
-        if me.id not in [1013414037, 1156425647]:
+        if me.id not in [1013414037, 1156425647, 1611280867]:
             custom_plugins = "https://github.com/code-rgb/Userge-Plugins"
         else:
             custom_plugins = "https://github.com/ashwinstr/Userge-Plugins-Fork"

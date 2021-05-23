@@ -17,7 +17,7 @@ async def urban_dict(message: Message):
     try:
         mean = await urban.get_word(word)
         await message.edit(
-            f"Text: {mean.word}**\n\nMeaning: {mean.definition}**\n\nExample: {mean.example}"
+            f"<b>Text:</b> {mean.word}\n\n<b>Meaning:</b> {mean.definition}\n\n<b>Example:</b> {mean.example}"
         )
     except asyncurban.WordNotFoundError:
         await message.edit("No result found for " + word + "")

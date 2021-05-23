@@ -156,8 +156,10 @@ async def fban_(message: Message):
     try:
         user_ = await userge.get_users(user)
         u_link = user_.mention
+        u_id = user_.id
     except BaseException:
         u_link = user
+        u_id = user
     failed = []
     total = 0
     reason = reason or "Not specified."
@@ -202,7 +204,10 @@ async def fban_(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Fbanned in `{total}` feds."
-    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
+    msg_ = (
+        fban_arg[3].format(u_link)
+        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
+    )
     await message.edit(msg_)
     await userge.send_message(PROOF_CHANNEL, msg_)
 
@@ -260,8 +265,10 @@ async def fban_p(message: Message):
     try:
         user_ = await userge.get_users(user)
         u_link = user_.mention
+        u_id = user_.id
     except BaseException:
         u_link = user
+        u_id = user
     await message.edit(fban_arg[0])
     failed = []
     total = 0
@@ -271,7 +278,7 @@ async def fban_p(message: Message):
     reply = message.reply_to_message
     proof = reply.message_id
     log_fwd = await userge.forward_messages(
-        PROOF_CHANNEL,
+        int(PROOF_CHANNEL),
         from_chat_id=from_,
         message_ids=proof,
     )
@@ -339,11 +346,14 @@ async def fban_p(message: Message):
     else:
         status = f"Success! Fbanned in {total} feds."
         success = True
-    msg_ = fban_arg[3].format(u_link) + f"\n**Reason:** {reason}\n**Status:** {status}"
+    msg_ = (
+        fban_arg[3].format(u_link)
+        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
+    )
     break_line = "\n" if success else ""
     log_proof = f"<a href='{log_fwd.link}'><b>channel</b></a>"
     chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof}."
-    log_msg_ = f"{msg_}{break_line}<b>Proof</b> in chat <a href='{reply.link}'>{message.chat.title}</a>"
+    log_msg_ = f"{msg_}{break_line}<b>Proof</b> in chat <a href='{reply.link}'><b>{message.chat.title}</b></a>"
     await message.edit(chat_msg_)
     await userge.send_message(PROOF_CHANNEL, log_msg_)
 
@@ -424,6 +434,11 @@ async def unfban_(message: Message):
     user = (message.extract_user_and_text)[0]
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>Un-FBanned {}</b>"]
     await message.edit(fban_arg[0])
+    input = message.input_str
+    if message.reply_to_message:
+        reason = input
+    else:
+        reason = input[1:]
     PROOF_CHANNEL = FBAN_LOG_CHANNEL if FBAN_LOG_CHANNEL else Config.LOG_CHANNEL_ID
     error_msg = "Provide a User ID or reply to a User"
     if user is None:
@@ -433,6 +448,7 @@ async def unfban_(message: Message):
     except (PeerIdInvalid, IndexError):
         return await message.err(error_msg, del_in=7)
     user = user_.id
+    reason = reason or "Not specified"
     failed = []
     total = 0
     await message.edit(fban_arg[1])
@@ -441,7 +457,7 @@ async def unfban_(message: Message):
         chat_id = int(data["chat_id"])
         try:
             async with userge.conversation(chat_id, timeout=8) as conv:
-                await conv.send_message(f"/unfban {user}")
+                await conv.send_message(f"/unfban {user} {reason}")
                 response = await conv.get_response(
                     mark_read=True,
                     filters=(filters.user([609517172]) & ~filters.service),
@@ -468,7 +484,10 @@ async def unfban_(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Un-Fbanned in `{total}` feds."
-    msg_ = fban_arg[3].format(user_.mention) + f"\n**Status:** {status}"
+    msg_ = (
+        fban_arg[3].format(user_.mention)
+        + f"\n<b>ID:</b> <code>{user}</code>\n<b>Reason:</b> {reason}\n**Status:** {status}"
+    )
     await message.edit(msg_)
     await userge.send_message(PROOF_CHANNEL, msg_)
 

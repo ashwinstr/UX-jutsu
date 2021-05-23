@@ -53,6 +53,7 @@ _CATEGORY = {
     "plugins": "💎",
     "bot": "💠",
     "custom": "🔧",
+    "sharingan": "👁‍🗨",
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
