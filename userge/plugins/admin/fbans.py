@@ -206,7 +206,7 @@ async def fban_(message: Message):
         status = f"Success! Fbanned in `{total}` feds."
     msg_ = (
         fban_arg[3].format(u_link)
-        + f"\n**ID:** {u_id}\n**Reason:** {reason}\n**Status:** {status}"
+        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
     )
     await message.edit(msg_)
     await userge.send_message(PROOF_CHANNEL, msg_)
@@ -348,7 +348,7 @@ async def fban_p(message: Message):
         success = True
     msg_ = (
         fban_arg[3].format(u_link)
-        + f"\n**ID:** {u_id}\n**Reason:** {reason}\n**Status:** {status}"
+        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
     )
     break_line = "\n" if success else ""
     log_proof = f"<a href='{log_fwd.link}'><b>channel</b></a>"
@@ -484,7 +484,7 @@ async def unfban_(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Un-Fbanned in `{total}` feds."
-    msg_ = fban_arg[3].format(user_.mention) + f"\n**Status:** {status}"
+    msg_ = fban_arg[3].format(user_.mention) + f"\n<b>ID:</b> <code>{user}</code>\n<b>Reason:</b> {reason}\n**Status:** {status}"
     await message.edit(msg_)
     await userge.send_message(PROOF_CHANNEL, msg_)
 
