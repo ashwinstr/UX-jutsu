@@ -351,9 +351,10 @@ async def fban_p(message: Message):
         + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
     )
     break_line = "\n" if success else ""
-    log_proof = f"<a href='{log_fwd.link}'><b>channel</b></a>"
-    chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof}."
-    log_msg_ = f"{msg_}{break_line}<b>Proof</b> in chat <a href='{reply.link}'><b>{message.chat.title}</b></a>"
+    log_proof_in = f"<a href='{log_fwd.link}'><b>channel</b></a>"
+    chat_proof_in = f"<a href='{reply.link}'><b>{message.chat.title}</b></a>" if (message.chat.type != "private") else "<b>PRIVATE</b>"
+    chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof_in}."
+    log_msg_ = f"{msg_}{break_line}<b>Proof</b> in {chat_proof_in} chat."
     await message.edit(chat_msg_)
     await userge.send_message(PROOF_CHANNEL, log_msg_)
 
