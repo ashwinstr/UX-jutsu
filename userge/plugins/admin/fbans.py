@@ -352,7 +352,11 @@ async def fban_p(message: Message):
     )
     break_line = "\n" if success else ""
     log_proof_in = f"<a href='{log_fwd.link}'><b>channel</b></a>"
-    chat_proof_in = f"<a href='{reply.link}'><b>{message.chat.title}</b></a>" if (message.chat.type != "private") else "<b>PRIVATE</b>"
+    chat_proof_in = (
+        f"<a href='{reply.link}'><b>{message.chat.title}</b></a>"
+        if (message.chat.type != "private")
+        else "<b>PRIVATE</b>"
+    )
     chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof_in}."
     log_msg_ = f"{msg_}{break_line}<b>Proof</b> in {chat_proof_in} chat."
     await message.edit(chat_msg_)
