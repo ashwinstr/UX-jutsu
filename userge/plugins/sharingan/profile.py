@@ -34,6 +34,7 @@ async def prof_ile(message: Message):
         await message.err(
             f"Sorry, ID <code>{id_}</code> was not found in database...", del_in=5
         )
+        return
     name_s = name_l.split(":")
     name = name_s[1] if (len(name_s) == 2) else "<b>Deleted account</b> (or blank name)"
     out = (
