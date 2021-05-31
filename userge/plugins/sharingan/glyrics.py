@@ -26,8 +26,8 @@ if GENIUS is not None:
         "header": "Lyrics using Genius API",
         "description": "Song lyrics from Genius.com",
         "flags": {
+            "-no_p": "Disable preview",
             "-t": "With telegra.ph link...",
-            "-pre": "telegr.ph link with preview",
             "-s": "Search song names...",
         },
         "usage": "{tr}glyrics [Artist name] - [Song name]",
@@ -102,7 +102,7 @@ async def lyrics(message: Message):
     else:
         title = f"{artist} - {song}"
     await message.edit(f"Searching lyrics for **{title}** on Genius...`")
-    dis_pre = True
+    dis_pre = False
     try:
         lyr = genius.search_song(song, artist)
     except Exception:
@@ -132,8 +132,8 @@ async def lyrics(message: Message):
         if len(full_lyr) <= 4096 and "-t" not in flag and "-pre" not in flag:
             await message.edit(full_lyr)
         else:
-            if "-pre" in flag:
-                dis_pre = False
+            if "-no_p" in flag:
+                dis_pre = True
             lyrics = lyrics.replace("\n", "<br>")
             link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
             await message.edit(
@@ -154,8 +154,8 @@ async def lyrics(message: Message):
     if len(lyr_msg) <= 4096 and "-t" not in flag and "-pre" not in flag:
         await message.edit(f"{lyr_msg}")
     else:
-        if "-pre" in flag:
-            dis_pre = False
+        if "-no_p" in flag:
+            dis_pre = True
         lyrics = lyrics.replace("\n", "<br>")
         link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
         await message.edit(
