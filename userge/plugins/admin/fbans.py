@@ -209,7 +209,7 @@ async def fban_(message: Message):
         + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
     )
     await message.edit(msg_)
-    await userge.send_message(PROOF_CHANNEL, msg_)
+    await userge.send_message(int(PROOF_CHANNEL), msg_)
 
 
 @userge.on_cmd(
