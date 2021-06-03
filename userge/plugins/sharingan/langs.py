@@ -1,10 +1,6 @@
 # created for USERGE-X by @Kakashi_HTK(telegram)/@ashwinstr(github)
 
 
-from googletrans import LANGUAGES
-
-from userge import userge
-
 def sort_lang(LANGUAGES):
     lang_list = []
     for code in LANGUAGES:
