@@ -494,7 +494,7 @@ async def unfban_(message: Message):
         + f"\n<b>ID:</b> <code>{user}</code>\n<b>Reason:</b> {reason}\n**Status:** {status}"
     )
     await message.edit(msg_)
-    await userge.send_message(PROOF_CHANNEL, msg_)
+    await userge.send_message(int(PROOF_CHANNEL), msg_)
 
 
 @userge.on_cmd(
