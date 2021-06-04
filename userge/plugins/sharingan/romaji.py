@@ -110,10 +110,7 @@ async def romaji_(message: Message):
         return
     result = result[1]
     if result is None:
-        await message.edit(
-            "Couldn't transcribe, sorry...",
-            del_in=5
-        )
+        await message.edit("Couldn't transcribe, sorry...", del_in=5)
         return
     if not secret:
         out += (
