@@ -11,7 +11,7 @@ import time
 from googletrans import LANGUAGES, Translator
 
 from userge import Config, Message, pool, userge
-from userge.plugins.sharingan.langs import sort_lang
+from userge.helpers.langs import sort_lang
 from userge.utils.functions import get_emoji_regex
 
 
