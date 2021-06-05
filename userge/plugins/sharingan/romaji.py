@@ -9,7 +9,7 @@ from googletrans import LANGUAGES
 from userge import Message, userge
 from userge.plugins.utils.translate import _translate_this
 
-from .langs import sort_lang
+from userge.helpers.langs import sort_lang
 
 translator = google_translator()
 
