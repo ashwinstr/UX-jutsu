@@ -7,9 +7,8 @@ from google_trans_new import google_translator
 from googletrans import LANGUAGES
 
 from userge import Message, userge
-from userge.plugins.utils.translate import _translate_this
-
 from userge.helpers.langs import sort_lang
+from userge.plugins.utils.translate import _translate_this
 
 translator = google_translator()
 
