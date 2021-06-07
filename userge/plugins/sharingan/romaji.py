@@ -3,6 +3,7 @@
 # further improvement by @Kakashi_HTK/@ashwinstr
 
 
+from json import dumps
 from google_trans_new import google_translator
 from googletrans import LANGUAGES
 
@@ -17,7 +18,7 @@ translator = google_translator()
     "rom",
     about={
         "header": "Romaji transcriber",
-        "supported languages": sort_lang(LANGUAGES),
+        "supported languages": dumps(LANGUAGES, indent=4),
         "flags": {"-s": "transcribe silently"},
         "usage": "{tr}rom [-s (optional)] [src lang] [dest lang] [reply to message or text]",
         "examples": "for other language to latin\n"
