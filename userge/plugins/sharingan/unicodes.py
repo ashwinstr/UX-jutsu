@@ -15,7 +15,7 @@ from userge import Message, userge
 async def uni_chr(message: Message):
     """search unicodes"""
     char_ = message.input_str
-    char_ = char.split()
+    char_ = char_.split()
     list_ = []
     for char in char_:
         for num in range(0, 1114112):
