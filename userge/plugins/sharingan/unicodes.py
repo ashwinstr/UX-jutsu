@@ -9,8 +9,7 @@ from userge import Message, userge
         "header": "search unicodes",
         "description": "search unicode corresponding code",
         "usage": "{tr}chr [unicode character(s)]",
-        "example": "{tr}chr > (\n"
-        "Note: one character per space",
+        "example": "{tr}chr > (\n" "Note: one character per space",
     },
 )
 async def uni_chr(message: Message):
@@ -25,7 +24,9 @@ async def uni_chr(message: Message):
     await message.edit("Searching unicodes...")
     for char in char_:
         if len(char) > 1:
-            await message.edit(f"Enter one character per space!\nError at <b>{char}</b>", del_in=5)
+            await message.edit(
+                f"Enter one character per space!\nError at <b>{char}</b>", del_in=5
+            )
             return
         total += 1
         for num in range(0, 1114112):
