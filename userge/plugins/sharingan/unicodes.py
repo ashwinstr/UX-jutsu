@@ -1,12 +1,12 @@
 # plugin for USERGE-X made by @Kakashi_HTK(telegram)/@ashwinstr(github)
 
-from userge import userge, Message
+from userge import Message, userge
 
 
 @userge.on_cmd(
     "chr",
     about={
-        "header": "search unicodes", 
+        "header": "search unicodes",
         "description": "search unicode corresponding number",
         "usage": "{tr}chr [unicode character(s)]",
         "example": "{tr}chr > [",
