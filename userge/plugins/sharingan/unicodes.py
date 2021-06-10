@@ -33,6 +33,10 @@ async def uni_chr(message: Message):
             if chr(num) == char:
                 list_.append(f'"<b>{char}</b>" - <code>chr({num})</code>')
                 break
-    ans = f"<b>UNICODE(s)</b> and their corresponding code: <b>[{total}]</b>\n\n"
+    if len(char_) == 1:
+        plural = "its"
+    else:
+        plural = "their"
+    ans = f"<b>UNICODE(s)</b> and {plural} corresponding code: <b>[{total}]</b>\n\n"
     ans += "\n".join(list_)
     await message.edit(ans)
