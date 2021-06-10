@@ -31,7 +31,7 @@ async def uni_chr(message: Message):
         total += 1
         for num in range(0, 1114112):
             if chr(num) == char:
-                list_.append(f"<b>{char}</b> - <code>chr({num})</code>")
+                list_.append(f'"<b>{char}</b>" - <code>chr({num})</code>')
                 break
     ans = f"<b>UNICODE(s)</b> and its/their corresponding code: <b>[{total}]</b>\n\n"
     ans += "\n".join(list_)
