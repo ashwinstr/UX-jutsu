@@ -219,7 +219,8 @@ async def fban_(message: Message):
         "description": "Fban user from the list of feds with replied message as proof",
         "flags": {
             "-nsfw": "won't send nsfw or gore proof to feds, but will log in log channel",
-            "-r": "give link to proof in reason, if FBAN_LOG_CHANNEL added",
+            "-r": "give link to proof in reason, if FBAN_LOG_CHANNEL added"
+                  "\nwarning: don't use this if any of the fed group has links blocklisted",
         },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
     },
@@ -284,7 +285,7 @@ async def fban_p(message: Message):
         message_ids=proof,
     )
     reason = reason or "Not specified"
-    if FBAN_LOG_CHANNEL:
+    if FBAN_LOG_CHANNEL and "-r" in message.flags:
         reason += (
             " || {"
             + f"https://t.me/{int(FBAN_LOG_CHANNEL)}/{int(log_fwd.message_id)}"
@@ -358,7 +359,7 @@ async def fban_p(message: Message):
         + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
     )
     break_line = "\n" if success else ""
-    log_proof_in = f"<a href='{log_fwd.link}'><b>channel</b></a>"
+    log_proof_in = f"<a href='{log_fwd.link}'><b>channel</b></a>" if "-r" in message.flags else "<b>channel</b>"
     chat_proof_in = (
         f"<a href='{reply.link}'><b>{message.chat.title}</b></a>"
         if (message.chat.type != "private")
