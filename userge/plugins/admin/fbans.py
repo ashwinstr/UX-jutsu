@@ -359,7 +359,7 @@ async def fban_p(message: Message):
         + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
     )
     break_line = "\n" if success else ""
-    log_proof_in = f"<a href='{log_fwd.link}'><b>channel</b></a>" if "-r" in message.flags else "<b>channel</b>"
+    log_proof_in = f"<a href='{log_fwd.link}'><b>channel</b></a>" if "-r" not in message.flags else "<b>channel</b>"
     chat_proof_in = (
         f"<a href='{reply.link}'><b>{message.chat.title}</b></a>"
         if (message.chat.type != "private")
