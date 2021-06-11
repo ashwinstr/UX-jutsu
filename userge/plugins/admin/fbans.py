@@ -219,6 +219,7 @@ async def fban_(message: Message):
         "description": "Fban user from the list of feds with replied message as proof",
         "flags": {
             "-nsfw": "won't send nsfw or gore proof to feds, but will log in log channel",
+            "-r": "give link to proof in reason, if FBAN_LOG_CHANNEL added",
         },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
     },
@@ -283,6 +284,8 @@ async def fban_p(message: Message):
         message_ids=proof,
     )
     reason = reason or "Not specified"
+    if FBAN_LOG_CHANNEL:
+        reason += " || {" + log_fwd.message_id + "}"
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
