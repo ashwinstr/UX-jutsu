@@ -285,7 +285,7 @@ async def fban_p(message: Message):
     )
     reason = reason or "Not specified"
     if FBAN_LOG_CHANNEL:
-        reason += " || {" + log_fwd.message_id + "}"
+        reason += " || {" + f"https://t.me/{int(FBAN_LOG_CHANNEL)}/{int(log_fwd.message_id)}" + "}"
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
