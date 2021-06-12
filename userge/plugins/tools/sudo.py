@@ -30,10 +30,19 @@ async def _init() -> None:
 
 
 @userge.on_cmd(
-    "sudo", about={"header": "enable / disable sudo access"}, allow_channels=False
+    "sudo",
+    about={
+        "header": "enable / disable sudo access",
+        "flags": {"-c": "check if sudo is enabled",},
+    },
+    allow_channels=False
 )
 async def sudo_(message: Message):
     """enable / disable sudo access"""
+    if "-c" in message.flags:
+        status = "<b>enabled</b>..." if Config.SUDO_ENABLED else "<b>disabled</b>..."
+        await message.edit(f"Sudo is {status}", del_in=5)
+        return
     if Config.SUDO_ENABLED:
         Config.SUDO_ENABLED = False
         await message.edit("`sudo disabled !`", del_in=3)
