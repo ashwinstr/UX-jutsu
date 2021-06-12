@@ -288,7 +288,7 @@ async def fban_p(message: Message):
     if FBAN_LOG_CHANNEL and "-r" in message.flags:
         reason += (
             " || {"
-            + f"https://t.me/{int(FBAN_LOG_CHANNEL)}/{int(log_fwd.message_id)}"
+            + f"{log_fwd.link}"
             + "}"
         )
     async for data in FED_LIST.find():
