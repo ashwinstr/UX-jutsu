@@ -33,9 +33,11 @@ async def _init() -> None:
     "sudo",
     about={
         "header": "enable / disable sudo access",
-        "flags": {"-c": "check if sudo is enabled",},
+        "flags": {
+            "-c": "check if sudo is enabled",
+        },
     },
-    allow_channels=False
+    allow_channels=False,
 )
 async def sudo_(message: Message):
     """enable / disable sudo access"""
