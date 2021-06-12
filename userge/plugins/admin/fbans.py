@@ -286,11 +286,7 @@ async def fban_p(message: Message):
     )
     reason = reason or "Not specified"
     if FBAN_LOG_CHANNEL and "-r" in message.flags:
-        reason += (
-            " || {"
-            + f"{log_fwd.link}"
-            + "}"
-        )
+        reason += " || {" + f"{log_fwd.link}" + "}"
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
