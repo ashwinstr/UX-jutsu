@@ -273,6 +273,7 @@ async def fban_p(message: Message):
         u_id = user
     await message.edit(fban_arg[0])
     failed = []
+    r_update = []
     total = 0
     await message.edit(fban_arg[1])
     from_ = message.chat.id
@@ -329,9 +330,10 @@ async def fban_p(message: Message):
                     ("New FedBan" in resp)
                     or ("starting a federation ban" in resp)
                     or ("start a federation ban" in resp)
-                    or ("FedBan Reason update" in resp)
                 ):
                     failed.append(f"{data['fed_name']}  \n__ID__: {data['chat_id']}")
+                elif "FedBan Reason update" in resp:
+                    r_update.append(f"{data['fed_name']} - <i>Reason updated</i>") 
         except FloodWait as f:
             await asyncio.sleep(f.x + 3)
         except BaseException:
@@ -348,7 +350,10 @@ async def fban_p(message: Message):
             status += "• " + i + "\n"
         success = False
     else:
-        status = f"Success! Fbanned in {total} feds."
+        status = f"<b>Success!</b> Fbanned in {total} feds."
+        if len(r_update) != 0:
+            for i in r_update:
+                status += f"\n• {i}"
         success = True
     msg_ = (
         fban_arg[3].format(u_link)
