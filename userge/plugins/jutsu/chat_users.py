@@ -1,6 +1,7 @@
 # created for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(github)
 
-from userge import userge, Message
+from userge import Message, userge
+
 
 @userge.on_cmd(
     "c_users",
@@ -8,8 +9,8 @@ from userge import userge, Message
         "header": "find chat users",
         "description": "mention users from any chat",
         "usage": "{tr}c_users [limit] [chat username/id]\n"
-                 "or {tr}c_users [[limit] or [chat username/id]]\n"
-                 "or {tr}c_users (default limit 100) (current chat)",
+        "or {tr}c_users [[limit] or [chat username/id]]\n"
+        "or {tr}c_users (default limit 100) (current chat)",
     },
 )
 async def chat_users_(message: Message):
@@ -24,7 +25,7 @@ async def chat_users_(message: Message):
             limit_ = input_.split()[0]
             try:
                 await userge.get_chat(chat_)
-            except:
+            except BaseException:
                 await message.edit(f"Chat <code>{chat_}</code> is not a valid chat...")
                 return
         else:
@@ -32,11 +33,13 @@ async def chat_users_(message: Message):
             try:
                 await userge.get_chat(chat_)
                 limit_ = 100
-            except:
+            except BaseException:
                 chat_ = message.chat.id
                 limit_ = input_
                 if limit_ > 10000:
-                    await message.edit(f"Current limit(<code>{limit_}</code>) can't be more than 10000...")
+                    await message.edit(
+                        f"Current limit(<code>{limit_}</code>) can't be more than 10000..."
+                    )
                     return
     title = (await userge.get_chat(chat_)).title
     await message.edit(f"Getting {limit_} members of chat {title}...")
