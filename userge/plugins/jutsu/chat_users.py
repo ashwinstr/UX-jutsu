@@ -47,7 +47,10 @@ async def chat_users_(message: Message):
     lim = 0
     async for mem in userge.iter_chat_members(chat_):
         if mem.user.username != "none":
-            user = " ".join([mem.user.first_name, mem.user.last_name or ""])
+            try:
+                user = " ".join([mem.user.first_name, mem.user.last_name or ""])
+            except:
+                user = mem.user.first_name
         else:
             user = "Deleted user"
         list_ += f"• {user} - @{mem.user.username}\n"
