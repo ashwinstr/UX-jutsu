@@ -53,7 +53,11 @@ async def chat_users_(message: Message):
                 user = mem.user.first_name
         else:
             user = "DELETED USER"
-        list_ += f"• {user} - @{mem.user.username}\n" if mem.user.username else f"• <a href='tg://user?id={mem.user.id}'>{user}</a>"
+        list_ += (
+            f"• {user} - @{mem.user.username}\n"
+            if mem.user.username
+            else f"• <a href='tg://user?id={mem.user.id}'>{user}</a>"
+        )
         lim += 1
         if len(list_) > 4040:
             await message.reply(list_)
