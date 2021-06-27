@@ -43,10 +43,11 @@ async def chat_users_(message: Message):
                     return
     title = (await userge.get_chat(chat_)).title
     await message.edit(f"Getting {limit_} members of chat {title}...")
-    list_ = ""
+    list_ = f"List of {limit_} members in chat <b>{title}</b>:\n\n"
     lim = 0
     async for mem in userge.iter_chat_members(chat_):
-        list_ += f"@{mem.user.username}\n"
+        user = " ".join([mem.user.first_name, mem.user.last_name or ""])
+        list_ += f"• {user} - @{mem.user.username}\n"
         lim += 1
         if limit_ != 10000:
             if lim == limit_:
