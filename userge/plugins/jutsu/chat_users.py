@@ -55,7 +55,12 @@ async def chat_users_(message: Message):
             user = "Deleted user"
         list_ += f"• {user} - @{mem.user.username}\n"
         lim += 1
-        if limit_ != 10000:
+        if len(list_) > 4040:
+            await message.reply(list_)
+            list_ = ""
+        if int(limit_) != 10000:
             if lim == limit_:
                 break
-    await message.edit(list_)
+    if len(list_) != 0:
+        await message.reply(list_)
+    await message.delete()
