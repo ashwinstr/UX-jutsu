@@ -46,17 +46,15 @@ async def chat_users_(message: Message):
     list_ = f"List of <b>{limit_}</b> members in chat <b>{title}</b>:\n\n"
     lim = 0
     async for mem in userge.iter_chat_members(chat_):
-        if mem.user.username is not None:
-            try:
-                user = " ".join([mem.user.first_name, mem.user.last_name or ""])
-            except BaseException:
-                user = mem.user.first_name
-        else:
-            user = "DELETED USER"
+        try:
+            await userge.get_users(mem.user.id)
+            user = " ".join([mem.user.first_name, mem.user.last_name or ""])
+        except:
+            user = "<i>DELETED USER</i>"
         list_ += (
             f"• {user} - @{mem.user.username}\n"
             if mem.user.username
-            else f"• <a href='tg://user?id={mem.user.id}'>{user}</a>"
+            else f"• <a href='tg://user?id={mem.user.id}'>{user}</a>\n"
         )
         lim += 1
         if len(list_) > 4040:
