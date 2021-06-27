@@ -49,7 +49,7 @@ async def chat_users_(message: Message):
         try:
             await userge.get_users(mem.user.id)
             user = " ".join([mem.user.first_name, mem.user.last_name or ""])
-        except:
+        except BaseException:
             user = "<i>DELETED USER</i>"
         list_ += (
             f"• {user} - @{mem.user.username}\n"
