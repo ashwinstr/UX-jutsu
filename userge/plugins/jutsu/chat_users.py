@@ -36,7 +36,7 @@ async def chat_users_(message: Message):
             except BaseException:
                 chat_ = message.chat.id
                 limit_ = input_
-                if limit_ > 10000:
+                if int(limit_) > 10000:
                     await message.edit(
                         f"Current limit(<code>{limit_}</code>) can't be more than 10000..."
                     )
@@ -46,14 +46,14 @@ async def chat_users_(message: Message):
     list_ = f"List of <b>{limit_}</b> members in chat <b>{title}</b>:\n\n"
     lim = 0
     async for mem in userge.iter_chat_members(chat_):
-        if mem.user.username != "none":
+        if mem.user.username is not None:
             try:
                 user = " ".join([mem.user.first_name, mem.user.last_name or ""])
             except BaseException:
                 user = mem.user.first_name
         else:
-            user = "Deleted user"
-        list_ += f"• {user} - @{mem.user.username}\n"
+            user = "DELETED USER"
+        list_ += f"• {user} - @{mem.user.username}\n" if mem.user.username else f"• <a href='tg://user?id={mem.user.id}'>{user}</a>"
         lim += 1
         if len(list_) > 4040:
             await message.reply(list_)
