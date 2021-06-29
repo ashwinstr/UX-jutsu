@@ -55,9 +55,15 @@ async def translateme(message: Message):
             await message.edit("Language flags can't be more than 2...", del_in=5)
             return
     elif len(flags) == 2:
-        src, dest = list(flags) if "s" not in flags else "auto", list(flags)[1]
+        if "s" not in flags:
+            src, dest = list(flags)
+        else:
+            src, dest = "auto", list(flags)[1]
     elif len(flags) == 1:
-        src, dest = "auto", list(flags)[0] if "s" not in flags else "auto", Config.LANG
+        if "s" not in flags:
+            src, dest = "auto", list(flags)[0]
+        else:
+            src, dest = "auto", Config.LANG
     else:
         src, dest = "auto", Config.LANG
     text = get_emoji_regex().sub("", text)
