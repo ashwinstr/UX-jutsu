@@ -49,7 +49,11 @@ async def translateme(message: Message):
         )
         return
     if len(flags) == 3:
-        src, dest = list(flags)[1], list(flags)[2] if "-s" in flags else return await message.edit("Language flags can't be more than 2...", del_in=5), ""
+        if "-s" in flags:
+            src, dest = list(flags)[1], list(flags)[2]
+        else:
+            await message.edit("Language flags can't be more than 2...", del_in=5)
+            return
     elif len(flags) == 2:
         src, dest = list(flags) if "-s" not in flags else "auto", list(flags)[1]
     elif len(flags) == 1:
