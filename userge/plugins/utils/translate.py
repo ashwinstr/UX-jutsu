@@ -49,23 +49,30 @@ async def translateme(message: Message):
         )
         return
     if len(flags) == 3:
-        src, dest = list(flags)[1], list(flags)[2] if "-s" in flags else return await message.edit("Language flags can't be more than 2...", del_in=5)
+        src, dest = list(flags)[1], list(flags)[2] if "-s" in flags else return await message.edit("Language flags can't be more than 2...", del_in=5), ""
+    elif len(flags) == 2:
+        src, dest = list(flags) if "-s" not in flags else "auto", list(flags)[1]
     elif len(flags) == 1:
-        src, dest = "auto", list(flags)[0]
+        src, dest = "auto", list(flags)[0] if "-s" not in flags else "auto", Config.LANG
     else:
         src, dest = "auto", Config.LANG
     text = get_emoji_regex().sub("", text)
-    await message.edit("`Translating ...`")
+    await message.edit("`Translating ...`") if "-s" not in flags
     try:
         reply_text = await _translate_this(text, dest, src)
     except ValueError:
-        await message.err(text="Invalid destination language.\nuse `.help tr`")
+        await message.err(text="Invalid destination language.\nuse `.help tr`") if "-s" not in flags else await message.delete()
         return
     source_lan = LANGUAGES[f"{reply_text.src.lower()}"]
     transl_lan = LANGUAGES[f"{reply_text.dest.lower()}"]
-    output = f"**Source ({source_lan.title()}):**`\n{text}`\n\n\
+    if "-s" not in flags:
+        output = f"**Source ({source_lan.title()}):**`\n{text}`\n\n\
 **Translation ({transl_lan.title()}):**\n`{reply_text.text}`"
-    await message.edit_or_send_as_file(text=output, caption="translated")
+        caption = "translated"
+    else:
+        output = reply_text.text
+        caption = None
+    await message.edit_or_send_as_file(text=output, caption=caption)
 
 
 @pool.run_in_thread
