@@ -70,9 +70,9 @@ async def translateme(message: Message):
             text="Invalid destination language.\nuse `.help tr`"
         ) if "-s" not in flags else await message.delete()
         return
-    source_lan = LANGUAGES[f"{reply_text.src.lower()}"]
-    transl_lan = LANGUAGES[f"{reply_text.dest.lower()}"]
     if "-s" not in flags:
+        source_lan = LANGUAGES[f"{reply_text.src.lower()}"]
+        transl_lan = LANGUAGES[f"{reply_text.dest.lower()}"]
         output = f"**Source ({source_lan.title()}):**`\n{text}`\n\n\
 **Translation ({transl_lan.title()}):**\n`{reply_text.text}`"
         caption = "translated"
