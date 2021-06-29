@@ -66,7 +66,9 @@ async def translateme(message: Message):
     try:
         reply_text = await _translate_this(text, dest, src)
     except ValueError:
-        await message.err(text="Invalid destination language.\nuse `.help tr`") if "-s" not in flags else await message.delete()
+        await message.err(
+            text="Invalid destination language.\nuse `.help tr`"
+        ) if "-s" not in flags else await message.delete()
         return
     source_lan = LANGUAGES[f"{reply_text.src.lower()}"]
     transl_lan = LANGUAGES[f"{reply_text.dest.lower()}"]
