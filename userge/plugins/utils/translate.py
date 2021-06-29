@@ -49,28 +49,28 @@ async def translateme(message: Message):
         )
         return
     if len(flags) == 3:
-        if "-s" in flags:
+        if "s" in flags:
             src, dest = list(flags)[1], list(flags)[2]
         else:
             await message.edit("Language flags can't be more than 2...", del_in=5)
             return
     elif len(flags) == 2:
-        src, dest = list(flags) if "-s" not in flags else "auto", list(flags)[1]
+        src, dest = list(flags) if "s" not in flags else "auto", list(flags)[1]
     elif len(flags) == 1:
-        src, dest = "auto", list(flags)[0] if "-s" not in flags else "auto", Config.LANG
+        src, dest = "auto", list(flags)[0] if "s" not in flags else "auto", Config.LANG
     else:
         src, dest = "auto", Config.LANG
     text = get_emoji_regex().sub("", text)
-    if "-s" not in flags:
+    if "s" not in flags:
         await message.edit("`Translating ...`")
     try:
         reply_text = await _translate_this(text, dest, src)
     except ValueError:
         await message.err(
             text="Invalid destination language.\nuse `.help tr`"
-        ) if "-s" not in flags else await message.delete()
+        ) if "s" not in flags else await message.delete()
         return
-    if "-s" not in flags:
+    if "s" not in flags:
         source_lan = LANGUAGES[f"{reply_text.src.lower()}"]
         transl_lan = LANGUAGES[f"{reply_text.dest.lower()}"]
         output = f"**Source ({source_lan.title()}):**`\n{text}`\n\n\
