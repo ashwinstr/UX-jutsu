@@ -20,6 +20,9 @@ from userge.utils.functions import get_emoji_regex
     about={
         "header": "Translate the given text using Google Translate",
         "supported languages": dumps(LANGUAGES, indent=4),
+        "flags": {
+            "-s": "secret translation",
+        },
         "usage": "from english to sinhala\n"
         "{tr}tr -en -si i am userge\n\n"
         "from auto detected language to sinhala\n"
@@ -45,8 +48,8 @@ async def translateme(message: Message):
             text="Give a text or reply to a message to translate!\nuse `.help tr`"
         )
         return
-    if len(flags) == 2:
-        src, dest = list(flags)
+    if len(flags) == 3:
+        src, dest = list(flags)[1], list(flags)[2] if "-s" in flags else return await message.edit("Language flags can't be more than 2...", del_in=5)
     elif len(flags) == 1:
         src, dest = "auto", list(flags)[0]
     else:
