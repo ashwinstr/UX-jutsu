@@ -2,7 +2,7 @@
 
 from pyrogram.errors import YouBlockedUser
 
-from userge import Message, userge, Config
+from userge import Config, Message, userge
 
 
 @userge.on_cmd(
@@ -17,7 +17,9 @@ async def f_stat(message: Message):
     """Fstat of user"""
     user_ = message.input_str or message.reply_to_message.from_user.id
     if not user_:
-        await message.edit(f"Input not found, see <code>{Config.SUDO_TRIGGER}fstat</code>.")
+        await message.edit(
+            f"Input not found, see <code>{Config.SUDO_TRIGGER}fstat</code>."
+        )
     await message.edit(f"Fetching fstat of user <b>{user_}</b>...")
     try:
         get_u = await userge.get_users(user_)
