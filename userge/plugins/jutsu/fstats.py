@@ -1,6 +1,6 @@
 # made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
-from userge import userge, Message
+from userge import Message, userge
 
 
 @userge.on_cmd(
@@ -18,8 +18,10 @@ async def f_stat(message: Message):
     try:
         get_u = await userge.get_users(user_)
         user_ = get_u.id
-    except:
-        await message.edit(f"Fetching fstat of user <b>{user_}</b>...\nWARNING: User not found in your database, checking Rose's database.")
+    except BaseException:
+        await message.edit(
+            f"Fetching fstat of user <b>{user_}</b>...\nWARNING: User not found in your database, checking Rose's database."
+        )
     bot_ = "MissRose_bot"
     async with userge.conversation(bot_) as conv:
         await conv.send_message("/start")
@@ -28,6 +30,8 @@ async def f_stat(message: Message):
         resp = await conv.get_response(mark_read=True)
     fail = "Could not find a user"
     if fail in resp.text:
-        await message.edit(f"User <code>{user_}</code> could not be found in @MissRose_bot database")
+        await message.edit(
+            f"User <code>{user_}</code> could not be found in @MissRose_bot database"
+        )
     else:
         await message.edit(resp.text)
