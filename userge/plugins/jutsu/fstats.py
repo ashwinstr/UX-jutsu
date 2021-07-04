@@ -37,10 +37,10 @@ async def f_stat(message: Message):
     async with userge.conversation(bot_, timeout=150) as conv:
         try:
             await conv.send_message(f"/fstat {user_id}")
-            response = await conv.get_response(mark_read=True)
         except YouBlockedUser:
             await message.err("Unblock @missrose_bot first...", del_in=5)
             return
+        response = await conv.get_response(mark_read=True)
     fail = "Could not find a user"
     resp = response.text
     if fail in resp:
