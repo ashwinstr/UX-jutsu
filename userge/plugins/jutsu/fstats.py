@@ -2,7 +2,7 @@
 
 from pyrogram.errors import YouBlockedUser
 
-from userge import Config, Message, userge
+from userge import Message, userge
 
 
 @userge.on_cmd(
