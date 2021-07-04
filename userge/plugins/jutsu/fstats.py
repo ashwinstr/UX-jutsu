@@ -15,11 +15,10 @@ from userge import Config, Message, userge
 )
 async def f_stat(message: Message):
     """Fstat of user"""
-    user_ = message.input_str or message.reply_to_message.from_user.id
+    reply = message.reply_to_message
+    user_ = message.input_str if not reply else reply.from_user.id
     if not user_:
-        await message.edit(
-            f"Input not found, see <code>{Config.SUDO_TRIGGER}fstat</code>."
-        )
+        user_ = message.from_user.id
     try:
         get_u = await userge.get_users(user_)
         user_name = " ".join([get_u.first_name, get_u.last_name or ""])
@@ -34,7 +33,7 @@ async def f_stat(message: Message):
         f"Fetching fstat of user <a href='tg://user?id={user_id}'><b>{user_name}</b></a>..."
     )
     bot_ = "MissRose_bot"
-    async with userge.conversation(bot_, timeout=100) as conv:
+    async with userge.conversation(bot_, timeout=1000) as conv:
         try:
             await conv.send_message(f"/fstat {user_id}")
         except YouBlockedUser:
