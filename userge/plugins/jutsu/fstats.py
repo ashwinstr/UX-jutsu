@@ -34,7 +34,7 @@ async def f_stat(message: Message):
         f"Fetching fstat of user <a href='tg://user?id={user_id}'><b>{user_name}</b></a>..."
     )
     bot_ = "MissRose_bot"
-    async with userge.conversation(bot_, timeout=150) as conv:
+    async with userge.conversation(bot_, timeout=100) as conv:
         try:
             await conv.send_message(f"/fstat {user_id}")
         except YouBlockedUser:
