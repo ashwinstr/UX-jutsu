@@ -30,7 +30,9 @@ async def f_stat(message: Message):
         )
         user_name = user_
         user_id = user_
-    await message.edit(f"Fetching fstat of user <a href='tg://user?id={user_id}'><b>{user_name}</b></a>...")
+    await message.edit(
+        f"Fetching fstat of user <a href='tg://user?id={user_id}'><b>{user_name}</b></a>..."
+    )
     bot_ = "MissRose_bot"
     async with userge.conversation(bot_) as conv:
         try:
