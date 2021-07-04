@@ -219,7 +219,7 @@ async def fban_(message: Message):
         "description": "Fban user from the list of feds with replied message as proof",
         "flags": {
             "-r": "give link to proof in reason, if FBAN_LOG_CHANNEL added",
-            "-s": "won't send proof to feds (silent), but will log in log channel + '-r'",
+            "-s": "won't send proof to feds (silent), but will log in log channel + '-r'"
             "\nWARNING: don't use -r or -s if any of the fed group has links blocklisted",
         },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
