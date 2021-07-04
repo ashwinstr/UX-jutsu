@@ -34,17 +34,18 @@ async def f_stat(message: Message):
         f"Fetching fstat of user <a href='tg://user?id={user_id}'><b>{user_name}</b></a>..."
     )
     bot_ = "MissRose_bot"
-    async with userge.conversation(bot_) as conv:
+    async with userge.conversation(bot_, timeout=100) as conv:
         try:
             await conv.send_message(f"/fstat {user_id}")
-            resp = await conv.get_response(mark_read=True)
+            response = await conv.get_response(mark_read=True)
         except YouBlockedUser:
             await message.err("Unblock @missrose_bot first...", del_in=5)
             return
     fail = "Could not find a user"
-    if fail in resp.text:
+    resp = response.text
+    if fail in resp:
         await message.edit(
             f"User <code>{user_name}</code> could not be found in @MissRose_bot's database."
         )
     else:
-        await message.edit(resp.text)
+        await message.edit(resp.html, parse_mode="html")
