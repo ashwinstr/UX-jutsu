@@ -20,20 +20,21 @@ async def f_stat(message: Message):
         await message.edit(
             f"Input not found, see <code>{Config.SUDO_TRIGGER}fstat</code>."
         )
-    await message.edit(f"Fetching fstat of user <b>{user_}</b>...")
     try:
         get_u = await userge.get_users(user_)
-        user_ = get_u.id
+        user_name = " ".join([get_u.first_name, get_u.last_name or ""])
+        user_id = get_u.id
     except BaseException:
         await message.edit(
             f"Fetching fstat of user <b>{user_}</b>...\nWARNING: User not found in your database, checking Rose's database."
         )
+        user_name = user_
+        user_id = user_
+    await message.edit(f"Fetching fstat of user <a href='tg://user?id={user_id}'><b>{user_name}</b></a>...")
     bot_ = "MissRose_bot"
     async with userge.conversation(bot_) as conv:
         try:
-            await conv.send_message("/start")
-            await conv.get_response(mark_read=True)
-            await conv.send_message(f"/fstat {user_}")
+            await conv.send_message(f"/fstat {user_id}")
             resp = await conv.get_response(mark_read=True)
         except YouBlockedUser:
             await message.err("Unblock @missrose_bot first...", del_in=5)
@@ -41,7 +42,7 @@ async def f_stat(message: Message):
     fail = "Could not find a user"
     if fail in resp.text:
         await message.edit(
-            f"User <code>{user_}</code> could not be found in @MissRose_bot database"
+            f"User <code>{user_name}</code> could not be found in @MissRose_bot's database."
         )
     else:
         await message.edit(resp.text)
