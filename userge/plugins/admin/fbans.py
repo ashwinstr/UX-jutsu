@@ -218,9 +218,9 @@ async def fban_(message: Message):
         "header": "Fban with proof",
         "description": "Fban user from the list of feds with replied message as proof",
         "flags": {
-            "-nsfw": "won't send nsfw or gore proof to feds, but will log in log channel",
-            "-r": "give link to proof in reason, if FBAN_LOG_CHANNEL added"
-            "\nwarning: don't use this if any of the fed group has links blocklisted",
+            "-r": "give link to proof in reason, if FBAN_LOG_CHANNEL added",
+            "-s": "won't send proof to feds (silent), but will log in log channel + '-r'",
+            "\nWARNING: don't use -r or -s if any of the fed group has links blocklisted",
         },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
     },
@@ -286,20 +286,20 @@ async def fban_p(message: Message):
         message_ids=proof,
     )
     reason = reason or "Not specified"
-    if FBAN_LOG_CHANNEL and "-r" in message.flags:
+    if FBAN_LOG_CHANNEL and ("-r" in message.flags or "-s" in message.flags):
         reason += " || {" + f"{log_fwd.link}" + "}"
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
         try:
-            if chat_id != from_ and "-nsfw" not in message.flags:
+            if chat_id != from_ and "-s" not in message.flags:
                 fwd = await userge.forward_messages(
                     chat_id=chat_id,
                     from_chat_id=from_,
                     message_ids=proof,
                 )
                 fwd_id = fwd.message_id
-            elif "-nsfw" in message.flags:
+            elif "-s" in message.flags:
                 fwd_id = None
             else:
                 fwd_id = message.reply_to_message.message_id
