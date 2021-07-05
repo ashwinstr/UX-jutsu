@@ -304,19 +304,15 @@ async def fban_p(message: Message):
             else:
                 fwd_id = message.reply_to_message.message_id
         except (Forbidden, ChannelInvalid, UserBannedInChannel):
+            fwd_id = None
             pass
         try:
-            if admin != 1156425647:
-                await userge.send_message(
-                    chat_id,
-                    f"/fban {user} {reason}",
-                    reply_to_message_id=fwd_id,
-                )
-            else:
-                await userge.send_message(
-                    chat_id,
-                    f"/fban {user} {reason}",
-                )
+            await userge.send_message(
+                chat_id,
+                f"/fban {user} {reason}",
+                reply_to_message_id=fwd_id,
+                disable_web_page_preview=True
+            )
         except UserBannedInChannel:
             pass
         try:
