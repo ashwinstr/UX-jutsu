@@ -1,7 +1,9 @@
 # made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
 import os
-from userge import userge, Message
+
+from userge import Message, userge
+
 
 @userge.on_cmd(
     "alb",
@@ -14,7 +16,7 @@ from userge import userge, Message
             "-t": "title",
         },
         "usage": "{tr}alb [flag] [name or album art file location]\n"
-                 "enter input w.r.t. order of flags shown in help",
+        "enter input w.r.t. order of flags shown in help",
     },
 )
 async def album_edt(message: Message):
@@ -37,51 +39,72 @@ async def album_edt(message: Message):
         if ("-a" and "-p") in sort_flag:
             album_art, performer = split_input_
             try:
-                await userge.send_audio(chat_, file_, thumb=album_art, performer=performer)
-            except:
-                await message.err(f"Album art file location <code>{album_art}</code> might be invalid, check again...", del_in=5)
+                await userge.send_audio(
+                    chat_, file_, thumb=album_art, performer=performer
+                )
+            except BaseException:
+                await message.err(
+                    f"Album art file location <code>{album_art}</code> might be invalid, check again...",
+                    del_in=5,
+                )
                 return
         elif ("-a" and "-t") in sort_flag:
             album_art, title = split_input_
             try:
                 await userge.send_audio(chat_, file_, thumb=album_art, title=title)
-            except:
-                await message.err(f"Album art file location <code>{album_art}</code> might be invalid, check again...", del_in=5)
+            except BaseException:
+                await message.err(
+                    f"Album art file location <code>{album_art}</code> might be invalid, check again...",
+                    del_in=5,
+                )
                 return
         elif ("-p" and "-t") in sort_flag:
             performer, title = split_flag_
             try:
                 await userge.send_audio(chat_, file_, performer=performer, title=title)
-            except:
-                await message.err(f"Something unexpected happened, try again...", del_in=5)
+            except BaseException:
+                await message.err(
+                    f"Something unexpected happened, try again...", del_in=5
+                )
                 return
         else:
-            await message.err("Invalid flags, check help of command <code>alb</code>...", del_in=5)
+            await message.err(
+                "Invalid flags, check help of command <code>alb</code>...", del_in=5
+            )
             return
     elif len(split_input_) == 1 and len(sort_flag) == 1:
         if "-a" in sort_flag:
             album_art = split_input_[0]
             try:
                 await userge.send_audio(chat_, file_, thumb=album_art)
-            except:
-                await message.err(f"Album art file location <code>{album_art}</code> might be invalid, check again...", del_in=5)
+            except BaseException:
+                await message.err(
+                    f"Album art file location <code>{album_art}</code> might be invalid, check again...",
+                    del_in=5,
+                )
                 return
         elif "-t" in sort_flag:
             title = split_input_[0]
             try:
                 await userge.send_audio(chat_, file_, title=title)
-            except:
-                await message.err(f"Something unexpected happened, try again...", del_in=5)
+            except BaseException:
+                await message.err(
+                    f"Something unexpected happened, try again...", del_in=5
+                )
                 return
         elif "-p" in sort_flag:
             performer = split_flag_[0]
             try:
                 await userge.send_audio(chat_, file, performer=performer)
-            except:
-                await message.err(f"Something unexpected happened, try again...", del_in=5)
+            except BaseException:
+                await message.err(
+                    f"Something unexpected happened, try again...", del_in=5
+                )
                 return
         else:
-            await message.err("Invalid flag, check help of command <code>alb</code>...", del_in=5)
+            await message.err(
+                "Invalid flag, check help of command <code>alb</code>...", del_in=5
+            )
             return
     else:
         await message.err("Number of flags and inputs didn't match...", del_in=5)
