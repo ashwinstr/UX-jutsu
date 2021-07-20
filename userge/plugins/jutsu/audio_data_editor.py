@@ -28,7 +28,7 @@ async def album_edt(message: Message):
     chat_ = message.chat.id
     file_ = await userge.download_media(reply_)
     flag = message.flags
-    input_ = message.filtered_input_str
+    input_ = str(message.filtered_input_str)
     flag_list = list(flag)
     sort_flag = flag_list.sort()
     split_input_ = input_.split(";")
