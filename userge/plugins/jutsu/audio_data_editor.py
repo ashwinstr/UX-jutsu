@@ -22,7 +22,7 @@ from userge import Message, userge
 async def album_edt(message: Message):
     """Audio name editor"""
     reply_ = message.reply_to_message
-    if not reply_ or not reply.audio:
+    if not reply_ or not reply_.audio:
         await message.edit("Reply to an audio file...")
         return
     chat_ = message.chat.id
