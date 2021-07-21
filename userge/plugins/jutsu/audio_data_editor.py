@@ -32,6 +32,7 @@ async def album_edt(message: Message):
     flag_list = list(flag)
     sort_flag = flag_list.sort()
     split_input_ = input_.split(";")
+    await message.edit(split_input_)
     if len(split_input_) > 2 or len(sort_flag) > 2:
         await message.err("Don't enter more then two '<b>;</b>' or flags...", del_in=5)
         return
