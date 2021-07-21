@@ -73,6 +73,7 @@ updateUpstream() {
 }
 
 fetchUpstream() {
+    git init
     git fetch $UPSTREAM_REMOTE &> /dev/null
 }
 
