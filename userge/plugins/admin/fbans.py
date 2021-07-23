@@ -237,7 +237,9 @@ async def fban_p(message: Message):
     PROOF_CHANNEL = FBAN_LOG_CHANNEL if FBAN_LOG_CHANNEL else Config.LOG_CHANNEL_ID
     if ("-r" or "-s") in message.flags:
         if not FBAN_LOG_CHANNEL:
-            await message.err("Add <code>FBAN_LOG_CHANNEL</code> to use reason flags...")
+            await message.err(
+                "Add <code>FBAN_LOG_CHANNEL</code> to use reason flags..."
+            )
             return
         channel_ = await userge.get_chat(int(FBAN_LOG_CHANNEL))
         if channel_.username is None:
