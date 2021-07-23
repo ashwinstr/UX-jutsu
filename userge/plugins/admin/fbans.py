@@ -238,7 +238,9 @@ async def fban_p(message: Message):
     if ("-r" or "-s") in message.flags:
         channel_ = await userge.get_chat(int(PROOF_CHANNEL))
         if channel_.username is None:
-            await message.err("<b>Proof</b> channel can't private channel for <b>reason</b> flags...")
+            await message.err(
+                "<b>Proof</b> channel can't private channel for <b>reason</b> flags..."
+            )
             return
     user = message.reply_to_message.from_user.id
     input = message.filtered_input_str
