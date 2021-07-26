@@ -111,7 +111,9 @@ async def album_edt(message: Message):
             )
             return
     elif len(flag_list) == 0:
-        await message.err("This command requires a proper flag to be passed...", del_in=5)
+        await message.err(
+            "This command requires a proper flag to be passed...", del_in=5
+        )
         return
     else:
         await message.err("Number of flags and inputs didn't match...", del_in=5)
