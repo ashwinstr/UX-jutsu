@@ -26,10 +26,10 @@ async def botz(message: Message):
     mem = len(member_b)
     out = f"<b>BOTS</b> in <b>{message.chat.title}</b>: [{total}]\n\n"
     out += f"<b>Admin bot(s)</b>: [{adm}]\n"
-    out += "🤖" if admin_b else ""
-    out += "\n🤖".join(admin_b)
+    out += "🤖 " if admin_b else ""
+    out += "\n🤖 ".join(admin_b)
     out += "\n\n" if admin_b else "\n"
     out += f"<b>Member bot(s)</b>: [{mem}]\n"
-    out += "🤖" if member_b else ""
-    out += "\n🤖".join(member_b)
+    out += "🤖 " if member_b else ""
+    out += "\n🤖 ".join(member_b)
     await message.edit(out)
