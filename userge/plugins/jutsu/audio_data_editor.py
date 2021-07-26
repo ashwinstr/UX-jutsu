@@ -29,16 +29,18 @@ async def album_edt(message: Message):
     file_ = await userge.download_media(reply_)
     flag = message.flags
     input_ = message.filtered_input_str
-    await message.reply(input_)
+    if not input_:
+        await message.err("No input found...", del_in=5)
+        return
     flag_list = list(flag)
-    sort_flag = flag_list.sort()
     split_input_ = input_.split(";")
-    await message.reply(split_input_)
-    if len(split_input_) > 2 or len(sort_flag) > 2:
+    list_input_ = list(split_input_)
+    await message.reply(len(list_input_))
+    if len(split_input_) > 2 or len(flag_list) > 2:
         await message.err("Don't enter more then two '<b>;</b>' or flags...", del_in=5)
         return
-    elif len(split_input_) == 2 and len(sort_flag) == 2:
-        if ("-a" and "-p") in sort_flag:
+    elif len(split_input_) == 2 and len(flag_list) == 2:
+        if ("-a" and "-p") in flag_list:
             album_art, performer = split_input_
             try:
                 await userge.send_audio(
@@ -50,7 +52,7 @@ async def album_edt(message: Message):
                     del_in=5,
                 )
                 return
-        elif ("-a" and "-t") in sort_flag:
+        elif ("-a" and "-t") in flag_list:
             album_art, title = split_input_
             try:
                 await userge.send_audio(chat_, file_, thumb=album_art, title=title)
@@ -60,7 +62,7 @@ async def album_edt(message: Message):
                     del_in=5,
                 )
                 return
-        elif ("-p" and "-t") in sort_flag:
+        elif ("-p" and "-t") in flag_list:
             performer, title = split_flag_
             try:
                 await userge.send_audio(chat_, file_, performer=performer, title=title)
@@ -74,7 +76,7 @@ async def album_edt(message: Message):
                 "Invalid flags, check help of command <code>alb</code>...", del_in=5
             )
             return
-    elif len(split_input_) == 1 and len(sort_flag) == 1:
+    elif len(split_input_) == 1 and len(flag_list) == 1:
         if "-a" in sort_flag:
             album_art = split_input_[0]
             try:
@@ -85,7 +87,7 @@ async def album_edt(message: Message):
                     del_in=5,
                 )
                 return
-        elif "-t" in sort_flag:
+        elif "-t" in flag_list:
             title = split_input_[0]
             try:
                 await userge.send_audio(chat_, file_, title=title)
@@ -94,7 +96,7 @@ async def album_edt(message: Message):
                     f"Something unexpected happened, try again...", del_in=5
                 )
                 return
-        elif "-p" in sort_flag:
+        elif "-p" in flag_list:
             performer = split_flag_[0]
             try:
                 await userge.send_audio(chat_, file, performer=performer)
@@ -108,6 +110,9 @@ async def album_edt(message: Message):
                 "Invalid flag, check help of command <code>alb</code>...", del_in=5
             )
             return
+    elif len(flag_list) == 0:
+        await message.err("This command requires a proper flag to be passed...", del_in=5)
+        return
     else:
         await message.err("Number of flags and inputs didn't match...", del_in=5)
         return
