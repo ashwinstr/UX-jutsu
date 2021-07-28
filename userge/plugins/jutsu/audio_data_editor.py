@@ -34,9 +34,7 @@ async def album_edt(message: Message):
         try:
             await userge.send_audio(chat_, file_, title=title)
         except BaseException:
-            await message.err(
-               f"Something unexpected happened, try again...", del_in=5
-            )
+            await message.err(f"Something unexpected happened, try again...", del_in=5)
         return
     if ";" in input_:
         split_input_ = input_.split(";")
@@ -49,9 +47,7 @@ async def album_edt(message: Message):
             else:
                 performer = single_input_
         try:
-            await userge.send_audio(
-                chat_, file_, thumb=album_art, performer=performer
-            )
+            await userge.send_audio(chat_, file_, thumb=album_art, performer=performer)
         except BaseException:
             await message.err(
                 f"Album art file location <code>{album_art}</code> might be invalid, check again...",
