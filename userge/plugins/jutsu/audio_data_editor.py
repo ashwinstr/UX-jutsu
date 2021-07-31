@@ -22,6 +22,14 @@ async def album_edt(message: Message):
     if not reply_ or not reply_.audio:
         await message.edit("Reply to an audio file...")
         return
+    album_thumb = reply_.audio.thumbs
+    if album_thumb is not None:
+        album_art_id = album_thumb[0].file_id
+        album_art = await userge.download_media(album_art_id)
+    else:
+        album_art = None
+    performer = reply_.audio.performer
+    title = reply_.audio.title
     chat_ = message.chat.id
     file_ = await userge.download_media(reply_)
     flag_ = message.flags
@@ -31,11 +39,6 @@ async def album_edt(message: Message):
         return
     if "-t" in flag_:
         title = input_
-        try:
-            await userge.send_audio(chat_, file_, title=title)
-        except BaseException:
-            await message.err(f"Something unexpected happened, try again...", del_in=5)
-        return
     if ";" in input_:
         split_input_ = input_.split(";")
         if len(split_input_) > 2:
@@ -58,21 +61,13 @@ async def album_edt(message: Message):
         return
     if "/" in input_:
         album_art = input_
-        try:
-            await userge.send_audio(chat_, file_, thumb=album_art)
-        except BaseException:
-            await message.err(
-                f"Album art file location <code>{album_art}</code> might be invalid, check again...",
-                del_in=5,
-            )
     else:
         performer = input_
-        try:
-            await userge.send_audio(chat_, file_, performer=performer)
-        except BaseException:
-            await message.err(
-                "Something unexpected happened, try again...",
-                del_in=5,
-            )
+    try:
+        await userge.send_audio(chat_, file_, thumb=album_art, performer=performer, title=title)
+    except BaseException:
+        await message.err(f"Something unexpected happened, check your data and try again...", del_in=5)
+        return
     await message.delete()
+    os.remove(album_art)
     os.remove(file_)
