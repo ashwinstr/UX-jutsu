@@ -380,8 +380,8 @@ async def fban_p(message: Message):
     )
     chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof_in}."
     log_msg_ = f"{msg_}{break_line}<b>Proof</b> in {chat_proof_in} chat."
-    await message.edit(chat_msg_)
-    await userge.send_message(PROOF_CHANNEL, log_msg_)
+    await message.edit(chat_msg_, disable_web_page_preview=True)
+    await userge.send_message(PROOF_CHANNEL, log_msg_, disable_web_page_preview=True)
 
 
 @userge.on_cmd(
