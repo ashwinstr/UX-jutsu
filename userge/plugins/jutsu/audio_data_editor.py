@@ -64,9 +64,13 @@ async def album_edt(message: Message):
     else:
         performer = input_
     try:
-        await userge.send_audio(chat_, file_, thumb=album_art, performer=performer, title=title)
+        await userge.send_audio(
+            chat_, file_, thumb=album_art, performer=performer, title=title
+        )
     except BaseException:
-        await message.err(f"Something unexpected happened, check your data and try again...", del_in=5)
+        await message.err(
+            f"Something unexpected happened, check your data and try again...", del_in=5
+        )
         return
     await message.delete()
     os.remove(album_art)
