@@ -38,8 +38,6 @@ async def album_edt(message: Message):
     if not input_:
         await message.err("No input found...", del_in=5)
         return
-    if "-t" in flag_:
-        title = input_
     if ";" in input_:
         split_input_ = input_.split(";")
         if len(split_input_) > 2:
@@ -60,10 +58,13 @@ async def album_edt(message: Message):
         await message.delete()
         os.remove(file_)
         return
-    if "/" in input_:
-        album_art = input_
+    if "-t" in flag_:
+        title = input_
     else:
-        performer = input_
+        if "/" in input_:
+            album_art = input_
+        else:
+            performer = input_
     try:
         await userge.send_audio(
             chat_, file_, thumb=album_art, performer=performer, title=title
