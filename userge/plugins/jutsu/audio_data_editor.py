@@ -1,5 +1,5 @@
 # made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
-# v3.1.0
+# v3.1.5
 
 import os
 
@@ -38,6 +38,7 @@ async def album_edt(message: Message):
     if not input_:
         await message.err("No input found...", del_in=5)
         return
+    await message.edit("Editing meta-data...")
     if ";" in input_:
         split_input_ = input_.split(";")
         if len(split_input_) > 2:
