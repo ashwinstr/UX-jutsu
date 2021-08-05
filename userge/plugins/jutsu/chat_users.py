@@ -44,6 +44,7 @@ async def chat_users_(message: Message):
     title = (await userge.get_chat(chat_)).title
     await message.edit(f"Getting <b>{limit_}</b> members of chat <b>{title}</b>...")
     list_ = f"List of <b>{limit_}</b> members in chat <b>{title}</b>:\n\n"
+    sr_n = 1
     lim = 0
     async for mem in userge.iter_chat_members(chat_):
         try:
@@ -52,10 +53,11 @@ async def chat_users_(message: Message):
         except BaseException:
             user = "<i>DELETED USER</i>"
         list_ += (
-            f"• {user} - @{mem.user.username}\n"
+            f"• [{sr_n}] {user} - @{mem.user.username}\n"
             if mem.user.username
-            else f"• <a href='tg://user?id={mem.user.id}'>{user}</a>\n"
+            else f"• [{sr_n}] <a href='tg://user?id={mem.user.id}'>{user}</a>\n"
         )
+        sr_n += 1
         lim += 1
         if len(list_) > 4040:
             await message.reply(list_)
