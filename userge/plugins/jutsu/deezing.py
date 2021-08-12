@@ -26,16 +26,20 @@ async def deezing_(message: Message):
         await message.edit("Please enter a proper number after ';'...", del_in=5)
         return
     bot_ = "deezermusicbot"
-    await message.edit(f"Searching <code>{song_}</code> on deezer...")
+    await message.edit(f"Searching <b>{song_}</b> on deezer...")
     results = await userge.get_inline_bot_results(bot_, song_)
     if not results.results[0]:
         await message.edit(f"Song <code>{song_}</code> not found...", del_in=5)
         return
-    await gather(
-        userge.send_inline_bot_result(
-            chat_id=message.chat.id,
-            query_id=results.query_id,
-            result_id=results.results[int(num)].id,
-        ),
-        message.delete(),
-    )
+    try:
+        await gather(
+            userge.send_inline_bot_result(
+                chat_id=message.chat.id,
+                query_id=results.query_id,
+                result_id=results.results[int(num)].id,
+            ),
+            message.delete(),
+        )
+    except:
+        await message.err("Something unexpected happend, please try again later...", del_in=5)
+        return
