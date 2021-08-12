@@ -40,6 +40,8 @@ async def deezing_(message: Message):
             ),
             message.delete(),
         )
-    except:
-        await message.err("Something unexpected happend, please try again later...", del_in=5)
+    except BaseException:
+        await message.err(
+            "Something unexpected happend, please try again later...", del_in=5
+        )
         return
