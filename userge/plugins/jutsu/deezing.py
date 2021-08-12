@@ -2,7 +2,7 @@
 
 from asyncio import gather
 
-from userge import Message, userge, Config
+from userge import Config, Message, userge
 
 
 @userge.on_cmd(
