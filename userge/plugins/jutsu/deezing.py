@@ -2,7 +2,7 @@
 
 from asyncio import gather
 
-from userge import Message, userge
+from userge import Message, userge, Config
 
 
 @userge.on_cmd(
@@ -32,11 +32,16 @@ async def deezing_(message: Message):
         await message.edit(f"Song <code>{song_}</code> not found...", del_in=5)
         return
     try:
+        log_send = await userge.send_inline_bot_result(
+            chat_id=Config.LOG_CHANNEL_ID,
+            query_id=results.query_id,
+            result_id=results.results[int(num)].id,
+        )
         await gather(
-            userge.send_inline_bot_result(
+            userge.copy_message(
                 chat_id=message.chat.id,
-                query_id=results.query_id,
-                result_id=results.results[int(num)].id,
+                from_chat_id=Config.LOG_CHANNEL_ID,
+                message_id=log_send.updates[0].id,
             ),
             message.delete(),
         )
