@@ -35,7 +35,7 @@ async def deezing_(message: Message):
         userge.send_inline_bot_result(
             chat_id=message.chat.id,
             query_id=results.query_id,
-            result_id=results.results[num].id,
+            result_id=results.results[int(num)].id,
         ),
         message.delete(),
     )
