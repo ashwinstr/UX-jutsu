@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from googlesearch import search
 
 from userge import Message, userge
-from userge.utils import post_to_telegraph
+from userge.utils import post_to_telegraph, capitaled
 
 GENIUS = os.environ.get("GENIUS")
 
@@ -84,19 +84,9 @@ async def lyrics(message: Message):
     if " - " in song:
         artist, song = song.split("-", 1)
         artist = artist.strip()
-        name_a = artist.split()
-        artist_a = []
-        for a in name_a:
-            a = a.capitalize()
-            artist_a.append(a)
-        artist = " ".join(artist_a)
+        artist = await capitaled(artist)
     song = song.strip()
-    name_s = song.split()
-    song_s = []
-    for s in name_s:
-        s = s.capitalize()
-        song_s.append(s)
-    song = " ".join(song_s)
+    song = await capitaled(song)
     if artist == "":
         title = song
     else:
