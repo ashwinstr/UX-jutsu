@@ -11,6 +11,7 @@ from .functions import (
     rand_array,
     rand_key,
     thumb_from_audio,
+    capitaled,
 )
 from .progress import progress
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate
