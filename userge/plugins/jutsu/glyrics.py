@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from googlesearch import search
 
 from userge import Message, userge
-from userge.utils import post_to_telegraph, capitaled
+from userge.utils import capitaled, post_to_telegraph
 
 GENIUS = os.environ.get("GENIUS")
 
