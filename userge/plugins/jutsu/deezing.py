@@ -1,4 +1,5 @@
 # made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
+# v2.0.1
 
 from asyncio import gather
 
