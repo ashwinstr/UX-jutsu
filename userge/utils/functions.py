@@ -170,3 +170,14 @@ class AttributeDict(dict):
 
     def __setattr__(self, attr, value):
         self[attr] = value
+        
+
+# capitalise
+async def capitaled(query: str):
+    query_split = query.split()
+    cap_text = []
+    for word_ in query_split:
+        word_cap = word_.capitalize()
+        cap_text.append(word_cap)
+    cap_query = " ".join(cap_text)
+    return cap_query
