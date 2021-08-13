@@ -31,7 +31,7 @@ async def deezing_(message: Message):
     song_ = await capitaled(song_)
     await message.edit(f"Searching <b>{song_}</b> on deezer...")
     results = await userge.get_inline_bot_results(bot_, song_)
-    if not results.results[0]:
+    if not results.results:
         await message.edit(f"Song <code>{song_}</code> not found...", del_in=5)
         return
     try:
