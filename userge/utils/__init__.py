@@ -1,6 +1,7 @@
 from .aiohttp_helper import AioHttp as get_response
 from .functions import (
     AttributeDict,
+    capitaled,
     check_owner,
     cleanhtml,
     deEmojify,
@@ -11,7 +12,6 @@ from .functions import (
     rand_array,
     rand_key,
     thumb_from_audio,
-    capitaled,
 )
 from .progress import progress
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate
