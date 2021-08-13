@@ -4,6 +4,7 @@
 from asyncio import gather
 
 from userge import Config, Message, userge
+from userge.utils import capitaled
 
 
 @userge.on_cmd(
@@ -27,6 +28,7 @@ async def deezing_(message: Message):
         await message.edit("Please enter a proper number after ';'...", del_in=5)
         return
     bot_ = "deezermusicbot"
+    song_ = await capitaled(song_)
     await message.edit(f"Searching <b>{song_}</b> on deezer...")
     results = await userge.get_inline_bot_results(bot_, song_)
     if not results.results[0]:
