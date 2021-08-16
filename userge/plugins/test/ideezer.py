@@ -28,9 +28,9 @@ async def ideez_er(message: Message):
     buttons_ = [
         [
             InlineKeyboardButton(
-                text="Previous", callback_data=f"btn_previous_{key}_1"
+                text="Previous", callback_data=f"btn_previous"
             ),
-            InlineKeyboardButton(text="Next", callback_data=f"btn_next_{key}_1"),
+            InlineKeyboardButton(text="Next", callback_data=f"btn_next"),
         ]
     ]
     await userge.bot.send_photo(
@@ -46,7 +46,7 @@ async def ideez_er(message: Message):
     )
 
 
-@userge.bot.on_callback_query(filters.regex(pattern=r"^btn_(previous|next)(.*)"))
+@userge.bot.on_callback_query(filters.regex(pattern=r"^btn_(previous|next)"))
 @check_owner
 async def test_(c_q: CallbackQuery):
     chosen_btn = c_q.matches[0].group(1)
