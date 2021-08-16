@@ -35,12 +35,6 @@ async def ideez_er(message: Message):
         z,
         reply_markup=InlineKeyboardMarkup(buttons_),
     )
-    ideezer = await userge.get_inline_bot_results(_bot.username, "ideez")
-    await userge.send_inline_bot_result(
-        message.chat.id,
-        ideezer.query_id,
-        ideezer.result[0].id,
-    )
 
 
 @userge.bot.on_callback_query(filters.regex(pattern=r"^btn_(previous|next)"))
