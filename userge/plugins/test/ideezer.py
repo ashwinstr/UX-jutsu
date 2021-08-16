@@ -15,6 +15,9 @@ async def ideez_er(message: Message):
     bot_ = "deezermusicbot"
     key = 0
     x = await userge.get_inline_bot_results(bot_, song)
+    if not x.results:
+        await message.edit("Oops...", del_in=5)
+        return
     y = await userge.send_inline_bot_result(
         Config.LOG_CHANNEL_ID, query_id=x.query_id, result_id=x.results[0].id
     )
