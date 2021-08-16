@@ -13,7 +13,6 @@ async def ideez_er(message: Message):
     _bot = await userge.bot.get_me()
     song = "eminem till i collapse"
     bot_ = "deezermusicbot"
-    key = 0
     x = await userge.get_inline_bot_results(bot_, song)
     if not x.results:
         await message.edit("Oops...", del_in=5)
@@ -27,9 +26,7 @@ async def ideez_er(message: Message):
     z = await userge.download_media(file_.audio.thumbs[0].file_id)
     buttons_ = [
         [
-            InlineKeyboardButton(
-                text="Previous", callback_data=f"btn_previous"
-            ),
+            InlineKeyboardButton(text="Previous", callback_data=f"btn_previous"),
             InlineKeyboardButton(text="Next", callback_data=f"btn_next"),
         ]
     ]
