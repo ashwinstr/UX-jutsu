@@ -10,7 +10,7 @@ from userge.utils import check_owner
     about={"header": "xyz", "description": "abc", "usage": "{tr}ideez,"},
 )
 async def ideez_er(message: Message):
-    _bot = await userge.bot.get_me()
+    await userge.bot.get_me()
     song = "eminem till i collapse"
     bot_ = "deezermusicbot"
     x = await userge.get_inline_bot_results(bot_, song)
