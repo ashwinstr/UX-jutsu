@@ -63,7 +63,8 @@ async def get_snip(message: Message) -> None:
             )
             if msg_.text:
                 text = msg_.text.html
-                text = text.split("\n\n")[1:]
+                text = text.split("\n\n")[1]
+                
             else:
                 await message.edit(
                     "The noformat flag works for text snips only as of now...", del_in=5
