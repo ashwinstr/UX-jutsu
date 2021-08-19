@@ -33,9 +33,6 @@ async def _list_all_snips_(message: Message) -> None:
     r"(?:\$|getsnip\s)(\S+)$",
     about={
         "header": "Get a snip by getsnip or '$' trigger",
-        "flags": {
-            "-no": "noformat",
-        },
         "usage": "$[snip]\ngetsnip [snip]",
     },
     name="get_snip",
@@ -46,13 +43,12 @@ async def _list_all_snips_(message: Message) -> None:
 )
 async def get_snip(message: Message) -> None:
     """get a snip"""
-    flags_ = message.flags
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
     snip_name = message.matches[0].group(1)
     found = await SNIPS.find_one({"snip_name": snip_name})
     if found:
-        if "-no" not in flags_:
+        if "_noformat" not in snip_name:
             await message.delete()
             await CHANNEL.forward_stored(
                 client=message.client,
