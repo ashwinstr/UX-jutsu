@@ -4,9 +4,8 @@
 # Based on notes.py
 
 import asyncio
-from asyncio import gather
 
-from userge import Message, get_collection, userge, Config
+from userge import Config, Message, get_collection, userge
 
 CHANNEL = userge.getCLogger(__name__)
 SNIPS = get_collection("SNIPS")
@@ -66,8 +65,7 @@ async def get_snip(message: Message) -> None:
                 text = msg_.text.html
             else:
                 await message.edit(
-                    "The noformat flag works for text snips only as of now...",
-                    del_in=5
+                    "The noformat flag works for text snips only as of now...", del_in=5
                 )
                 return
             await message.edit(text, parse_mode="md")
