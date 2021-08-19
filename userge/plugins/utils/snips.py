@@ -4,8 +4,9 @@
 # Based on notes.py
 
 import asyncio
+from asyncio import gather
 
-from userge import Message, get_collection, userge
+from userge import Message, get_collection, userge, Config
 
 CHANNEL = userge.getCLogger(__name__)
 SNIPS = get_collection("SNIPS")
@@ -32,6 +33,9 @@ async def _list_all_snips_(message: Message) -> None:
     r"(?:\$|getsnip\s)(\S+)$",
     about={
         "header": "Get a snip by getsnip or '$' trigger",
+        "flags": {
+            "-no": "noformat",
+        },
         "usage": "$[snip]\ngetsnip [snip]",
     },
     name="get_snip",
@@ -42,19 +46,35 @@ async def _list_all_snips_(message: Message) -> None:
 )
 async def get_snip(message: Message) -> None:
     """get a snip"""
+    flags_ = message.flags
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
     snip_name = message.matches[0].group(1)
     found = await SNIPS.find_one({"snip_name": snip_name})
     if found:
-        await message.delete()
-        await CHANNEL.forward_stored(
-            client=message.client,
-            message_id=found["snip_msg_id"],
-            user_id=message.from_user.id,
-            chat_id=message.chat.id,
-            reply_to_message_id=reply_id,
-        )
+        if "-no" not in flags_:
+            await message.delete()
+            await CHANNEL.forward_stored(
+                client=message.client,
+                message_id=found["snip_msg_id"],
+                user_id=message.from_user.id,
+                chat_id=message.chat.id,
+                reply_to_message_id=reply_id,
+            )
+        else:
+            msg_ = await userge.get_messages(
+                chat_id=Config.LOG_CHANNEL_ID,
+                message_ids=found["snip_msg_id"],
+            )
+            if msg_.text:
+                text = msg_.text.html
+            else:
+                await message.edit(
+                    "The noformat flag works for text snips only as of now...",
+                    del_in=5
+                )
+                return
+            await message.edit(text, parse_mode"md")
 
 
 @userge.on_cmd(
