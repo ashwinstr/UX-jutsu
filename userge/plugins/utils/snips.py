@@ -70,7 +70,7 @@ async def get_snip(message: Message) -> None:
                     del_in=5
                 )
                 return
-            await message.edit(text, parse_mode"md")
+            await message.edit(text, parse_mode="md")
 
 
 @userge.on_cmd(
