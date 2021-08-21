@@ -45,7 +45,7 @@ async def get_snip(message: Message) -> None:
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
     snip_name = message.matches[0].group(1)
-    if message.matches[0].group(2) == "noformat":
+    if "_noformat" in snip_name:
         no_format = True
     found = await SNIPS.find_one({"snip_name": snip_name})
     if found:
@@ -69,7 +69,7 @@ async def get_snip(message: Message) -> None:
 
             else:
                 await message.edit(
-                    "The noformat flag works for text snips only as of now...", del_in=5
+                    "The noformat works for text snips only as of now...", del_in=5
                 )
                 return
             info_ = await message_edit(
