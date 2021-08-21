@@ -45,7 +45,7 @@ async def get_snip(message: Message) -> None:
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
     snip_name = message.matches[0].group(1)
-    if (message.input_str).split()[1] == "noformat":
+    if (message.input_str).split()[0] == "noformat":
         no_format = True
     found = await SNIPS.find_one({"snip_name": snip_name})
     if found:
