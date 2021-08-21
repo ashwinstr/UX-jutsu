@@ -72,8 +72,15 @@ async def get_snip(message: Message) -> None:
                     "The noformat flag works for text snips only as of now...", del_in=5
                 )
                 return
-            info_ = await message_edit(f"<u>Snip <b>{snip_name}</b> is as replied</u>: ↩")
-            await userge.send_message(message.chat.id, main_text, reply_to_message_id=info_.message_id, parse_mode="md")
+            info_ = await message_edit(
+                f"<u>Snip <b>{snip_name}</b> is as replied</u>: ↩"
+            )
+            await userge.send_message(
+                message.chat.id,
+                main_text,
+                reply_to_message_id=info_.message_id,
+                parse_mode="md",
+            )
 
 
 @userge.on_cmd(
