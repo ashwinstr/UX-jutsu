@@ -45,9 +45,11 @@ async def get_snip(message: Message) -> None:
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
     snip_name = message.matches[0].group(1)
+    if (message.input_str).split()[1] == "noformat"
+        no_format = True
     found = await SNIPS.find_one({"snip_name": snip_name})
     if found:
-        if "_noformat" not in snip_name:
+        if not no_format:
             await message.delete()
             await CHANNEL.forward_stored(
                 client=message.client,
@@ -63,14 +65,15 @@ async def get_snip(message: Message) -> None:
             )
             if msg_.text:
                 text = msg_.text.html
-                text = text.split("\n\n")[1]
+                main_text = text.split("\n\n")[1]
 
             else:
                 await message.edit(
                     "The noformat flag works for text snips only as of now...", del_in=5
                 )
                 return
-            await message.edit(text, parse_mode="md")
+            info_ = await message_edit(f"<u>Snip <b>{snip_name}</b> is as replied</u>: ↩")
+            await userge.send_message(message.chat.id, main_text, reply_to_message_id=info_.message_id, parse_mode="md")
 
 
 @userge.on_cmd(
