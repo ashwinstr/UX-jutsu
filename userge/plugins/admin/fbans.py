@@ -378,8 +378,12 @@ async def fban_p(message: Message):
         if (message.chat.type != "private")
         else "<b>PRIVATE</b>"
     )
-    chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof_in}."
-    log_msg_ = f"{msg_}{break_line}<b>Proof</b> in {chat_proof_in} chat."
+    if "-s" not in message.flags:
+        chat_msg_ = f"{msg_}{break_line}<b>Proof</b> logged in {log_proof_in}."
+        log_msg_ = f"{msg_}{break_line}<b>Proof</b> in {chat_proof_in} chat."
+    else:
+        chat_msg_ = msg_
+        log_msg_ = msg_
     await message.edit(chat_msg_, disable_web_page_preview=True)
     await userge.send_message(PROOF_CHANNEL, log_msg_, disable_web_page_preview=True)
 
