@@ -167,4 +167,4 @@ async def dsend_(message: Message):
         resp_ = int(resp_)
     except BaseException:
         pass
-    await message.edit(resp_)
+    await userge.send_message(message.chat.id, resp_)
