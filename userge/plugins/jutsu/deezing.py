@@ -92,14 +92,14 @@ async def dlist_(message: Message):
             min_ = dure_ / 60
             sec_ = (min_ - int(min_)) * 60
             await message.reply("worked")
-            sec_ = f"{sec_:02}"
-            await message.reply("worked")
+            sec_ = f"{int(sec_):02}"
+            await message.reply(sec_)
             list_.append(f"• [<b>{one}</b>] {title_} <b>({int(min_)}:{int(sec_)})</b>")
             total_ += 1
         except BaseException:
             break
     if not list_:
-        await message.reply(f"Couldn't find results for <code>{query_}</code>...")
+        await message.edit(f"Couldn't find results for <code>{query_}</code>...", del_in=5)
         return
     list_ = "\n".join(list_)
     out_ = f"Results found for <b>{query_}</b>: [<b>{total_}</b>]\n\n"
