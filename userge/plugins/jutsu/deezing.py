@@ -3,6 +3,8 @@
 
 from asyncio import gather
 
+from pyrogram import filters
+
 from userge import Config, Message, userge
 from userge.utils import capitaled
 
