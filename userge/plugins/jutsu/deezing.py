@@ -129,7 +129,7 @@ async def dlist_(message: Message):
                 return
             await response.delete()
     except BaseException:
-        out_ += "### <b>Response time expired</b> ###"
+        out_ += "### <b>Response time expired.</b> ###"
         await message.edit(out_)
         return
     try:
@@ -143,7 +143,7 @@ async def dlist_(message: Message):
             from_chat_id=Config.LOG_CHANNEL_ID,
             message_id=log_send.updates[0].id,
         )
-        out_ += f"\n\n### <b>Response {reply_} found</b> ###"
+        out_ += f"\n\n### <b>Response {reply_} replied.</b> ###"
         await message.edit(out_)
     except BaseException:
         await message.err(
