@@ -1,7 +1,5 @@
 # made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
-# v2.0.1
-
-from asyncio import gather
+# v3.0.5
 
 from pyrogram import filters
 
@@ -109,7 +107,7 @@ async def dlist_(message: Message):
     )
     await message.edit(out_)
     me_ = await userge.get_me()
-    async with userge.conversation(message.chat.id, timeout=15) as conv:
+    async with userge.conversation(message.chat.id) as conv:
         response = await conv.get_response(
             mark_read=True, filters=(filters.user(me_.id))
         )
@@ -135,13 +133,10 @@ async def dlist_(message: Message):
             query_id=result.query_id,
             result_id=result_id,
         )
-        await gather(
-            userge.copy_message(
-                chat_id=message.chat.id,
-                from_chat_id=Config.LOG_CHANNEL_ID,
-                message_id=log_send.updates[0].id,
-            ),
-            message.delete(),
+        userge.copy_message(
+            chat_id=message.chat.id,
+            from_chat_id=Config.LOG_CHANNEL_ID,
+            message_id=log_send.updates[0].id,
         )
     except BaseException:
         await message.err(
