@@ -128,7 +128,7 @@ async def dlist_(message: Message):
                 )
                 return
             await response.delete()
-    except:
+    except BaseException:
         out_ += "### <b>Response time expired</b> ###"
         await message.edit(out_)
         return
