@@ -116,6 +116,7 @@ async def dlist_(message: Message):
                 "Out of index error...", reply_to_message_id=response.message_id
             )
             return
+        await response.delete()
     try:
         log_send = await userge.send_inline_bot_result(
             chat_id=Config.LOG_CHANNEL_ID,
