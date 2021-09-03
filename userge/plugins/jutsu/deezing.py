@@ -62,7 +62,8 @@ async def deezing_(message: Message):
     "dzlist",
     about={
         "header": "deezer music list",
-        "description": "get music list from deezer",
+        "description": "get music list from deezer"
+        "\nSudo users use dz after getting the list or respond with dzsend",
         "usage": "{tr}dzlist [query]",
     },
 )
