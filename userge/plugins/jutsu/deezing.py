@@ -20,11 +20,13 @@ async def deezing_(message: Message):
     query_ = message.input_str
     if ";" in query_:
         split_ = query_.split(";", 1)
-        song_, num = split_[0].strip, split_[1].strip
+        song_, num = split_[0], split_[1]
     else:
         song_ = query_
         num = "0"
-    if not num.isdigit():
+    try:
+        num = int(num)
+    except:
         await message.edit("Please enter a proper number after ';'...", del_in=5)
         return
     bot_ = "deezermusicbot"
