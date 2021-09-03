@@ -63,7 +63,7 @@ async def deezing_(message: Message):
     about={
         "header": "deezer music list",
         "description": "get music list from deezer"
-        "\nSudo users use dz after getting the list or respond with dzsend",
+        "\nSudo users use dz after getting the list",
         "usage": "{tr}dzlist [query]",
     },
 )
@@ -152,20 +152,3 @@ async def dlist_(message: Message):
             "Something unexpected happend, please try again later...", del_in=5
         )
 
-
-@userge.on_cmd(
-    "dzsend",
-    about={
-        "header": "send dzlist response",
-        "description": "for sudo users who can't respond to dzlist directly",
-        "usage": "{tr}dzsend [responding number]",
-    },
-)
-async def dsend_(message: Message):
-    """send dzlist response"""
-    resp_ = message.input_str
-    try:
-        resp_ = int(resp_)
-    except BaseException:
-        pass
-    await userge.send_message(message.chat.id, resp_)
