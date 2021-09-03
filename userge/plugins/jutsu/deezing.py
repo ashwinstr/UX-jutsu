@@ -99,7 +99,9 @@ async def dlist_(message: Message):
         except BaseException:
             break
     if not list_:
-        await message.edit(f"Couldn't find results for <code>{query_}</code>...", del_in=5)
+        await message.edit(
+            f"Couldn't find results for <code>{query_}</code>...", del_in=5
+        )
         return
     list_ = "\n".join(list_)
     out_ = f"Results found for <b>{query_}</b>: [<b>{total_}</b>]\n\n"
