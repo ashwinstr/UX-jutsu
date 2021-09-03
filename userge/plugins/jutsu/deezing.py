@@ -108,14 +108,10 @@ async def dlist_(message: Message):
     )
     await message.edit(out_)
     me_ = await userge.get_me()
-    sudos_ = Config.SUDO_USERS
-    new_users = [me_.id]
-    for sudo in sudos_:
-        new_users.append(sudo)
     try:
         async with userge.conversation(message.chat.id, timeout=15) as conv:
             response = await conv.get_response(
-                mark_read=True, filters=(filters.user(new_users))
+                mark_read=True, filters=(filters.user(me_.id))
             )
             resp = response.text
             try:
@@ -154,3 +150,22 @@ async def dlist_(message: Message):
         await message.err(
             "Something unexpected happend, please try again later...", del_in=5
         )
+
+
+@userge.on_cmd(
+    "dzsend",
+    about={
+        "header": "send dzlist response",
+        "description": "for sudo users who can't respond to dzlist directly",
+        "usage": "{tr}dzsend [responding number]",
+    },
+)
+async def dsend_(message: Message):
+    """send dzlist response"""
+    resp_ = message.input_str
+    try:
+        resp_ = int(resp_)
+    except:
+        pass
+    await message.edit(resp_)
+    
