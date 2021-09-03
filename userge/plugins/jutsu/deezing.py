@@ -111,7 +111,7 @@ async def dlist_(message: Message):
     try:
         async with userge.conversation(message.chat.id, timeout=15) as conv:
             response = await conv.get_response(
-                mark_read=True, filters=(filters.user(me_.id))
+                mark_read=True, filters=(filters.user(me_.id or Config.SUDO_USERS))
             )
             resp = response.text
             try:
