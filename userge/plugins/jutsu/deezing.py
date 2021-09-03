@@ -67,6 +67,7 @@ async def dlist_(message: Message):
     """get list and number corresponding to songs"""
     bot_ = "deezermusicbot"
     query_ = message.input_str
+    query_ = capitaled(query_)
     await message.edit(f"Searching for <b>{query_}</b>...")
     result = await userge.get_inline_bot_results(bot_, query_)
     if not result:
@@ -85,6 +86,6 @@ async def dlist_(message: Message):
         except BaseException:
             break
     list_ = "\n".join(list_)
-    out_ = f"Results found for <b>query_</b>: [<b>{total_}</b>]\n\n"
+    out_ = f"Results found for <b>{query_}</b>: [<b>{total_}</b>]\n\n"
     out_ += list_
     await message.edit(out_)
