@@ -107,26 +107,31 @@ async def dlist_(message: Message):
     )
     await message.edit(out_)
     me_ = await userge.get_me()
-    async with userge.conversation(message.chat.id) as conv:
-        response = await conv.get_response(
-            mark_read=True, filters=(filters.user(me_.id))
-        )
-        resp = response.text
-        try:
-            reply_ = int(resp)
-        except BaseException:
-            await conv.send_message(
-                f"The response {resp} is not a number, please try again..."
+    try:
+        async with userge.conversation(message.chat.id) as conv:
+            response = await conv.get_response(
+                mark_read=True, filters=(filters.user(me_.id))
             )
-            return
-        try:
-            result_id = result.results[reply_].id
-        except BaseException:
-            await conv.send_message(
-                "Out of index error...", reply_to_message_id=response.message_id
-            )
-            return
-        await response.delete()
+            resp = response.text
+            try:
+                reply_ = int(resp)
+            except BaseException:
+                await conv.send_message(
+                    f"The response {resp} is not a number, please try again..."
+                )
+                return
+            try:
+                result_id = result.results[reply_].id
+            except BaseException:
+                await conv.send_message(
+                    "Out of index error...", reply_to_message_id=response.message_id
+                )
+                return
+            await response.delete()
+    except:
+        out_ += "### <b>Response time expired</b> ###"
+        await message.edit(out_)
+        return
     try:
         log_send = await userge.send_inline_bot_result(
             chat_id=Config.LOG_CHANNEL_ID,
