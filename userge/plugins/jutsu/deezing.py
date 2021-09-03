@@ -1,6 +1,8 @@
 # made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
 # v3.0.5
 
+import asyncio
+
 from pyrogram import filters
 
 from userge import Config, Message, userge
