@@ -95,9 +95,10 @@ async def dlist_(message: Message):
     list_ = "\n".join(list_)
     out_ = f"Results found for <b>{query_}</b>: [<b>{total_}</b>]\n\n"
     out_ += list_
+    out_ += "\n\nReply with corresponding number <b>within 15 seconds</b> to get the music.")
     await message.edit(out_)
     me_ = await userge.get_me()
-    async with userge.conversation(message.chat.id, timeout=10) as conv:
+    async with userge.conversation(message.chat.id, timeout=15) as conv:
         response = await conv.get_response(
             mark_read=True, filters=(filters.user(me_.id))
         )
