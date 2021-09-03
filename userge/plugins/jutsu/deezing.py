@@ -70,7 +70,10 @@ async def dlist_(message: Message):
     await message.edit(f"Searching for <b>{query_}</b>...")
     result = await userge.get_inline_bot_results(bot_, query_)
     if not result:
-        await message.edit(f"Results not found for <code>{query_}</code>, try something else...", del_in=5)
+        await message.edit(
+            f"Results not found for <code>{query_}</code>, try something else...",
+            del_in=5,
+        )
         return
     list_ = []
     total_ = 0
@@ -79,7 +82,7 @@ async def dlist_(message: Message):
             title_ = result.results[one].document.attributes[1].file_name
             list_.append(f"• [<b>{one}</b>] {title_}")
             total_ += 1
-        except:
+        except BaseException:
             break
     list_ = "\n".join(list_)
     out_ = f"Results found for <b>query_</b>: [<b>{total_}</b>]\n\n"
