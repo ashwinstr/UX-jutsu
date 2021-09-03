@@ -11,12 +11,12 @@ from userge.utils import capitaled
     "dz",
     about={
         "header": "deezer music",
-        "description": "download music using @deezermusicbot",
+        "description": "download music from deezer",
         "usage": "{tr}dz [artist name] [song name] [; number](optional)",
     },
 )
 async def deezing_(message: Message):
-    """download music using @deezermusicbot"""
+    """download music from deezer"""
     query_ = message.input_str
     if ";" in query_:
         split_ = query_.split(";", 1)
@@ -53,3 +53,35 @@ async def deezing_(message: Message):
             "Something unexpected happend, please try again later...", del_in=5
         )
         return
+
+
+@userge.on_cmd(
+    "dzlist",
+    about={
+        "header": "deezer music list",
+        "description": "get music list from deezer",
+        "usage": "{tr}dzlist [query]",
+    },
+)
+async def dlist_(message: Message):
+    """get list and number corresponding to songs"""
+    bot_ = "deezermusicbot"
+    query_ = message.input_str
+    await message.edit(f"Searching for <b>{query_}</b>...")
+    result = await userge.get_inline_bot_results(bot_, query_)
+    if not result:
+        await message.edit(f"Results not found for <code>{query_}</code>, try something else...", del_in=5)
+        return
+    list_ = []
+    total_ = 0
+    for one in range(0, 10):
+        try:
+            title_ = result.results[one].document.attributes[1].file_name
+            list_.append(f"• [<b>{one}</b>] {title_}")
+            total_ += 1
+        except:
+            break
+    list_ = "\n".join(list_)
+    out_ = f"Results found for <b>query_</b>: [<b>{total_}</b>]\n\n"
+    out_ += list_
+    await message.edit(out_)
