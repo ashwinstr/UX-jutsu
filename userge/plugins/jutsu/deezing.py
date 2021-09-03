@@ -108,7 +108,7 @@ async def dlist_(message: Message):
     await message.edit(out_)
     me_ = await userge.get_me()
     try:
-        async with userge.conversation(message.chat.id) as conv:
+        async with userge.conversation(message.chat.id, timeout=15) as conv:
             response = await conv.get_response(
                 mark_read=True, filters=(filters.user(me_.id))
             )
@@ -129,7 +129,7 @@ async def dlist_(message: Message):
                 return
             await response.delete()
     except BaseException:
-        out_ += "### <b>Response time expired.</b> ###"
+        out_ += "\n\n### <b>Response time expired.</b> ###"
         await message.edit(out_)
         return
     try:
