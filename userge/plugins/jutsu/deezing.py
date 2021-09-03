@@ -26,7 +26,7 @@ async def deezing_(message: Message):
         num = "0"
     try:
         num = int(num)
-    except:
+    except BaseException:
         await message.edit("Please enter a proper number after ';'...", del_in=5)
         return
     bot_ = "deezermusicbot"
