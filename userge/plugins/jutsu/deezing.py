@@ -88,7 +88,7 @@ async def dlist_(message: Message):
     for one in range(0, 10):
         try:
             title_ = result.results[one].document.attributes[1].file_name
-            dure_ = result.results[one].document.attributes[1].duration
+            dure_ = result.results[one].document.attributes[0].duration
             min_ = dure_ / 60
             sec_ = min_ - int(min_) * 60
             list_.append(f"• [<b>{one}</b>] {title_} <b>({int(min_)}:{int(sec_)})</b>")
