@@ -110,7 +110,7 @@ async def dlist_(message: Message):
     me_ = await userge.get_me()
     sudos_ = Config.SUDO_USERS
     new_users = [me_.id]
-    for sudo on sudos_:
+    for sudo in sudos_:
         new_users.append(sudo)
     try:
         async with userge.conversation(message.chat.id, timeout=15) as conv:
