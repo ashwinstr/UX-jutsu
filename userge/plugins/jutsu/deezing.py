@@ -55,7 +55,6 @@ async def deezing_(message: Message):
         await message.err(
             "Something unexpected happend, please try again later...", del_in=5
         )
-        return
 
 
 @userge.on_cmd(
@@ -134,11 +133,13 @@ async def dlist_(message: Message):
             query_id=result.query_id,
             result_id=result_id,
         )
-        userge.copy_message(
+        await userge.copy_message(
             chat_id=message.chat.id,
             from_chat_id=Config.LOG_CHANNEL_ID,
             message_id=log_send.updates[0].id,
         )
+        out_ += f"\n\n### <b>Response {reply_} found</b> ###"
+        await message.edit(out_)
     except BaseException:
         await message.err(
             "Something unexpected happend, please try again later...", del_in=5
