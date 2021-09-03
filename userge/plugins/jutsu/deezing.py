@@ -165,7 +165,6 @@ async def dsend_(message: Message):
     resp_ = message.input_str
     try:
         resp_ = int(resp_)
-    except:
+    except BaseException:
         pass
     await message.edit(resp_)
-    
