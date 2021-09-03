@@ -67,7 +67,10 @@ async def dlist_(message: Message):
     """get list and number corresponding to songs"""
     bot_ = "deezermusicbot"
     query_ = message.input_str
-    query_ = capitaled(query_)
+    if not query_:
+        await message.err("Input not found...", del_in=5)
+        return
+    query_ = await capitaled(query_)
     await message.edit(f"Searching for <b>{query_}</b>...")
     result = await userge.get_inline_bot_results(bot_, query_)
     if not result:
