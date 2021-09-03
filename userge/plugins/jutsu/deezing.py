@@ -1,6 +1,7 @@
 # made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
 # v3.0.5
 
+from asyncio import gather
 
 from pyrogram import filters
 
