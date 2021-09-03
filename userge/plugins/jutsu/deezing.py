@@ -108,17 +108,21 @@ async def dlist_(message: Message):
     )
     await message.edit(out_)
     me_ = await userge.get_me()
+    sudos_ = Config.SUDO_USERS
+    new_users = [me_.id]
+    for sudo on sudos_:
+        new_users.append(sudo)
     try:
         async with userge.conversation(message.chat.id, timeout=15) as conv:
             response = await conv.get_response(
-                mark_read=True, filters=(filters.user(me_.id or Config.SUDO_USERS))
+                mark_read=True, filters=(filters.user(new_users))
             )
             resp = response.text
             try:
                 reply_ = int(resp)
             except BaseException:
                 await conv.send_message(
-                    f"The response {resp} is not a number, please try again..."
+                    f"The response <b>{resp}</b> is not a number, please try again..."
                 )
                 return
             try:
