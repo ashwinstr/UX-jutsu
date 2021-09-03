@@ -91,7 +91,9 @@ async def dlist_(message: Message):
             dure_ = result.results[one].document.attributes[0].duration
             min_ = dure_ / 60
             sec_ = (min_ - int(min_)) * 60
+            await message.reply("worked")
             sec_ = f"{sec_:02}"
+            await message.reply("worked")
             list_.append(f"• [<b>{one}</b>] {title_} <b>({int(min_)}:{int(sec_)})</b>")
             total_ += 1
         except BaseException:
