@@ -236,9 +236,11 @@ class RawDecorator(RawClient):
                 if r_m.chat and r_m.chat.id in Config.DISABLED_CHATS:
                     return
                 await _init(r_c, r_m)
-                if r_m.chat:
-                    if ("#no_ub" in r_m.chat.title.lower()) and not await _is_admin(r_c, r_m):
-                        return 
+        #        if r_m.chat:
+        #            try:
+        #                group_ = r_m.chat.title
+        #            if ("#no_ub" in r_m.chat.title.lower()) and not await _is_admin(r_c, r_m):
+        #                return 
                 _raise = partial(_raise_func, r_c, r_m)
                 if r_m.chat and r_m.chat.type not in flt.scope:
                     if isinstance(flt, types.raw.Command):
