@@ -126,7 +126,7 @@ async def dlist_(message: Message):
             try:
                 result_id = result.results[reply_].id
             except BaseException:
-                out_ += f"### Response <b>{resp}</b> gave out of index error, <b>please retry</b>. ###"
+                out_ += f"\n\n### Response <b>{resp}</b> gave out of index error, <b>please retry</b>. ###"
                 await response.delete()
                 await message.edit(out_, del_in=15)
                 return
