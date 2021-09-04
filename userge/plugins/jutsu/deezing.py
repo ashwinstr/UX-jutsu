@@ -119,16 +119,16 @@ async def dlist_(message: Message):
             try:
                 reply_ = int(resp)
             except BaseException:
-                await conv.send_message(
-                    f"The response <b>{resp}</b> is not a number, please try again..."
-                )
+                out_ += f"\n\n### The response <b>{resp}</b> is not a number, <b>please retry</b>. ###"
+                await response.delete()
+                await message.edit(out_, del_in=15)
                 return
             try:
                 result_id = result.results[reply_].id
             except BaseException:
-                await conv.send_message(
-                    "Out of index error...", reply_to_message_id=response.message_id
-                )
+                out_ += f"### Response <b>{resp}</b> gave out of index error, <b>please retry</b>. ###"
+                await response.delete()
+                await message.edit(out_, del_in=15)
                 return
             await response.delete()
     except BaseException:
