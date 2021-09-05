@@ -57,9 +57,13 @@
 ## How To Deploy 
 * With Heroku:
 <p align="center">
-   <a href = "https://heroku.com/deploy?template=https://github.com/code-pms/MyGpack"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a>
+   <a href = "https://heroku.com/deploy?template=https://github.com/ashwinstr/MyGpack"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a>
 </p>
 <br>
+
+* With Railway
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2Fashwinstr%2FUX-jutsu&envs=API_ID%2CAPI_HASH%2CDATABASE_URL%2CHU_STRING_SESSION%2CBOT_TOKEN%2COWNER_ID%2CCMD_TRIGGER%2CUPSTREAM_REPO&API_IDDesc=Telegram+api_id&API_HASHDesc=Telegram+api_hash&DATABASE_URLDesc=Get+it+from+cloud.mongodb.com&HU_STRING_SESSIONDesc=Telegram+string+session&BOT_TOKENDesc=Telegram+bot+token%2C+get+it+with+the+help+of+%40BotFather&OWNER_IDDesc=Your+user+ID&CMD_TRIGGERDesc=Command+trigger+to+execute+userbot+command&UPSTREAM_REPODesc=Repo+from+which+updates+will+be+pulled&CMD_TRIGGERDefault=.&UPSTREAM_REPODefault=https%3A%2F%2Fgithub.com%2Fashwinstr%2FUX-jutsu&referralCode=fMjN28)
+
 
 > **NOTE** : your can fill other vars as your need and they are optional. (settings -> reveal config vars)
 * First click The Button Above.
