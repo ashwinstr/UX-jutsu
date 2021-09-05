@@ -65,7 +65,7 @@
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2Fashwinstr%2FUX-jutsu&envs=API_ID%2CAPI_HASH%2CDATABASE_URL%2CHU_STRING_SESSION%2CBOT_TOKEN%2COWNER_ID%2CCMD_TRIGGER%2CUPSTREAM_REPO&API_IDDesc=Telegram+api_id&API_HASHDesc=Telegram+api_hash&DATABASE_URLDesc=Get+it+from+cloud.mongodb.com&HU_STRING_SESSIONDesc=Telegram+string+session&BOT_TOKENDesc=Telegram+bot+token%2C+get+it+with+the+help+of+%40BotFather&OWNER_IDDesc=Your+user+ID&CMD_TRIGGERDesc=Command+trigger+to+execute+userbot+command&UPSTREAM_REPODesc=Repo+from+which+updates+will+be+pulled&CMD_TRIGGERDefault=.&UPSTREAM_REPODefault=https%3A%2F%2Fgithub.com%2Fashwinstr%2FUX-jutsu&referralCode=fMjN28)
 
 
-> **NOTE** : your can fill other vars as your need and they are optional. (settings -> reveal config vars)
+> **NOTE** : your can fill other vars as your need and they are optional. ([Heroku] settings -> reveal config vars) ([Railway] -> variables
 * First click The Button Above.
 * Fill `API_ID`, `API_HASH`, `DATABASE_URL`, `LOG_CHANNEL_ID`, `HEROKU_APP_NAME` and `HEROKU_API_KEY` (**required**)
 * Then fill Dual Mode vars : `OWNER_ID`, `BOT_TOKEN` and `HU_STRING_SESSION`
