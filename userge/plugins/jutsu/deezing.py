@@ -131,7 +131,7 @@ async def dlist_(message: Message):
                 return
             try:
                 for one in reply_:
-                    result_id = result.results[one].id
+                    result_id = result.results[int(one)].id
             except BaseException:
                 out_ += f"\n\n### Response/s <b>{reply_}</b> gave out of index error, <b>please retry</b>. ###"
                 await response.delete()
@@ -144,7 +144,7 @@ async def dlist_(message: Message):
         return
     try:
         for one in reply_:
-            result_id = result.results[one].id
+            result_id = result.results[int(one)].id
             log_send = await userge.send_inline_bot_result(
                 chat_id=Config.LOG_CHANNEL_ID,
                 query_id=result.query_id,
