@@ -3,10 +3,9 @@
 
 
 from json import dumps
+from userge import userge, Message, Config
 
 from googletrans import LANGUAGES, Translator
-
-from userge import Config, Message, userge
 
 translator = Translator()
 
@@ -85,11 +84,8 @@ async def pronun_(message: Message):
             lang_src = LANGUAGES[f"{trans.src.lower()}"]
             lang_src = lang_src.title()
             pronun = trans.pronunciation
-        except BaseException:
-            await message.edit(
-                f"Language not supported, see <code>{Config.CMD_TRIGGER}help pro</code>... ",
-                del_in=5,
-            )
+        except:
+            await message.edit(f"Language not supported, see <code>{Config.CMD_TRIGGER}help pro</code>... ", del_in=5)
             return
     else:
         try:
@@ -105,7 +101,6 @@ async def pronun_(message: Message):
     if not pronun:
         pronun = trans.text
         success = False
-        return
     if not success:
         line_ = f"Translated text to <b>{lang_dest}</b>:"
     else:
@@ -122,8 +117,6 @@ async def pronun_(message: Message):
             out_ += pronun
         else:
             await message.delete()
-            await CHANNEL.log(
-                f"Couldn't find pronunciation for <code>{query_}</code> in <b>{lang_dest}</b>..."
-            )
+            await CHANNEL.log(f"Couldn't find pronunciation for <code>{query_}</code> in <b>{lang_dest}</b>...")
             return
     await message.edit(out_)
