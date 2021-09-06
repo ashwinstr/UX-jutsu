@@ -13,7 +13,7 @@ from pyrogram.errors import (
 )
 from pyrogram.types import ChatPermissions
 
-from userge import Message, userge, Config
+from userge import Config, Message, userge
 from userge.utils.functions import get_emoji_regex
 
 CHANNEL = userge.getCLogger(__name__)
@@ -527,7 +527,8 @@ async def zombie_clean(message: Message):
         if del_users > 0:
             del_stats = f"`Found` **{del_users}** `zombie accounts in this chat.`"
             await message.edit(
-                f"🕵️‍♂️ {del_stats} you can clean them using `{Config.CMD_TRIGGER}zombies -c`", del_in=5
+                f"🕵️‍♂️ {del_stats} you can clean them using `{Config.CMD_TRIGGER}zombies -c`",
+                del_in=5,
             )
             await CHANNEL.log(
                 "#ZOMBIE_CHECK\n\n"
