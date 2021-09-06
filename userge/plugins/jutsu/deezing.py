@@ -110,23 +110,27 @@ async def dlist_(message: Message):
     )
     await message.edit(out_)
     me_ = await userge.get_me()
+    reply_ = []
     try:
         async with userge.conversation(message.chat.id, timeout=15) as conv:
             response = await conv.get_response(
                 mark_read=True, filters=(filters.user(me_.id))
             )
             resp = response.text
+            resp = resp.split()
             try:
-                reply_ = int(resp)
+                for one in resp:
+                    reply_.append(int(resp))
             except BaseException:
-                out_ += f"\n\n### The response <b>{resp}</b> is not a number, <b>please retry</b>. ###"
+                out_ += f"\n\n### The response <b>{resp}</b> is/are not a number, <b>please retry</b>. ###"
                 await response.delete()
                 await message.edit(out_, del_in=15)
                 return
             try:
-                result_id = result.results[reply_].id
+                for one in reply_:
+                    result_id = result.results[one].id
             except BaseException:
-                out_ += f"\n\n### Response <b>{resp}</b> gave out of index error, <b>please retry</b>. ###"
+                out_ += f"\n\n### Response/s <b>{reply_}</b> gave out of index error, <b>please retry</b>. ###"
                 await response.delete()
                 await message.edit(out_, del_in=15)
                 return
@@ -136,16 +140,19 @@ async def dlist_(message: Message):
         await message.edit(out_)
         return
     try:
-        log_send = await userge.send_inline_bot_result(
-            chat_id=Config.LOG_CHANNEL_ID,
-            query_id=result.query_id,
-            result_id=result_id,
-        )
-        await userge.copy_message(
-            chat_id=message.chat.id,
-            from_chat_id=Config.LOG_CHANNEL_ID,
-            message_id=log_send.updates[0].id,
-        )
+        for one in reply_:
+            result_id = result.results[one].id
+            log_send = await userge.send_inline_bot_result(
+                chat_id=Config.LOG_CHANNEL_ID,
+                query_id=result.query_id,
+                result_id=result_id,
+            )
+            await userge.copy_message(
+                chat_id=message.chat.id,
+                from_chat_id=Config.LOG_CHANNEL_ID,
+                message_id=log_send.updates[0].id,
+            )
+        reply_ = ", ".join(reply_)
         out_ += f"\n\n### <b>Responded with {reply_}.</b> ###"
         await message.edit(out_)
     except BaseException:
