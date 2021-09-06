@@ -539,7 +539,7 @@ async def fban_lst_(message: Message):
     total = 0
     async for data in FED_LIST.find():
         total += 1
-        chat_id = data['chat_id']
+        chat_id = data["chat_id"]
         id_ = f"'<code>{chat_id}</code>' - " if "-id" in message.flags else ""
         out += f"• Fed: {id_}<b>{data['fed_name']}</b>\n"
     await message.edit_or_send_as_file(
