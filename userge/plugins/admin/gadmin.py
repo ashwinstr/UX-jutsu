@@ -462,7 +462,6 @@ async def unmute_usr(message: Message):
             "{tr}zombies -c [remove deleted accounts from group]",
         ],
     },
-    allow_channels=False,
     allow_bots=False,
     allow_private=False,
 )
