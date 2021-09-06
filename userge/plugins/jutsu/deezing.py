@@ -120,7 +120,7 @@ async def dlist_(message: Message):
             resp = resp.split()
             try:
                 for one in resp:
-                    integer = int(one)
+                    int(one)
                     reply_.append(one)
             except BaseException:
                 proverb = "is not" if len(resp) == 1 else "are not all"
