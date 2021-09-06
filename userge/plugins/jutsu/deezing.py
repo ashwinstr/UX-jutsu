@@ -122,7 +122,9 @@ async def dlist_(message: Message):
                 for one in resp:
                     reply_.append(int(one))
             except BaseException:
-                out_ += f"\n\n### The response <b>{resp}</b> is/are not a number, <b>please retry</b>. ###"
+                proverb = "is not" if len(resp) == 1 else "are not all"
+                resp = "</b>, <b>".join(resp)
+                out_ += f"\n\n### The response <b>{resp}</b> {proverb} a number, <b>please retry</b>. ###"
                 await response.delete()
                 await message.edit(out_, del_in=15)
                 return
