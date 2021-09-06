@@ -120,7 +120,7 @@ async def dlist_(message: Message):
             resp = resp.split()
             try:
                 for one in resp:
-                    reply_.append(int(resp))
+                    reply_.append(int(one))
             except BaseException:
                 out_ += f"\n\n### The response <b>{resp}</b> is/are not a number, <b>please retry</b>. ###"
                 await response.delete()
