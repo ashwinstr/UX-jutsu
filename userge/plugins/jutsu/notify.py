@@ -8,7 +8,7 @@ from userge import userge
 from userge.core.client import _START_TIME
 
 
-async def _start_bot():
+async def _start_bot(self):
     while True:
         await asyncio.sleep(1)
         time_ = time.time()
