@@ -210,8 +210,6 @@ class Userge(_AbstractUserge):
                 self.loop.run_until_complete(coro)
             else:
                 _LOG.info(_LOG_STR, f"Idling USERGE-X - {mode}")
-                async def startlog_(userge):
-                    await userge.send_message(Config.LOG_CHANNEL_ID, "Bot started...")
                 idle()
             self.loop.run_until_complete(_finalize())
         except (asyncio.exceptions.CancelledError, RuntimeError):
