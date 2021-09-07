@@ -20,7 +20,7 @@ from typing import List, Awaitable, Any, Optional, Union
 
 from pyrogram import idle
 
-from userge import userge, logging, Config, logbot
+from userge import Config, logbot, logging
 from userge.utils import time_formatter
 from userge.utils.exceptions import UsergeBotNotFound
 from userge.plugins import get_all_plugins
