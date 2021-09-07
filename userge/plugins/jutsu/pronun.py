@@ -122,5 +122,4 @@ async def pronun_(message: Message):
             await CHANNEL.log(
                 f"Couldn't find pronunciation for <code>{query_}</code> in <b>{lang_dest}</b>, translation done..."
             )
-            return
     await message.edit(out_)
