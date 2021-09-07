@@ -12,7 +12,7 @@ async def _start_bot():
     while True:
         await asyncio.sleep(1)
         time_ = time.time()
-        diff_ = time_ - _START_TIME
+        time_ - _START_TIME
         if diff__ > 2:
             await userge.send_message(Config.LOG_CHANNEL_ID, "Bot has started...")
             return
