@@ -35,7 +35,7 @@ async def pronun_(message: Message):
         if reply_:
             query_ = reply_.text or reply_.caption
         else:
-            await message.err("No input found...", del_in=5)
+            await message.err("`No input found...`", del_in=5)
             return
     out_ = ""
     secret = False
@@ -43,27 +43,27 @@ async def pronun_(message: Message):
     if "-s" in flags:
         secret = True
         if len(flags) > 3:
-            await message.edit("Maximum two language flags supported...", del_in=5)
+            await message.edit("`Maximum two language flags supported...`", del_in=5)
             return
         elif len(flags) == 3:
             if list(flags)[0] == "-s":
                 src = list(flags)[1]
                 dest = list(flags)[2]
             else:
-                await message.edit("Keep secret flag at start...", del_in=5)
+                await message.edit("`Keep secret flag at start...`", del_in=5)
                 return
         elif len(flags) == 2:
             if list(flags)[0] == "-s":
                 src = "auto"
                 dest = list(flags)[1]
             else:
-                await message.edit("Keep secret flag at start...", del_in=5)
+                await message.edit("`Keep secret flag at start...`", del_in=5)
                 return
         else:
             no_f = True
     else:
         if len(flags) > 2:
-            await message.edit("Maximum two language flags supported...", del_in=5)
+            await message.edit("`Maximum two language flags supported...`", del_in=5)
             return
         elif len(flags) == 2:
             src = list(flags)[0]
