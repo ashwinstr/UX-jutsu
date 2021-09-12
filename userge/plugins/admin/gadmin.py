@@ -636,7 +636,6 @@ async def pin_msgs(message: Message):
             "{tr}gpic -d [send to chat]",
         ],
     },
-    allow_channels=False,
     check_change_info_perm=True,
 )
 async def chatpic_func(message: Message):
