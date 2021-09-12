@@ -23,7 +23,7 @@ NEKOBIN_URL = "https://nekobin.com/"
     "paste",
     about={
         "header": "Pastes text or text_file to dogbin",
-        "flags": {"-n": "use nekobin"},
+        "flags": {"-d": "use dogbin"},
         "usage": "{tr}paste [flags] [file_type] [text | reply to msg]",
         "examples": "{tr}paste -py import os",
     },
@@ -34,7 +34,7 @@ async def paste_(message: Message) -> None:
     await message.edit("`Processing...`")
     text = message.filtered_input_str
     replied = message.reply_to_message
-    use_neko = False
+    use_neko = True
     file_ext = ".txt"
     if not text and replied:
         if replied.document and replied.document.file_size < 2 ** 20 * 10:
@@ -49,8 +49,8 @@ async def paste_(message: Message) -> None:
         await message.err("input not found!")
         return
     flags = list(message.flags)
-    if "n" in flags:
-        use_neko = True
+    if "d" in flags:
+        use_neko = False
         flags.remove("n")
     if flags and len(flags) == 1:
         file_ext = "." + flags[0]
