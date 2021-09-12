@@ -51,7 +51,7 @@ async def paste_(message: Message) -> None:
     flags = list(message.flags)
     if "d" in flags:
         use_neko = False
-        flags.remove("n")
+        flags.remove("d")
     if flags and len(flags) == 1:
         file_ext = "." + flags[0]
     await message.edit("`Pasting text ...`")
