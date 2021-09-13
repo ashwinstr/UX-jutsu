@@ -26,7 +26,7 @@ async def meaning_wrd(message: Message):
             for a, b in words.items():
                 output = output + f"\n**{a}**\n"
                 for i in b:
-                    output = output + f"◾ __{i}__\n"
+                    output = output + f"• __{i}__\n"
             await message.edit(output)
         except Exception:
             await message.err(f"Couldn't fetch meaning of {word}")
@@ -53,7 +53,7 @@ async def synonym_wrd(message: Message):
         output = f"**Synonym for :** __{word}__\n"
         try:
             for a in words:
-                output = output + f"◾ __{a}__\n"
+                output = output + f"• __{a}__\n"
             await message.edit(output)
         except Exception:
             await message.err(f"Couldn't fetch synonyms of {word}")
@@ -80,7 +80,7 @@ async def antonym_wrd(message: Message):
         output = f"**Antonym for :** __{word}__\n"
         try:
             for a in words:
-                output = output + f"◾ __{a}__\n"
+                output = output + f"• __{a}__\n"
             await message.edit(output)
         except Exception:
             await message.err(f"Couldn't fetch antonyms of {word}")
