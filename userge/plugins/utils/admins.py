@@ -42,13 +42,13 @@ async def mentionadmins(message: Message):
             full_name = (await message.client.get_user_dict(u_id))["flname"]
             if status == "creator":
                 if men_admins or men_creator:
-                    owner_ += f"\n 🤴🏻 {mention_html(u_id, full_name)}"
+                    owner_ += f"\n 🎖 {mention_html(u_id, full_name)}"
                 elif username:
-                    owner_ += "\n 🤴🏻 [{}](https://t.me/{})".format(
+                    owner_ += "\n 🎖 [{}](https://t.me/{})".format(
                         html.escape(full_name), username
                     )
                 else:
-                    owner_ += "\n 🤴🏻 [{}](tg://openmessage?user_id={})".format(
+                    owner_ += "\n 🎖 [{}](tg://openmessage?user_id={})".format(
                         html.escape(full_name), u_id
                     )
                 if show_id:
