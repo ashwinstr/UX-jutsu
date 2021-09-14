@@ -62,24 +62,6 @@ async def lyrics(message: Message):
         s_list = "\n".join(s_list)
         await message.edit(f"Songs matching [<b>{song}</b>]:\n\n" f"{s_list}")
         return
-
-    to_search = song + "genius lyrics"
-    gen_surl = list(search(to_search, num=1, stop=1))[0]
-    gen_page = requests.get(gen_surl)
-    scp = BeautifulSoup(gen_page.text, "html.parser")
-    writers_box = [
-        writer
-        for writer in scp.find_all("span", {"class": "metadata_unit-label"})
-        if writer.text == "Written By"
-    ]
-    if writers_box:
-        target_node = writers_box[0].find_next_sibling(
-            "span", {"class": "metadata_unit-info"}
-        )
-        writers = target_node.text.strip()
-    else:
-        writers = "Couldn't find writers..."
-
     artist = ""
     if " - " in song:
         artist, song = song.split("-", 1)
@@ -96,50 +78,15 @@ async def lyrics(message: Message):
     try:
         lyr = genius.search_song(song, artist)
     except Exception:
-        name = f"{song} {artist}"
-        data = {"searchTerm": name}
-        async with aiohttp.request(
-            "POST",
-            "http://www.glyrics.xyz/search",
-            headers={
-                "content-type": "application/json",
-            },
-            data=json.dumps(data),
-        ) as result:
-            lyric = await result.text()
-        lyr = json.loads(lyric)
-        lyr = lyr["lyrics"]
-        if not lyr:
-            await message.edit(
-                f"Sorry, couldn't find lyrics for <code>{title}</code>...", del_in=5
-            )
-            return
-        lyrics = f"\n{lyr}"
-        lyrics += f"\n\n<b>Written by:</b> <code>{writers}</code>"
-        lyrics += f"\n<b>Source:</b> <code>genius.com</code>"
-        lyrics = lyrics.replace("[", "<b>[").replace("]", "]</b>")
-        full_lyr = f"Lyrics for **{title}** by Genius.com...\n\n{lyrics}"
-        if len(full_lyr) <= 4096 and "-t" not in flag and "-pre" not in flag:
-            await message.edit(full_lyr)
-        else:
-            if "-no_p" in flag:
-                dis_pre = True
-            lyrics = lyrics.replace("\n", "<br>")
-            link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
-            await message.edit(
-                f"Lyrics for [<b>{title}</b>]({link}) by genius.com...",
-                disable_web_page_preview=dis_pre,
-            )
+        await message.edit(f"Couldn't find <code>{title}</code> on genius...", del_in=5)
         return
     if lyr is None:
         await message.edit(f"Couldn't find `{title}` on Genius...")
         return
     lyric = lyr.lyrics
     lyrics = f"\n{lyric}"
-    lyrics += f"\n\n<b>Written by:</b> <code>{writers}</code>"
     lyrics += f"\n<b>Source:</b> <code>genius.com</code>"
-    lyrics = lyrics.replace("[", "<b>[")
-    lyrics = lyrics.replace("]", "]</b>")
+    lyrics = lyrics.replace("[", "<b>[").replace("]", "]</b>").replace("EmbedShare", "").replace("URLCopyEmbedCopy", "")
     lyr_msg = f"Lyrics for <b>{title}</b>...\n\n{lyrics}"
     if len(lyr_msg) <= 4096 and "-t" not in flag and "-pre" not in flag:
         await message.edit(f"{lyr_msg}")
