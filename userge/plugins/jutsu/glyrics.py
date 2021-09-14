@@ -57,7 +57,7 @@ async def lyrics(message: Message):
         s_list = []
         hits = songs["hits"]
         for one in hits:
-            s_list.append(f'◾️ <code>{hits[number]["result"]["full_title"]}</code>')
+            s_list.append(f'• <code>{hits[number]["result"]["full_title"]}</code>')
             number += 1
         s_list = "\n".join(s_list)
         await message.edit(f"Songs matching [<b>{song}</b>]:\n\n" f"{s_list}")
