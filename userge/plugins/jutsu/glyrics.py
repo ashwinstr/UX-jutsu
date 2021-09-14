@@ -1,13 +1,8 @@
 # ported from oub-remix to USERGE-X by AshSTR/ashwinstr
 
-import json
 import os
 
-import aiohttp
 import lyricsgenius
-import requests
-from bs4 import BeautifulSoup
-from googlesearch import search
 
 from userge import Message, userge
 from userge.utils import capitaled, post_to_telegraph
@@ -86,7 +81,12 @@ async def lyrics(message: Message):
     lyric = lyr.lyrics
     lyrics = f"\n{lyric}"
     lyrics += f"\n<b>Source:</b> <code>genius.com</code>"
-    lyrics = lyrics.replace("[", "<b>[").replace("]", "]</b>").replace("EmbedShare", "").replace("URLCopyEmbedCopy", "")
+    lyrics = (
+        lyrics.replace("[", "<b>[")
+        .replace("]", "]</b>")
+        .replace("EmbedShare", "")
+        .replace("URLCopyEmbedCopy", "")
+    )
     lyr_msg = f"Lyrics for <b>{title}</b>...\n\n{lyrics}"
     if len(lyr_msg) <= 4096 and "-t" not in flag and "-pre" not in flag:
         await message.edit(f"{lyr_msg}")
