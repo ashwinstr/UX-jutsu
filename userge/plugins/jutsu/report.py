@@ -39,7 +39,7 @@ async def report_(message: Message):
         )
         return
     reason_ = message.input_str
-    chat_ message.chat.id
+    chat_ = message.chat.id
     rep = report_user(
         chat=chat_,
         user_id=user_.id,
