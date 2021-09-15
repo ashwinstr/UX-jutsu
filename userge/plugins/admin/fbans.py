@@ -13,6 +13,7 @@ import os
 from pyrogram import filters
 from pyrogram.errors import FloodWait, PeerIdInvalid, UserBannedInChannel
 
+from ..jutsu.report import report_user
 from userge import Config, Message, get_collection, userge
 
 FBAN_LOG_CHANNEL = os.environ.get("FBAN_LOG_CHANNEL")
@@ -219,7 +220,7 @@ async def fban_(message: Message):
 )
 async def fban_p(message: Message):
     """Fban user from connected feds with proof."""
-    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
+    fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}{}</b>"]
     d_err = ("Failed to detect user **{}**, fban might not work...",)
     if not message.reply_to_message:
         await message.err("Please reply to proof...", del_in=7)
@@ -239,11 +240,13 @@ async def fban_p(message: Message):
     user = message.reply_to_message.from_user.id
     input = message.filtered_input_str
     reason = input
+    fps = True
     if (
         user in Config.SUDO_USERS
         or user in Config.OWNER_ID
         or user == (await message.client.get_me()).id
     ):
+        fps = False
         if not input:
             await message.err("Can't fban replied user, give user ID...", del_in=5)
             return
@@ -288,6 +291,17 @@ async def fban_p(message: Message):
     )
     reason = reason or "Not specified"
     reason += " || {" + f"{log_fwd.link}" + "}"
+    if fps:
+        report_user(
+            chat=message.chat.id,
+            user_id=user,
+            msg=reply,
+            msg_id=reply.message_id,
+            reason=reason
+        )
+        reported = "</b>and <b>reported "
+    else:
+        reported = ""
     async for data in FED_LIST.find():
         total += 1
         chat_id = int(data["chat_id"])
@@ -335,7 +349,7 @@ async def fban_p(message: Message):
             for i in r_update:
                 status += f"\n• {i}"
     msg_ = (
-        fban_arg[3].format(u_link)
+        fban_arg[3].format(reported, u_link)
         + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
     )
     await message.edit(msg_, disable_web_page_preview=True)
