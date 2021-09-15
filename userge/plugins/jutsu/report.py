@@ -56,7 +56,7 @@ async def report_(message: Message):
     await CHANNEL.log(msg_)
 
 
-def report_user(chat: int, user_id: int, msg: tuple, msg_id: int, reason: str):
+def report_user(chat: int, user_id: int, msg: dict, msg_id: int, reason: str):
     if ("nsfw" or "porn") in reason:
         reason_ = InputReportReasonPornography()
         for_ = "<b>pornographic</b> message"
