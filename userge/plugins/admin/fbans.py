@@ -11,13 +11,7 @@ import asyncio
 import os
 
 from pyrogram import filters
-from pyrogram.errors import (
-    ChannelInvalid,
-    FloodWait,
-    Forbidden,
-    PeerIdInvalid,
-    UserBannedInChannel,
-)
+from pyrogram.errors import FloodWait, PeerIdInvalid, UserBannedInChannel
 
 from userge import Config, Message, get_collection, userge
 
@@ -238,7 +232,8 @@ async def fban_p(message: Message):
     channel_ = await userge.get_chat(int(FBAN_LOG_CHANNEL))
     if channel_.username is None or channel_.type != "channel":
         await message.edit(
-            "Proof channel should be a <b>channel</b> and should be <b>public</b> for this command to work...", del_in=5
+            "Proof channel should be a <b>channel</b> and should be <b>public</b> for this command to work...",
+            del_in=5,
         )
         return
     user = message.reply_to_message.from_user.id
@@ -334,13 +329,11 @@ async def fban_p(message: Message):
         status = f"Failed to fban in {len(failed)}/{total} feds.\n"
         for i in failed:
             status += "• " + i + "\n"
-        success = False
     else:
         status = f"<b>Success!</b> Fbanned in {total} feds."
         if len(r_update) != 0:
             for i in r_update:
                 status += f"\n• {i}"
-        success = True
     msg_ = (
         fban_arg[3].format(u_link)
         + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
