@@ -13,8 +13,9 @@ import os
 from pyrogram import filters
 from pyrogram.errors import FloodWait, PeerIdInvalid, UserBannedInChannel
 
-from ..jutsu.report import report_user
 from userge import Config, Message, get_collection, userge
+
+from ..jutsu.report import report_user
 
 FBAN_LOG_CHANNEL = os.environ.get("FBAN_LOG_CHANNEL")
 
@@ -297,7 +298,7 @@ async def fban_p(message: Message):
             user_id=user,
             msg=reply,
             msg_id=reply.message_id,
-            reason=reason
+            reason=reason,
         )
         reported = "</b>and <b>reported "
     else:
