@@ -39,7 +39,25 @@ async def report_(message: Message):
         )
         return
     reason_ = message.input_str
-    if reason_ == "nsfw":
+    chat_ message.chat.id
+    rep = report_user(
+        chat=chat_,
+        user_id=user_.id,
+        msg=reply_,
+        msg_id=reply_.message_id,
+        reason=reason_,
+    )
+    msg_ = (
+        "### <b>Reported user</b> ###\n"
+        f"<b>User:</b> {user_.mention}\n"
+        f"<b>Reason:</b> <i>{rep}</i>"
+    )
+    await message.edit(msg_)
+    await CHANNEL.log(msg_)
+
+    
+def report_user(chat: int, user_id: int, msg: tuple, msg_id: int, reason: str):
+    if ("nsfw" or "porn") in reason:
         reason_ = InputReportReasonPornography()
         for_ = "<b>pornographic</b> message"
     else:
@@ -47,20 +65,14 @@ async def report_(message: Message):
         for_ = "<b>spam</b> message"
     peer_ = (
         InputPeerUserFromMessage(
-            peer=message.chat.id,
-            msg_id=reply_.message_id,
-            user_id=user_.id,
+            peer=chat,
+            msg_id=msg_id,
+            user_id=user_id,
         ),
     )
     ReportPeer(
         peer=peer_,
         reason=reason_,
-        message=reply_,
+        message=msg,
     )
-    msg_ = (
-        "### <b>Reported user</b> ###\n"
-        f"<b>User:</b> {user_.mention}\n"
-        f"<b>Reason:</b> <i>{for_}</i>"
-    )
-    await message.edit(msg_)
-    await CHANNEL.log(msg_)
+    return for_
