@@ -85,8 +85,8 @@ async def report_(message: Message):
         reason=reason_,
     )
     msg_ = (
-        "### <b>Reported user</b> ###\n"
-        f"<b>User:</b> {user_.mention}\n"
+        f"### <b>Reported {user_.mention}</b> ###\n"
+        f"<b>User ID:</b> <code>{user_.id}</code>\n"
         f"<b>Reason:</b> <i>{rep}</i>"
     )
     await message.edit(msg_)
