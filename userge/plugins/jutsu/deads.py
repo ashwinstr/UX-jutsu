@@ -1,6 +1,6 @@
 # just for fun plugin for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
-from userge import userge, Message
+from userge import Message, userge
 
 
 @userge.on_cmd(
@@ -34,4 +34,3 @@ async def dead_(message: Message):
         text=msg_,
         reply_to_message_id=reply_id,
     )
-        
