@@ -32,7 +32,7 @@ async def deezing_(message: Message):
         await message.edit("Please enter a proper number after ';'...", del_in=5)
         return
     bot_ = "deezermusicbot"
-    song_ = await capitaled(song_)
+    song_ = capitaled(song_)
     await message.edit(f"Searching <b>{song_}</b> on deezer...")
     results = await userge.get_inline_bot_results(bot_, song_)
     if not results.results:
@@ -74,7 +74,7 @@ async def dlist_(message: Message):
     if not query_:
         await message.err("Input not found...", del_in=5)
         return
-    query_ = await capitaled(query_)
+    query_ = capitaled(query_)
     await message.edit(f"Searching for <b>{query_}</b>...")
     result = await userge.get_inline_bot_results(bot_, query_)
     if not result:
