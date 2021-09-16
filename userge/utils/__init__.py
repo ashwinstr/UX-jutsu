@@ -27,3 +27,7 @@ from .tools import (
     take_screen_shot,
     time_formatter,
 )
+from .jutsu_tools import (
+    capitaled,
+    report_user,
+)
