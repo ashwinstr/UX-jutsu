@@ -10,6 +10,7 @@ from pyrogram.raw.types import (
 )
 
 from userge import Config, Message, userge
+from userge.utils import report_user
 
 CHANNEL = userge.getCLogger(__name__)
 
@@ -54,25 +55,4 @@ async def report_(message: Message):
     )
     await message.edit(msg_)
     await CHANNEL.log(msg_)
-
-
-def report_user(chat: int, user_id: int, msg: dict, msg_id: int, reason: str):
-    if ("nsfw" or "porn") in reason:
-        reason_ = InputReportReasonPornography()
-        for_ = "<b>pornographic</b> message"
-    else:
-        reason_ = InputReportReasonSpam()
-        for_ = "<b>spam</b> message"
-    peer_ = (
-        InputPeerUserFromMessage(
-            peer=chat,
-            msg_id=msg_id,
-            user_id=user_id,
-        ),
-    )
-    ReportPeer(
-        peer=peer_,
-        reason=reason_,
-        message=msg,
-    )
-    return for_
+    
