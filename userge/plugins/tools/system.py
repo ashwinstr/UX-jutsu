@@ -108,52 +108,6 @@ async def shutdown_(message: Message) -> None:
 
 
 @userge.on_cmd(
-    "die",
-    about={
-        "header": "set auto heroku dyno off timeout",
-        "flags": {"-t": "input offline timeout in min : default to 5min"},
-        "usage": "{tr}die [flags]",
-        "examples": ["{tr}die", "{tr}die -t5"],
-    },
-    allow_channels=False,
-)
-async def die_(message: Message) -> None:
-    """set offline timeout to die USERGE-X"""
-    global MAX_IDLE_TIME  # pylint: disable=global-statement
-    if not Config.HEROKU_APP:
-        await message.err("`heroku app not detected !`")
-        return
-    await message.edit("`processing ...`")
-    if Config.RUN_DYNO_SAVER:
-        if isinstance(Config.RUN_DYNO_SAVER, asyncio.Task):
-            Config.RUN_DYNO_SAVER.cancel()
-        Config.RUN_DYNO_SAVER = False
-        SAVED_SETTINGS.update_one(
-            {"_id": "DYNO_SAVER"}, {"$set": {"on": False}}, upsert=True
-        )
-        await message.edit(
-            "auto heroku dyno off worker has been **stopped**", del_in=5, log=__name__
-        )
-        return
-    time_in_min = int(message.flags.get("-t", 5))
-    if time_in_min < 5:
-        await message.err(f"`please set higher value [{time_in_min}] !`")
-        return
-    MAX_IDLE_TIME = time_in_min * 60
-    SAVED_SETTINGS.update_one(
-        {"_id": "DYNO_SAVER"},
-        {"$set": {"on": True, "timeout": MAX_IDLE_TIME}},
-        upsert=True,
-    )
-    await message.edit(
-        "auto heroku dyno off worker has been **started** " f"[`{time_in_min}`min]",
-        del_in=3,
-        log=__name__,
-    )
-    Config.RUN_DYNO_SAVER = asyncio.get_event_loop().create_task(_dyno_saver_worker())
-
-
-@userge.on_cmd(
     "setvar",
     about={
         "header": "set var",
