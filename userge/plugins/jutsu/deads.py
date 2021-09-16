@@ -31,7 +31,7 @@ async def dead_(message: Message):
 """
     await userge.send_message(
         chat_id=message.chat.id,
-        text=msg_
+        text=msg_,
         reply_to_message_id=reply_id,
     )
         
