@@ -354,7 +354,9 @@ async def fban_p(message: Message):
         + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
     )
     await message.edit(msg_, disable_web_page_preview=True)
-    await userge.send_message(int(FBAN_LOG_CHANNEL), msg_, disable_web_page_preview=True)
+    await userge.send_message(
+        int(FBAN_LOG_CHANNEL), msg_, disable_web_page_preview=True
+    )
 
 
 @userge.on_cmd(
