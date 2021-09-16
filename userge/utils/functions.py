@@ -170,4 +170,3 @@ class AttributeDict(dict):
 
     def __setattr__(self, attr, value):
         self[attr] = value
-

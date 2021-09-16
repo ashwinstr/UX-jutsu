@@ -2,13 +2,6 @@
 # v1.3.3
 
 
-from pyrogram.raw.functions.account import ReportPeer
-from pyrogram.raw.types import (
-    InputPeerUserFromMessage,
-    InputReportReasonPornography,
-    InputReportReasonSpam,
-)
-
 from userge import Config, Message, userge
 from userge.utils import report_user
 
@@ -55,4 +48,3 @@ async def report_(message: Message):
     )
     await message.edit(msg_)
     await CHANNEL.log(msg_)
-    

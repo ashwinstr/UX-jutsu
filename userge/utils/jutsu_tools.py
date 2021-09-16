@@ -18,7 +18,7 @@ def capitaled(query: str):
         cap_text.append(word_cap)
     cap_query = " ".join(cap_text)
     return cap_query
-    
+
 
 # to report for spam or pornographic content
 def report_user(chat: int, user_id: int, msg: dict, msg_id: int, reason: str):
