@@ -13,7 +13,9 @@ CHANNEL = userge.getCLogger(__name__)
     about={
         "header": "Report user for spam",
         "description": "Report users for spam or pornographic content",
-        "flags": {"-r": "report remotely using message link",},
+        "flags": {
+            "-r": "report remotely using message link",
+        },
         "usage": "{tr}rep [spam (default)] or [nsfw (if pornographic spam)(optional)] [reply to spam message]\n"
         "Do NOT reply to innocent users with this.",
     },
@@ -23,30 +25,36 @@ async def report_(message: Message):
     reply_ = message.reply_to_message
     flags = message.flags
     if not reply_ and "-r" not in flags:
-        await message.edit("`Reply to spammer or provide spam message link to report...`", del_in=5)
+        await message.edit(
+            "`Reply to spammer or provide spam message link to report...`", del_in=5
+        )
         return
     if "-r" in flags:
         input_ = message.filtered_input_str
         try:
             link_ = input_.split()[0]
-        except:
+        except BaseException:
             await message.edit("`Provide a spam message link to report...`", del_in=5)
             return
         try:
             reason_ = input_.split()[1:]
-        except:
+        except BaseException:
             reason_ = "spam"
         try:
             chat_id = "-100" + link_.split("/")[-2]
             msg_id = link_.split("/")[-1]
-        except:
-            await message.edit("`Provide a proper spam message link to report...`", del_in=5)
+        except BaseException:
+            await message.edit(
+                "`Provide a proper spam message link to report...`", del_in=5
+            )
             return
         try:
             msg_en = await userge.get_messages(int(chat_id), int(msg_id))
             user_id = msg_en.from_user.id
-        except:
-            await message.edit("`Provide a proper spam message link to report...`", del_in=5)
+        except BaseException:
+            await message.edit(
+                "`Provide a proper spam message link to report...`", del_in=5
+            )
             return
     else:
         user_id = reply_.from_user.id
