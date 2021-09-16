@@ -63,7 +63,7 @@ async def lyrics(message: Message):
         artist = artist.strip()
         artist = capitaled(artist)
     song = song.strip()
-    song = await capitaled(song)
+    song = capitaled(song)
     if artist == "":
         title = song
     else:
