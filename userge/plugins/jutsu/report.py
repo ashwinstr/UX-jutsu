@@ -41,7 +41,12 @@ async def report_(message: Message):
         except BaseException:
             reason_ = "spam"
         try:
-            chat_id = "-100" + link_.split("/")[-2]
+            chat_id = link_.split("/")[-2]
+            if chat_id.isdigit():
+                chat_id = "-100" + str(chat_id)
+                chat_id = int(chat_id)
+            else:
+                pass
             msg_id = link_.split("/")[-1]
         except BaseException:
             await message.edit(
@@ -49,7 +54,7 @@ async def report_(message: Message):
             )
             return
         try:
-            msg_en = await userge.get_messages(int(chat_id), int(msg_id))
+            msg_en = await userge.get_messages(chat_id, int(msg_id))
             user_id = msg_en.from_user.id
         except BaseException:
             await message.edit(
