@@ -1,5 +1,6 @@
 # just for fun plugin for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
+import asyncio
 from userge import Message, userge
 
 
@@ -29,8 +30,11 @@ async def dead_(message: Message):
 
 <b>Running at full capacity like no tomorrow MF.</b><a href='{link_}'>­</a>
 """
-    await userge.send_message(
+    send_ = await userge.send_message(
         chat_id=message.chat.id,
         text=msg_,
         reply_to_message_id=reply_id,
     )
+    await asyncio.sleep(15)
+    msg_ = msg_.replace("­", "")
+    await send_.edit(msg_)
