@@ -24,10 +24,10 @@ def capitaled(query: str):
 def report_user(chat: int, user_id: int, msg: dict, msg_id: int, reason: str):
     if ("nsfw" or "porn") in reason:
         reason_ = InputReportReasonPornography()
-        for_ = "<b>pornographic</b> message"
+        for_ = "pornographic message"
     else:
         reason_ = InputReportReasonSpam()
-        for_ = "<b>spam</b> message"
+        for_ = "spam message"
     peer_ = (
         InputPeerUserFromMessage(
             peer=chat,
