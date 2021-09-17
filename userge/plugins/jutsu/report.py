@@ -85,7 +85,7 @@ async def report_(message: Message):
         reason=reason_,
     )
     msg_ = (
-        f"### <b>Reported {user_.mention}</b> ###\n"
+        f"❯❯❯ <b>Reported {user_.mention}</b> \n"
         f"<b>User ID:</b> <code>{user_.id}</code>\n"
         f"<b>Reason:</b> <i>{rep}</i>"
     )
