@@ -109,7 +109,7 @@ async def denyToPm(message: Message):
             try:
                 usr = list(Config.ALLOWED_CHATS)[one]
                 one += 1
-            except:
+            except BaseException:
                 break
             try:
                 Config.ALLOWED_CHATS.remove(usr)
@@ -119,7 +119,9 @@ async def denyToPm(message: Message):
         if not Config.ALLOWED_CHATS:
             await message.edit("`Disallowed all PMs.`", del_in=5)
         else:
-            await message.edit("`Something went wrong, not all PMs disallowed...`", del_in=5)
+            await message.edit(
+                "`Something went wrong, not all PMs disallowed...`", del_in=5
+            )
         return
     userid = await get_id(message)
     if userid:
