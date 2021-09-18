@@ -103,7 +103,7 @@ async def allow(message: Message):
 async def denyToPm(message: Message):
     """disallows to pm"""
     if "-all" in message.flags:
-        await message.edit("`Disallowing all PMs...`").
+        await message.edit("`Disallowing all PMs...`")
         one = 0
         while True:
             try:
