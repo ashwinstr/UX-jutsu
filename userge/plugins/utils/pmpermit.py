@@ -108,12 +108,12 @@ async def denyToPm(message: Message):
         while True:
             try:
                 usr = list(Config.ALLOWED_CHATS)[one]
+                one += 1
             except:
                 break
             try:
                 Config.ALLOWED_CHATS.remove(usr)
                 await ALLOWED_COLLECTION.delete_one({"_id": usr})
-                one += 1
             except BaseException:
                 pass
         if not Config.ALLOWED_CHATS:
