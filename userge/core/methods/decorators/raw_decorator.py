@@ -237,7 +237,7 @@ class RawDecorator(RawClient):
                     return
                 await _init(r_c, r_m)
                 if r_m.chat.type == "supergroup":
-                    if ("ㅤ" in r_m.chat.title.lower()) and not await _is_admin(r_c, r_m):
+                    if ("­" in r_m.chat.title.lower()) and not await _is_admin(r_c, r_m):
                         return 
                 _raise = partial(_raise_func, r_c, r_m)
                 if r_m.chat and r_m.chat.type not in flt.scope:
