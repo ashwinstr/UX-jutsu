@@ -24,7 +24,7 @@ async def dead_(message: Message):
     msg_ = f"""
 <b>DARE TO TEST ME MF.</b>
 
-    🔥 <b>Status:</> I'm alive MF.
+    🔥 <b>Status:</b> I'm alive MF.
     ⏱ <b>Dead since:</b> Never died MF.
     👤 <b>Who killed:</b> No one dares MF.
     🧬 <b>Why died:</b> Nothing kills me MF.
