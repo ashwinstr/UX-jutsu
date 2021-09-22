@@ -81,7 +81,7 @@ def post_to_telegraph(a_title: str, content: str) -> str:
         title=a_title,
         author_name=auth_name,
         author_url="https://t.me/xplugin",
-        text=content,
+        html_content=content,
     )
     link_ = "https://telegra.ph/" + resp["path"]
     return link_
