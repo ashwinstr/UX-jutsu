@@ -15,12 +15,13 @@ import shlex
 from os.path import basename
 from typing import List, Optional, Tuple
 
-from html_telegraph_poster import TelegraphPoster
+from telegraph import Telegraph
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from ujson import loads
 
 import userge
 
+tele_ = Telegraph()
 _LOG = userge.logging.getLogger(__name__)
 
 _BTN_URL_REGEX = re.compile(r"(\[([^\[]+?)]\[buttonurl:(?:/{0,2})(.+?)(:same)?])")
@@ -75,16 +76,15 @@ def time_formatter(seconds: float) -> str:
 # https://github.com/UsergeTeam/Userge-Plugins/blob/master/plugins/anilist.py
 def post_to_telegraph(a_title: str, content: str) -> str:
     """Create a Telegram Post using HTML Content"""
-    post_client = TelegraphPoster(use_api=True)
-    auth_name = "Kakashi"
-    post_client.create_api_token(auth_name)
-    post_page = post_client.post(
+    auth_name = tele_.create_account("Kakashi")
+    resp = tele_.create_page(
         title=a_title,
         author=auth_name,
         author_url="https://t.me/xplugin",
         text=content,
     )
-    return post_page["url"]
+    link_ = "https://telegra.ph/" + resp['path']
+    return link_
 
 
 async def runcmd(cmd: str) -> Tuple[str, str, int, int]:
