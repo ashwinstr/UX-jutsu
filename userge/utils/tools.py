@@ -15,8 +15,8 @@ import shlex
 from os.path import basename
 from typing import List, Optional, Tuple
 
-from telegraph import Telegraph
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from telegraph import Telegraph
 from ujson import loads
 
 import userge
@@ -83,7 +83,7 @@ def post_to_telegraph(a_title: str, content: str) -> str:
         author_url="https://t.me/xplugin",
         text=content,
     )
-    link_ = "https://telegra.ph/" + resp['path']
+    link_ = "https://telegra.ph/" + resp["path"]
     return link_
 
 
