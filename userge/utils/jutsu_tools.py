@@ -69,7 +69,7 @@ def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, dif
                 hour -= 12
                 ts = "PM"
             elif hour == 12:
-                ts = "PM
+                ts = "PM"
                 pass
             else:
                 ts = "AM"
