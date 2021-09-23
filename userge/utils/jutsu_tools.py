@@ -44,7 +44,7 @@ def report_user(chat: int, user_id: int, msg: dict, msg_id: int, reason: str):
 
 
 # return time and date after applying time difference
-def time_date(year: int, month: int, date: int, hour: int, minute: int, diff: str):
+def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, diff: str):
     """time and date changer as per time-zone difference"""
     differ = diff.split(":")
     if int(differ[0]) >= 12 or int(differ[0]) <= -12 or int(differ[1]) >= 60:
