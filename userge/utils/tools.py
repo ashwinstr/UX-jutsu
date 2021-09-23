@@ -76,16 +76,18 @@ def time_formatter(seconds: float) -> str:
 def time_date(year: int, month: int, date: int, hour: int, minute: int, diff: str):
     """time and date changer as per time-zone difference"""
     differ = diff.split(":")
-    if differ[0] >= 12 or differ[0] <= -12 or differ[1] >= 60:
-        return await message.edit(
-            "`Format of the difference given is wrong, check and try again...`"
-        )
+    if (
+        int(differ[0]) >= 12
+        or int(differ[0]) <= -12
+        or int(differ[1]) >= 60
+    ):
+        return await message.edit("`Format of the difference given is wrong, check and try again...`")
     try:
         hour_diff = differ[0]
         hour_diff = int(hour_diff)
         min_diff = differ[1]
         min_diff = int(min_diff)
-
+        
         if hour_diff < 0:
             minute -= min_diff
             if minute < 0:
@@ -95,12 +97,14 @@ def time_date(year: int, month: int, date: int, hour: int, minute: int, diff: st
             if hour < 0:
                 date -= 1
                 hour += 12
+                ts = "PM"
             elif hour > 12 and hour < 24:
                 hour -= 12
+                ts = "PM"
             elif hour == 12:
-                pass
+                ts = "PM"
             else:
-                pass
+                ts = "AM"
             if date < 1:
                 month -= 1
                 if month < 1:
@@ -121,11 +125,13 @@ def time_date(year: int, month: int, date: int, hour: int, minute: int, diff: st
                 hour += 1
                 if hour > 12 and hour < 24:
                     hour -= 12
+                    ts = "PM"
                 elif hour == 12:
-                    pass
+                    ts = "PM"
                 elif hour >= 24:
                     hour -= 24
                     date += 1
+                    ts = "AM"
                     if date > 30 and (month == (4 or 6 or 9 or 11)):
                         month += 1
                     elif date > 28 and month == 2 and year % 4 != 0:
@@ -145,7 +151,7 @@ def time_date(year: int, month: int, date: int, hour: int, minute: int, diff: st
             "hour": hour,
             "date": date,
             "month": month,
-            "year": year,
+            "year": year
         }
         return json_
     except Exception as e:
