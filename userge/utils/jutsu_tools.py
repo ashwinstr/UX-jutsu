@@ -91,6 +91,7 @@ def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, dif
             if minute >= 60:
                 hour += 1
                 minute -= 60
+            hour += hour_diff
             if hour > 12 and hour < 24:
                 hour -= 12
                 ts = "PM"
