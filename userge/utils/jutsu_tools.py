@@ -70,10 +70,8 @@ def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, dif
                 ts = "PM"
             elif hour == 12:
                 ts = "PM"
-                pass
             else:
                 ts = "AM"
-                pass
             if date < 1:
                 month -= 1
                 if month < 1:
@@ -98,7 +96,6 @@ def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, dif
                 ts = "PM"
             elif hour == 12:
                 ts = "PM"
-                pass
             elif hour >= 24:
                 hour -= 24
                 date += 1
