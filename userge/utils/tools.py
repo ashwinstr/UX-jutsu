@@ -77,9 +77,7 @@ def time_date(year: int, month: int, date: int, hour: int, minute: int, diff: st
     """time and date changer as per time-zone difference"""
     differ = diff.split(":")
     if int(differ[0]) >= 12 or int(differ[0]) <= -12 or int(differ[1]) >= 60:
-        return (
-            "`Format of the difference given is wrong, check and try again...`"
-        )
+        return "`Format of the difference given is wrong, check and try again...`"
     try:
         hour_diff = differ[0]
         hour_diff = int(hour_diff)
