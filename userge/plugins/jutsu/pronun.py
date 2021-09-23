@@ -73,10 +73,13 @@ async def pronun_(message: Message):
             dest = list(flags)[0]
         else:
             no_f = True
+    if no_f:
+        await message.edit("`Need a language flag to work or use translate plugin...`")
+        return
     if not secret:
         await message.edit("`Transcribing...`")
-    src = src.replace("-", "") if not no_f else False
-    dest = dest.replace("-", "") if not no_f else False
+    src = src.replace("-", "")
+    dest = dest.replace("-", "")
     if src and dest:
         try:
             trans = translator.translate(query_, dest=dest, src=src)
@@ -90,16 +93,6 @@ async def pronun_(message: Message):
                 f"Language not supported, see <code>{Config.CMD_TRIGGER}help pro</code>... ",
                 del_in=5,
             )
-            return
-    else:
-        try:
-            trans = translator.translate(query_, "en", "auto")
-            lang_src = LANGUAGES[f"{tran.src.lower()}"]
-            lang_src = lang_src.title()
-            lang_dest = "English"
-            pronun = trans.pronunciation
-        except BaseException:
-            await message.edit("There was some problem...", del_in=5)
             return
     success = True
     if not pronun:
