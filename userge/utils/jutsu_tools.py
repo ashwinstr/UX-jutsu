@@ -88,6 +88,7 @@ def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, dif
             minute += min_diff
             if minute >= 60:
                 hour += 1
+                minute -= 60
                 if hour > 12 and hour < 24:
                     hour -= 12
                 elif hour == 12:
@@ -97,21 +98,26 @@ def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, dif
                     date += 1
                     if date > 30 and (month == (4 or 6 or 9 or 11)):
                         month += 1
+                        date -= 30
                     elif date > 28 and month == 2 and year % 4 != 0:
                         month += 1
+                        date -= 28
                     elif date > 29 and month == 2 and year % 4 == 0:
                         month += 1
+                        date -= 29
                     elif date > 31 and (month == (1 or 3 or 5 or 7 or 8 or 10 or 12)):
                         month += 1
+                        date -= 31
                         if month > 12:
+                            month -= 12
                             year += 1
         hour = f"{hour:02}"
         minute = f"{minute:02}"
         date = f"{date:02}"
         month = f"{month:02}"
         json_ = {
-            "min": minute,
             "hour": hour,
+            "min": minute,
             "date": date,
             "month": month,
             "year": year,
