@@ -42,7 +42,7 @@ async def fb_leauges_(message: Message):
         return
 
     if "-j" in message.flags:
-        json_ = json.dumps(response)
+        json_ = json.dumps(response, indent=4)
         await message.edit_or_send_as_file(json_)
         return
     leagues_ = "The <b>leagues</b> available in the <b>API</b>: [<b>{}</b>]\n\n"
@@ -101,7 +101,7 @@ async def fb_teams_(message: Message):
         return
 
     if "-j" in message.flags:
-        json_ = json.dumps(response)
+        json_ = json.dumps(response, indent=4)
         await message.edit_or_send_as_file(json_)
         return
     season_ = response["season"]
@@ -181,7 +181,7 @@ async def fb_sched_(message: Message):
         return
 
     if "-j" in message.flags:
-        json_ = json.dumps(response)
+        json_ = json.dumps(response, indent=4)
         await message.edit_or_send_as_file(json_)
         return
     matches_ = response["matches"]
@@ -301,7 +301,7 @@ async def fb_fixtures_(message: Message):
         return
 
     if "-j" in message.flags:
-        json_ = json.dumps(response)
+        json_ = json.dumps(response, indent=4)
         await message.edit_or_send_as_file(json_)
         return
     try:
@@ -430,7 +430,7 @@ async def fb_stand_(message: Message):
         return
 
     if "-j" in message.flags:
-        json_ = json.dumps(response)
+        json_ = json.dumps(response, indent=4)
         await message.edit_or_send_as_file(json_)
         return
     try:
