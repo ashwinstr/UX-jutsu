@@ -87,7 +87,7 @@ async def lyrics(message: Message):
         .replace("EmbedShare", "")
         .replace("URLCopyEmbedCopy", "")
     )
-    lyr_msg = f"Lyrics for <b>{title}</b>...\n\n{lyrics}"
+    lyr_msg = f"Lyrics for <b>{title}</b>...\n\n<i>{lyrics}"
     if len(lyr_msg) <= 4096 and "-t" not in flag and "-pre" not in flag:
         await message.edit(f"{lyr_msg}")
     else:
