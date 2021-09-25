@@ -82,8 +82,8 @@ async def lyrics(message: Message):
     lyrics = f"\n{lyric}"
     lyrics += f"\n<b>Source:</b> <code>genius.com</code>"
     lyrics = (
-        lyrics.replace("[", "<b>[")
-        .replace("]", "]</b>")
+        lyrics.replace("[", "</i><b>[")
+        .replace("]", "]</b><i>")
         .replace("EmbedShare", "")
         .replace("URLCopyEmbedCopy", "")
     )
