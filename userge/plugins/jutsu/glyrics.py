@@ -79,8 +79,8 @@ async def lyrics(message: Message):
         await message.edit(f"Couldn't find `{title}` on Genius...")
         return
     lyric = lyr.lyrics
-    lyrics = f"\n{lyric}"
-    lyrics += f"\n<b>Source:</b> <code>genius.com</code>"
+    lyrics = f"\n{lyric}</i>"
+    lyrics += f"\n\n<b>Source:</b> <code>genius.com</code>"
     lyrics = (
         lyrics.replace("[", "</i><b>[")
         .replace("]", "]</b><i>")
