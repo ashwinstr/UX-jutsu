@@ -240,7 +240,7 @@ async def fban_p(message: Message):
     if "-r" in message.flags:
         link_ = message.filtered_input_str
         link_split = link_.split()
-        link_ = link_split()[0]
+        link_ = link_split[0]
         try:
             reason = " ".join(link_split[1:])
         except BaseException:
