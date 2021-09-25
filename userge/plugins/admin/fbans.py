@@ -213,6 +213,9 @@ async def fban_(message: Message):
         "header": "Fban with proof",
         "description": "Fban user from the list of feds with replied message as proof"
         "\nWARNING: don't use if any of the fed group has links blocklisted",
+        "flags": {
+            "-r": "remote fban, use with direct proof link",
+        },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
     },
     allow_bots=False,
@@ -222,9 +225,6 @@ async def fban_p(message: Message):
     """Fban user from connected feds with proof."""
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}{}</b>"]
     d_err = ("Failed to detect user **{}**, fban might not work...",)
-    if not message.reply_to_message:
-        await message.err("Please reply to proof...", del_in=7)
-        return
     if not FBAN_LOG_CHANNEL:
         await message.edit(
             "Add <code>FBAN_LOG_CHANNEL</code> to forward the proofs...", del_in=5
@@ -237,9 +237,50 @@ async def fban_p(message: Message):
             del_in=5,
         )
         return
-    user = message.reply_to_message.from_user.id
-    input = message.filtered_input_str
-    reason = input
+    if "-r" in message.flags:
+        link_ = message.filtered_input_str
+        link_split = link_.split()
+        link_ = link_split()[0]
+        try:
+            reason = " ".join(link_split[1:])
+        except:
+            reason = "Not specified"
+        try:
+            user_and_message = link_.split("/")
+            chat_id = user_and_message[-2]
+            if chat_id.isdigit():
+                chat_id = "-100" + str(chat_id)
+                chat_id = int(chat_id)
+            else:
+                chat_ = await userge.get_chat(chat_id)
+                chat_id = chat_.id
+            msg_id = int(user_and_message[-1])
+        except BaseException:
+            await message.edit(
+                "`Provide a proper spam message link to report...`", del_in=5
+            )
+            return
+        try:
+            msg_en = await userge.get_messages(chat_id, int(msg_id))
+            user = msg_en.from_user.id
+            proof = msg_en.message_id
+        except BaseException:
+            await message.edit(
+                "`Provide a proper spam message link to report...`", del_in=5
+            )
+            return
+        input = ""
+    else:
+        chat_id = message.chat.id
+        user = message.reply_to_message.from_user.id
+        input = message.filtered_input_str
+        reason = input
+        reply = message.reply_to_message
+        if not message.reply_to_message:
+            await message.err("Please reply to proof...", del_in=7)
+            return
+        msg_en = reply
+        proof = msg_en.message_id
     fps = True
     if (
         user in Config.SUDO_USERS
@@ -248,7 +289,7 @@ async def fban_p(message: Message):
     ):
         fps = False
         if not input:
-            await message.err("Can't fban replied user, give user ID...", del_in=5)
+            await message.err("Can't fban replied/specified user because of them being SUDO_USER or OWNER, give user ID...", del_in=5)
             return
         user = input.split()[0]
         reason = input.split()[1:]
@@ -280,23 +321,19 @@ async def fban_p(message: Message):
     r_update = []
     total = 0
     await message.edit(fban_arg[1])
-    from_ = message.chat.id
-    message.from_user.id
-    reply = message.reply_to_message
-    proof = reply.message_id
     log_fwd = await userge.forward_messages(
         int(FBAN_LOG_CHANNEL),
-        from_chat_id=from_,
+        from_chat_id=chat_id,
         message_ids=proof,
     )
     reason = reason or "Not specified"
     reason += " || {" + f"{log_fwd.link}" + "}"
     if fps:
         report_user(
-            chat=message.chat.id,
+            chat=chat_id,
             user_id=user,
-            msg=reply,
-            msg_id=reply.message_id,
+            msg=msg_en,
+            msg_id=proof,
             reason=reason,
         )
         reported = "</b>and <b>reported "
