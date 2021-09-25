@@ -37,7 +37,7 @@ async def report_(message: Message):
             await message.edit("`Provide a spam message link to report...`", del_in=5)
             return
         try:
-            reason_ = input_.split()[1:]
+            reason_ = " ".join(input_.split()[1:])
         except BaseException:
             reason_ = "spam"
         try:
