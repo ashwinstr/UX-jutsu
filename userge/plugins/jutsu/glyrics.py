@@ -94,7 +94,7 @@ async def lyrics(message: Message):
         if "-no_p" in flag:
             dis_pre = True
         lyrics = lyrics.replace("\n", "<br>")
-        link = post_to_telegraph(f"Lyrics for {title}...", lyrics)
+        link = post_to_telegraph(f"Lyrics for {title}...", f"<i>{lyrics}")
         await message.edit(
             f"Lyrics for [<b>{title}</b>]({link}) by genius.com...",
             disable_web_page_preview=dis_pre,
