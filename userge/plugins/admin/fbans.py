@@ -243,7 +243,7 @@ async def fban_p(message: Message):
         link_ = link_split()[0]
         try:
             reason = " ".join(link_split[1:])
-        except:
+        except BaseException:
             reason = "Not specified"
         try:
             user_and_message = link_.split("/")
@@ -289,7 +289,10 @@ async def fban_p(message: Message):
     ):
         fps = False
         if not input:
-            await message.err("Can't fban replied/specified user because of them being SUDO_USER or OWNER, give user ID...", del_in=5)
+            await message.err(
+                "Can't fban replied/specified user because of them being SUDO_USER or OWNER, give user ID...",
+                del_in=5,
+            )
             return
         user = input.split()[0]
         reason = input.split()[1:]
