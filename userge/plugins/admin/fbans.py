@@ -271,14 +271,14 @@ async def fban_p(message: Message):
             return
         input = ""
     else:
+        if not message.reply_to_message:
+            await message.err("Please reply to proof...", del_in=7)
+            return 
         chat_id = message.chat.id
         user = message.reply_to_message.from_user.id
         input = message.filtered_input_str
         reason = input
         reply = message.reply_to_message
-        if not message.reply_to_message:
-            await message.err("Please reply to proof...", del_in=7)
-            return
         msg_en = reply
         proof = msg_en.message_id
     fps = True
