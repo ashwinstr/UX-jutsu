@@ -352,42 +352,42 @@ async def fb_fixtures_(message: Message):
                 finished = False
                 h_score = ""
                 a_score = ""
-                sche_ = match_["utcDate"]
-                date_ = sche_.split("T")[0]
-                date_ = date_.split("-")
-                date_y = int(date_[0])
-                date_m = int(date_[1])
-                date_d = int(date_[2])
-                time_ = sche_.split("T")[1]
-                time_h = time_.split(":")[0]
-                time_h = int(time_h)
-                time_m = time_.split(":")[1]
-                time_m = int(time_m)
-                if FOOTBALL_UTC_TIME:
-                    differ = FOOTBALL_UTC_TIME
-                else:
-                    differ = "+5:30"
-                t_d_ = time_date_diff(
-                    year=date_y,
-                    month=date_m,
-                    date=date_d,
-                    hour=time_h,
-                    minute=time_m,
-                    diff=differ,
-                )
+            sche_ = match_["utcDate"]
+            date_ = sche_.split("T")[0]
+            date_ = date_.split("-")
+            date_y = int(date_[0])
+            date_m = int(date_[1])
+            date_d = int(date_[2])
+            time_ = sche_.split("T")[1]
+            time_h = time_.split(":")[0]
+            time_h = int(time_h)
+            time_m = time_.split(":")[1]
+            time_m = int(time_m)
+            if FOOTBALL_UTC_TIME:
+                differ = FOOTBALL_UTC_TIME
+            else:
+                differ = "+5:30"
+            t_d_ = time_date_diff(
+                year=date_y,
+                month=date_m,
+                date=date_d,
+                hour=time_h,
+                minute=time_m,
+                diff=differ,
+            )
             if finished:
                 out_ += (
                     f"• [{sr_}] <b>Match day:</b> <i>{cur_matchDay}</i><br>"
                     f"{h_score} - {home_t}<br>"
-                    f"{a_score} - {away_t}<br><br>"
+                    f"{a_score} - {away_t}<br>"
                 )
             else:
                 out_ += (
                     f"• [{sr_}] <b>Match day:</b> <i>{cur_matchDay}</i><br>"
                     f"{home_t}<br>"
                     f"{away_t}<br>"
-                    f"{t_d_['date']}/{t_d_['month']}/{t_d_['year']} at {t_d_['hour']}:{t_d_['min']} {t_d_['stamp']} UTC{differ}<br><br>"
                 )
+            out_ += f"{t_d_['date']}/{t_d_['month']}/{t_d_['year']} at {t_d_['hour']}:{t_d_['min']} {t_d_['stamp']} UTC{differ}<br><br>"
             sr_ += 1
     link_ = pt(f"Fixtures for {league_} this season ({start_end}).", out_)
     await message.edit(
