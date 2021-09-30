@@ -78,10 +78,9 @@ def post_to_telegraph(a_title: str, content: str) -> str:
     tele_.create_account(short_name="Kakashi")
     resp = tele_.create_page(
         title=a_title,
-        author_url="https://t.me/xplugin",
         html_content=content,
     )
-    link_ = "https://telegra.ph/" + resp["path"]
+    link_ = resp["url"]
     return link_
 
 
