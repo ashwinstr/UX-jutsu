@@ -327,6 +327,12 @@ async def fb_fixtures_(message: Message):
     out_ = f"<b>LEAGUE:</b> <i>{league_} ({country}) {start_end}</i><br><br>"
     sr_ = 1
     for match_ in response["matches"]:
+        stage_ = match_['stage']
+        if ("QUALIFICATION" or "PRELIMINARY") in stage_:
+            continue
+        if stage_ == "GROUP_STAGE":
+            group_ = match_['group']
+            out_ += f"<b>{group_}</b>"
         if int(cur_matchDay) == match_["matchday"]:
             home_t = match_["homeTeam"]["name"]
             away_t = match_["awayTeam"]["name"]
