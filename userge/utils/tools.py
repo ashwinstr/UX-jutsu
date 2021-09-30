@@ -75,9 +75,11 @@ def time_formatter(seconds: float) -> str:
 
 def post_to_telegraph(a_title: str, content: str) -> str:
     """Create a Telegram Post using HTML Content"""
-    tele_.create_account(short_name="Kakashi")
+    auth_name = tele_.create_account(short_name="Kakashi")
     resp = tele_.create_page(
         title=a_title,
+        author_name=auth_name,
+        author_url="https://t.me/xplugin",
         html_content=content,
     )
     link_ = resp["url"]
