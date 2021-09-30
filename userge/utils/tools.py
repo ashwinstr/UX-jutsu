@@ -76,7 +76,7 @@ def time_formatter(seconds: float) -> str:
 # https://github.com/UsergeTeam/Userge-Plugins/blob/master/plugins/anilist.py
 def post_to_telegraph(a_title: str, content: str) -> str:
     """Create a Telegram Post using HTML Content"""
-    auth_name = tele_.create_account("Kakashi")
+    auth_name = tele_.create_account(short_name="Kakashi")
     resp = tele_.create_page(
         title=a_title,
         author_name=auth_name,
