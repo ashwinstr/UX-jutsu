@@ -330,10 +330,8 @@ async def fb_fixtures_(message: Message):
         stage_ = match_["stage"]
         if ("QUALIFICATION" or "PRELIMINARY") in stage_:
             continue
-        if stage_ == "GROUP_STAGE":
-            group_ = match_["group"]
-            out_ += f"<b>{group_}</b>"
-        if int(cur_matchDay) == match_["matchday"]:
+        stages = ["GROUP_STAGE", "ROUND_OF_16", "QUARTER_FINAL", "SEMI_FINAL", "FINAL"]
+        if int(cur_matchDay) == match_["matchday"] and stage_ in stages:
             home_t = match_["homeTeam"]["name"]
             away_t = match_["awayTeam"]["name"]
             score = match_["score"]["fullTime"]
@@ -378,9 +376,13 @@ async def fb_fixtures_(message: Message):
                 minute=time_m,
                 diff=differ,
             )
+            try:
+                stage_now = f"<b>{match_['group']}</b><br>•"
+            except:
+                stage_now = "•"
             if finished:
                 out_ += (
-                    f"• [{sr_}] <b>Match day:</b> <i>{cur_matchDay}</i><br>"
+                    f"{stage_now} [{sr_}] <b>Match day:</b> <i>{cur_matchDay}</i><br>"
                     f"{h_score} - {home_t}<br>"
                     f"{a_score} - {away_t}<br>"
                 )
