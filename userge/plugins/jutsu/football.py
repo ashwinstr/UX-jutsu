@@ -378,7 +378,7 @@ async def fb_fixtures_(message: Message):
             )
             try:
                 stage_now = f"<b>{match_['group']}</b><br>•"
-            except:
+            except BaseException:
                 stage_now = "•"
             if finished:
                 out_ += (
