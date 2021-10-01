@@ -85,6 +85,9 @@ async def fb_teams_(message: Message):
         )
         return
     league_ = message.filter_input_str
+    if not league_:
+        await message.edit("Input not found, give competition code...", del_in=5)
+        return
     league_ = league_.upper()
     await message.edit("<code>Checking league code...<code>")
 
@@ -200,6 +203,7 @@ async def fb_sched_(message: Message):
         f"Matches for <b>{the_team}</b> this season <i>({start_end})</i>:<br><br>"
     )
     for match_ in matches_:
+        match_id = match_["id"]
         comp_n = match_["competition"]["name"]
         home_t = match_["homeTeam"]["name"]
         away_t = match_["awayTeam"]["name"]
@@ -244,9 +248,9 @@ async def fb_sched_(message: Message):
             minute=time_m,
             diff=differ,
         )
+        matches_sch += f"• <b>Competetion:</b> {comp_n} <b>Match day:</b> <i>{md}</i> <b>Match ID:</b> <code>{match_id}</code><br>"
         if finished:
             matches_sch += (
-                f"• <b>Competetion:</b> {comp_n} <b>Match day:</b> <i>{md}</i><br>"
                 f"{h_score} - {home_t}<br>"
                 f"{a_score} - {away_t}<br>"
             )
@@ -256,7 +260,6 @@ async def fb_sched_(message: Message):
             else:
                 away_t = f"<b>{away_t}</b>"
             matches_sch += (
-                f"• <b>Competetion:</b> {comp_n} <b>Match day:</b> <i>{md}</i><br>"
                 f"{home_t}<br>"
                 f"{away_t}<br>"
             )
@@ -380,15 +383,15 @@ async def fb_fixtures_(message: Message):
                 stage_now = f"<b>{match_['group']}</b><br>•"
             except BaseException:
                 stage_now = "•"
+            match_id = match_["id"]
+            out_ += f"{stage_now} [{sr_}] <b>Match day:</b> <i>{cur_matchDay}</i> <b>Match ID:</b> <code>{match_id}</code><br>"
             if finished:
                 out_ += (
-                    f"{stage_now} [{sr_}] <b>Match day:</b> <i>{cur_matchDay}</i><br>"
                     f"{h_score} - {home_t}<br>"
                     f"{a_score} - {away_t}<br>"
                 )
             else:
                 out_ += (
-                    f"• [{sr_}] <b>Match day:</b> <i>{cur_matchDay}</i><br>"
                     f"{home_t}<br>"
                     f"{away_t}<br>"
                 )
@@ -489,7 +492,3 @@ async def fb_stand_(message: Message):
     await message.edit(
         f"Standing table of <b>{league_n}</b> this season <i>({start_end})</i> is <a href='{link_}'><b>HERE</b></a>"
     )
-
-
-#    json_ = json.dumps(response, indent=4)
-#    await message.edit_or_send_as_file(json_)
