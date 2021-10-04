@@ -290,13 +290,17 @@ async def enable_userbot(message: Message):
             await message.err(str(err))
             return
         if chat.id not in Config.DISABLED_CHATS:
-            await message.edit("this chat is already enabled!")
+            await message.edit("This chat is already enabled!")
         else:
             Config.DISABLED_CHATS.remove(chat.id)
+            if chat.type == "private":
+                c_name = " ".join([chat.first_name, chat.last_name or ""])
+            else:
+                c_name = chat.title
             await asyncio.gather(
                 DISABLED_CHATS.delete_one({"_id": chat.id}),
                 message.edit(
-                    f"CHAT : `{chat.title}` removed from **DISABLED_CHATS**!",
+                    f"CHAT : `{c_name}` removed from **DISABLED_CHATS**!\n`Bot might restart, wait for some time...`",
                     del_in=5,
                     log=__name__,
                 ),
@@ -324,7 +328,7 @@ async def disable_userbot(message: Message):
                 message.edit("**Disabled** all chats!", del_in=5),
             )
         else:
-            await message.err("invalid flag!")
+            await message.err("Invalid flag!")
     else:
         chat = message.chat
         if message.input_str:
@@ -334,15 +338,19 @@ async def disable_userbot(message: Message):
                 await message.err(str(err))
                 return
         if chat.id in Config.DISABLED_CHATS:
-            await message.edit("this chat is already disabled!")
+            await message.edit("This chat is already disabled!")
         elif chat.id == Config.LOG_CHANNEL_ID:
-            await message.err("can't disabled log channel")
+            await message.err("Can't disabled log channel")
         else:
+            if chat.type == "private":
+                c_name = " ".join([chat.first_name, chat.last_name or ""])
+            else:
+                c_name = chat.title
             Config.DISABLED_CHATS.add(chat.id)
             await asyncio.gather(
                 DISABLED_CHATS.insert_one({"_id": chat.id, "title": chat.title}),
                 message.edit(
-                    f"CHAT : `{chat.title}` added to **DISABLED_CHATS**!",
+                    f"CHAT : `{c_name}` added to **DISABLED_CHATS**!\n`Bot might restart, wait for some time...`",
                     del_in=5,
                     log=__name__,
                 ),
