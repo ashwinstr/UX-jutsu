@@ -7,6 +7,7 @@
 # All rights reserved.
 
 import aiohttp
+import json
 
 from userge import Config, Message, logging, pool, userge
 
@@ -53,7 +54,7 @@ async def check_logs(message: Message):
                 PASTY_URL + "api/v2/pastes/", json={"content": text}
             ) as resp:
                 if resp.status == 201:
-                    response = await resp.json()
+                    response = await json.dumps(resp, indent=4)
                     key = response["result"]["key"]
                     file_ext = ".txt"
                     final_url = PASTY_URL + key + file_ext
