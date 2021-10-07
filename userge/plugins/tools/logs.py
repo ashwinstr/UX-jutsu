@@ -67,7 +67,7 @@ async def check_logs(message: Message):
                         )
                         await message.edit(reply_text, disable_web_page_preview=True)
                         pasty_ = True
-                    except BaseException as e:
+                    except BaseException:
                         error_ = f"`PastyLus failed, uploading logs as file.`"
                         await message.edit(error_)
                         pasty_ = False
