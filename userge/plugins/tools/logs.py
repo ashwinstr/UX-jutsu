@@ -10,7 +10,7 @@ import aiohttp
 
 from userge import Config, Message, logging, pool, userge
 
-NEKOBIN_URL = "https://nekobin.com/"
+PASTY_URL = "https://pasty.lus.pm/"
 
 _LEVELS = {
     "debug": logging.DEBUG,
@@ -50,21 +50,21 @@ async def check_logs(message: Message):
             text = d_f.read()
         async with aiohttp.ClientSession() as ses:
             async with ses.post(
-                NEKOBIN_URL + "api/documents", json={"content": text}
+                PASTY_URL + "api/documents", json={"content": text}
             ) as resp:
                 if resp.status == 201:
                     response = await resp.json()
                     key = response["result"]["key"]
                     file_ext = ".txt"
-                    final_url = NEKOBIN_URL + key + file_ext
-                    final_url_raw = f"{NEKOBIN_URL}raw/{key}{file_ext}"
+                    final_url = PASTY_URL + key + file_ext
+                    final_url_raw = f"{PASTY_URL}raw/{key}{file_ext}"
                     reply_text = "**Here Are Your Logs** :\n"
                     reply_text += (
                         f"• [NEKO]({final_url})            • [RAW]({final_url_raw})"
                     )
                     await message.edit(reply_text, disable_web_page_preview=True)
                 else:
-                    await message.edit("Failed to reach Nekobin !")
+                    await message.edit("Failed to reach PastyLus !")
                     await message.client.send_document(
                         chat_id=message.chat.id,
                         document="logs/userge.log",
