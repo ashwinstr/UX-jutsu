@@ -10,6 +10,8 @@ import aiohttp
 
 from userge import Config, Message, logging, pool, userge
 
+CHANNEL = userge.getCLogger(__name__)
+
 PASTY_URL = "https://pasty.lus.pm/"
 
 _LEVELS = {
@@ -66,10 +68,11 @@ async def check_logs(message: Message):
                         await message.edit(reply_text, disable_web_page_preview=True)
                         pasty_ = True
                     except BaseException as e:
-                        error_ = f"{e}\n`PastyLus failed, uploading logs as file.`"
+                        error_ = f"`PastyLus failed, uploading logs as file.`"
                         await message.edit(error_)
                         pasty_ = False
                 if resp.status != 201 or not pasty_:
+                    await CHANNEL.log(e)
                     await message.edit("Failed to reach PastyLus !")
                     await message.client.send_document(
                         chat_id=message.chat.id,
