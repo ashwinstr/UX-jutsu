@@ -73,7 +73,8 @@ async def check_logs(message: Message):
                         pasty_ = False
                 if resp.status != 201 or not pasty_:
                     await message.edit(
-                        "`Failed to reach PastyLus! Sending as document...`"
+                        "`Failed to reach PastyLus! Sending as document...`",
+                        del_in=5
                     )
                     await message.client.send_document(
                         chat_id=message.chat.id,
