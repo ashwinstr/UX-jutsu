@@ -67,7 +67,7 @@ async def check_logs(message: Message):
                         )
                         await message.edit(reply_text, disable_web_page_preview=True)
                         pasty_ = True
-                    except BaseException:
+                    except BaseException as e:
                         await CHANNEL.log(e)
                         pasty_ = False
                 if resp.status != 201 or not pasty_:
