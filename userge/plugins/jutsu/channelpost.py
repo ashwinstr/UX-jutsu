@@ -1,7 +1,8 @@
 # made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
 
 
-from userge import userge, Message
+from userge import Message, userge
+
 
 @userge.on_cmd(
     "post",
@@ -22,7 +23,6 @@ async def post_(message: Message):
         chat_ = await userge.get_chat(chat_)
     except (TypeError, ValueError):
         return await message.edit("`Invalid link provided...`")
-
 
     await userge.copy_message(chat_.id, message.chat.id, reply_.message_id)
     await message.edit(f"**Posted in** `{chat.title}`**!**")
