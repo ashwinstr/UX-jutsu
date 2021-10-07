@@ -24,5 +24,9 @@ async def post_(message: Message):
     except (TypeError, ValueError):
         return await message.edit("`Invalid link provided...`")
 
+    if chat_.type == "private":
+        title_ = " ".join([chat_.first_name, chat_.last_name or ""])
+    else:
+        title_ = chat_.title
     await userge.copy_message(chat_.id, message.chat.id, reply_.message_id)
-    await message.edit(f"**Posted in** `{chat_.title}`**!**")
+    await message.edit(f"**Posted in** `{title_}`**!**")
