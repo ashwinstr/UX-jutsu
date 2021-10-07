@@ -65,9 +65,11 @@ async def check_logs(message: Message):
                         )
                         await message.edit(reply_text, disable_web_page_preview=True)
                         pasty_ = True
-                    except BaseException:
+                    except BaseException as e:
+                        error_ = f"{e}\n`PastyLus failed, uploading logs as file.`"
+                        await message.edit(error_)
                         pasty_ = False
-                elif resp.status != 201 or not pasty_:
+                if resp.status != 201 or not pasty_:
                     await message.edit("Failed to reach PastyLus !")
                     await message.client.send_document(
                         chat_id=message.chat.id,
