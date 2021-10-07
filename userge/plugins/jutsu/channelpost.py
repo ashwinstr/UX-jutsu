@@ -26,7 +26,9 @@ async def post_(message: Message):
 
     if chat_.type == "private":
         title_ = " ".join([chat_.first_name, chat_.last_name or ""])
+        verb_ = "Sent to"
     else:
         title_ = chat_.title
+        verb_ = "Posted in"
     await userge.copy_message(chat_.id, message.chat.id, reply_.message_id)
-    await message.edit(f"**Posted in** `{title_}`**!**")
+    await message.edit(f"**{verb_}** `{title_}`**!**")
