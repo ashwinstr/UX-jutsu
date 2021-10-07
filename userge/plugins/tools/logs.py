@@ -6,8 +6,9 @@
 #
 # All rights reserved.
 
-import aiohttp
 import json
+
+import aiohttp
 
 from userge import Config, Message, logging, pool, userge
 
