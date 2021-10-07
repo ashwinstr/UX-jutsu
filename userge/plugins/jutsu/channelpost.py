@@ -25,4 +25,4 @@ async def post_(message: Message):
         return await message.edit("`Invalid link provided...`")
 
     await userge.copy_message(chat_.id, message.chat.id, reply_.message_id)
-    await message.edit(f"**Posted in** `{chat.title}`**!**")
+    await message.edit(f"**Posted in** `{chat_.title}`**!**")
