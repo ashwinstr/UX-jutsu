@@ -66,10 +66,10 @@ async def check_logs(message: Message):
                         await message.edit(reply_text, disable_web_page_preview=True)
                         pasty_ = True
                     except BaseException as e:
-                        await userge.send_message(Config.LOG_CHANNEL_ID, f"`{e}`")
+                        await userge.send_message(Config.LOG_CHANNEL_ID, f"Failed to load <b>logs</b> in PastyLus,\n<b>ERROR</b>:`{e}`")
                         pasty_ = False
                 if resp.status != 201 or not pasty_:
-                    await message.edit("Failed to reach PastyLus !")
+                    await message.edit("`Failed to reach PastyLus! Sending as document...`")
                     await message.client.send_document(
                         chat_id=message.chat.id,
                         document="logs/userge.log",
