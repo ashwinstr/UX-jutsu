@@ -65,7 +65,7 @@ async def check_logs(message: Message):
                         )
                         await message.edit(reply_text, disable_web_page_preview=True)
                         pasty_ = True
-                    except:
+                    except BaseException:
                         pasty_ = False
                 elif resp.status != 201 or not pasty_:
                     await message.edit("Failed to reach PastyLus !")
