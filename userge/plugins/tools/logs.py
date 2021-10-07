@@ -53,17 +53,21 @@ async def check_logs(message: Message):
                 PASTY_URL + "api/v2/pastes/", json={"content": text}
             ) as resp:
                 if resp.status == 201:
-                    response = await resp.json()
-                    key = response["result"]["key"]
-                    file_ext = ".txt"
-                    final_url = PASTY_URL + key + file_ext
-                    final_url_raw = f"{PASTY_URL}raw/{key}{file_ext}"
-                    reply_text = "**Here Are Your Logs** :\n"
-                    reply_text += (
-                        f"• [NEKO]({final_url})            • [RAW]({final_url_raw})"
-                    )
-                    await message.edit(reply_text, disable_web_page_preview=True)
-                else:
+                    try:
+                        response = await resp.json()
+                        key = response["result"]["key"]
+                        file_ext = ".txt"
+                        final_url = PASTY_URL + key + file_ext
+                        final_url_raw = f"{PASTY_URL}raw/{key}{file_ext}"
+                        reply_text = "**Here Are Your Logs** :\n"
+                        reply_text += (
+                            f"• [NEKO]({final_url})            • [RAW]({final_url_raw})"
+                        )
+                        await message.edit(reply_text, disable_web_page_preview=True)
+                        pasty_ = True
+                    except:
+                        pasty_ = False
+                elif resp.status != 201 or not pasty_:
                     await message.edit("Failed to reach PastyLus !")
                     await message.client.send_document(
                         chat_id=message.chat.id,
