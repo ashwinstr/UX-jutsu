@@ -1,7 +1,6 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
 
-from pyrogram.error import UserNotParticipant
 from pyrogram.raw.functions.account import ReportPeer
 from pyrogram.raw.types import (
     InputPeerUserFromMessage,
