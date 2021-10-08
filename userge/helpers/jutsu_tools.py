@@ -165,6 +165,8 @@ async def admin_chats(user_id: int) -> dict:
                 is_admin = check['is_admin']
                 is_creator = check['is_creator']
             except UserNotParticipant:
+                is_admin = False
+                is_creator = False
                 pass
             chat_ = dialog.chat
             if is_admin or is_creator:
