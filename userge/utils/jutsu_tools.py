@@ -24,7 +24,7 @@ def capitaled(query: str):
 
 # to report for spam or pornographic content
 def report_user(chat: int, user_id: int, msg: dict, msg_id: int, reason: str):
-    if ("nsfw" or "porn") in reason:
+    if ("nsfw" or "NSFW" or "porn") in reason:
         reason_ = InputReportReasonPornography()
         for_ = "pornographic message"
     else:
