@@ -151,7 +151,7 @@ async def admin_or_creator(chat_id: int, user_id: int) -> dict:
     return json_
 
 
-async def admin_groups(user_id: int) -> dict:
+async def admin_chats(user_id: int) -> dict:
     list_ = []
     try:
         user_ = await userge.get_users(user_id)
