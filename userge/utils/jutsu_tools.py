@@ -7,6 +7,7 @@ from pyrogram.raw.types import (
     InputReportReasonPornography,
     InputReportReasonSpam,
 )
+from userge import userge
 
 
 # capitalise
