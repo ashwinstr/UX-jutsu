@@ -8,7 +8,7 @@ import os
 
 from userge import Config, Message, userge
 from userge.utils import post_to_telegraph as pt
-from userge.utils import time_date_diff
+from userge.helpers import time_date_diff
 
 FOOTBALL_API = os.environ.get("FOOTBALL_API")
 FOOTBALL_UTC_TIME = os.environ.get("FOOTBALL_UTC_TIME")
