@@ -3,6 +3,8 @@
 
 from userge import Message, userge
 
+CHANNEL = userge.getCLogger(__name__)
+
 
 @userge.on_cmd(
     "post",
@@ -31,4 +33,7 @@ async def post_(message: Message):
         title_ = chat_.title
         verb_ = "Posted in"
     await userge.copy_message(chat_.id, message.chat.id, reply_.message_id)
-    await message.edit(f"**{verb_}** `{title_}`**!**")
+    out_ = f"**{verb_}** `{title_}`**!**"
+    out_c = f"**{verb_}** `{title_}` (`{chat_.id}`)**!**"
+    await message.edit(out_)
+    await CHANNEL.log(out_c)
