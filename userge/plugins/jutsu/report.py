@@ -3,7 +3,7 @@
 
 
 from userge import Config, Message, userge
-from userge.utils import report_user
+from userge.helpers import report_user
 
 CHANNEL = userge.getCLogger(__name__)
 
