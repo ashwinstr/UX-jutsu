@@ -8,8 +8,6 @@ from pyrogram.raw.types import (
     InputReportReasonSpam,
 )
 
-from userge import userge
-
 
 # capitalise
 def capitaled(query: str):
@@ -141,4 +139,3 @@ def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, dif
         return json_
     except Exception as e:
         return e
-
