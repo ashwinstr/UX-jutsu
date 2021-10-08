@@ -6,7 +6,7 @@ from asyncio import gather
 from pyrogram import filters
 
 from userge import Config, Message, userge
-from userge.utils import capitaled
+from userge.helpers import capitaled
 
 
 @userge.on_cmd(
