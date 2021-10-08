@@ -34,6 +34,6 @@ async def post_(message: Message):
         verb_ = "Posted in"
     await userge.copy_message(chat_.id, message.chat.id, reply_.message_id)
     out_ = f"**{verb_}** `{title_}`**!**"
-    out_c = f"**{verb_}** `{title_}` (`{chat_.id}`)**!**"
+    out_c = f"**{verb_}** `{title_}` (`{chat_.id}`)"
     await message.edit(out_)
     await CHANNEL.log(out_c)
