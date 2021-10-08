@@ -19,7 +19,6 @@ from .tools import (
     get_file_id,
     humanbytes,
     parse_buttons,
-    post_to_telegraph,
     runcmd,
     safe_filename,
     sublists,
