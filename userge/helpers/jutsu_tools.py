@@ -1,6 +1,7 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
 
+from pyrogram.error import UserNotParticipant
 from pyrogram.raw.functions.account import ReportPeer
 from pyrogram.raw.types import (
     InputPeerUserFromMessage,
@@ -142,9 +143,38 @@ def time_date_diff(year: int, month: int, date: int, hour: int, minute: int, dif
         return e
 
     
-async def admin_or_creator(chat_id: int, user_id: int) -> bool:
+async def admin_or_creator(chat_id: int, user_id: int) -> dict:
     check_status = await userge.get_chat_member(chat_id, user_id)
     admin_ = True if check_status.status == "administrator" else False
     creator_ = True if check_status.status == "creator" else False
     json_ = {"is_admin": admin_, "is_creator": creator_}
     return json_
+
+
+async def admin_groups(user_id: int) -> dict:
+    list_ = []
+    try:
+        user_ = await userge.get_users(user_id)
+    except:
+        raise
+        return
+    async for dialog in userge.iter_dialogs():
+        if dialog.chat.type in ["group", "supergroup", "channel"]:
+            try:
+                check = await admin_or_creator(dialog.chat.id, user_.id)
+                is_admin = check['is_admin']
+                is_creator = check['is_creator']
+            except UserNotParticipant:
+                pass
+            chat_ = dialog.chat
+            if is_admin or is_creator:
+                list_.append(
+                    {
+                        "chat_name": chat_.title,
+                        "chat_id": chat_.id,
+                        "chat_username": chat_.username,
+                        "admin": is_admin,
+                        "creator": is_creator,
+                    }
+                )
+    return list_
