@@ -5,7 +5,7 @@ import os
 import lyricsgenius
 
 from userge import Message, userge
-from userge.utils import capitaled, post_to_telegraph
+from userge.helpers import capitaled, post_to_telegraph
 
 GENIUS = os.environ.get("GENIUS")
 
