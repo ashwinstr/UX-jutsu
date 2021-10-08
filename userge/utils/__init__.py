@@ -12,7 +12,6 @@ from .functions import (
     rand_key,
     thumb_from_audio,
 )
-from .jutsu_tools import capitaled, report_user, time_date_diff
 from .progress import progress
 from .sys_tools import SafeDict, get_import_path, secure_text, terminate
 from .tools import (
