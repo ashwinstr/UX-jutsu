@@ -1,8 +1,10 @@
 # this plugin is made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
 
 import asyncio
-from pyrogram.errors import FloodWait, UserNotParticipant, ChatAdminRequired
-from userge import userge, Message
+
+from pyrogram.errors import ChatAdminRequired, FloodWait, UserNotParticipant
+
+from userge import Message, userge
 from userge.helpers import admin_chats
 
 CHANNEL = userge.getCLogger(__name__)
@@ -13,7 +15,7 @@ CHANNEL = userge.getCLogger(__name__)
     about={
         "header": "global promote",
         "description": "promote in every chat you're admin in",
-        "usage": "{tr}gpromote [reply to user or user id]"
+        "usage": "{tr}gpromote [reply to user or user id]",
     },
 )
 async def g_promote_(message: Message):
@@ -23,26 +25,26 @@ async def g_promote_(message: Message):
     if reply_:
         user_ = reply_.from_user.id
         if input_:
-            rank = input_
+            pass
         else:
-            rank = "Admin"
+            pass
     else:
         try:
             userandrank = input_.split()
             user_ = userandrank[0]
             try:
-                rank = userandrank[1]
-            except:
-                rank = "Admin"
-        except:
+                userandrank[1]
+            except BaseException:
+                pass
+        except BaseException:
             await message.edit("`Provide a user ID or reply to targeted user...`")
             return
     try:
         user_ = await userge.get_users(user_)
-    except:
+    except BaseException:
         await message.edit(f"The target `{user_}` is not a user...", del_in=5)
         return
-    
+
     user_name = " ".join([user_.first_name, user_.last_name or ""])
     await message.edit(f"Promoting <b>{user_name}</b> globally...")
     me_ = await userge.get_me()
@@ -51,9 +53,9 @@ async def g_promote_(message: Message):
     chat_suc = ""
     for chat in adm_chats:
         try:
-            get_mem = await userge.get_chat_member(chat['chat_id'], user_.id)
+            await userge.get_chat_member(chat["chat_id"], user_.id)
             await userge.promote_chat_member(
-                chat['chat_id'],
+                chat["chat_id"],
                 user_.id,
                 can_change_info=True,
                 can_delete_messages=True,
