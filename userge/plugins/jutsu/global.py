@@ -78,6 +78,6 @@ async def g_promote_(message: Message):
         "#G_PROMOTED\n"
         f"<b>USER:</b> [{user_name}](tg://user?id={user_.id}) <b>ID:</b> `{user_.id}`\n"
         f"<b>IN:</b> {passed} chats as shown below...\n\n"
-        f"{chat_suc}""
+        f"{chat_suc}"
     )
     await CHANNEL.log(log_)
