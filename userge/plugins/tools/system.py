@@ -22,6 +22,7 @@ from userge.utils import runcmd, terminate
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 DISABLED_CHATS = get_collection("DISABLED_CHATS")
+FROZEN = get_collection("FROZEN")
 
 MAX_IDLE_TIME = 300
 LOG = userge.getLogger(__name__)
@@ -83,6 +84,7 @@ async def restart_(message: Message):
             time.sleep(30)
         else:
             await message.edit("`Restarting [HARD] ...`", del_in=1)
+            await FROZEN.drop()
             asyncio.get_event_loop().create_task(userge.restart(hard=True))
     else:
         await message.edit("`Restarting [SOFT] ...`", del_in=1)
