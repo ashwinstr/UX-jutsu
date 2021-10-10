@@ -5,7 +5,7 @@ from time import time
 from git import Repo
 from git.exc import GitCommandError
 
-from userge import Config, Message, pool, userge, get_collection
+from userge import Config, Message, get_collection, pool, userge
 from userge.utils import runcmd
 
 LOG = userge.getLogger(__name__)
