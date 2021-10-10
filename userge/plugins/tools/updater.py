@@ -5,11 +5,13 @@ from time import time
 from git import Repo
 from git.exc import GitCommandError
 
-from userge import Config, Message, pool, userge
+from userge import Config, Message, pool, userge, get_collection
 from userge.utils import runcmd
 
 LOG = userge.getLogger(__name__)
 CHANNEL = userge.getCLogger(__name__)
+
+FROZEN = get_collection("FROZEN")
 
 
 async def _init():
@@ -152,6 +154,7 @@ def _get_updates_pr(git_u_n: str, branch: str) -> str:
 
 
 async def _pull_from_repo(repo: Repo, branch: str) -> None:
+    await FROZEN.drop()
     repo.git.checkout(branch, force=True)
     repo.git.reset("--hard", branch)
     repo.remote(Config.UPSTREAM_REMOTE).pull(branch, force=True)
