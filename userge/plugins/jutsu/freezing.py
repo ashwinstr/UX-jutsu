@@ -3,8 +3,8 @@
 
 import asyncio
 import os
-from userge import userge, Message, Config, get_collection
 
+from userge import Message, get_collection, userge
 
 FROZEN = get_collection("FROZEN")
 
@@ -34,28 +34,33 @@ async def freezer_(message: Message):
         return
     found = await FROZEN.find_one({"plug_name": plugin_name})
     if found:
-        await message.edit(f"The plugin <b>[{plugin_name}]</b> is already frozen.", del_in=5)
+        await message.edit(
+            f"The plugin <b>[{plugin_name}]</b> is already frozen.", del_in=5
+        )
         return
     if os.path.exists(old_):
         os.rename(old_, new_)
-        await FROZEN.insert_one(
-            {
-                "plug_name": plugin_name,
-                "plug_loc": new_
-            }
+        await FROZEN.insert_one({"plug_name": plugin_name, "plug_loc": new_})
+        await message.edit(
+            f"Plugin <b>{plugin_name}</b> got frozen temporarily.\n<b>Bot restarting...</b>"
         )
-        await message.edit(f"Plugin <b>{plugin_name}</b> got frozen temporarily.\n<b>Bot restarting...</b>")
-        await CHANNEL.log(f"Plugin <b>{plugin_name}</b> got frozen temporarily.\n<b>Bot restarting...</b>")
+        await CHANNEL.log(
+            f"Plugin <b>{plugin_name}</b> got frozen temporarily.\n<b>Bot restarting...</b>"
+        )
         asyncio.get_event_loop().create_task(userge.restart())
     else:
-        await message.edit(f"`The given plugin {plugin_name} doesn't exist...`", del_in=5)
+        await message.edit(
+            f"`The given plugin {plugin_name} doesn't exist...`", del_in=5
+        )
 
 
 @userge.on_cmd(
     "defreeze",
     about={
         "header": "re-enable frozen plugin",
-        "flags": {"-all": "re-enable all frozen plugins",},
+        "flags": {
+            "-all": "re-enable all frozen plugins",
+        },
         "usage": "{tr}defreeze [plugin name]",
     },
 )
@@ -63,7 +68,7 @@ async def defreezer_(message: Message):
     """re-enable frozen plugin"""
     if "-all" in message.flags:
         async for plug in FROZEN.find():
-            old_ = plug['plug_name']
+            old_ = plug["plug_name"]
             new_ = f"{old_}.py"
             os.rename(old_, new_)
         await FROZEN.drop()
@@ -77,16 +82,22 @@ async def defreezer_(message: Message):
         return
     found = await FROZEN.find_one({"plug_name": plugin_name})
     if found:
-        old_ = found['plug_loc']
+        old_ = found["plug_loc"]
         new_ = f"{old_}.py"
         try:
             os.rename(old_, new_)
-        except:
-            await message.edit(f"The plugin <b>{plugin_name}</b> is already re-enabled.", del_in=5)
+        except BaseException:
+            await message.edit(
+                f"The plugin <b>{plugin_name}</b> is already re-enabled.", del_in=5
+            )
             return
         await FROZEN.delete_one(found)
-        await message.edit(f"Plugin <b>{plugin_name}</b> got defrozen.\n<b>Bot restarting...</b>")
-        await CHANNEL.log(f"Plugin <b>{plugin_name}</b> got defrozen.\n<b>Bot restarting...</b>")
+        await message.edit(
+            f"Plugin <b>{plugin_name}</b> got defrozen.\n<b>Bot restarting...</b>"
+        )
+        await CHANNEL.log(
+            f"Plugin <b>{plugin_name}</b> got defrozen.\n<b>Bot restarting...</b>"
+        )
         asyncio.get_event_loop().create_task(userge.restart())
     else:
         await message.edit(f"`The plugin {plugin_name} is not frozen...`", del_in=5)
@@ -105,7 +116,7 @@ async def frozen_(message: Message):
     total = 0
     async for plug in FROZEN.find():
         total += 1
-        plugin = plug['plug_name']
+        plugin = plug["plug_name"]
         list_ += f"• [{total}] `{plugin}`\n"
     list_ = list_.format(total)
     await message.edit(list_)
