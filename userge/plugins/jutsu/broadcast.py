@@ -108,7 +108,7 @@ async def del_post(message: Message):
         msg_ = (
             "### <b>DELETING ALL CHATS FROM POST LIST</b> ###\n\n"
             "For confirmation of deleting all chats from POST LIST,\n"
-            "please reply with `Yes, delete all chats in list for posting.` <b>within 10 seconds</b>."
+            "please reply with '`Yes, delete all chats in list for posting.`' <b>within 10 seconds</b>."
         )
         await message.edit(msg_)
         me_ = await userge.get_me()
@@ -117,16 +117,16 @@ async def del_post(message: Message):
                 response = await conv.get_response(
                     mark_read=True, filters=(filters.user(me_.id))
                 )
-                resp = response.text
-                if resp == "Yes, delete all chats in list for posting.":
-                    await POST_LIST.drop()
-                    del_ = "Deleted whole <b>POST LIST</b> successfully."
-                    await message.edit(del_)
-                    await CHANNEL.log(del_)
-                    return
         except BaseException:
             msg_ += "\n\n### Process cancelled as no response given. ###"
             await message.edit(msg_)
+            return
+        resp = response.text
+        if resp == "Yes, delete all chats in list for posting.":
+            await POST_LIST.drop()
+            del_ = "Deleted whole <b>POST LIST</b> successfully."
+            await message.edit(del_)
+            await CHANNEL.log(del_)
             return
 
     chat_ = message.input_str
