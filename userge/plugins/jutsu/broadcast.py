@@ -108,24 +108,26 @@ async def del_post(message: Message):
         msg_ = (
             "### <b>DELETING ALL CHATS FROM POST LIST</b> ###\n\n"
             "For confirmation of deleting all chats from POST LIST,\n"
-            "please reply with `Yes, delete all chats in list for posting.` <b>within 10 seconds</b>."
+            "please reply with '`Yes, delete all chats in list for posting.`' <b>within 10 seconds</b>."
         )
         await message.edit(msg_)
+        me_ = await userge.get_me()
         try:
-            async with userge.conversation(message.chat.id, timeout=10) as conv:
+            async with userge.conversation(message.chat.id) as conv:
                 response = await conv.get_response(
                     mark_read=True, filters=(filters.user(me_.id))
                 )
-                resp = response.text
-                if resp == "Yes, delete all chats in list for posting.":
-                    await POST_LIST.drop()
-                    del_ = "Deleted whole <b>POST LIST</b> successfully."
-                    await message.edit(del_)
-                    await CHANNEL.log(del_)
-                    return
         except BaseException:
             msg_ += "\n\n### Process cancelled as no response given. ###"
             await message.edit(msg_)
+            return
+        resp = response.text
+        if resp == "Yes, delete all chats in list for posting.":
+            await POST_LIST.drop()
+            await resp.delete()
+            del_ = "Deleted whole <b>POST LIST</b> successfully."
+            await message.edit(del_)
+            await CHANNEL.log(del_)
             return
 
     chat_ = message.input_str
@@ -240,13 +242,13 @@ async def post_(message: Message):
         await userge.copy_message(
             chat_.id, message.chat.id, reply_.message_id, reply_to_message_id=broad_id
         )
-        if chat_.type == "private":
+        if chat_.type in ["private", "bot"]:
             chat_name = " ".join([chat_.first_name, chat_.last_name or ""])
         else:
             chat_name = chat_.title
         await message.edit(f"Broadcasted a message to <b>{chat_name}</b> successfully.")
         await CHANNEL.log(
-            f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id} `) successfully."
+            f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id}`) successfully."
         )
         return
     total = 0

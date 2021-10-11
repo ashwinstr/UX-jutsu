@@ -435,7 +435,11 @@ async def fban_m(message: Message):
         ):
             cant += 1
             continue
-        await mass_fban(user, reason)
+        fail = 0
+        try:
+            await mass_fban(user, reason)
+        except:
+            fail += 1
         ban += 1
         prog = user_n / len(input) * 100
         prog_1, prog_2 = True, True
