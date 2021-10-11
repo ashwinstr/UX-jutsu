@@ -11,7 +11,15 @@ from userge import Message, userge
 )
 async def botz(message: Message):
     """Check the bots present in group."""
-    chat = message.chat.id
+    chat = message.input_str
+    if not chat:
+        chat = message.chat.id
+    try:
+        chat_ = await userge.get_chat(chat)
+        chat = chat_.id
+    except:
+        await message.edit("`Provide a valid chat as input...`", del_in=5)
+        return
     admin_b = []
     member_b = []
     total = 0
