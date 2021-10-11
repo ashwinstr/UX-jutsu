@@ -17,7 +17,9 @@ async def botz(message: Message):
     try:
         chat_ = await userge.get_chat(chat)
         if chat_.type == "private":
-            await message.edit("`You can't use this command for private chats...`", del_in=5)
+            await message.edit(
+                "`You can't use this command for private chats...`", del_in=5
+            )
             return
         chat = chat_.id
     except BaseException:
