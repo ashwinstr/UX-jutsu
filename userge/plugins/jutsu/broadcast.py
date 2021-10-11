@@ -2,9 +2,11 @@
 
 
 import asyncio
+
 from pyrogram import filters
 from pyrogram.errors import FloodWait
-from userge import Message, userge, get_collection, Config
+
+from userge import Config, Message, get_collection, userge
 from userge.utils import post_to_telegraph as pt
 
 POST_LIST = get_collection("POST_LIST")
@@ -17,7 +19,7 @@ BROAD_TAGGING = False
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "BROAD_TAG"})
     if data:
-        BROAD_TAGGING = bool(data['is_active'])
+        bool(data["is_active"])
 
 
 @userge.on_cmd(
@@ -27,7 +29,7 @@ async def _init() -> None:
         "flags": {
             "-c": "check toggle",
         },
-        "usage": "{tr}broad_tog"
+        "usage": "{tr}broad_tog",
     },
 )
 async def broad_toggle_(message: Message):
@@ -67,7 +69,7 @@ async def add_post(message: Message):
         chat_ = message.chat.id
     try:
         chat_ = await userge.get_chat(chat_)
-    except:
+    except BaseException:
         await message.edit(f"Provided input ({chat_}) is not a chat...", del_in=5)
         return
     chat_type = chat_.type
@@ -80,7 +82,9 @@ async def add_post(message: Message):
     if found:
         await message.edit(f"Chat <b>{chat_name}</b> is already in list.", del_in=5)
         return
-    await POST_LIST.insert_one({"chat_name": chat_name, "chat_id": chat_id, "chat_type": chat_type})
+    await POST_LIST.insert_one(
+        {"chat_name": chat_name, "chat_id": chat_id, "chat_type": chat_type}
+    )
     msg_ = f"Successfully added <b>{chat_name}</b> (`{chat_id}`) in POST LIST."
     await message.edit(msg_)
     await CHANNEL.log(msg_)
@@ -90,7 +94,9 @@ async def add_post(message: Message):
     "delp",
     about={
         "header": "delete chat from POST LIST",
-        "flags": {"-all": "delete all chats from list",},
+        "flags": {
+            "-all": "delete all chats from list",
+        },
         "usage": "{tr}delp [chat username or id (optional)]",
     },
     allow_bots=False,
@@ -117,7 +123,7 @@ async def del_post(message: Message):
                     await message.edit(del_)
                     await CHANNEL.log(del_)
                     return
-        except:
+        except BaseException:
             msg_ += "\n\n### Process cancelled as no response given. ###"
             await message.edit(msg_)
             return
@@ -127,7 +133,7 @@ async def del_post(message: Message):
         chat_ = message.chat.id
     try:
         chat_ = await userge.get_chat(chat_)
-    except:
+    except BaseException:
         await message.edit(f"Provided input ({chat_}) is not a chat...", del_in=5)
         return
     chat_id = chat_.id
@@ -146,7 +152,9 @@ async def del_post(message: Message):
     "listp",
     about={
         "header": "list chats in POST LIST",
-        "flags": {"-id": "list chat IDs as well",},
+        "flags": {
+            "-id": "list chat IDs as well",
+        },
         "usage": "{tr}listp",
     },
     allow_bots=False,
@@ -162,9 +170,9 @@ async def list_post(message: Message):
     p_total = 0
     out_ = "List of chats in <b>POST LIST</b>: [{}]\n\n"
     async for chat_ in POST_LIST.find():
-        chat_id = chat_['chat_id']
-        chat_name = chat_['chat_name']
-        type_ = chat_['chat_type']
+        chat_id = chat_["chat_id"]
+        chat_name = chat_["chat_name"]
+        type_ = chat_["chat_type"]
         id_ = f"'`{chat_id}`' - " if "-id" in message.flags else ""
         if type_ == "supergroup":
             s_total += 1
@@ -189,7 +197,9 @@ async def list_post(message: Message):
         await message.edit(out_)
     else:
         link_ = pt("List of chats in POST LIST.", out_)
-        await message.edit(f"List of chats in POST LIST is <a href='{link_}'><b>HERE</b></a>.")
+        await message.edit(
+            f"List of chats in POST LIST is <a href='{link_}'><b>HERE</b></a>."
+        )
 
 
 @userge.on_cmd(
@@ -199,7 +209,7 @@ async def list_post(message: Message):
         "flags": {
             "-all": "send to all chats in list",
             "-grp": "send to all groups in list",
-            "-pvt": "send to all private chats in list"
+            "-pvt": "send to all private chats in list",
         },
         "usage": "{tr}post [flag] [reply to message]",
     },
@@ -216,50 +226,76 @@ async def post_(message: Message):
             target = int(target)
         try:
             chat_ = await userge.get_chat(target)
-        except:
-            await message.edit(f"Given target <b>{target}</b> is not valid, see `{Config.CMD_TRIGGER}help post` for help...", del_in=5)
+        except BaseException:
+            await message.edit(
+                f"Given target <b>{target}</b> is not valid, see `{Config.CMD_TRIGGER}help post` for help...",
+                del_in=5,
+            )
             return
         if BROAD_TAGGING:
             broad = await userge.send_message(chat_.id, "#BROADCAST")
             broad_id = broad.message_id
         else:
-            broad_id = None 
-        await userge.copy_message(chat_.id, message.chat.id, reply_.message_id, reply_to_message_id=broad_id)
+            broad_id = None
+        await userge.copy_message(
+            chat_.id, message.chat.id, reply_.message_id, reply_to_message_id=broad_id
+        )
         if chat_.type == "private":
             chat_name = " ".join([chat_.first_name, chat_.last_name or ""])
         else:
             chat_name = chat_.title
         await message.edit(f"Broadcasted a message to <b>{chat_name}</b> successfully.")
-        await CHANNEL.log(f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id} `) successfully.")
+        await CHANNEL.log(
+            f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id} `) successfully."
+        )
         return
     total = 0
     try:
         async for chats_ in POST_LIST.find():
             if "-all" in flags:
                 if BROAD_TAGGING:
-                    broad = await userge.send_message(chats_['chat_id'], "#BROADCAST")
+                    broad = await userge.send_message(chats_["chat_id"], "#BROADCAST")
                     broad_id = broad.message_id
                 else:
                     broad_id = None
-                await userge.copy_message(chats_['chat_id'], message.chat.id, reply_.message_id, reply_to_message_id=broad_id)
+                await userge.copy_message(
+                    chats_["chat_id"],
+                    message.chat.id,
+                    reply_.message_id,
+                    reply_to_message_id=broad_id,
+                )
                 total += 1
             elif "-grp" in flags:
-                if chats_['chat_type'] in ['group', 'supergroup']:
+                if chats_["chat_type"] in ["group", "supergroup"]:
                     if BROAD_TAGGING:
-                        broad = await userge.send_message(chats_['chat_id'], "#BROADCAST")
+                        broad = await userge.send_message(
+                            chats_["chat_id"], "#BROADCAST"
+                        )
                         broad_id = broad.message_id
                     else:
                         broad_id = None
-                    await userge.copy_message(chats_['chat_id'], message.chat.id, reply_.message_id, reply_to_message_id=broad_id)
+                    await userge.copy_message(
+                        chats_["chat_id"],
+                        message.chat.id,
+                        reply_.message_id,
+                        reply_to_message_id=broad_id,
+                    )
                     total += 1
             elif "-pvt" in flags:
-                if chats_['chat_type'] == "private":
+                if chats_["chat_type"] == "private":
                     if BROAD_TAGGING:
-                        broad = await userge.send_message(chats_['chat_id'], "#BROADCAST")
+                        broad = await userge.send_message(
+                            chats_["chat_id"], "#BROADCAST"
+                        )
                         broad_id = broad.message_id
                     else:
                         broad_id = None
-                    await userge.copy_message(chats_['chat_id'], message.chat.id, reply_.message_id, reply_to_message_id=broad_id)
+                    await userge.copy_message(
+                        chats_["chat_id"],
+                        message.chat.id,
+                        reply_.message_id,
+                        reply_to_message_id=broad_id,
+                    )
                     total += 1
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
