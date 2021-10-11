@@ -124,6 +124,7 @@ async def del_post(message: Message):
         resp = response.text
         if resp == "Yes, delete all chats in list for posting.":
             await POST_LIST.drop()
+            await resp.delete()
             del_ = "Deleted whole <b>POST LIST</b> successfully."
             await message.edit(del_)
             await CHANNEL.log(del_)
@@ -241,7 +242,7 @@ async def post_(message: Message):
         await userge.copy_message(
             chat_.id, message.chat.id, reply_.message_id, reply_to_message_id=broad_id
         )
-        if chat_.type == "private":
+        if chat_.type in ["private", "bot"]:
             chat_name = " ".join([chat_.first_name, chat_.last_name or ""])
         else:
             chat_name = chat_.title
