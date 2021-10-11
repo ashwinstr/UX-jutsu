@@ -438,7 +438,7 @@ async def fban_m(message: Message):
         fail = 0
         try:
             await mass_fban(user, reason)
-        except:
+        except BaseException:
             fail += 1
         ban += 1
         prog = user_n / len(input) * 100
