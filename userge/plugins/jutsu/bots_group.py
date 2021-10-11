@@ -17,7 +17,7 @@ async def botz(message: Message):
     try:
         chat_ = await userge.get_chat(chat)
         chat = chat_.id
-    except:
+    except BaseException:
         await message.edit("`Provide a valid chat as input...`", del_in=5)
         return
     admin_b = []
