@@ -246,7 +246,7 @@ async def post_(message: Message):
             chat_name = chat_.title
         await message.edit(f"Broadcasted a message to <b>{chat_name}</b> successfully.")
         await CHANNEL.log(
-            f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id} `) successfully."
+            f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id}`) successfully."
         )
         return
     total = 0
