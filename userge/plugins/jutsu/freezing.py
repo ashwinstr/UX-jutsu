@@ -4,7 +4,7 @@
 import asyncio
 import os
 
-from userge import Message, get_collection, userge, Config
+from userge import Config, Message, get_collection, userge
 
 FROZEN = get_collection("FROZEN")
 
@@ -22,12 +22,14 @@ async def freezer_(message: Message):
     """disable plugin temporarily"""
     cmd_name = message.input_str
     if not cmd_name:
-        await message.edit("`Provide a plugin name or command name to disable...`", del_in=5)
+        await message.edit(
+            "`Provide a plugin name or command name to disable...`", del_in=5
+        )
         return
     try:
         cmd_ = f"{Config.CMD_TRIGGER}{cmd_name}"
         plugin_name = userge.manager.commands[cmd_].plugin_name
-    except:
+    except BaseException:
         plugin_name = message.input_str
     try:
         plugin_parent = userge.manager.plugins[plugin_name].parent
