@@ -111,8 +111,9 @@ async def del_post(message: Message):
             "please reply with `Yes, delete all chats in list for posting.` <b>within 10 seconds</b>."
         )
         await message.edit(msg_)
+        me_ = await userge.get_me()
         try:
-            async with userge.conversation(message.chat.id, timeout=10) as conv:
+            async with userge.conversation(message.chat.id) as conv:
                 response = await conv.get_response(
                     mark_read=True, filters=(filters.user(me_.id))
                 )
