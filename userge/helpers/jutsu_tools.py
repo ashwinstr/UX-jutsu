@@ -2,6 +2,7 @@
 
 
 import asyncio
+import time
 from typing import Union
 from pyrogram.errors import UserNotParticipant
 from pyrogram.raw.functions.account import ReportPeer
@@ -185,7 +186,7 @@ async def admin_chats(user_id: int) -> dict:
 
 async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
     await asyncio.sleep(timeout)
-    if filter_user:
+    if filtered_user:
         try:
             user_ = await userge.get_users(filter_user)
         except:
@@ -196,13 +197,15 @@ async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, 
             response = await userge.get_messages(msg.chat.id, msg_id)
         except:
             raise "No response found."
-        if filter_user:
-            if response.from_user.id == user_.id:
-                await userge.send_read_acknowledge(msg.chat.id, response)
+        if response.reply_to_message.message_id == msg.message_id:
+            if filter_user:
+                if response.from_user.id == user_.id:
+                    if mark_read:
+                        await userge.send_read_acknowledge(msg.chat.id, response)
+                    return response
+            else:
+                if mark_read:
+                    await userge.send_read_acknowledge(msg.chat.id, response)
                 return response
-        else:
-            if mark_read:
-                await userge.send_read_acknowledge(msg.chat.id, response)
-            return response
         
     raise "No response found in time limit."
