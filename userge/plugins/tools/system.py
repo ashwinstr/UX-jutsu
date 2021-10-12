@@ -7,7 +7,7 @@
 #
 # All rights reserved.
 
-### additions by @Kakashi_HTK(TG)/@ashwinstr(GH)
+# additions by @Kakashi_HTK(TG)/@ashwinstr(GH)
 
 
 import asyncio
