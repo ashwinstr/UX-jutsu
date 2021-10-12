@@ -84,8 +84,8 @@ async def restart_(message: Message):
             time.sleep(30)
         else:
             await message.edit("`Restarting [HARD] ...`", del_in=1)
-            await FROZEN.drop()
-            asyncio.get_event_loop().create_task(userge.restart(hard=True))
+        await FROZEN.drop()
+        asyncio.get_event_loop().create_task(userge.restart(hard=True))
     else:
         await message.edit("`Restarting [SOFT] ...`", del_in=1)
         asyncio.get_event_loop().create_task(userge.restart())
