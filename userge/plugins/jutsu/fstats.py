@@ -1,5 +1,8 @@
-# made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
+### made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
+### ask before porting plox
 
+
+import asyncio
 from pyrogram.errors import YouBlockedUser
 
 from userge import Message, userge
@@ -34,17 +37,18 @@ async def f_stat(message: Message):
     )
     bot_ = "MissRose_bot"
     try:
-        async with userge.conversation(bot_) as conv:
-            await conv.send_message(f"/fstat {user_id}")
-            response = await conv.get_response(mark_read=True)
+        query_ = await userge.send_message(bot_, f"!fstat {user_id}")
     except YouBlockedUser:
         await message.err("Unblock @missrose_bot first...", del_in=5)
         return
+    await asyncio.sleep(3)
+    response = await userge.get_messages(bot_, (query_.message_id + 1))
+    await userge.send_read_acknowledge(bot_, response)
     fail = "Could not find a user"
     resp = response.text
     if fail in resp:
         await message.edit(
-            f"User <code>{user_name}</code> could not be found in @MissRose_bot's database."
+            f"User <b>{user_name}</b> (<code>{user_id}</code>) could not be found in @MissRose_bot's database."
         )
     else:
         await message.edit(resp.html, parse_mode="html")
