@@ -2,7 +2,6 @@
 
 
 import asyncio
-import time
 from typing import Union
 from pyrogram.errors import UserNotParticipant
 from pyrogram.raw.functions.account import ReportPeer
