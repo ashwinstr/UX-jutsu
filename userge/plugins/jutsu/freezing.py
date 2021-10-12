@@ -4,7 +4,6 @@
 import asyncio
 import os
 
-
 from userge import Config, Message, get_collection, userge
 
 FROZEN = get_collection("FROZEN")
