@@ -66,5 +66,5 @@ async def chat_users_(message: Message):
             if lim == limit_:
                 break
     if len(list_) != 0:
-        await message.reply(list_.format(sr_n))
+        await message.reply(list_.format(sr_n - 1))
     await message.delete()
