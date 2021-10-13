@@ -47,14 +47,14 @@ async def f_stat(message: Message):
     except Exception as e:
         return await message.edit(f"<b>ERROR:</b> `{e}`")
     fail = "Could not find a user"
-    resp = response.text
-    resp = resp.replace("/fbanstat", f"{Config.CMD_TRIGGER}fbanstat")
+    resp = response.text.html
+    resp = resp.replace("/fbanstat", f"`{Config.CMD_TRIGGER}fbanstat`")
     if fail in resp:
         await message.edit(
             f"User <b>{user_name}</b> (<code>{user_id}</code>) could not be found in @MissRose_bot's database."
         )
     else:
-        await message.edit(resp.html, parse_mode="html")
+        await message.edit(resp, parse_mode="html")
 
 
 @userge.on_cmd(

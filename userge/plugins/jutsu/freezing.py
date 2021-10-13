@@ -15,7 +15,7 @@ CHANNEL = userge.getCLogger(__name__)
     "freeze",
     about={
         "header": "disable plugin temporarily",
-        "usage": "{tr}freeze [plugin name]",
+        "usage": "{tr}freeze [plugin name or command name]",
     },
 )
 async def freezer_(message: Message):
@@ -125,5 +125,8 @@ async def frozen_(message: Message):
         total += 1
         plugin = plug["plug_name"]
         list_ += f"• [{total}] `{plugin}`\n"
+    if total == 0:
+        await message.edit("`No plugin is frozen at the moment.`", del_in=5)
+        return
     list_ = list_.format(total)
     await message.edit(list_)
