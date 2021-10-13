@@ -6,5 +6,6 @@ from .jutsu_tools import (
     time_date_diff,
     admin_or_creator,
     admin_chats,
-    get_response
+    get_response,
+    full_name
 )
