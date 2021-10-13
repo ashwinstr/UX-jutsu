@@ -6,7 +6,8 @@ import asyncio
 
 from pyrogram.errors import YouBlockedUser
 
-from userge import Message, userge
+from userge import Message, userge, Config
+from userge.helpers import get_response as gr
 
 
 @userge.on_cmd(
@@ -42,11 +43,13 @@ async def f_stat(message: Message):
     except YouBlockedUser:
         await message.err("Unblock @missrose_bot first...", del_in=5)
         return
-    await asyncio.sleep(3)
-    response = await userge.get_messages(bot_, (query_.message_id + 1))
-    await userge.send_read_acknowledge(bot_, response)
+    try:
+        response = await gr(query_, timeout=4, mark_read=True)
+    except Exception as e:
+        return await message.edit(f"<b>ERROR:</b> `{e}`")
     fail = "Could not find a user"
     resp = response.text
+    resp = resp.replace("/fbanstat", f"{Config.CMD_TRIGGER}fbanstat")
     if fail in resp:
         await message.edit(
             f"User <b>{user_name}</b> (<code>{user_id}</code>) could not be found in @MissRose_bot's database."
