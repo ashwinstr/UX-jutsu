@@ -208,3 +208,11 @@ async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, 
                 return response
         
     raise "No response found in time limit."
+
+
+def full_name(user: dict):
+    try:
+        f_name = " ".join([user.first_name, user.last_name or ""])
+    except:
+        raise
+    return f_name
