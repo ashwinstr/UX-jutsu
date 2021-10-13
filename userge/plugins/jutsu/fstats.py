@@ -2,11 +2,9 @@
 # ask before porting plox
 
 
-import asyncio
-
 from pyrogram.errors import YouBlockedUser
 
-from userge import Message, userge, Config
+from userge import Config, Message, userge
 from userge.helpers import get_response as gr
 
 
