@@ -2,13 +2,11 @@
 # ask before porting plox
 
 
-import asyncio
-
 from pyrogram.errors import YouBlockedUser
 
-from userge import Message, userge, Config
-from userge.helpers import get_response as gr
+from userge import Config, Message, userge
 from userge.helpers import full_name
+from userge.helpers import get_response as gr
 
 
 @userge.on_cmd(
@@ -63,7 +61,7 @@ async def f_stat(message: Message):
     "fbanstat",
     about={
         "header": "check fedban details",
-        "usage": "{tr}fbanstat [user ID or reply to user] [fed ID]"
+        "usage": "{tr}fbanstat [user ID or reply to user] [fed ID]",
     },
 )
 async def fban_stat(message: Message):
@@ -86,8 +84,10 @@ async def fban_stat(message: Message):
         fed_id = split[0]
     try:
         user_ = await userge.get_users(user)
-    except:
-        await message.edit(f"<b>ERROR:</b> The given user `{user}` is not valid...", del_in=5)
+    except BaseException:
+        await message.edit(
+            f"<b>ERROR:</b> The given user `{user}` is not valid...", del_in=5
+        )
         return
     await message.edit("`Fetching fban stats...`")
     user_id = user_.id
