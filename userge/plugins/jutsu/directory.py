@@ -2,7 +2,8 @@
 
 
 from pyrogram import errors as e
-from userge import userge, Message, Config
+
+from userge import Message, userge
 from userge.utils import post_to_telegraph as pt
 
 
