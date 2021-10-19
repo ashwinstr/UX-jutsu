@@ -1,4 +1,5 @@
-# made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
+# plugin made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
+# before porting please ask to Kakashi
 
 
 import asyncio
@@ -7,6 +8,7 @@ from pyrogram import filters
 from pyrogram.errors import FloodWait
 
 from userge import Config, Message, get_collection, userge
+from userge.helpers import full_name
 from userge.utils import post_to_telegraph as pt
 
 POST_LIST = get_collection("POST_LIST")
@@ -40,14 +42,14 @@ async def broad_toggle_(message: Message):
             tog = "enabled"
         else:
             tog = "disabled"
-        await message.edit(f"Broadcast tag is <b>{tog}</b>.", del_in=3)
+        await message.edit(f"`Broadcast tag is `<b>{tog}</b>`.`", del_in=3)
         return
     if BROAD_TAGGING:
         BROAD_TAGGING = False
-        await message.edit("Broadcast tag is now disabled.", del_in=3)
+        await message.edit("`Broadcast tag is now disabled.`", del_in=3)
     else:
         BROAD_TAGGING = True
-        await message.edit("Broadcast tag is now enabled.", del_in=3)
+        await message.edit("`Broadcast tag is now enabled.`", del_in=3)
     await SAVED_SETTINGS.update_one(
         {"_id": "BROAD_TAG"}, {"$set": {"is_active": BROAD_TAGGING}}
     )
@@ -70,17 +72,17 @@ async def add_post(message: Message):
     try:
         chat_ = await userge.get_chat(chat_)
     except BaseException:
-        await message.edit(f"Provided input ({chat_}) is not a chat...", del_in=5)
+        await message.edit(f"`Provided input ({chat_}) is not a chat...`", del_in=5)
         return
     chat_type = chat_.type
     if chat_type == "private":
-        chat_name = " ".join([chat_.first_name, chat_.last_name or ""])
+        chat_name = full_name(chat_)
     else:
         chat_name = chat_.title
     chat_id = chat_.id
     found = await POST_LIST.find_one({"chat_id": chat_id})
     if found:
-        await message.edit(f"Chat <b>{chat_name}</b> is already in list.", del_in=5)
+        await message.edit(f"`Chat `<b>{chat_name}</b>` is already in list.`", del_in=5)
         return
     await POST_LIST.insert_one(
         {"chat_name": chat_name, "chat_id": chat_id, "chat_type": chat_type}
@@ -125,7 +127,7 @@ async def del_post(message: Message):
         if resp == "Yes, delete all chats in list for posting.":
             await POST_LIST.drop()
             await resp.delete()
-            del_ = "Deleted whole <b>POST LIST</b> successfully."
+            del_ = "`Deleted whole `<b>POST LIST</b>` successfully.`"
             await message.edit(del_)
             await CHANNEL.log(del_)
             return
@@ -136,18 +138,18 @@ async def del_post(message: Message):
     try:
         chat_ = await userge.get_chat(chat_)
     except BaseException:
-        await message.edit(f"Provided input ({chat_}) is not a chat...", del_in=5)
+        await message.edit(f"`Provided input ({chat_}) is not a chat...`", del_in=5)
         return
     chat_id = chat_.id
     found = await POST_LIST.find_one({"chat_id": chat_id})
     if found:
-        msg_ = f"Successfully removed <b>{found['chat_name']}</b> from POST LIST."
+        msg_ = f"`Successfully removed `<b>{found['chat_name']}</b>` from POST LIST.`"
         await POST_LIST.delete_one(found)
         await message.edit(msg_)
         await CHANNEL.log(msg_)
         return
     else:
-        await message.edit(f"The chat <b>{chat_id}</b> doesn't exist in POST LIST.")
+        await message.edit(f"`The chat `<b>{chat_id}</b>` doesn't exist in POST LIST.`")
 
 
 @userge.on_cmd(
@@ -243,10 +245,10 @@ async def post_(message: Message):
             chat_.id, message.chat.id, reply_.message_id, reply_to_message_id=broad_id
         )
         if chat_.type in ["private", "bot"]:
-            chat_name = " ".join([chat_.first_name, chat_.last_name or ""])
+            chat_name = full_name(chat_)
         else:
             chat_name = chat_.title
-        await message.edit(f"Broadcasted a message to <b>{chat_name}</b> successfully.")
+        await message.edit(f"`Broadcasted a message to `<b>{chat_name}</b>` successfully.`")
         await CHANNEL.log(
             f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id}`) successfully."
         )
@@ -302,7 +304,7 @@ async def post_(message: Message):
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
     except Exception as e:
-        await CHANNEL.log(f"Something unexpected happened...\n\n<b>ERROR:</b> {e}")
+        await CHANNEL.log(f"`Something unexpected happened...`\n\n<b>ERROR:</b> `{e}`")
         return
     if "-all" in flags:
         to_ = "all chats"
@@ -310,7 +312,7 @@ async def post_(message: Message):
         to_ = "all groups"
     elif "-pvt" in flags:
         to_ = "all private chats"
-    out_ = f"Broadcasted given message to <b>{to_} ({total})</b> in list successfully."
+    out_ = f"`Broadcasted given message to `<b>{to_} ({total})</b>` in list successfully.`"
     await message.edit(out_)
     out_ = f"#BROADCAST_SUCCESSFUL\n\n{out_}"
     await CHANNEL.log(out_)

@@ -5,7 +5,8 @@
 # Ported to Pyrogram + Rewrite with Mongo DB
 # by: (TG - @DeletedUser420) [https://github.com/code-rgb]
 # Thanks @Lostb053  for writing help
-# Added proof forward and mass fban by @Kakashi_HTK/@ashwinstr
+# plugin modified for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
+# before porting please ask to Kakashi
 
 import asyncio
 import os
