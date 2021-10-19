@@ -44,7 +44,9 @@ async def chat_users_(message: Message):
                     )
                     return
     title = (await userge.get_chat(chat_)).title
-    await message.edit(f"`Getting `<b>{limit_}</b>` members of chat `<b>{title}</b>`...`")
+    await message.edit(
+        f"`Getting `<b>{limit_}</b>` members of chat `<b>{title}</b>`...`"
+    )
     list_ = "`List of `<b>{}</b>` members`" + f"`in chat `<b>{title}</b>`:`\n\n"
     sr_n = 1
     lim = 0
