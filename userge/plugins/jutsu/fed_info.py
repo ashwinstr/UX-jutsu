@@ -1,5 +1,5 @@
-# made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
-# ask before porting plox
+# plugin made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
+# before porting please ask to Kakashi
 
 
 from pyrogram.errors import YouBlockedUser

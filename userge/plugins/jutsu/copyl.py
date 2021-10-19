@@ -1,4 +1,5 @@
-# made by @Kakashi_HTK/@ashwinstr
+# plugin made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
+# before porting please ask to Kakashi
 
 from userge import Message, userge
 

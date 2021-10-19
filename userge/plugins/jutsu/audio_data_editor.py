@@ -1,4 +1,5 @@
-# made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
+# plugin made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
+# before porting please ask to Kakashi
 # v3.1.5
 
 import os
@@ -21,7 +22,7 @@ async def album_edt(message: Message):
     """Audio name editor"""
     reply_ = message.reply_to_message
     if not reply_ or not reply_.audio:
-        await message.edit("Reply to an audio file...")
+        await message.edit("`Reply to an audio file...`")
         return
     album_thumb = reply_.audio.thumbs
     if album_thumb is not None:
@@ -36,13 +37,13 @@ async def album_edt(message: Message):
     flag_ = message.flags
     input_ = message.filtered_input_str
     if not input_:
-        await message.err("No input found...", del_in=5)
+        await message.err("`No input found...`", del_in=5)
         return
-    await message.edit("Editing meta-data...")
+    await message.edit("`Editing meta-data...`")
     if ";" in input_:
         split_input_ = input_.split(";")
         if len(split_input_) > 2:
-            await message.edit("Please give no more than two inputs...", del_in=5)
+            await message.edit("`Please give no more than two inputs...`", del_in=5)
             return
         for single_input_ in split_input_:
             if "/" in single_input_:
@@ -70,9 +71,9 @@ async def album_edt(message: Message):
         await userge.send_audio(
             chat_, file_, thumb=album_art, performer=performer, title=title
         )
-    except BaseException:
-        await message.err(
-            f"Something unexpected happened, check your data and try again...", del_in=5
+    except BaseException as e:
+        await message.edit(
+            f"`Something unexpected happened.`\n<b>ERROR:</b> `{e}`", del_in=5
         )
         return
     await message.delete()
