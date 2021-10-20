@@ -216,3 +216,21 @@ def full_name(user: dict):
     except:
         raise
     return f_name
+
+
+def msg_type(message):
+    type_ = "text"
+    if message.audio:
+        type_ = "audio"
+    elif message.animation:
+        type_ = "gif"
+    elif message.document:
+        type_ = "file"
+    elif message.photo:
+        type_ = "photo"
+    elif message.sticker:
+        type_ = "sticker"
+    elif message.video:
+        type_ = "video"
+    return type_
+    
