@@ -219,6 +219,7 @@ def full_name(user: dict):
 
 
 def msg_type(message):
+    type_ = "text"
     if message.audio:
         type_ = "audio"
     elif message.animation:
