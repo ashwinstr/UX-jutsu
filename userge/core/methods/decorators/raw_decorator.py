@@ -299,7 +299,8 @@ class RawDecorator(RawClient):
                             cond = cond and await _both_are_admins(r_c, r_m)
                         if flt.check_perm:
                             cond = cond and await _both_have_perm(flt, r_c, r_m)
-                        if cond:
+                        test = False
+                        if cond and test:
                             if Config.USE_USER_FOR_CLIENT_CHECKS:
                                 if isinstance(r_c, _client.UsergeBot):
                                     return
