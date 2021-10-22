@@ -231,7 +231,10 @@ async def fban_p(message: Message):
             "Add <code>FBAN_LOG_CHANNEL</code> to forward the proofs...", del_in=5
         )
         return
-    channel_ = await userge.get_chat(int(FBAN_LOG_CHANNEL))
+    try:
+        channel_ = await userge.get_chat(int(FBAN_LOG_CHANNEL))
+    except:
+        return await message.edit(f"`The FBAN_LOG_CHANNEL ID provided ('{FBAN_LOG_CHANNEL}') is invalid, enter correct one.`", del_in=5)
     if channel_.username is None or channel_.type != "channel":
         await message.edit(
             "Proof channel should be a <b>channel</b> and should be <b>public</b> for this command to work...",
