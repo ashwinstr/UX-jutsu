@@ -32,14 +32,14 @@ async def kang_bot(message: Message):
     """kang with sudo on bot mode"""
     if not STICK_GROUP:
         return await message.edit(
-            "Add var `STICK_GROUP` with private channel ID as value to kang using a tg bot...",
+            "Add var `STICK_GROUP` with private group ID as value to kang using a tg bot...",
             del_in=5,
         )
     try:
         await userge.get_chat(STICK_GROUP)
     except BaseException:
         return await message.edit(
-            "`The provided STICK_GROUP is not a valid channel...`"
+            "`The provided STICK_GROUP is not a valid group...`"
         )
     reply_ = message.reply_to_message
     if not reply_:
