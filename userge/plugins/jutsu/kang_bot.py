@@ -38,9 +38,7 @@ async def kang_bot(message: Message):
     try:
         await userge.get_chat(STICK_GROUP)
     except BaseException:
-        return await message.edit(
-            "`The provided STICK_GROUP is not a valid group...`"
-        )
+        return await message.edit("`The provided STICK_GROUP is not a valid group...`")
     reply_ = message.reply_to_message
     if not reply_:
         return await message.edit("`Reply to sticker or image to kang...`", del_in=5)
