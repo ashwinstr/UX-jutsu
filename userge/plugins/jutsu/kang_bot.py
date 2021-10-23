@@ -14,11 +14,11 @@ from pyrogram.raw.types import InputStickerSetShortName
 
 from userge import Config, Message, get_collection, userge
 
-STICK_CHANNEL = int(os.environ.get("STICK_CHANNEL", 0))
+STICK_GROUP = int(os.environ.get("STICK_GROUP", 0))
 
 STICK_MSG = get_collection("STICK_MSG")
 
-StickerChannelFilter = filters.create(lambda _, __, ___: STICK_CHANNEL)
+StickerGroupFilter = filters.create(lambda _, __, ___: STICK_GROUP)
 
 
 @userge.on_cmd(
@@ -30,30 +30,30 @@ StickerChannelFilter = filters.create(lambda _, __, ___: STICK_CHANNEL)
 )
 async def kang_bot(message: Message):
     """kang with sudo on bot mode"""
-    if not STICK_CHANNEL:
+    if not STICK_GROUP:
         return await message.edit(
-            "Add var `STICK_CHANNEL` with private channel ID as value to kang using a tg bot...",
+            "Add var `STICK_GROUP` with private channel ID as value to kang using a tg bot...",
             del_in=5,
         )
     try:
-        await userge.get_chat(STICK_CHANNEL)
+        await userge.get_chat(STICK_GROUP)
     except BaseException:
         return await message.edit(
-            "`The provided STICK_CHANNEL is not a valid channel...`"
+            "`The provided STICK_GROUP is not a valid channel...`"
         )
     reply_ = message.reply_to_message
     if not reply_:
         return await message.edit("`Reply to sticker or image to kang...`", del_in=5)
     if not reply_.sticker:
         return await message.edit("`Reply to sticker or image to kang...`", del_in=5)
-    await userge.bot.copy_message(STICK_CHANNEL, message.chat.id, reply_.message_id)
+    await userge.bot.copy_message(STICK_GROUP, message.chat.id, reply_.message_id)
     bot_msg = await message.edit("`Kanging...`")
     await STICK_MSG.insert_one(
         {"chat_id": message.chat.id, "msg_id": bot_msg.message_id}
     )
 
 
-@userge.on_message(filters.sticker & filters.chat([int(STICK_CHANNEL)]), group=1)
+@userge.on_message(filters.sticker & filters.chat([int(STICK_GROUP)]), group=1)
 async def kang_on_send(_, message: Message):
     try:
         start_ = await userge.send_message(message.chat.id, "`Kanging...`")
