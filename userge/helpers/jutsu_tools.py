@@ -210,10 +210,10 @@ async def response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark
 
 async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
     try:
-        response = await asyncio.wait_for(response(msg, filter_user, mark_read), timeout=timeout)
+       _response = await asyncio.wait_for(response(msg, filter_user, mark_read), timeout=timeout)
     except:
         raise
-    return response
+    return _response
 
 
 def full_name(user: dict):
