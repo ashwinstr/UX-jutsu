@@ -249,7 +249,7 @@ async def post_(message: Message):
         else:
             chat_name = chat_.title
         await message.edit(
-            f"`Broadcasted a message to `<b>{chat_name}</b>` successfully.`"
+            f"`Broadcasted a message to` <b>{chat_name}</b>` successfully.`"
         )
         await CHANNEL.log(
             f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id}`) successfully."
