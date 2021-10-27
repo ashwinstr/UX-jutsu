@@ -469,6 +469,8 @@ async def zombie_clean(message: Message):
     chat_ = message.filtered_input_str
     if not chat_:
         chat_id = message.chat.id
+        if message.chat.type == "private":
+            return await message.edit("`Chat can't be private...`", del_in=5)
     else:
         try:
             chat_ = await userge.get_chat(chat_)
