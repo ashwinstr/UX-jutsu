@@ -463,11 +463,20 @@ async def unmute_usr(message: Message):
         ],
     },
     allow_bots=False,
-    allow_private=False,
 )
 async def zombie_clean(message: Message):
     """remove deleted accounts from tg group"""
-    chat_id = message.chat.id
+    chat_ = message.filtered_input_str
+    if not chat_:
+        chat_id = message.chat.id
+    else:
+        try:
+            chat_ = await userge.get_chat(chat_)
+            if chat_.type in ["private", "bot"]:
+                return await message.edit("`Chat can't be private or bot...`, del_in=5)
+            chat_id = chat_.id
+        except:
+            return await message.edit("`Provide valid chat ID...`, del_in=5)
     flags = message.flags
     rm_delaccs = "-c" in flags
     can_clean = bool(
