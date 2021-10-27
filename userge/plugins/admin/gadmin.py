@@ -473,10 +473,10 @@ async def zombie_clean(message: Message):
         try:
             chat_ = await userge.get_chat(chat_)
             if chat_.type in ["private", "bot"]:
-                return await message.edit("`Chat can't be private or bot...`, del_in=5)
+                return await message.edit("`Chat can't be private or bot...`", del_in=5)
             chat_id = chat_.id
         except:
-            return await message.edit("`Provide valid chat ID...`, del_in=5)
+            return await message.edit("`Provide valid chat ID...`", del_in=5)
     flags = message.flags
     rm_delaccs = "-c" in flags
     can_clean = bool(
