@@ -471,21 +471,20 @@ async def zombie_clean(message: Message):
         chat_id = message.chat.id
         if message.chat.type == "private":
             return await message.edit("`Chat can't be private...`", del_in=5)
-    else:
-        try:
-            chat_ = await userge.get_chat(chat_)
-            if chat_.type in ["private", "bot"]:
-                return await message.edit("`Chat can't be private or bot...`", del_in=5)
-            chat_id = chat_.id
-        except BaseException:
-            return await message.edit("`Provide valid chat ID...`", del_in=5)
+    try:
+        chat_ = await userge.get_chat(chat_)
+        if chat_.type in ["private", "bot"]:
+            return await message.edit("`Chat can't be private or bot...`", del_in=5)
+        chat_id = chat_.id
+    except BaseException:
+        return await message.edit("`Provide valid chat ID...`", del_in=5)
     flags = message.flags
     rm_delaccs = "-c" in flags
     can_clean = bool(
         not message.from_user
         or message.from_user
         and (
-            await message.client.get_chat_member(message.chat.id, message.from_user.id)
+            await message.client.get_chat_member(chat_id, message.from_user.id)
         ).status
         in ("administrator", "creator")
     )
@@ -519,7 +518,7 @@ async def zombie_clean(message: Message):
             await message.edit(f"{del_stats}", del_in=5)
             await CHANNEL.log(
                 "#ZOMBIE_CLEAN\n\n"
-                f"CHAT: `{message.chat.title}` (`{chat_id}`)\n"
+                f"CHAT: `{chat_.title}` (`{chat_id}`)\n"
                 f"TOTAL ZOMBIE COUNT: `{del_total}`\n"
                 f"CLEANED ZOMBIE COUNT: `{del_users}`\n"
                 f"ZOMBIE ADMIN COUNT: `{del_admins}`"
@@ -543,14 +542,14 @@ async def zombie_clean(message: Message):
             )
             await CHANNEL.log(
                 "#ZOMBIE_CHECK\n\n"
-                f"CHAT: `{message.chat.title}` (`{chat_id}`)\n"
+                f"CHAT: `{chat_.title}` (`{chat_id}`)\n"
                 f"ZOMBIE COUNT: `{del_users}`"
             )
         else:
             await message.edit(f"{del_stats}", del_in=5)
             await CHANNEL.log(
                 "#ZOMBIE_CHECK\n\n"
-                f"CHAT: `{message.chat.title}` (`{chat_id}`)\n"
+                f"CHAT: `{chat_.title}` (`{chat_id}`)\n"
                 r"ZOMBIE COUNT: `WOOHOO group is clean.. \^o^/`"
             )
 
