@@ -325,7 +325,6 @@ async def uninvitedPmHandler(message: Message):
             await message.from_user.block()
             user_ = await userge.get_users(message.chat.id)
             user_name = full_name(user_)
-            await BLOCK_REASON.insert_one("_id": message.chat.id, "name": user_name, "reason": "spammer")
             await asyncio.sleep(1)
             await CHANNEL.log(
                 f"#BLOCKED\n{user_dict['mention']} has been blocked due to spamming in pm !! "
