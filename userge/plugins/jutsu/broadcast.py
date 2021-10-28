@@ -248,7 +248,13 @@ async def post_(message: Message):
             chat_name = full_name(chat_)
         else:
             chat_name = chat_.title
+<<<<<<< HEAD
         await message.edit(f"Broadcasted a message to <b>{chat_name}</b> successfully.")
+=======
+        await message.edit(
+            f"`Broadcasted a message to` <b>{chat_name}</b>` successfully.`"
+        )
+>>>>>>> dbea1ebefe85e236de4885e03deeaebd36800e97
         await CHANNEL.log(
             f"#BROADCAST_SUCCESSFUL\n\nBroadcasted a message to <b>{chat_name}</b> (`{chat_.id}`) successfully."
         )
@@ -312,7 +318,13 @@ async def post_(message: Message):
         to_ = "all groups"
     elif "-pvt" in flags:
         to_ = "all private chats"
+<<<<<<< HEAD
     out_ = f"Broadcasted given message to <b>{to_} ({total})</b> in list successfully."
+=======
+    out_ = (
+        f"`Broadcasted given message to `<b>{to_} ({total})</b>` in list successfully.`"
+    )
+>>>>>>> dbea1ebefe85e236de4885e03deeaebd36800e97
     await message.edit(out_)
     out_ = f"#BROADCAST_SUCCESSFUL\n\n{out_}"
     await CHANNEL.log(out_)

@@ -1,7 +1,5 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
-
-import asyncio
 from typing import Union
 from pyrogram.errors import UserNotParticipant
 from pyrogram.raw.functions.account import ReportPeer
@@ -183,7 +181,11 @@ async def admin_chats(user_id: int) -> dict:
     return list_
 
 
+<<<<<<< HEAD
 async def response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
+=======
+async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
+>>>>>>> dbea1ebefe85e236de4885e03deeaebd36800e97
     if filter_user:
         try:
             user_ = await userge.get_users(filter_user)
@@ -209,11 +211,20 @@ async def response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark
     raise "No response found in time limit."
 
 
+<<<<<<< HEAD
 async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
     try:
         await asyncio.wait_for(response(), timeout=timeout)
     except:
         raise
+=======
+#async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
+#    try:
+#       _response = await asyncio.wait_for(response(msg, filter_user, mark_read), timeout=timeout)
+#    except:
+#        raise
+#    return _response
+>>>>>>> dbea1ebefe85e236de4885e03deeaebd36800e97
 
 
 def full_name(user: dict):
@@ -225,6 +236,10 @@ def full_name(user: dict):
 
 
 def msg_type(message):
+<<<<<<< HEAD
+=======
+    type_ = "text"
+>>>>>>> dbea1ebefe85e236de4885e03deeaebd36800e97
     if message.audio:
         type_ = "audio"
     elif message.animation:
@@ -238,4 +253,8 @@ def msg_type(message):
     elif message.video:
         type_ = "video"
     return type_
+<<<<<<< HEAD
     
+=======
+    
+>>>>>>> dbea1ebefe85e236de4885e03deeaebd36800e97

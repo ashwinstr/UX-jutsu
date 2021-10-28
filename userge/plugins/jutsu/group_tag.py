@@ -26,7 +26,9 @@ async def add_tag(message: Message):
         if reply_:
             user = reply_.from_user.id
         else:
-            return await message.edit("`Give username or reply to user to add in tag list...`", del_in=5)
+            return await message.edit(
+                "`Give username or reply to user to add in tag list...`", del_in=5
+            )
     try:
         user_ = await userge.get_users(user)
         user_id = user_.id
@@ -38,15 +40,22 @@ async def add_tag(message: Message):
     data = []
     found = await CHAT_TAG.find_one({"chat_id": chat_})
     if found:
-        for one in found['data']:
-            if one['user_id'] == user_id:
-                return await message.edit(f"User {user_id} already in CHAT_TAG list for this chat.", del_in=5)
-        data = found['data']
-    data.append({'user_id': user_id, 'name': name_, 'mention': mention})
-    await CHAT_TAG.update_one({'chat_id': chat_}, {'$set': {'data': data}}, upsert=True)
-    await message.edit(f"Added user <b>{user_.first_name}</b> to tag list of chat <b>{message.chat.title}</b>...", del_in=5)
-    await CHANNEL.log(f"Added user <b>{user_.first_name}</b> to tag list of chat <b>{message.chat.title}</b>...")
-    
+        for one in found["data"]:
+            if one["user_id"] == user_id:
+                return await message.edit(
+                    f"User {user_id} already in CHAT_TAG list for this chat.", del_in=5
+                )
+        data = found["data"]
+    data.append({"user_id": user_id, "name": name_, "mention": mention})
+    await CHAT_TAG.update_one({"chat_id": chat_}, {"$set": {"data": data}}, upsert=True)
+    await message.edit(
+        f"Added user <b>{user_.first_name}</b> to tag list of chat <b>{message.chat.title}</b>...",
+        del_in=5,
+    )
+    await CHANNEL.log(
+        f"Added user <b>{user_.first_name}</b> to tag list of chat <b>{message.chat.title}</b>..."
+    )
+
 
 @userge.on_cmd(
     "deltag",
@@ -54,7 +63,7 @@ async def add_tag(message: Message):
         "header": "delete user in the chat's tag list",
         "flags": {
             "-this": "delete all tag list in the chat",
-            "-all": "clear whole list"
+            "-all": "clear whole list",
         },
         "usage": "{tr}deltag [username/id or reply to user]",
     },
@@ -71,7 +80,9 @@ async def del_tag(message: Message):
         if reply_:
             user = reply_.from_user.id
         else:
-            return await message.edit("`Give username or reply to user to add in tag list...`", del_in=5)
+            return await message.edit(
+                "`Give username or reply to user to add in tag list...`", del_in=5
+            )
     try:
         user_ = await userge.get_users(user)
         user_id = user_.id
@@ -88,15 +99,23 @@ async def del_tag(message: Message):
             await CHAT_TAG.delete_one(found)
             await message.edit("`Cleared this chat's tag list.`", del_in=5)
             return await CHANNEL.log(f"Cleared <b>{chat_.title}</b>'s tag list.")
-        for one in found['data']:
-            if one['user_id'] != user_id:
+        for one in found["data"]:
+            if one["user_id"] != user_id:
                 data.append(one)
         await CHAT_TAG.update_one({found}, {"$set": {"data": data}}, upsert=True)
-        await message.edit(f"Deleted user <b>{user_.first_name}</b> from tag list of chat <b>{message.chat.title}</b>...", del_in=5)
-        await CHANNEL.log(f"Deleted user <b>{user_.first_name}</b> from tag list of chat <b>{message.chat.title}</b>...")
+        await message.edit(
+            f"Deleted user <b>{user_.first_name}</b> from tag list of chat <b>{message.chat.title}</b>...",
+            del_in=5,
+        )
+        await CHANNEL.log(
+            f"Deleted user <b>{user_.first_name}</b> from tag list of chat <b>{message.chat.title}</b>..."
+        )
         return
     else:
-        await message.edit(f"User <b>{user_.first_name}</b> doesn't exist in tag list of chat <b>{message.chat.title}</b>...", del_in=5)
+        await message.edit(
+            f"User <b>{user_.first_name}</b> doesn't exist in tag list of chat <b>{message.chat.title}</b>...",
+            del_in=5,
+        )
 
 
 @userge.on_cmd(

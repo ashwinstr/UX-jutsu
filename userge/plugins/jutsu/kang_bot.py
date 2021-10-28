@@ -6,54 +6,52 @@ import io
 import os
 import random
 
-from bs4 import BeautifulSoup as bs
 from PIL import Image
 from pyrogram import emoji, filters
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
 from pyrogram.raw.functions.messages import GetStickerSet
 from pyrogram.raw.types import InputStickerSetShortName
 
-from userge import Message, userge, Config, get_collection
-from userge.utils import get_response
+from userge import Config, Message, get_collection, userge
 
-
-STICK_CHANNEL = int(os.environ.get("STICK_CHANNEL", 0))
+STICK_GROUP = int(os.environ.get("STICK_GROUP", 0))
 
 STICK_MSG = get_collection("STICK_MSG")
 
-StickerChannelFilter = filters.create(lambda _, __, ___: STICK_CHANNEL)
+StickerGroupFilter = filters.create(lambda _, __, ___: STICK_GROUP)
 
 
 @userge.on_cmd(
     "kangbot",
     about={
         "header": "kang with sudo on bot mode",
-        "usage": "{tr}kangbot [reply to sticker]"
+        "usage": "{tr}kangbot [reply to sticker]",
     },
 )
 async def kang_bot(message: Message):
     """kang with sudo on bot mode"""
-    if not STICK_CHANNEL:
-        return await message.edit("Add var `STICK_CHANNEL` with private channel ID as value to kang using a tg bot...", del_in=5)
+    if not STICK_GROUP:
+        return await message.edit(
+            "Add var `STICK_GROUP` with private group ID as value to kang using a tg bot...",
+            del_in=5,
+        )
     try:
-        channel = await userge.get_chat(STICK_CHANNEL)
-    except:
-        return await message.edit("`The provided STICK_CHANNEL is not a valid channel...`")
+        await userge.get_chat(STICK_GROUP)
+    except BaseException:
+        return await message.edit("`The provided STICK_GROUP is not a valid group...`")
     reply_ = message.reply_to_message
     if not reply_:
         return await message.edit("`Reply to sticker or image to kang...`", del_in=5)
     if not reply_.sticker:
         return await message.edit("`Reply to sticker or image to kang...`", del_in=5)
-    await userge.bot.copy_message(STICK_CHANNEL, message.chat.id, reply_.message_id)
+    await userge.bot.copy_message(STICK_GROUP, message.chat.id, reply_.message_id)
     bot_msg = await message.edit("`Kanging...`")
-    await STICK_MSG.insert_one({'chat_id': message.chat.id, 'msg_id': bot_msg.message_id})
+    await STICK_MSG.insert_one(
+        {"chat_id": message.chat.id, "msg_id": bot_msg.message_id}
+    )
 
 
-@userge.on_message(
-    filters.sticker
-    & filters.chat([int(STICK_CHANNEL)]),
-    group=1
-)
+@userge.on_message(filters.sticker & filters.chat([int(STICK_GROUP)]), group=1)
 async def kang_on_send(_, message: Message):
     try:
         start_ = await userge.send_message(message.chat.id, "`Kanging...`")
@@ -82,7 +80,9 @@ async def kang_on_send(_, message: Message):
                 await start_.edit("`Unsupported File!`")
                 return
             await start_.edit(f"`{random.choice(KANGING_STR)}`")
-            photo = await userge.download_media(message=replied, file_name=Config.DOWN_PATH)
+            photo = await userge.download_media(
+                message=replied, file_name=Config.DOWN_PATH
+            )
         else:
             await start_.edit("`I can't kang that...`")
             return
@@ -111,7 +111,9 @@ async def kang_on_send(_, message: Message):
             exist = False
             try:
                 exist = await userge.send(
-                    GetStickerSet(stickerset=InputStickerSetShortName(short_name=packname))
+                    GetStickerSet(
+                        stickerset=InputStickerSetShortName(short_name=packname)
+                    )
                 )
             except StickersetInvalid:
                 pass
@@ -152,15 +154,16 @@ async def kang_on_send(_, message: Message):
                             await conv.send_message("/publish")
                             if is_anim:
                                 await conv.get_response(mark_read=True)
-                                await conv.send_message(f"<{packnick}>", parse_mode=None)
+                                await conv.send_message(
+                                    f"<{packnick}>", parse_mode=None
+                                )
                             await conv.get_response(mark_read=True)
                             await conv.send_message("/skip")
                             await conv.get_response(mark_read=True)
                             await conv.send_message(packname)
                             await conv.get_response(mark_read=True)
-                            out = (
-                                f"[kanged](t.me/addstickers/{packname})"
-                            )
+                            out = f"[kanged](t.me/addstickers/{packname})"
+
                             await start_.edit(
                                 f"**Sticker** {out} __in a Different Pack__**!**"
                             )
@@ -207,16 +210,16 @@ async def kang_on_send(_, message: Message):
                     await conv.get_response(mark_read=True)
                     await conv.send_message(packname)
                     await conv.get_response(mark_read=True)
-            out = (
-                f"[kanged](t.me/addstickers/{packname})"
-            )
+            out = f"[kanged](t.me/addstickers/{packname})"
             await start_.edit(f"**Sticker** {out}**!**")
             if os.path.exists(str(photo)):
                 os.remove(photo)
         async for data in STICK_MSG.find():
-            chat_ = data['chat_id']
-            msg_ = data['msg_id']
-        await userge.bot.edit_message_text(int(chat_), int(msg_), f"**Sticker** {out}**!**")
+            chat_ = data["chat_id"]
+            msg_ = data["msg_id"]
+        await userge.bot.edit_message_text(
+            int(chat_), int(msg_), f"**Sticker** {out}**!**"
+        )
         await STICK_MSG.drop()
     except Exception as e:
         await userge.send_message(Config.LOG_CHANNEL_ID, e)

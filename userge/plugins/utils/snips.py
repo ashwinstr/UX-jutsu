@@ -5,7 +5,7 @@
 
 import asyncio
 
-from userge import Config, Message, get_collection, userge
+from userge import Message, get_collection, userge
 
 CHANNEL = userge.getCLogger(__name__)
 SNIPS = get_collection("SNIPS")
@@ -45,42 +45,16 @@ async def get_snip(message: Message) -> None:
     reply = message.reply_to_message
     reply_id = reply.message_id if reply else None
     snip_name = message.matches[0].group(1)
-    if "_noformat" in snip_name:
-        no_format = True
     found = await SNIPS.find_one({"snip_name": snip_name})
     if found:
-        if not no_format:
-            await message.delete()
-            await CHANNEL.forward_stored(
-                client=message.client,
-                message_id=found["snip_msg_id"],
-                user_id=message.from_user.id,
-                chat_id=message.chat.id,
-                reply_to_message_id=reply_id,
-            )
-        else:
-            msg_ = await userge.get_messages(
-                chat_id=Config.LOG_CHANNEL_ID,
-                message_ids=found["snip_msg_id"],
-            )
-            if msg_.text:
-                text = msg_.text.html
-                main_text = text.split("\n\n")[1]
-
-            else:
-                await message.edit(
-                    "The noformat works for text snips only as of now...", del_in=5
-                )
-                return
-            info_ = await message_edit(
-                f"<u>Snip <b>{snip_name}</b> is as replied</u>: ↩"
-            )
-            await userge.send_message(
-                message.chat.id,
-                main_text,
-                reply_to_message_id=info_.message_id,
-                parse_mode="md",
-            )
+        await message.delete()
+        await CHANNEL.forward_stored(
+            client=message.client,
+            message_id=found["snip_msg_id"],
+            user_id=message.from_user.id,
+            chat_id=message.chat.id,
+            reply_to_message_id=reply_id,
+        )
 
 
 @userge.on_cmd(
