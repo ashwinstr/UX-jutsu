@@ -183,8 +183,7 @@ async def admin_chats(user_id: int) -> dict:
     return list_
 
 
-async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
-    await asyncio.sleep(timeout)
+async def response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
     if filter_user:
         try:
             user_ = await userge.get_users(filter_user)
@@ -210,9 +209,33 @@ async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, 
     raise "No response found in time limit."
 
 
+async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
+    try:
+        await asyncio.wait_for(response(), timeout=timeout)
+    except:
+        raise
+
+
 def full_name(user: dict):
     try:
         f_name = " ".join([user.first_name, user.last_name or ""])
     except:
         raise
     return f_name
+
+
+def msg_type(message):
+    if message.audio:
+        type_ = "audio"
+    elif message.animation:
+        type_ = "gif"
+    elif message.document:
+        type_ = "file"
+    elif message.photo:
+        type_ = "photo"
+    elif message.sticker:
+        type_ = "sticker"
+    elif message.video:
+        type_ = "video"
+    return type_
+    

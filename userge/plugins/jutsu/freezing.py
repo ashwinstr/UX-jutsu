@@ -75,7 +75,7 @@ async def defreezer_(message: Message):
     """re-enable frozen plugin"""
     if "-all" in message.flags:
         async for plug in FROZEN.find():
-            old_ = plug["plug_name"]
+            old_ = plug["plug_loc"]
             new_ = f"{old_}.py"
             os.rename(old_, new_)
         await FROZEN.drop()

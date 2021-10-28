@@ -7,5 +7,6 @@ from .jutsu_tools import (
     admin_or_creator,
     admin_chats,
     get_response,
-    full_name
+    full_name,
+    msg_type
 )

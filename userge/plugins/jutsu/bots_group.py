@@ -41,7 +41,7 @@ async def botz(message: Message):
             member_b.append(mention)
     adm = len(admin_b)
     mem = len(member_b)
-    out = f"<b>BOTS</b>` in `<b>{chat_.title}</b>: `[{total}]`\n\n"
+    out = f"<b>BOTS</b> in <b>{chat_.title}</b>: `[{total}]`\n\n"
     out += f"<b>Admin bot(s)</b>: [{adm}]\n"
     out += "🤖 " if admin_b else ""
     out += "\n🤖 ".join(admin_b)

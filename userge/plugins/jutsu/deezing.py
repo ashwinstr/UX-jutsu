@@ -34,7 +34,7 @@ async def deezing_(message: Message):
         return
     bot_ = "deezermusicbot"
     song_ = capitaled(song_)
-    await message.edit(f"`Searching `<b>{song_}</b>` on deezer...`")
+    await message.edit(f"Searching <b>{song_}</b> on deezer...")
     results = await userge.get_inline_bot_results(bot_, song_)
     if not results.results:
         await message.edit(f"Song <code>{song_}</code> not found...", del_in=5)
@@ -76,7 +76,7 @@ async def dlist_(message: Message):
         await message.err("`Input not found...`", del_in=5)
         return
     query_ = capitaled(query_)
-    await message.edit(f"`Searching for `<b>{query_}</b>...")
+    await message.edit(f"Searching for <b>{query_}</b>...")
     result = await userge.get_inline_bot_results(bot_, query_)
     if not result:
         await message.edit(
@@ -104,10 +104,10 @@ async def dlist_(message: Message):
         )
         return
     list_ = "\n".join(list_)
-    out_ = f"`Results found for `<b>{query_}</b>`: `[<b>{total_}</b>]\n\n"
+    out_ = f"Results found for <b>{query_}</b>: [<b>{total_}</b>]\n\n"
     out_ += list_
     out_ += (
-        "\n\n`Reply with corresponding number `<b>within 15 seconds</b>` to get the music.`"
+        "\n\nReply with corresponding number <b>within 15 seconds</b> to get the music."
     )
     await message.edit(out_)
     me_ = await userge.get_me()
@@ -126,7 +126,7 @@ async def dlist_(message: Message):
             except BaseException:
                 proverb = "is not" if len(resp) == 1 else "are not all"
                 resp = "</b>, <b>".join(resp)
-                out_ += f"\n\n`### The response `<b>{resp}</b>` {proverb} a number, `<b>please retry</b>`. ###`"
+                out_ += f"\n\n### The response <b>{resp}</b> {proverb} a number, <b>please retry</b>. ###"
                 await response.delete()
                 await message.edit(out_, del_in=15)
                 return
@@ -134,13 +134,13 @@ async def dlist_(message: Message):
                 for one in reply_:
                     result_id = result.results[int(one)].id
             except BaseException:
-                out_ += f"\n\n`### Response/s `<b>{reply_}</b>` gave out of index error, `<b>please retry</b>`. ###`"
+                out_ += f"\n\n### Response/s <b>{reply_}</b> gave out of index error, <b>please retry</b>. ###`"
                 await response.delete()
                 await message.edit(out_, del_in=15)
                 return
             await response.delete()
     except BaseException:
-        out_ += "\n\n`### `<b>Response time expired.</b>` ###`"
+        out_ += "\n\n### <b>Response time expired.</b> ###"
         await message.edit(out_)
         return
     try:
@@ -157,7 +157,7 @@ async def dlist_(message: Message):
                 message_id=log_send.updates[0].id,
             )
         reply_ = ", ".join(reply_)
-        out_ += f"\n\n`### `<b>Responded with {reply_}.</b>` ###`"
+        out_ += f"\n\n### <b>Responded with {reply_}.</b> ###"
         await message.edit(out_)
     except BaseException as e:
         await message.edit(
