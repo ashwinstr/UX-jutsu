@@ -42,7 +42,7 @@ async def broad_toggle_(message: Message):
             tog = "enabled"
         else:
             tog = "disabled"
-        await message.edit(f"`Broadcast tag is `<b>{tog}</b>`.`", del_in=3)
+        await message.edit(f"`Broadcast tag is` <b>{tog}</b>`.`", del_in=3)
         return
     if BROAD_TAGGING:
         BROAD_TAGGING = False
@@ -82,7 +82,7 @@ async def add_post(message: Message):
     chat_id = chat_.id
     found = await POST_LIST.find_one({"chat_id": chat_id})
     if found:
-        await message.edit(f"`Chat `<b>{chat_name}</b>` is already in list.`", del_in=5)
+        await message.edit(f"`Chat` <b>{chat_name}</b> `is already in list.`", del_in=5)
         return
     await POST_LIST.insert_one(
         {"chat_name": chat_name, "chat_id": chat_id, "chat_type": chat_type}
