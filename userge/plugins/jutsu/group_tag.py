@@ -190,7 +190,7 @@ async def tag_them(message: Message):
                 (found['data']).pop(num)
                 break
             if not username:
-                username = one['mention']
+                username = f"tg://user?id={one['user_id']}"
             list += f"• {username}\n"
             num += 1
         await message.delete()

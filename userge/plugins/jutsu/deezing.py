@@ -106,13 +106,9 @@ async def dlist_(message: Message):
     list_ = "\n".join(list_)
     out_ = f"Results found for <b>{query_}</b>: [<b>{total_}</b>]\n\n"
     out_ += list_
-<<<<<<< HEAD
     out_ += (
         "\n\nReply with corresponding number <b>within 15 seconds</b> to get the music."
     )
-=======
-    out_ += "\n\n`Reply with corresponding number `<b>within 15 seconds</b>` to get the music.`"
->>>>>>> dbea1ebefe85e236de4885e03deeaebd36800e97
     await message.edit(out_)
     me_ = await userge.get_me()
     reply_ = []
