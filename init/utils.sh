@@ -94,9 +94,9 @@ upgradePip() {
     pip3 install -U pip &> /dev/null
 }
 
-installReq() {
-    pip3 install -U -r $1/requirements.txt &> /dev/null
-}
+#installReq() {
+#    pip3 install -U -r $1/requirements.txt &> /dev/null
+#}
 
 printLine() {
     echo '->- ->- ->- ->- ->- ->- ->- --- -<- -<- -<- -<- -<- -<- -<-'
