@@ -2,7 +2,7 @@
 # before porting please ask to Kakashi plox
 
 
-from userge import userge, Message, get_collection
+from userge import Message, get_collection, userge
 from userge.helpers import full_name
 from userge.utils import mention_html
 
@@ -89,8 +89,8 @@ async def del_tag(message: Message):
     except Exception as e:
         return await message.edit(f"<b>ERROR:</b> {e}", del_in=5)
     chat_ = message.chat.id
-    mention = user_.mention
-    name_ = full_name(user_)
+    user_.mention
+    full_name(user_)
     data = []
     found = await CHAT_TAG.find_one({"chat_id": chat_})
     if found:
@@ -122,9 +122,7 @@ async def del_tag(message: Message):
     "taglist",
     about={
         "header": "list users in the chat's tag list",
-        "flags": {
-            "-all": "list all chats' list"
-        },
+        "flags": {"-all": "list all chats' list"},
         "usage": "{tr}taglist",
     },
 )
@@ -136,21 +134,21 @@ async def list_tag(message: Message):
         async for one in CHAT_TAG.find():
             chat_n += 1
             try:
-                chat_ = await userge.get_chat(one['chat_id'])
+                chat_ = await userge.get_chat(one["chat_id"])
                 title = f"<b>{chat_.title}</b>"
-                valid_ = ""
-            except:
-                tital = one['chat_id']
+            except BaseException:
+                one["chat_id"]
                 title = f"`{title}`"
-                valid_ = "not found"
             list += f"[{chat_n}] {title}:\n"
-            for two in one['data']:
-                name_ = two['name']
-                id_ = two['user_id']
+            for two in one["data"]:
+                name_ = two["name"]
+                id_ = two["user_id"]
                 mention = mention_html(id_, name_)
                 list += f"• {mention} - `{id_}`\n"
             list += "\n"
-        await message.edit("`List of all users in tag list sent to log channel.`", del_in=5)
+        await message.edit(
+            "`List of all users in tag list sent to log channel.`", del_in=5
+        )
         await CHANNEL.log(list)
         return
     chat_ = message.chat.id
@@ -159,7 +157,7 @@ async def list_tag(message: Message):
     found = await CHAT_TAG.find_one({"chat_id": chat_.id})
     if found:
         total = 0
-        for one in found['data']:
+        for one in found["data"]:
             total += 1
             list += f"• {one['name']} - `{one['user_id']}`\n"
         await message.edit(list.format(total))
@@ -182,12 +180,12 @@ async def tag_them(message: Message):
     found = await CHAT_TAG.find_one({"chat_id": chat_.id})
     num = 0
     if found:
-        for one in found['data']:
+        for one in found["data"]:
             try:
-                username = (await userge.get_users(one['user_id'])).username
+                username = (await userge.get_users(one["user_id"])).username
                 username = f"{one['name']} - @{username}"
-            except:
-                (found['data']).pop(num)
+            except BaseException:
+                (found["data"]).pop(num)
                 break
             if not username:
                 username = f"tg://user?id={one['user_id']}"
