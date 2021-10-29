@@ -1,0 +1,39 @@
+# plugin made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
+# before porting please ask to Kakashi
+
+
+from userge import userge, Message, get_collection
+
+BLOCKED = get_collection("BLOCKED")
+
+
+TYPES_ = (
+    "audio",
+    "video",
+    "photo",
+    "document",
+    "animation",
+    "voice",
+    "video_note",
+    "media"
+)
+
+
+@userge.on_cmd(
+    "blocktype",
+    
+)
+
+@userge.on_cmd(
+    "addbl",
+    about={
+        "header": "add to blocklist",
+        "usage": "{tr}addbl [type of message]"
+    },
+)
+async def add_bl_(message: Message):
+    """add to blocklist"""
+    input_ = message.input_str
+    if not input_:
+        return await message.edit("`Provide input to add to blocklist...`", del_in=5)
+    input_ = input_.split()

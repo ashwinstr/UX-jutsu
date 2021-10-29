@@ -4,6 +4,7 @@
 
 from userge import Message, get_collection, userge
 from userge.helpers import full_name
+from userge.utils import mention_html
 
 CHAT_TAG = get_collection("CHAT_TAG")
 
@@ -140,7 +141,10 @@ async def list_tag(message: Message):
                 title = f"`{title}`"
             list += f"[{chat_n}] {title}:\n"
             for two in one["data"]:
-                list += f"• {two['mention']} - `{two['user_id']}`\n"
+                name_ = two["name"]
+                id_ = two["user_id"]
+                mention = mention_html(id_, name_)
+                list += f"• {mention} - `{id_}`\n"
             list += "\n"
         await message.edit(
             "`List of all users in tag list sent to log channel.`", del_in=5
@@ -174,9 +178,19 @@ async def tag_them(message: Message):
     chat_ = await userge.get_chat(chat_)
     list = ""
     found = await CHAT_TAG.find_one({"chat_id": chat_.id})
+    num = 0
     if found:
         for one in found["data"]:
-            list += f"• {one['mention']}\n"
+            try:
+                username = (await userge.get_users(one["user_id"])).username
+                username = f"{one['name']} - @{username}"
+            except BaseException:
+                (found["data"]).pop(num)
+                break
+            if not username:
+                username = f"tg://user?id={one['user_id']}"
+            list += f"• {username}\n"
+            num += 1
         await message.delete()
         await message.reply(list)
         await CHANNEL.log(f"Mentioned users in tag list in <b>{chat_.title}</b>...")

@@ -163,6 +163,7 @@ async def kang_on_send(_, message: Message):
                             await conv.send_message(packname)
                             await conv.get_response(mark_read=True)
                             out = f"[kanged](t.me/addstickers/{packname})"
+
                             await start_.edit(
                                 f"**Sticker** {out} __in a Different Pack__**!**"
                             )

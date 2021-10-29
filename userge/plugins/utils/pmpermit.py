@@ -12,12 +12,14 @@ import asyncio
 from typing import Dict
 
 from userge import Config, Message, filters, get_collection, userge
+from userge.helpers import full_name
 from userge.utils import SafeDict
 from userge.utils.extras import reported_user_image
 
 CHANNEL = userge.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
 ALLOWED_COLLECTION = get_collection("PM_PERMIT")
+BLOCK_REASON = get_collection("BLOCK_REASON")
 PMPERMIT_MSG = {}
 
 
@@ -321,6 +323,8 @@ async def uninvitedPmHandler(message: Message):
                 message.chat.id, report_img_, caption=blocked_message
             )
             await message.from_user.block()
+            user_ = await userge.get_users(message.chat.id)
+            full_name(user_)
             await asyncio.sleep(1)
             await CHANNEL.log(
                 f"#BLOCKED\n{user_dict['mention']} has been blocked due to spamming in pm !! "
