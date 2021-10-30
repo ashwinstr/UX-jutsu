@@ -143,7 +143,7 @@ async def list_tag(message: Message):
             for two in one["data"]:
                 name_ = two["name"]
                 id_ = two["user_id"]
-                mention = mention_html(id_, name_)
+                mention = f"[{name_}](tg://user?id={id_})"
                 list += f"• {mention} - `{id_}`\n"
             list += "\n"
         await message.edit(
@@ -181,15 +181,8 @@ async def tag_them(message: Message):
     num = 0
     if found:
         for one in found["data"]:
-            try:
-                username = (await userge.get_users(one["user_id"])).username
-                username = f"{one['name']} - @{username}"
-            except BaseException:
-                (found["data"]).pop(num)
-                break
-            if not username:
-                username = f"tg://user?id={one['user_id']}"
-            list += f"• {username}\n"
+            mention = f"[{one['name']}](tg://user?id={one['user_id']})"
+            list += f"• {mention}\n"
             num += 1
         await message.delete()
         await message.reply(list)
