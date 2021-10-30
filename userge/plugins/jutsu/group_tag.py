@@ -4,7 +4,6 @@
 
 from userge import Message, get_collection, userge
 from userge.helpers import full_name
-from userge.utils import mention_html
 
 CHAT_TAG = get_collection("CHAT_TAG")
 
