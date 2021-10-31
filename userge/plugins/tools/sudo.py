@@ -15,6 +15,7 @@ from pyrogram.errors import PeerIdInvalid
 from userge import Config, Message, get_collection, userge
 
 SAVED_SETTINGS = get_collection("CONFIGS")
+TRUSTED_SUDO_USERS = get_collection("trusted_sudo_users")
 SUDO_USERS_COLLECTION = get_collection("sudo_users")
 SUDO_CMDS_COLLECTION = get_collection("sudo_cmds")
 
@@ -25,6 +26,8 @@ async def _init() -> None:
         Config.SUDO_ENABLED = s_o["data"]
     async for i in SUDO_USERS_COLLECTION.find():
         Config.SUDO_USERS.add(i["_id"])
+    async for i in TRUSTED_SUDO_USERS.find():
+        Config.TRUSTED_SUDO_USERS.add(i["_id"])
     async for i in SUDO_CMDS_COLLECTION.find():
         Config.ALLOWED_COMMANDS.add(i["_id"])
 
@@ -58,12 +61,18 @@ async def sudo_(message: Message):
 
 @userge.on_cmd(
     "addsudo",
-    about={"header": "add sudo user", "usage": "{tr}addsudo [username | reply to msg]"},
+    about={
+        "header": "add sudo user",
+        "flags": {
+            "-t": "add to trusted sudo users' list",
+        },
+        "usage": "{tr}addsudo [username | reply to msg]"
+    },
     allow_channels=False,
 )
 async def add_sudo(message: Message):
     """add sudo user"""
-    user_id = message.input_str
+    user_id = message.filtered_input_str
     if message.reply_to_message:
         user_id = message.reply_to_message.from_user.id
     if not user_id:
@@ -75,6 +84,30 @@ async def add_sudo(message: Message):
         user = await message.client.get_user_dict(user_id)
     except (PeerIdInvalid, IndexError) as p_e:
         await message.err(str(p_e))
+        return
+    if "-t" in message.flags:
+        if user['id'] in Config.TRUSTED_SUDO_USERS:
+            await message.edit(f"user : `{user['id']}` already in **TRUSTED SUDO**!", del_in=5)
+        else:
+            if user["id"] in Config.OWNER_ID or user["id"] == (await userge.get_me()).id:
+                await message.edit(
+                    f"user : `{user['id']}` is in `OWNER_ID` so no need to add in sudo",
+                    del_in=5,
+                )
+                return
+            if user["id"] in Config.TG_IDS:
+                await message.err("Not Permitted due to security reasons", del_in=7)
+                return
+            Config.TRUSTED_SUDO_USERS.add(user["id"])
+            await asyncio.gather(
+                SUDO_USERS_COLLECTION.insert_one(
+                    {"_id": user["id"], "men": user["mention"]}
+                ),
+                message.edit(
+                    f"user : `{user['id']}` added to **SUDO**!", del_in=5, log=__name__
+                ),
+            )
+        )
         return
     if user["id"] in Config.SUDO_USERS:
         await message.edit(f"user : `{user['id']}` already in **SUDO**!", del_in=5)
@@ -128,6 +161,21 @@ async def del_sudo(message: Message):
     if not isinstance(user_id, int):
         await message.err("invalid type!")
         return
+    if "-t" in message.flags:
+        if not (user['id'] in Config.TRUSTED_SUDO_USERS):
+            await message.edit(f"user : `{user['id']}` already not in **TRUSTED SUDO**!", del_in=5)
+        else:
+            Config.TRUSTED_SUDO_USERS.remove(user["id"])
+            await asyncio.gather(
+                SUDO_USERS_COLLECTION.delete_one(
+                    {"_id": user["id"]}
+                ),
+                message.edit(
+                    f"user : `{user['id']}` removed to **SUDO**!", del_in=5, log=__name__
+                ),
+            )
+        )
+        return
     if user_id not in Config.SUDO_USERS:
         await message.edit(f"user : `{user_id}` not in **SUDO** !", del_in=5)
     else:
@@ -143,15 +191,20 @@ async def del_sudo(message: Message):
 @userge.on_cmd("vsudo", about={"header": "view sudo users"}, allow_channels=False)
 async def view_sudo(message: Message):
     """view sudo users"""
-    if not Config.SUDO_USERS:
+    if not Config.SUDO_USERS and not Config.TRUSTED_SUDO_USERS:
         await message.edit("**SUDO** users not found!", del_in=5)
         return
-    out_str = "🚷 **SUDO USERS**: [{}] 🚷\n\n"
+    out_str = "🚷 **TRSUTED SUDO USERS**: [{}] 🚷\n\n"
+    tr_total = 0
+    async for user in TRUSTED_SUDO_USERS.find():
+        tr_total += 1
+        out_str += f" 👤 {user['men']} #⃣ `{user['_id']}`\n"
+    out_str += "\n🚷 **NORMAL SUDO USERS**: [{}] 🚷\n\n"
     total = 0
     async for user in SUDO_USERS_COLLECTION.find():
         total += 1
         out_str += f" 👤 {user['men']} #⃣ `{user['_id']}`\n"
-    await message.edit(out_str.format(total), del_in=0)
+    await message.edit(out_str.format(tr_total, total), del_in=0)
 
 
 @userge.on_cmd(
@@ -160,7 +213,6 @@ async def view_sudo(message: Message):
         "header": "add sudo command",
         "flags": {
             "-all": "add all commands to sudo ",
-            "-full": "full sudo access [i.e '-all' + term, eval, exec ...] (Dangerous !)",
         },
         "usage": "{tr}addscmd [command name]\n{tr}addscmd -all\n{tr}addscmd -full",
     },
@@ -168,7 +220,7 @@ async def view_sudo(message: Message):
 )
 async def add_sudo_cmd(message: Message):
     """add sudo cmd"""
-    if "-all" in message.flags or "-full" in message.flags:
+    if "-all" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()
         Config.ALLOWED_COMMANDS.clear()
         tmp_ = []
@@ -194,10 +246,6 @@ async def add_sudo_cmd(message: Message):
                 ):
                     tmp_.append({"_id": t_c})
                     Config.ALLOWED_COMMANDS.add(t_c)
-            else:
-                mode_ = "full"
-                tmp_.append({"_id": t_c})
-                Config.ALLOWED_COMMANDS.add(t_c)
         await asyncio.gather(
             SUDO_CMDS_COLLECTION.insert_many(tmp_),
             message.edit(
