@@ -173,7 +173,6 @@ async def del_sudo(message: Message):
                     f"user : `{user['id']}` removed to **SUDO**!", del_in=5, log=__name__
                 ),
             )
-        )
         return
     if user_id not in Config.SUDO_USERS:
         await message.edit(f"user : `{user_id}` not in **SUDO** !", del_in=5)
