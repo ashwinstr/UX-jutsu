@@ -103,13 +103,19 @@ async def add_sudo(message: Message):
             if user["id"] in Config.TG_IDS:
                 await message.err("Not Permitted due to security reasons", del_in=7)
                 return
+            if user['id'] in Config.SUDO_USERS:
+                Config.SUDO_USERS.remove(user['id'])
+                await SUDO_USERS_COLLECTION.delete_one({"_id": user["id"]})
+                verb_ = "transferred"
+            else:
+                verb_ = "added"
             Config.TRUSTED_SUDO_USERS.add(user["id"])
             await asyncio.gather(
                 TRUSTED_SUDO_USERS.insert_one(
                     {"_id": user["id"], "men": user["mention"]}
                 ),
                 message.edit(
-                    f"user : `{user['id']}` added to **TRUSTED SUDO**!", del_in=5, log=__name__
+                    f"user : `{user['id']}` {verb_} to **TRUSTED SUDO**!", del_in=5, log=__name__
                 ),
             )
         return
@@ -125,6 +131,12 @@ async def add_sudo(message: Message):
         if user["id"] in Config.TG_IDS:
             await message.err("Not Permitted due to security reasons", del_in=7)
             return
+        if user['id'] in Config.TRUSTED_SUDO_USERS:
+            Config.TRUSTED_SUDO_USERS.remove(user['id'])
+            await TRUSTED_SUDO_USERS.delete_one({"_id": user["id"]})
+            verb_ = "transferred"
+        else:
+            verb_ = "added"
         Config.SUDO_USERS.add(user["id"])
         await asyncio.gather(
             SUDO_USERS_COLLECTION.insert_one(
