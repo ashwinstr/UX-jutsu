@@ -109,7 +109,9 @@ async def add_sudo(message: Message):
                     {"_id": user["id"], "men": user["mention"]}
                 ),
                 message.edit(
-                    f"user : `{user['id']}` added to **TRUSTED SUDO**!", del_in=5, log=__name__
+                    f"user : `{user['id']}` added to **TRUSTED SUDO**!",
+                    del_in=5,
+                    log=__name__,
                 ),
             )
         return
