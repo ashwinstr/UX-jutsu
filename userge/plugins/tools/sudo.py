@@ -168,7 +168,7 @@ async def del_sudo(message: Message):
         Config.TRUSTED_SUDO_USERS.clear()
         await asyncio.gather(
             SUDO_USERS_COLLECTION.drop(),
-            TRUSTED_SUDO_USERS.drop()
+            TRUSTED_SUDO_USERS.drop(),
             message.edit("**SUDO** users cleared!", del_in=5),
         )
         return
