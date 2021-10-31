@@ -66,7 +66,7 @@ async def sudo_(message: Message):
         "flags": {
             "-t": "add to trusted sudo users' list",
         },
-        "usage": "{tr}addsudo [username | reply to msg]"
+        "usage": "{tr}addsudo [username | reply to msg]",
     },
     allow_channels=False,
 )
@@ -86,10 +86,15 @@ async def add_sudo(message: Message):
         await message.err(str(p_e))
         return
     if "-t" in message.flags:
-        if user['id'] in Config.TRUSTED_SUDO_USERS:
-            await message.edit(f"user : `{user['id']}` already in **TRUSTED SUDO**!", del_in=5)
+        if user["id"] in Config.TRUSTED_SUDO_USERS:
+            await message.edit(
+                f"user : `{user['id']}` already in **TRUSTED SUDO**!", del_in=5
+            )
         else:
-            if user["id"] in Config.OWNER_ID or user["id"] == (await userge.get_me()).id:
+            if (
+                user["id"] in Config.OWNER_ID
+                or user["id"] == (await userge.get_me()).id
+            ):
                 await message.edit(
                     f"user : `{user['id']}` is in `OWNER_ID` so no need to add in sudo",
                     del_in=5,
@@ -161,16 +166,18 @@ async def del_sudo(message: Message):
         await message.err("invalid type!")
         return
     if "-t" in message.flags:
-        if not (user['id'] in Config.TRUSTED_SUDO_USERS):
-            await message.edit(f"user : `{user['id']}` already not in **TRUSTED SUDO**!", del_in=5)
+        if not (user["id"] in Config.TRUSTED_SUDO_USERS):
+            await message.edit(
+                f"user : `{user['id']}` already not in **TRUSTED SUDO**!", del_in=5
+            )
         else:
             Config.TRUSTED_SUDO_USERS.remove(user["id"])
             await asyncio.gather(
-                SUDO_USERS_COLLECTION.delete_one(
-                    {"_id": user["id"]}
-                ),
+                SUDO_USERS_COLLECTION.delete_one({"_id": user["id"]}),
                 message.edit(
-                    f"user : `{user['id']}` removed to **SUDO**!", del_in=5, log=__name__
+                    f"user : `{user['id']}` removed to **SUDO**!",
+                    del_in=5,
+                    log=__name__,
                 ),
             )
         return
