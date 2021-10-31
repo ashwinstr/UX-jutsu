@@ -105,11 +105,11 @@ async def add_sudo(message: Message):
                 return
             Config.TRUSTED_SUDO_USERS.add(user["id"])
             await asyncio.gather(
-                SUDO_USERS_COLLECTION.insert_one(
+                TRUSTED_SUDO_USERS.insert_one(
                     {"_id": user["id"], "men": user["mention"]}
                 ),
                 message.edit(
-                    f"user : `{user['id']}` added to **SUDO**!", del_in=5, log=__name__
+                    f"user : `{user['id']}` added to **TRUSTED SUDO**!", del_in=5, log=__name__
                 ),
             )
         return
@@ -173,7 +173,7 @@ async def del_sudo(message: Message):
         else:
             Config.TRUSTED_SUDO_USERS.remove(user["id"])
             await asyncio.gather(
-                SUDO_USERS_COLLECTION.delete_one({"_id": user["id"]}),
+                TRUSTED_SUDO_USERS.delete_one({"_id": user["id"]}),
                 message.edit(
                     f"user : `{user['id']}` removed to **SUDO**!",
                     del_in=5,
