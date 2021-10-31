@@ -103,12 +103,11 @@ async def add_sudo(message: Message):
             if user["id"] in Config.TG_IDS:
                 await message.err("Not Permitted due to security reasons", del_in=7)
                 return
-            if user['id'] in Config.SUDO_USERS:
-                Config.SUDO_USERS.remove(user['id'])
+            if user["id"] in Config.SUDO_USERS:
+                Config.SUDO_USERS.remove(user["id"])
                 await SUDO_USERS_COLLECTION.delete_one({"_id": user["id"]})
-                verb_ = "transferred"
             else:
-                verb_ = "added"
+                pass
             Config.TRUSTED_SUDO_USERS.add(user["id"])
             await asyncio.gather(
                 TRUSTED_SUDO_USERS.insert_one(
@@ -133,12 +132,11 @@ async def add_sudo(message: Message):
         if user["id"] in Config.TG_IDS:
             await message.err("Not Permitted due to security reasons", del_in=7)
             return
-        if user['id'] in Config.TRUSTED_SUDO_USERS:
-            Config.TRUSTED_SUDO_USERS.remove(user['id'])
+        if user["id"] in Config.TRUSTED_SUDO_USERS:
+            Config.TRUSTED_SUDO_USERS.remove(user["id"])
             await TRUSTED_SUDO_USERS.delete_one({"_id": user["id"]})
-            verb_ = "transferred"
         else:
-            verb_ = "added"
+            pass
         Config.SUDO_USERS.add(user["id"])
         await asyncio.gather(
             SUDO_USERS_COLLECTION.insert_one(
@@ -184,9 +182,7 @@ async def del_sudo(message: Message):
         await message.err("invalid type!")
         return
     if user_id not in Config.TRUSTED_SUDO_USERS and user_id not in Config.SUDO_USERS:
-        await message.edit(
-            f"user : `{user_id}` already not in any **SUDO**!", del_in=5
-        )
+        await message.edit(f"user : `{user_id}` already not in any **SUDO**!", del_in=5)
     elif user_id in Config.TRUSTED_SUDO_USERS:
         Config.TRUSTED_SUDO_USERS.remove(user_id)
         await asyncio.gather(
