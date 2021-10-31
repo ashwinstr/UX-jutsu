@@ -107,7 +107,6 @@ async def add_sudo(message: Message):
                     f"user : `{user['id']}` added to **SUDO**!", del_in=5, log=__name__
                 ),
             )
-        )
         return
     if user["id"] in Config.SUDO_USERS:
         await message.edit(f"user : `{user['id']}` already in **SUDO**!", del_in=5)
