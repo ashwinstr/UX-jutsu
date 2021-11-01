@@ -20,7 +20,7 @@ motor>=2.3.0
 #numpy
 oauth2client>=4.1.3
 opencv-python
-Pillow==8.2.0
+Pillow==8.4.0
 psutil>=5.7.3
 pybase64>=1.1.1
 PyDictionary>=2.0.1
@@ -44,10 +44,10 @@ tgcrypto
 urbandict>=0.5
 wget>=3.2
 wikipedia>=1.4.0
-git+https://github.com/ytdl-org/youtube-dl
+youtube_dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
-ruamel.yaml==0.17.2
+ruamel.yaml==0.17.17
 ujson>=4.0.1
-youtube-search-python==1.4.3
+youtube-search-python==1.4.9
 git+https://github.com/code-rgb/google-images-download.git
 feedparser>=6.0.2
