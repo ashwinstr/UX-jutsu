@@ -468,7 +468,7 @@ async def zombie_clean(message: Message):
     """remove deleted accounts from tg group"""
     chat_ = message.filtered_input_str
     if not chat_:
-        chat_id = message.chat.id
+        chat_ = message.chat.id
         if message.chat.type == "private":
             return await message.edit("`Chat can't be private...`", del_in=5)
     try:
