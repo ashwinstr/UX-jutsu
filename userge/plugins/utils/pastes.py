@@ -213,7 +213,7 @@ _SERVICES: Dict[str, PasteService] = {
     "-s": SpaceBin(),
 }
 
-_DEFAULT_SERVICE = "-k" if Config.HEROKU_ENV else "-n"
+_DEFAULT_SERVICE = "-s" if Config.HEROKU_ENV else "-n"
 _HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 ("
     "KHTML, like Gecko) Cafari/537.36"
