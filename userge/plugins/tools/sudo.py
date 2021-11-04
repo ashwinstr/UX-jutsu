@@ -188,7 +188,7 @@ async def del_sudo(message: Message):
         await asyncio.gather(
             TRUSTED_SUDO_USERS.delete_one({"_id": user_id}),
             message.edit(
-                f"user : `{user_id}` removed to **TRUSTED SUDO**!",
+                f"user : `{user_id}` removed from **TRUSTED SUDO**!",
                 del_in=5,
                 log=__name__,
             ),
