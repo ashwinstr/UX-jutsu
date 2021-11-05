@@ -1,5 +1,6 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
+import asyncio
 from typing import Union
 from pyrogram.errors import UserNotParticipant
 from pyrogram.raw.functions.account import ReportPeer
@@ -182,6 +183,7 @@ async def admin_chats(user_id: int) -> dict:
 
 
 async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
+    await asyncio.sleep(timeout)
     if filter_user:
         try:
             user_ = await userge.get_users(filter_user)
