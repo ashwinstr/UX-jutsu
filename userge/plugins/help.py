@@ -494,7 +494,7 @@ if userge.has_bot:
         iq_user_id = inline_query.from_user.id
         if (
             (iq_user_id in Config.OWNER_ID)
-            or (iq_user_id in Config.SUDO_USERS)
+            or (iq_user_id in Config.SUDO_USERS or iq_user_id in Config.TRUSTED_SUDO_USERS)
             and Config.SUDO_ENABLED
         ):
 
