@@ -257,6 +257,8 @@ async def add_sudo_cmd(message: Message):
                         "delsudo",
                         "sudo",
                         "vsudo",
+                        "freeze",
+                        "defreeze"
                     ]
                 ):
                     tmp_.append({"_id": t_c})
