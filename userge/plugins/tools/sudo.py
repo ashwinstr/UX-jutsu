@@ -249,7 +249,7 @@ async def add_sudo_cmd(message: Message):
         "vsudo",
         "freeze",
         "defreeze",
-    ]  
+    ]
     if "-all" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()
         Config.ALLOWED_COMMANDS.clear()
@@ -258,10 +258,7 @@ async def add_sudo_cmd(message: Message):
             t_c = c_d.lstrip(Config.CMD_TRIGGER)
             if "-all" in message.flags:
                 mode_ = "all"
-                if not (
-                    t_c
-                    in blocked_cmd
-                ):
+                if not (t_c in blocked_cmd):
                     tmp_.append({"_id": t_c})
                     Config.ALLOWED_COMMANDS.add(t_c)
         await asyncio.gather(
@@ -279,7 +276,10 @@ async def add_sudo_cmd(message: Message):
         return
     cmd = cmd.lstrip(Config.CMD_TRIGGER)
     if cmd in blocked_cmd:
-        return await message.err(f"Command {cmd} is dangerous, so can't be added for normal sudo users!", del_in=5)
+        return await message.err(
+            f"Command {cmd} is dangerous, so can't be added for normal sudo users!",
+            del_in=5,
+        )
     if cmd in Config.ALLOWED_COMMANDS:
         await message.edit(f"cmd : `{cmd}` already in **SUDO**!", del_in=5)
     elif cmd not in (
