@@ -33,7 +33,7 @@ rarfile>=4.0
 removebg>=0.4
 requests>=2.25.0
 scikit-image
-git+https://github.com/code-rgb/search-engine-parser
+search-engine-parser
 selenium==3.141.0
 setuptools>=40.3.0
 spamwatch>=0.3.0
