@@ -26,6 +26,8 @@ async def ss_video(message: Message):
         return await message.edit("`Reply to a video...`", del_in=5)
     try:
         frame = int(message.filtered_input_str)
+        if not frame:
+            frame = 4
         if frame > 10:
             return await message.edit("`Limit is 10 frames...`", del_in=5)
     except BaseException:
