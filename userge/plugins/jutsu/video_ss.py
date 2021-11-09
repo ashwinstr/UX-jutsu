@@ -4,6 +4,7 @@
 import asyncio
 import os
 import time
+import vcsi
 
 from userge import Message, userge
 from userge.utils import progress
