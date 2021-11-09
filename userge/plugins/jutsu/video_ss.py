@@ -23,7 +23,7 @@ async def ss_video(message: Message):
     reply_ = message.reply_to_message
     if not reply_:
         return await message.edit("`Reply to video...`", del_in=5)
-    if not reply_.video:
+    if not reply_.video and not reply_.animation:
         return await message.edit("`Reply to a video...`", del_in=5)
     try:
         frame = int(message.filtered_input_str)
