@@ -43,6 +43,7 @@ stagger>=1.0.0
 telegraph>=1.4.1
 tgcrypto
 urbandict>=0.5
+vcsi
 wget>=3.2
 wikipedia>=1.4.0
 youtube_dl
