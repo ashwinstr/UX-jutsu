@@ -53,7 +53,7 @@ async def deezing_(message: Message):
             ),
             message.delete(),
         )
-    except BaseException as e:
+    except BaseException:
         await message.err(
             "`Something unexpected happend.`\n<b>ERROR:</b> `{e}`", del_in=5
         )

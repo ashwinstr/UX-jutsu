@@ -4,7 +4,7 @@
 
 from asyncio import gather
 
-from userge import userge, Message, Config
+from userge import Config, Message, userge
 from userge.helpers import capitaled
 
 
@@ -41,11 +41,11 @@ async def flac_bot(message: Message):
             ),
             message.delete(),
         )
-    except BaseException as e:
+    except BaseException:
         await message.err(
             "`Something unexpected happend.`\n<b>ERROR:</b> `{e}`", del_in=5
         )
-    
+
 
 @userge.on_cmd(
     "flac_q",
@@ -58,7 +58,7 @@ async def flac_bot(message: Message):
             "flac": "FLAC quality",
             "320": "MP3_320",
             "256": "MP3_256",
-            "128": "MP3_128"
+            "128": "MP3_128",
         },
         "usage": "{tr}flac_q flac or 320 or 256 or 128",
     },
@@ -77,7 +77,9 @@ async def flac_quality(message: Message):
     if not input_:
         return await message.edit("`Provide quality to set...`", del_in=5)
     if input_ not in message.options:
-        return await message.edit("`Input not found in available options, see 'help flac_q'...", del_in=5)
+        return await message.edit(
+            "`Input not found in available options, see 'help flac_q'...", del_in=5
+        )
     if input_ == "flac":
         q_ = 0
         quality = "FLAC"
@@ -94,7 +96,7 @@ async def flac_quality(message: Message):
     async with userge.conversation(bot_) as conv:
         try:
             await conv.send_message("/settings")
-        except:
+        except BaseException:
             return await message.edit("`Unblock` @FlacStoreBot `first.`", del_in=5)
         resp_one = await conv.get_response(mark_read=True)
         await resp_one.click()
