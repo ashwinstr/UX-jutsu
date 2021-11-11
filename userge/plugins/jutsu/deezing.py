@@ -77,7 +77,7 @@ async def dlist_(message: Message):
         bot_ = "deezermusicbot"
     else:
         bot_ = "FlacStoreBot"
-    query_ = message.input_str
+    query_ = message.filtered_input_str
     if not query_:
         await message.err("`Input not found...`", del_in=5)
         return
