@@ -2,8 +2,6 @@
 # before porting please ask to Kakashi
 
 
-from asyncio import gather
-
 from userge import Config, Message, userge
 from userge.helpers import capitaled
 
@@ -46,7 +44,9 @@ async def flac_bot(message: Message):
         async with userge.conversation(bot_) as conv:
             await conv.get_response(mark_read=True)
             music_ = await conv.get_response(mark_read=True)
-        await userge.copy_message(message.chat.id, bot_, music_.message_id, reply_to_message_id=reply_to)
+        await userge.copy_message(
+            message.chat.id, bot_, music_.message_id, reply_to_message_id=reply_to
+        )
         await message.delete()
     except BaseException as e:
         await message.edit(
@@ -84,8 +84,10 @@ async def flac_quality(message: Message):
     input_ = message.input_str
     if not input_:
         return await message.edit("`Provide quality to set...`", del_in=5)
-    if input_ not in ['flac', '320', '256', '128']:
-        return await message.edit("`Input not found in available options, see 'help flac_q'...`", del_in=5)
+    if input_ not in ["flac", "320", "256", "128"]:
+        return await message.edit(
+            "`Input not found in available options, see 'help flac_q'...`", del_in=5
+        )
     if input_ == "flac":
         q_ = 0
         quality = "FLAC"
