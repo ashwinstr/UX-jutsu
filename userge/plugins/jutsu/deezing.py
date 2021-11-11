@@ -65,12 +65,18 @@ async def deezing_(message: Message):
         "header": "deezer music list",
         "description": "get music list from deezer"
         "\nSudo users use dz after getting the list",
+        "flags": {
+            "-f": "use FlacStoreBot instead of deezermusicbot",
+        },
         "usage": "{tr}dzlist [query]",
     },
 )
 async def dlist_(message: Message):
     """get list and number corresponding to songs"""
-    bot_ = "deezermusicbot"
+    if "-f" not in message.flags:
+        bot_ = "deezermusicbot"
+    else:
+        bot_ = "FlacStoreBot"
     query_ = message.input_str
     if not query_:
         await message.err("`Input not found...`", del_in=5)
