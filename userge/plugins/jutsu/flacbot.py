@@ -12,6 +12,7 @@ from userge.helpers import capitaled
     "flac",
     about={
         "header": "download music with FlacBot",
+        "description": "change quality with flac_q",
         "usage": "{tr}flac [artist and song name]",
     },
 )
