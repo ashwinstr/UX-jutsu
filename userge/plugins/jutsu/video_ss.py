@@ -5,7 +5,7 @@ import asyncio
 import os
 import time
 
-from userge import userge, Message
+from userge import Message, userge
 from userge.utils import progress
 
 
@@ -23,10 +23,14 @@ async def ss_video(message: Message):
     reply_ = message.reply_to_message
     if not reply_:
         return await message.edit("`Reply to video...`", del_in=5)
-    if not reply_.video:
+    if not reply_.video and not reply_.animation:
         return await message.edit("`Reply to a video...`", del_in=5)
     try:
-        frame = int(message.filtered_input_str)
+        frame = message.filtered_input_str
+        if not frame:
+            frame = 4
+        else:
+            frame = int(frame)
         if frame > 10:
             return await message.edit("`Limit is 10 frames...`", del_in=5)
     except BaseException:
