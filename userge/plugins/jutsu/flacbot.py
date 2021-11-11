@@ -27,23 +27,30 @@ async def flac_bot(message: Message):
     results = await userge.get_inline_bot_results(bot_, query_)
     if not results:
         return await message.edit("`Results not found...`", del_in=5)
+    log_send = await userge.send_inline_bot_result(
+        chat_id=Config.LOG_CHANNEL_ID,
+        query_id=results.query_id,
+        result_id=results.results[0].id,
+    )
+    reply_ = message.reply_to_message
+    if reply_:
+        reply_to = reply_.message_id
+    else:
+        reply_to = None
     try:
-        log_send = await userge.send_inline_bot_result(
-            chat_id=Config.LOG_CHANNEL_ID,
-            query_id=results.query_id,
-            result_id=results.results[0].id,
-        )
-        await gather(
-            userge.copy_message(
-                chat_id=message.chat.id,
-                from_chat_id=Config.LOG_CHANNEL_ID,
-                message_id=log_send.updates[0].id,
-            ),
-            message.delete(),
-        )
+        await userge.copy_message(
+            chat_id=bot_,
+            from_chat_id=Config.LOG_CHANNEL_ID,
+            message_id=log_send.updates[0].id,
+        ),
+        async with userge.conversation(bot_) as conv:
+            await conv.get_response(mark_read=True)
+            music_ = await conv.get_response(mark_read=True)
+        await userge.copy_message(message.chat.id, bot_, music_.message_id, reply_to_message_id=reply_to)
+        await message.delete()
     except BaseException as e:
-        await message.err(
-            "`Something unexpected happend.`\n<b>ERROR:</b> `{e}`", del_in=5
+        await message.edit(
+            f"`Something unexpected happened.`\n<b>Error:</b> `{e}`", del_in=5
         )
     
 
@@ -71,13 +78,14 @@ async def flac_quality(message: Message):
             await conv.send_message("/settings")
             check = await conv.get_response(mark_read=True)
         quality_ = check.reply_markup.inline_keyboard[0][0].text
-        await message.edit(f"`{quality_}", del_in=5)
+        qual = quality_.split()[1]
+        await message.edit(f"`Current quality set in the bot is: {qual}`", del_in=5)
         return
     input_ = message.input_str
     if not input_:
         return await message.edit("`Provide quality to set...`", del_in=5)
-    if input_ not in message.options:
-        return await message.edit("`Input not found in available options, see 'help flac_q'...", del_in=5)
+    if input_ not in ['flac', '320', '256', '128']:
+        return await message.edit("`Input not found in available options, see 'help flac_q'...`", del_in=5)
     if input_ == "flac":
         q_ = 0
         quality = "FLAC"
