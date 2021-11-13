@@ -115,7 +115,7 @@ async def create_button(msg: Message):
         "description": "First Create a Inline via @Botfather and "
         "Add bot token To Config Vars",
         "usage": "{tr}ibutton [reply to button msg]",
-        "buttons": "<code>[name][buttonurl:link] or [name](buttonurl:link)</code> - <b>add a url button</b>\n"
+        "buttons": "<code>Description [name][buttonurl:link] or [name](buttonurl:link)</code> - <b>add a url button</b>\n"
         "<code>[name][buttonurl:link:same]</code> - "
         "<b>add a url button to same row</b>",
     },
