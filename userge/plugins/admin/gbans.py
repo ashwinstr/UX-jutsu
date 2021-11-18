@@ -232,10 +232,10 @@ async def ungban_user(message: Message):
 async def gban_new(message: Message):
     """gban in all groups and channels"""
     input_ = message.input_str
-    if not input_:
+    reply_ = message.reply_to_message
+    if not input_ and not reply_:
         return await message.edit("`Input not found.`", del_in=5)
     input_ = (input_).split(" ", 1)
-    reply_ = message.reply_to_message
     if len(input_) == 2:
         user_ = input_[0]
         try:
@@ -247,7 +247,9 @@ async def gban_new(message: Message):
             if not reply_:
                 return await message.edit("`Provided user is not valid.`", del_in=5)
             user_id = reply_.from_user.id
-            user_n = full_name(user_)
+            user_n = " ".join(
+                [reply_.from_user.first_name, reply_.from_user.last_name or ""]
+            )
             reason_ = message.input_str
     elif len(input_) == 1:
         user_ = input_[0]
@@ -260,14 +262,18 @@ async def gban_new(message: Message):
             if not reply_:
                 return await message.edit("`Provided user is not valid.`", del_in=5)
             user_id = reply_.from_user.id
-            user_n = full_name(user_)
+            user_n = " ".join(
+                [reply_.from_user.first_name, reply_.from_user.last_name or ""]
+            )
             reason_ = message.input_str
+    await message.edit(f"GBanning user {mention_html(user_id, user_n)}...")
     me_ = await userge.get_me()
     found = await GBAN_USER_BASE.find_one({"user_id": user_id})
     if found:
         gbanned_chats = found["chat_ids"]
     else:
         gbanned_chats = []
+    failed = ""
     async for dia_ in userge.iter_dialogs():
         try:
             chat_ = dia_.chat
@@ -303,8 +309,10 @@ async def gban_new(message: Message):
         "#GBANNED_USER\n\n"
         f"<b>User:</b> {mention_html(user_id, user_n)}\n"
         f"<b>User_ID:</b> `{user_id}` <b>Reason:</b> {reason_}\n"
-        f"<b>GBanned in:</b> {len(gbanned_chats)}"
+        f"<b>GBanned in:</b> {len(gbanned_chats)}\n"
     )
+    if failed:
+        out_ += f"<b>Failed in:</b>\n{failed}"
     await message.edit(out_)
     await CHANNEL.log(
         r"\\**#Antispam_Log**//"
