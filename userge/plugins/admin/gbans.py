@@ -13,8 +13,8 @@ from pyrogram.errors import (
 from spamwatch.types import Ban
 
 from userge import Config, Message, filters, get_collection, pool, userge
+from userge.helpers import full_name
 from userge.utils import get_response, mention_html
-from userge.helpers import admin_or_creato, full_name
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 GBAN_USER_BASE = get_collection("GBAN_USER")
@@ -243,7 +243,7 @@ async def gban_new(message: Message):
             user_id = user_.id
             user_n = full_name(user_)
             reason_ = input_[1]
-        except:
+        except BaseException:
             if not reply_:
                 return await message.edit("`Provided user is not valid.`", del_in=5)
             user_id = reply_.from_user.id
@@ -256,18 +256,16 @@ async def gban_new(message: Message):
             user_id = user_.id
             user_n = full_name(user_)
             reason_ = "Not specified"
-        except:
+        except BaseException:
             if not reply_:
                 return await message.edit("`Provided user is not valid.`", del_in=5)
             user_id = reply_.from_user.id
             user_n = full_name(user_)
             reason_ = message.input_str
     me_ = await userge.get_me()
-    failed_ = ""
-    total_ = 0
     found = await GBAN_USER_BASE.find_one({"user_id": user_id})
     if found:
-        gbanned_chats = found['chat_ids']
+        gbanned_chats = found["chat_ids"]
     else:
         gbanned_chats = []
     async for dia_ in userge.iter_dialogs():
@@ -276,27 +274,29 @@ async def gban_new(message: Message):
             try:
                 me_status = (await userge.get_chat_member(chat_.id, me_.id)).status
                 user_status = (await userge.get_chat_member(chat_.id, user_id)).status
-            except:
+            except BaseException:
                 continue
-            status_ = ['administrator', 'creator']
+            status_ = ["administrator", "creator"]
             if me_status not in status_ or user_status in status_:
                 continue
             try:
                 await userge.kick_chat_member(chat_.id, user_id)
                 gbanned_chats.append[chat_.id]
-            except:
+            except BaseException:
                 failed += f"• {chat_.title} - {chat_.type}\n"
-        except:
+        except BaseException:
             failed += f"• {chat_.title} - {chat_.type}\n"
     if found:
-        await GBAN_USER_BASE.update_one({'user_id': user_id}, {'$set': {'chat_ids': gbanned_chats}}, upsert=True)
+        await GBAN_USER_BASE.update_one(
+            {"user_id": user_id}, {"$set": {"chat_ids": gbanned_chats}}, upsert=True
+        )
     else:
         await GBAN_USER_BASE.insert_one(
             {
                 "firstname": user_n,
                 "user_id": user_id,
                 "reason": reason_,
-                "chat_ids": gbanned_chats
+                "chat_ids": gbanned_chats,
             }
         )
     out_ = (
