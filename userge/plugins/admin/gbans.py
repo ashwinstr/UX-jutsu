@@ -273,6 +273,7 @@ async def gban_new(message: Message):
         gbanned_chats = found["chat_ids"]
     else:
         gbanned_chats = []
+    failed = ""
     async for dia_ in userge.iter_dialogs():
         try:
             chat_ = dia_.chat
@@ -308,8 +309,10 @@ async def gban_new(message: Message):
         "#GBANNED_USER\n\n"
         f"<b>User:</b> {mention_html(user_id, user_n)}\n"
         f"<b>User_ID:</b> `{user_id}` <b>Reason:</b> {reason_}\n"
-        f"<b>GBanned in:</b> {len(gbanned_chats)}"
+        f"<b>GBanned in:</b> {len(gbanned_chats)}\n"
     )
+    if failed:
+        out_ += f"<b>Failed in:</b>\n{failed}"
     await message.edit(out_)
     await CHANNEL.log(
         r"\\**#Antispam_Log**//"
