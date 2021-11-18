@@ -26,7 +26,7 @@ async def last_logged(message: Message):
         return await message.edit("`Can't search more than 10 messages.`", del_in=5)
     await message.edit("`Looking for last traceback...`")
     num = 0
-    me_ = (await userge.get_users(Config.OWNER_ID)).first_name
+    me_ = (await userge.get_me()).first_name
     async for msg_ in userge.search_messages(Config.LOG_CHANNEL_ID):
         if msg_type(msg_) == "text":
             num += 1
