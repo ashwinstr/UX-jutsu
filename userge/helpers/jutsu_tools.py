@@ -248,6 +248,8 @@ def extract_id(mention: str):
         return "Input is not a mention but an id..."
     elif mention.startswith("@"):
         return "Input is not a mention but a username..."
-    mention = mention.html
-    filter = (re.search(r"\d+", mention)).group(1)
-    return filter
+    mention = mention
+    filter = re.search(r"\d+", mention)
+    if filter: 
+        return filter.group(1)
+    return "ID not found."
