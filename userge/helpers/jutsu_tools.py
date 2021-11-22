@@ -1,5 +1,6 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
+import re
 import asyncio
 from typing import Union
 from pyrogram.errors import UserNotParticipant
@@ -240,3 +241,13 @@ def msg_type(message):
     elif message.video:
         type_ = "video"
     return type_
+
+
+def extract_id(mention: str):
+    if mention.isdigit():
+        return "Input is not a mention but an id..."
+    elif mention.startswith("@"):
+        return "Input is not a mention but a username..."
+    mention = mention.html
+    filter = (re.search(r"\d+", mention)).group(1)
+    return filter
