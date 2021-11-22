@@ -15,7 +15,7 @@ from pyrogram import filters
 from pyrogram.errors import FloodWait, PeerIdInvalid, UserBannedInChannel
 
 from userge import Config, Message, get_collection, userge
-from userge.helpers import report_user
+from userge.helpers import extract_id, report_user
 
 FBAN_LOG_CHANNEL = os.environ.get("FBAN_LOG_CHANNEL")
 
@@ -111,6 +111,8 @@ async def fban_(message: Message):
     await message.edit(fban_arg[0])
     if not message.reply_to_message:
         user = input.split()[0]
+        if not user.isdigit() and not user.startswith("@"):
+            user = extract_id(user)
         reason = input.split()[1:]
         reason = " ".join(reason)
     else:
@@ -302,6 +304,8 @@ async def fban_p(message: Message):
             )
             return
         user = input.split()[0]
+        if not user.isdigit() and not user.startswith("@"):
+            user = extract_id(user)
         reason = input.split()[1:]
         reason = " ".join(reason)
         try:
