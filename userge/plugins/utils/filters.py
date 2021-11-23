@@ -185,6 +185,8 @@ async def delete_filters(message: Message) -> None:
 async def add_filter(message: Message) -> None:
     """add filter to current chat"""
     filter_ = message.matches[0].group(1).strip()
+    if "-p" in filter_:
+        filter_ = (filter_.replace("-p", "")).strip()
     content = message.matches[0].group(2)
     replied = message.reply_to_message
     if replied and replied.text:
