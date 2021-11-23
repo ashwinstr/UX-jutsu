@@ -160,6 +160,9 @@ async def delete_filters(message: Message) -> None:
     r"addfilter ([^\s\|][^\|]*)(?:\s?\|\s?([\s\S]+))?",
     about={
         "header": "Adds a filter by name",
+        "flags": {
+            "-p": "enable link preview",
+        },
         "options": {
             "{fname}": "add first name",
             "{lname}": "add last name",
@@ -197,10 +200,13 @@ async def add_filter(message: Message) -> None:
         await message.err(f"invalid media type [ {filter_} ] !")
         return
     await message.edit("`adding filter ...`")
+    dis_pre = True
+    if "-p" in message.flags:
+        dis_pre = False
     message_id = await CHANNEL.store(replied, content)
     _filter_updater(message.chat.id, filter_, message_id)
     result = await FILTERS_COLLECTION.update_one(
-        {"chat_id": message.chat.id, "name": filter_},
+        {"chat_id": message.chat.id, "name": filter_, "dis_preview": dis_pre},
         {"$set": {"mid": message_id}},
         upsert=True,
     )
@@ -240,6 +246,7 @@ async def chat_filter(message: Message) -> None:
                     message_id=FILTERS_DATA[message.chat.id][name],
                     chat_id=message.chat.id,
                     user_id=message.from_user.id,
+                    dis_preview=FILTERS_DATA['dis_preview'],
                     reply_to_message_id=message.message_id,
                 )
     except RuntimeError:
