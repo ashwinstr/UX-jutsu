@@ -153,6 +153,7 @@ class ChannelLogger:
                              chat_id: int,
                              user_id: int,
                              reply_to_message_id: int,
+                             disable_web_page_preview:bool=True,
                              del_in: int = 0,
                              allow_random:bool=True) -> None:
         """\nforward stored message from log channel.
