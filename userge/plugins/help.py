@@ -530,7 +530,7 @@ if userge.has_bot:
                 ]
                 results.append(
                     InlineQueryResultPhoto(
-                        photo_url="https://i.imgur.com/Zg58iXc.jpg",
+                        photo_url="https://telegra.ph/file/87653d81b25e2960cf251.jpg",
                         caption="**ARE YOU OLD ENOUGH FOR THIS ?**",
                         reply_markup=InlineKeyboardMarkup(buttons),
                     )
