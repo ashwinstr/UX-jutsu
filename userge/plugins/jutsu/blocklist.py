@@ -3,6 +3,7 @@
 
 import os
 import asyncio
+import time
 from pyrogram import filters
 from pyrogram.types import ChatPermissions
 from pyrogram.errors import FloodWait
@@ -10,7 +11,7 @@ from userge import userge, Message, get_collection
 from userge.helpers import msg_type
 from userge.helpers import admin_or_creator, full_name
 
-from .block_functions import audio_, video_, photo_, document_, animation_, sticker_, voice_, video_note_, media_
+from ..jutsu.block_functions import audio_, video_, photo_, document_, animation_, sticker_, voice_, video_note_, media_
 
 BLOCKED = get_collection("BLOCKED")
 BLOCKLISTING = os.environ.get("BLOCKLISTING")
@@ -39,14 +40,6 @@ MODE_ = [
 
 DATA_ = {}
 
-""" async def _init():
-    global DATA_
-    data = open("userge/xcache/blocklist.txt", "r")
-
-    DATA_['chat_id'] = data['chat_id']
-    for one in TYPES_:
-        DATA_['blocked'][one] = data.get(one) """
-
 
 @userge.on_cmd(
     "bl",
@@ -73,7 +66,7 @@ async def bl_ock(message: Message):
                 "chat_id": message.chat.id,
                 "block_tog": True,
                 "block_mode": None,
-                "time": 0,
+                "seconds": 0,
                 "blocked": {
                     "audio": False,
                     "video": False,
@@ -87,23 +80,6 @@ async def bl_ock(message: Message):
                 }
             }
         )
-        """ bl_list = await BLOCK.find_one({'chat_id': message.chat.id})
-        if bl_list:
-            with open("userge/xcache/blocklist.txt", "w+") as list_:
-                bl_ = re.sub("'_id'.+\),\s", "", str(bl_list), count=1)
-                list_.write(bl_)
-            global DATA_
-            num = 0
-            for one in DATA_:
-                if one['chat_id'] == message.chat.id:
-                    found_it = True
-                    DATA_.pop(num)
-                    DATA_.append(ast.literal_eval(list_))
-                    break
-                else:
-                    found_it = False
-            if not found_it:
-                DATA_.append(ast.literal_eval(list_)) """
         block_tog = True
     flags = message.flags
     if "-c" in flags:
@@ -157,9 +133,10 @@ async def bl_mode(message: Message):
     else:
         time = 0
     if mode not in MODE_:
-        return await message.edit("`Send a valid mode to set to...`", del_in==5)
+        return await message.edit("`Send a valid mode to set to...`", del_in=5)
     await BLOCKED.update_one({"chat_id": message.chat.id}, {"$set": {"block_mode": mode}}, upsert=True)
-    await BLOCKED.update_one({"chat_id": message.chat.id}, {"$set": {"time": time}}, upsert=True)
+    await BLOCKED.update_one({"chat_id": message.chat.id}, {"$set": {"time": _time}}, upsert=True)
+    await BLOCKED.update_one({"chat_id": message.chat.id}, {"$set": {"seconds": time}}, upsert=True)
     await message.edit(f"BlockMode: {mode}\nTime: {_time}")
 
 
@@ -197,7 +174,7 @@ async def add_bl_(message: Message):
     if not out_:
         await message.edit("`Nothing has changed...`", del_in=5)
     else:
-        await message.edit(f"`Changed the following:\n\n{out}")
+        await message.edit(f"`Changed the following:\n\n{out_}")
 
 
 @userge.on_cmd(
@@ -230,10 +207,10 @@ async def add_bl_(message: Message):
             upsert=True
         )
         out_ += f"• <b>{block}</b> = False\n"
-    if not out:
+    if not out_:
         await message.edit("`Nothing has changed...`", del_in=5)
     else:
-        await message.edit(f"`Changed the following:\n\n{out}")
+        await message.edit(f"`Changed the following:\n\n{out_}")
 
 
 @userge.on_cmd(
@@ -320,7 +297,7 @@ async def bl_action(_, message: Message):
             return
         if found['blocked'][msg_type(message)]:
             user_ = message.from_user.id
-            name_ = full_name(await userge.get_user(user_))
+            name_ = full_name(await userge.get_users(user_))
             chat_id = message.chat.id
             await message.delete()
             msg = await take_action(chat_id, user_)
@@ -338,25 +315,26 @@ async def take_action(chat_id: int, user_id: int):
     found = await BLOCKED.find_one({"chat_id": chat_id})
     if not found:
         return
-    time = found['time']
+    time_ = found['seconds']
     if found['block_mode'] == "kick":
         await userge.kick_chat_member(chat_id, user_id)
         await userge.unban_chat_member(chat_id, user_id)
         type_ = "KICKED"
     elif found['block_mode'] == "ban":
-        await userge.kick_chat_member(chat_id, user_id, until_date=int(time.time() + time))
+        await userge.kick_chat_member(chat_id, user_id, until_date=int(time.time() + time_))
         type_ = "BANNED"
     elif found['block_mode'] in ["mute", "tmute"]:
-        await userge.restrict_chat_member(chat_id, user_id, ChatPermissions, until_date=int(time.time() + time))
+        await userge.restrict_chat_member(chat_id, user_id, ChatPermissions(), until_date=int(time.time() + time_))
         type_ = "MUTED"
-        if time == 0:
+        if time_ == 0:
             mute_time = "forever"
         else:
-            mute_time = _time
+            mute_time = time_
     user_ = await userge.get_users(user_id)
+
     msg = (
         f"### <b>{type_}</b> ###\n"
-        f"<b>USER:</b> {user_.mention} (`{user_id}`)"
-        f"<b>FOR:</b> {mute_time}"
+        f"<b>USER:</b> {user_.mention} (`{user_id}`)\n"
+        f"<b>FOR:</b> {found['time']}"
     )
     return msg
