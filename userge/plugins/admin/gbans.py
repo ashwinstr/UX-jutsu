@@ -13,6 +13,7 @@ from pyrogram.errors import (
 from spamwatch.types import Ban
 
 from userge import Config, Message, filters, get_collection, pool, userge
+from userge.helpers import full_name
 from userge.utils import get_response, mention_html
 
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -217,6 +218,110 @@ async def ungban_user(message: Message):
         f"**User ID:** `{user_id}`"
     )
     LOG.info("UnGbanned %s", str(user_id))
+
+
+@userge.on_cmd(
+    "gban_n",
+    about={
+        "header": "gban in all groups and channels",
+        "usage": "{tr}gban_n [reply to user]",
+    },
+    allow_channels=False,
+    allow_bots=False,
+)
+async def gban_new(message: Message):
+    """gban in all groups and channels"""
+    input_ = message.input_str
+    reply_ = message.reply_to_message
+    if not input_ and not reply_:
+        return await message.edit("`Input not found.`", del_in=5)
+    input_ = (input_).split(" ", 1)
+    if len(input_) == 2:
+        user_ = input_[0]
+        try:
+            user_ = await userge.get_users(user_)
+            user_id = user_.id
+            user_n = full_name(user_)
+            reason_ = input_[1]
+        except BaseException:
+            if not reply_:
+                return await message.edit("`Provided user is not valid.`", del_in=5)
+            user_id = reply_.from_user.id
+            user_n = " ".join(
+                [reply_.from_user.first_name, reply_.from_user.last_name or ""]
+            )
+            reason_ = message.input_str
+    elif len(input_) == 1:
+        user_ = input_[0]
+        try:
+            user_ = await userge.get_users(user_)
+            user_id = user_.id
+            user_n = full_name(user_)
+            reason_ = "Not specified"
+        except BaseException:
+            if not reply_:
+                return await message.edit("`Provided user is not valid.`", del_in=5)
+            user_id = reply_.from_user.id
+            user_n = " ".join(
+                [reply_.from_user.first_name, reply_.from_user.last_name or ""]
+            )
+            reason_ = message.input_str
+    await message.edit(f"GBanning user {mention_html(user_id, user_n)}...")
+    me_ = await userge.get_me()
+    found = await GBAN_USER_BASE.find_one({"user_id": user_id})
+    if found:
+        gbanned_chats = found["chat_ids"]
+    else:
+        gbanned_chats = []
+    failed = ""
+    async for dia_ in userge.iter_dialogs():
+        try:
+            chat_ = dia_.chat
+            try:
+                me_status = (await userge.get_chat_member(chat_.id, me_.id)).status
+                user_status = (await userge.get_chat_member(chat_.id, user_id)).status
+            except BaseException:
+                continue
+            status_ = ["administrator", "creator"]
+            if me_status not in status_ or user_status in status_:
+                continue
+            try:
+                await userge.kick_chat_member(chat_.id, user_id)
+                gbanned_chats.append[chat_.id]
+            except BaseException:
+                failed += f"• {chat_.title} - {chat_.type}\n"
+        except BaseException:
+            failed += f"• {chat_.title} - {chat_.type}\n"
+    if found:
+        await GBAN_USER_BASE.update_one(
+            {"user_id": user_id}, {"$set": {"chat_ids": gbanned_chats}}, upsert=True
+        )
+    else:
+        await GBAN_USER_BASE.insert_one(
+            {
+                "firstname": user_n,
+                "user_id": user_id,
+                "reason": reason_,
+                "chat_ids": gbanned_chats,
+            }
+        )
+    out_ = (
+        "#GBANNED_USER\n\n"
+        f"<b>User:</b> {mention_html(user_id, user_n)}\n"
+        f"<b>User_ID:</b> `{user_id}` <b>Reason:</b> {reason_}\n"
+        f"<b>GBanned in:</b> {len(gbanned_chats)}\n"
+    )
+    if failed:
+        out_ += f"<b>Failed in:</b>\n{failed}"
+    await message.edit(out_)
+    await CHANNEL.log(
+        r"\\**#Antispam_Log**//"
+        f"\n**User:** {mention_html(user_id, firstname)}\n"
+        f"**User ID:** `{user_id}`\n"
+        f"**Chat:** {chat.title}\n"
+        f"**Chat ID:** `{chat.id}`\n"
+        f"**Reason:** `{reason}`\n\n$GBAN #id{user_id}"
+    )
 
 
 @userge.on_cmd(

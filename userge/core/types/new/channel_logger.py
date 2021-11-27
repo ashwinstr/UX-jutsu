@@ -153,6 +153,7 @@ class ChannelLogger:
                              chat_id: int,
                              user_id: int,
                              reply_to_message_id: int,
+                             dis_preview:bool=True,
                              del_in: int = 0,
                              allow_random:bool=True) -> None:
         """\nforward stored message from log channel.
@@ -213,7 +214,7 @@ class ChannelLogger:
                     chat_id=chat_id,
                     text=caption,
                     reply_to_message_id=reply_to_message_id,
-                    disable_web_page_preview=True,
+                    disable_web_page_preview=dis_preview,
                     reply_markup=buttons if client.is_bot and buttons else None)
             if del_in and msg:
                 await asyncio.sleep(del_in)

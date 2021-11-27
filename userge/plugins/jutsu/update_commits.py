@@ -6,7 +6,8 @@ from os import system
 
 from git import Repo
 from git.exc import GitCommandError
-from userge import userge, Message, Config
+
+from userge import Config, Message, userge
 
 
 @userge.on_cmd(
@@ -29,9 +30,7 @@ async def fetch_(message: Message):
             )
             out = _get_updates(repo, branch)
     if out:
-        change_log = (
-            f"**New UPDATE available for [{branch}]:\n\n📄 CHANGELOG 📄**\n\n"
-        )
+        change_log = f"**New UPDATE available for [{branch}]:\n\n📄 CHANGELOG 📄**\n\n"
         await message.edit_or_send_as_file(
             change_log + out, disable_web_page_preview=True
         )

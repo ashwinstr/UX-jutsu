@@ -8,5 +8,6 @@ from .jutsu_tools import (
     admin_chats,
     get_response,
     full_name,
-    msg_type
+    msg_type,
+    extract_id
 )
