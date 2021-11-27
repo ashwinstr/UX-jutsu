@@ -137,7 +137,10 @@ async def fban_(message: Message):
     input = message.filtered_input_str
     await message.edit(fban_arg[0])
     sudo_ = False
-    if message.from_user.id in Config.SUDO_USERS or message.from_user.id in Config.TRUSTED_SUDO_USERS:
+    if (
+        message.from_user.id in Config.SUDO_USERS
+        or message.from_user.id in Config.TRUSTED_SUDO_USERS
+    ):
         sudo_ = True
     if not message.reply_to_message:
         split_ = input.split(" ", 1)
@@ -280,7 +283,10 @@ async def fban_p(message: Message):
         )
         return
     sudo_ = False
-    if message.from_user.id in Config.SUDO_USERS or message.from_user.id in Config.TRUSTED_SUDO_USERS:
+    if (
+        message.from_user.id in Config.SUDO_USERS
+        or message.from_user.id in Config.TRUSTED_SUDO_USERS
+    ):
         sudo_ = True
     if "-r" in message.flags:
         link_ = message.filtered_input_str
