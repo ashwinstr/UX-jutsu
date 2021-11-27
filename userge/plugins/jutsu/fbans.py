@@ -93,6 +93,33 @@ async def delfed_(message: Message):
 
 
 @userge.on_cmd(
+    "fban_tag",
+    about={
+        "header": "enable / disable fbanner's tag",
+        "flags": {
+            "-c": "check",
+        },
+        "usage": "{tr}fban_tag",
+    },
+)
+async def fban_sudo_tags(message: Message):
+    """enable / disable fbanner's tag"""
+    if not hasattr(Config, "FBAN_TAG"):
+        setattr(Config, "FBAN_TAG", False)
+    if "-c" in message.flags:
+        if Config.FBAN_TAG:
+            return await message.edit("`Fban tags are on.`", del_in=5)
+        else:
+            return await message.edit("`Fban tags are off.`", del_in=5)
+    if Config.FBAN_TAG:
+        Config.FBAN_TAG = False
+        await message.edit("`Fban tags disabled.`", del_in=5)
+    else:
+        Config.FBAN_TAG = True
+        await message.edit("`Fban tags enabled.`", del_in=5)
+
+
+@userge.on_cmd(
     "fban",
     about={
         "header": "Fban user",
@@ -109,12 +136,15 @@ async def fban_(message: Message):
     PROOF_CHANNEL = FBAN_LOG_CHANNEL if FBAN_LOG_CHANNEL else Config.LOG_CHANNEL_ID
     input = message.filtered_input_str
     await message.edit(fban_arg[0])
+    sudo_ = False
+    if message.from_user.id in Config.SUDO_USERS or message.from_user.id in Config.TRUSTED_SUDO_USERS:
+        sudo_ = True
     if not message.reply_to_message:
-        user = input.split()[0]
+        split_ = input.split(" ", 1)
+        user = split_[0]
         if not user.isdigit() and not user.startswith("@"):
             user = extract_id(user)
-        reason = input.split()[1:]
-        reason = " ".join(reason)
+        reason = split_[1]
     else:
         user = message.reply_to_message.from_user.id
         reason = input
@@ -127,6 +157,7 @@ async def fban_(message: Message):
         pass
     if (
         user in Config.SUDO_USERS
+        or user in Config.TRUSTED_SUDO_USERS
         or user in Config.OWNER_ID
         or user == (await message.client.get_me()).id
     ):
@@ -204,8 +235,10 @@ async def fban_(message: Message):
         status = f"Success! Fbanned in `{total}` feds."
     msg_ = (
         fban_arg[3].format(u_link)
-        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
+        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}\n"
     )
+    if sudo_:
+        msg_ += f"**By:** {message.from_user.mention}"
     await message.edit(msg_)
     await userge.send_message(int(PROOF_CHANNEL), msg_)
 
@@ -247,7 +280,7 @@ async def fban_p(message: Message):
         )
         return
     sudo_ = False
-    if message.from_user.id in Config.SUDO_USERS:
+    if message.from_user.id in Config.SUDO_USERS or message.from_user.id in Config.TRUSTED_SUDO_USERS:
         sudo_ = True
     if "-r" in message.flags:
         link_ = message.filtered_input_str
@@ -296,6 +329,7 @@ async def fban_p(message: Message):
     fps = True
     if (
         user in Config.SUDO_USERS
+        or user in Config.TRUSTED_SUDO_USERS
         or user in Config.OWNER_ID
         or user == (await message.client.get_me()).id
     ):
@@ -306,11 +340,11 @@ async def fban_p(message: Message):
                 del_in=5,
             )
             return
-        user = input.split()[0]
+        split_ = input.split(" ", 1)
+        user = split_[0]
         if not user.isdigit() and not user.startswith("@"):
             user = extract_id(user)
-        reason = input.split()[1:]
-        reason = " ".join(reason)
+        reason = split_[1]
         try:
             user_ = await userge.get_users(user)
             user = user_.id
