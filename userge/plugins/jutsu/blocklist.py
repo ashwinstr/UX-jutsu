@@ -2,8 +2,8 @@
 # before porting please ask to Kakashi
 
 import asyncio
-import time
 import os
+import time
 
 from pyrogram import filters
 from pyrogram.errors import FloodWait
@@ -143,9 +143,15 @@ async def bl_mode(message: Message):
         time = 0
     if mode not in MODE_:
         return await message.edit("`Send a valid mode to set to...`", del_in=5)
-    await BLOCKED.update_one({"chat_id": message.chat.id}, {"$set": {"block_mode": mode}}, upsert=True)
-    await BLOCKED.update_one({"chat_id": message.chat.id}, {"$set": {"time": _time}}, upsert=True)
-    await BLOCKED.update_one({"chat_id": message.chat.id}, {"$set": {"seconds": time}}, upsert=True)
+    await BLOCKED.update_one(
+        {"chat_id": message.chat.id}, {"$set": {"block_mode": mode}}, upsert=True
+    )
+    await BLOCKED.update_one(
+        {"chat_id": message.chat.id}, {"$set": {"time": _time}}, upsert=True
+    )
+    await BLOCKED.update_one(
+        {"chat_id": message.chat.id}, {"$set": {"seconds": time}}, upsert=True
+    )
     await message.edit(f"BlockMode: {mode}\nTime: {_time}")
 
 
@@ -287,7 +293,7 @@ async def bl_action(_, message: Message):
             return
         if found["blocked"][msg_type(message)]:
             user_ = message.from_user.id
-            name_ = full_name(await userge.get_users(user_))
+            full_name(await userge.get_users(user_))
             chat_id = message.chat.id
             await message.delete()
             msg = await take_action(chat_id, user_)
@@ -302,21 +308,25 @@ async def take_action(chat_id: int, user_id: int):
     found = await BLOCKED.find_one({"chat_id": chat_id})
     if not found:
         return
-    time_ = found['seconds']
-    if found['block_mode'] == "kick":
+    time_ = found["seconds"]
+    if found["block_mode"] == "kick":
         await userge.kick_chat_member(chat_id, user_id)
         await userge.unban_chat_member(chat_id, user_id)
         type_ = "KICKED"
-    elif found['block_mode'] == "ban":
-        await userge.kick_chat_member(chat_id, user_id, until_date=int(time.time() + time_))
+    elif found["block_mode"] == "ban":
+        await userge.kick_chat_member(
+            chat_id, user_id, until_date=int(time.time() + time_)
+        )
         type_ = "BANNED"
-    elif found['block_mode'] in ["mute", "tmute"]:
-        await userge.restrict_chat_member(chat_id, user_id, ChatPermissions(), until_date=int(time.time() + time_))
+    elif found["block_mode"] in ["mute", "tmute"]:
+        await userge.restrict_chat_member(
+            chat_id, user_id, ChatPermissions(), until_date=int(time.time() + time_)
+        )
         type_ = "MUTED"
         if time_ == 0:
-            mute_time = "forever"
+            pass
         else:
-            mute_time = time_
+            pass
     user_ = await userge.get_users(user_id)
 
     msg = (
