@@ -244,6 +244,9 @@ async def fban_p(message: Message):
             del_in=5,
         )
         return
+    sudo_ = False
+    if message.from_user.id in Config.SUDO_USERS:
+        sudo_ = True
     if "-r" in message.flags:
         link_ = message.filtered_input_str
         link_split = link_.split()
@@ -397,8 +400,10 @@ async def fban_p(message: Message):
                 status += f"\n• {i}"
     msg_ = (
         fban_arg[3].format(reported, u_link)
-        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}"
+        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}\n"
     )
+    if sudo_:
+        msg_ += f"**By:** {message.from_user.mention}"
     await message.edit(msg_, disable_web_page_preview=True)
     await userge.send_message(
         int(FBAN_LOG_CHANNEL), msg_, disable_web_page_preview=True
