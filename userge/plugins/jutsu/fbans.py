@@ -28,7 +28,7 @@ CHANNEL = userge.getCLogger(__name__)
 async def _init() -> None:
     f_t = await SAVED_SETTINGS.find_one({"_id": "FBAN_TAG"})
     if f_t:
-        Config.FBAN_TAG = f_t['data']
+        Config.FBAN_TAG = f_t["data"]
 
 
 @userge.on_cmd(
