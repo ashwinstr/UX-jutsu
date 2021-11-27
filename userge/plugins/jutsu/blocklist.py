@@ -2,15 +2,15 @@
 # before porting please ask to Kakashi
 
 import os
-import re
-import json
-import ast
+import asyncio
 from pyrogram import filters
 from pyrogram.types import ChatPermissions
+from pyrogram.errors import FloodWait
 from userge import userge, Message, get_collection
 from userge.helpers import msg_type
 from userge.helpers import admin_or_creator, full_name
-from userge.plugins.misc.uploads import audio_upload, photo_upload
+
+from .block_functions import audio_, video_, photo_, document_, animation_, sticker_, voice_, video_note_, media_
 
 BLOCKED = get_collection("BLOCKED")
 BLOCKLISTING = os.environ.get("BLOCKLISTING")
@@ -22,6 +22,7 @@ TYPES_ = [
     "photo",
     "document",
     "animation",
+    "sticker",
     "voice",
     "video_note",
     "media"
@@ -79,13 +80,14 @@ async def bl_ock(message: Message):
                     "photo": False,
                     "document": False,
                     "animation": False,
+                    "sticker": False,
                     "voice": False,
                     "video_note": False,
                     "media": False
                 }
             }
         )
-        bl_list = await BLOCK.find_one({'chat_id': message.chat.id})
+        """ bl_list = await BLOCK.find_one({'chat_id': message.chat.id})
         if bl_list:
             with open("userge/xcache/blocklist.txt", "w+") as list_:
                 bl_ = re.sub("'_id'.+\),\s", "", str(bl_list), count=1)
@@ -101,7 +103,7 @@ async def bl_ock(message: Message):
                 else:
                     found_it = False
             if not found_it:
-                DATA_.append(ast.literal_eval(list_))
+                DATA_.append(ast.literal_eval(list_)) """
         block_tog = True
     flags = message.flags
     if "-c" in flags:
@@ -195,7 +197,7 @@ async def add_bl_(message: Message):
     if not out_:
         await message.edit("`Nothing has changed...`", del_in=5)
     else:
-        await message.edit("`Changed the following:\n\n{out}")
+        await message.edit(f"`Changed the following:\n\n{out}")
 
 
 @userge.on_cmd(
@@ -231,7 +233,7 @@ async def add_bl_(message: Message):
     if not out:
         await message.edit("`Nothing has changed...`", del_in=5)
     else:
-        await message.edit("`Changed the following:\n\n{out}")
+        await message.edit(f"`Changed the following:\n\n{out}")
 
 
 @userge.on_cmd(
@@ -254,6 +256,7 @@ async def list_bl(message: Message):
             f"<b>Audios:</b> {found['blocked']['audio']}\n"
             f"<b>Documents:</b> {found['blocked']['document']}\n"
             f"<b>GIFs:</b> {found['blocked']['animation']}\n"
+            f"<b>Stickers:</b> {found['blocked']['sticker']}\n"
             f"<b>Voice notes:</b> {found['blocked']['voice']}\n"
             f"<b>Video notes:</b> {found['blocked']['video_note']}\n"
             f"<b>Media:</b> {found['blocked']['media']}"
@@ -263,51 +266,72 @@ async def list_bl(message: Message):
         await message.edit("`Blocklist not enabled here...`", del_in=5)
 
 
+@userge.on_cmd(
+    "resetbl",
+    about={
+        "header": "reset the blocklist for current chat",
+        "usage": "{tr}resetbl"
+    },
+)
+async def reset_bl(message: Message):
+    """reset the blocklist for current chat"""
+    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    if not found:
+        return await message.edit("`Current chat not blocklisting...`", del_in=5)
+    await BLOCKED.delete_one(found)
+    await message.edit("`Current chat removed from blocklisting...`")
+
 
 BlockFilter = filters.create(lambda _, __, ___:BLOCKLISTING)
-GroupFilter = filters.create(lambda _, __, ___:DATA_['chat_id'])
-PhotoFilter = filters.create(lambda _, __, ___:DATA_['blocked']['photo'])
-VideoFilter = filters.create(lambda _, __, ___:DATA_['blocked']['video'])
-AudioFilter = filters.create(lambda _, __, ___:DATA_['blocked']['audio'])
-DocumentFilter = filters.create(lambda _, __, ___:DATA_['blocked']['document'])
-AnimationFilter = filters.create(lambda _, __, ___:DATA_['blocked']['animation'])
-VoiceFilter = filters.create(lambda _, __, ___:DATA_['blocked']['voice'])
-Video_noteFilter = filters.create(lambda _, __, ___:DATA_['blocked']['video_note'])
-MediaFilter = filters.create(lambda _, __, ___:DATA_['blocked']['media'])
+Audio = filters.create(audio_)
+Video = filters.create(video_)
+Photo = filters.create(photo_)
+Document = filters.create(document_)
+Animation = filters.create(animation_)
+Sticker = filters.create(sticker_)
+Voice = filters.create(voice_)
+VideoNote = filters.create(video_note_)
+Media = filters.create(media_)
 
 
 @userge.on_message(
-    filters.chat([DATA_['chat_id']]
+    filters.group
     & ~filters.bot
     & BlockFilter
     & (
-        (PhotoFilter & filters.photo)
-        | (VideoFilter & filters.video)
-        | (AudioFilter & filters.audio)
-        | (DocumentFilter & filters.document)
-        | (AnimationFilter & filters.animation)
-        | (VoiceFilter & filters.voice)
-        | (Video_noteFilter & filters.video_note)
-        | (MediaFilter & filters.media)
+        (Audio & filters.audio)
+        | (Video & filters.video)
+        | (Photo & filters.photo)
+        | (Document & filters.document)
+        | (Animation & filters.animation)
+        | (Sticker & filters.sticker)
+        | (Voice & filters.voice)
+        | (VideoNote & filters.video_note)
+        | (Media & filters.media)
     ),
     group=1
 )
 async def bl_action(_, message: Message):
-    found = await BLOCKED.find_one({"chat_id": message.chat.id})
-    if not found['block_tog']:
-        return
-    if found['blocked'][msg_type(message)]:
-        user_ = message.from_user.id
-        name_ = full_name(message)
-        chat_id = message.chat.id
-        await message.delete()
-        msg = await take_action(chat_id, user_)
-        if found['block_mode'] == "None":
+    try:
+        found = await BLOCKED.find_one({"chat_id": message.chat.id})
+        if not found:
             return
-        await userge.bot.send_message(
-            message.chat.id,
-            msg
-        )
+        if not found['block_tog']:
+            return
+        if found['blocked'][msg_type(message)]:
+            user_ = message.from_user.id
+            name_ = full_name(await userge.get_user(user_))
+            chat_id = message.chat.id
+            await message.delete()
+            msg = await take_action(chat_id, user_)
+            if found['block_mode'] == "None":
+                return
+            await userge.bot.send_message(
+                message.chat.id,
+                msg
+            )
+    except FloodWait as e:
+        await asyncio.sleep(e.x + 3)
 
 
 async def take_action(chat_id: int, user_id: int):
@@ -315,7 +339,6 @@ async def take_action(chat_id: int, user_id: int):
     if not found:
         return
     time = found['time']
-    await message.delete()
     if found['block_mode'] == "kick":
         await userge.kick_chat_member(chat_id, user_id)
         await userge.unban_chat_member(chat_id, user_id)
