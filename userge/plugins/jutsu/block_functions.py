@@ -1,59 +1,57 @@
-
 from userge import Message, get_collection
-
 
 BLOCKED = get_collection("BLOCKED")
 
 
 async def audio_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['audio']
+        return found["blocked"]["audio"]
 
 
 async def video_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['video']
+        return found["blocked"]["video"]
 
 
 async def photo_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['photo']
+        return found["blocked"]["photo"]
 
 
 async def document_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['document']
+        return found["blocked"]["document"]
 
 
 async def animation_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['animation']
+        return found["blocked"]["animation"]
 
 
 async def sticker_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['sticker']
+        return found["blocked"]["sticker"]
 
 
 async def voice_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['voice']
+        return found["blocked"]["voice"]
 
 
 async def video_note_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['video_note']
+        return found["blocked"]["video_note"]
 
 
 async def media_(_, __, message: Message) -> bool:
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return found['blocked']['media']
+        return found["blocked"]["media"]

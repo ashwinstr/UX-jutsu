@@ -1,17 +1,28 @@
 # plugin made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
 # before porting please ask to Kakashi
 
-import os
 import asyncio
 import time
-from pyrogram import filters
-from pyrogram.types import ChatPermissions
-from pyrogram.errors import FloodWait
-from userge import userge, Message, get_collection
-from userge.helpers import msg_type
-from userge.helpers import admin_or_creator, full_name
+import os
 
-from ..jutsu.block_functions import audio_, video_, photo_, document_, animation_, sticker_, voice_, video_note_, media_
+from pyrogram import filters
+from pyrogram.errors import FloodWait
+from pyrogram.types import ChatPermissions
+
+from userge import Message, get_collection, userge
+from userge.helpers import admin_or_creator, full_name, msg_type
+
+from .block_functions import (
+    animation_,
+    audio_,
+    document_,
+    media_,
+    photo_,
+    sticker_,
+    video_,
+    video_note_,
+    voice_,
+)
 
 BLOCKED = get_collection("BLOCKED")
 BLOCKLISTING = os.environ.get("BLOCKLISTING")
@@ -26,16 +37,10 @@ TYPES_ = [
     "sticker",
     "voice",
     "video_note",
-    "media"
+    "media",
 ]
 
-MODE_ = [
-    "kick",
-    "ban",
-    "mute",
-    "tmute",
-    "None"
-]
+MODE_ = ["kick", "ban", "mute", "tmute", "None"]
 
 
 DATA_ = {}
@@ -46,8 +51,8 @@ DATA_ = {}
     about={
         "header": "enable/disable blocklist",
         "flags": {"-c": "check blocklist toggle"},
-        "usage": "{tr}bl"
-    }
+        "usage": "{tr}bl",
+    },
 )
 async def bl_ock(message: Message):
     """toggle blocklist"""
@@ -55,11 +60,11 @@ async def bl_ock(message: Message):
         return await message.edit("Set `BLOCKLISTING` as `True` in vars...", del_in=5)
     me_ = await userge.get_me()
     check = await admin_or_creator(message.chat.id, me_.id)
-    if not check['is_admin'] and not check['is_creator']:
+    if not check["is_admin"] and not check["is_creator"]:
         return await message.edit("`Need admin rights...`", del_in=5)
     blocking = await BLOCKED.find_one({"chat_id": message.chat.id})
     if blocking:
-        block_tog = blocking['block_tog']
+        block_tog = blocking["block_tog"]
     else:
         await BLOCKED.insert_one(
             {
@@ -76,8 +81,8 @@ async def bl_ock(message: Message):
                     "sticker": False,
                     "voice": False,
                     "video_note": False,
-                    "media": False
-                }
+                    "media": False,
+                },
             }
         )
         block_tog = True
@@ -89,10 +94,14 @@ async def bl_ock(message: Message):
             switch = "disabled"
         return await message.edit(f"`BLOCKLIST is {switch}.`", del_in=5)
     if block_tog:
-        await BLOCKED.update_one({'chat_id': message.chat.id}, {"$set": {"block_tog": False}}, upsert=True)
+        await BLOCKED.update_one(
+            {"chat_id": message.chat.id}, {"$set": {"block_tog": False}}, upsert=True
+        )
         await message.edit("`BLOCKLIST is now disabled.`", del_in=5)
     else:
-        await BLOCKED.update_one({'chat_id': message.chat.id}, {"$set": {"block_tog": True}}, upsert=True)
+        await BLOCKED.update_one(
+            {"chat_id": message.chat.id}, {"$set": {"block_tog": True}}, upsert=True
+        )
         await message.edit("`BLOCKLIST is now enabled.`", del_in=5)
 
 
@@ -105,7 +114,7 @@ async def bl_ock(message: Message):
             "ban": "ban on trigger",
             "mute": "mute on trigger",
             "tmute": "time mute on trigger with -m(minutes) -h(hours) -d(days)",
-            "None": "only delete message"
+            "None": "only delete message",
         },
         "usage": "{tr}blmode kick",
     },
@@ -145,7 +154,7 @@ async def bl_mode(message: Message):
     about={
         "header": "add to blocklist",
         "options": TYPES_,
-        "usage": "{tr}addbl [type of message]"
+        "usage": "{tr}addbl [type of message]",
     },
 )
 async def add_bl_(message: Message):
@@ -155,20 +164,14 @@ async def add_bl_(message: Message):
         return await message.edit("`Provide input to add to blocklist...`", del_in=5)
     input_ = input_.split()
     out_ = ""
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     for block in input_:
         if block not in TYPES_:
             continue
-        up_block = found['blocked']
+        up_block = found["blocked"]
         up_block.update({block: True})
         await BLOCKED.update_one(
-            {'chat_id': message.chat.id},
-            {
-                "$set": {
-                    'blocked': up_block
-                }
-            },
-            upsert=True
+            {"chat_id": message.chat.id}, {"$set": {"blocked": up_block}}, upsert=True
         )
         out_ += f"• <b>{block}</b> = True\n"
     if not out_:
@@ -179,32 +182,25 @@ async def add_bl_(message: Message):
 
 @userge.on_cmd(
     "delbl",
-    about={
-        "header": "remove from blocklist",
-        "usage": "{tr}delbl [type of message]"
-    },
+    about={"header": "remove from blocklist", "usage": "{tr}delbl [type of message]"},
 )
 async def add_bl_(message: Message):
     """remove from blocklist"""
     input_ = message.input_str
     if not input_:
-        return await message.edit("`Provide input to remove from blocklist...`", del_in=5)
+        return await message.edit(
+            "`Provide input to remove from blocklist...`", del_in=5
+        )
     input_ = input_.split()
     out_ = ""
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     for block in input_:
         if block not in TYPES_:
             continue
-        up_block = found['blocked']
+        up_block = found["blocked"]
         up_block.update({block: False})
         await BLOCKED.update_one(
-            {'chat_id': message.chat.id},
-            {
-                "$set": {
-                    'blocked': up_block
-                }
-            },
-            upsert=True
+            {"chat_id": message.chat.id}, {"$set": {"blocked": up_block}}, upsert=True
         )
         out_ += f"• <b>{block}</b> = False\n"
     if not out_:
@@ -215,15 +211,12 @@ async def add_bl_(message: Message):
 
 @userge.on_cmd(
     "listbl",
-    about={
-        "header": "list the blocklist for current chat",
-        "usage": "{tr}listbl"
-    },
+    about={"header": "list the blocklist for current chat", "usage": "{tr}listbl"},
 )
 async def list_bl(message: Message):
     """list the blocklist for current chat"""
     await message.edit("`Checking blocklist...`")
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
         out_ = (
             f"### <b>BLOCKLIST for chat {message.chat.title}</b> ###\n"
@@ -245,21 +238,18 @@ async def list_bl(message: Message):
 
 @userge.on_cmd(
     "resetbl",
-    about={
-        "header": "reset the blocklist for current chat",
-        "usage": "{tr}resetbl"
-    },
+    about={"header": "reset the blocklist for current chat", "usage": "{tr}resetbl"},
 )
 async def reset_bl(message: Message):
     """reset the blocklist for current chat"""
-    found = await BLOCKED.find_one({'chat_id': message.chat.id})
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if not found:
         return await message.edit("`Current chat not blocklisting...`", del_in=5)
     await BLOCKED.delete_one(found)
     await message.edit("`Current chat removed from blocklisting...`")
 
 
-BlockFilter = filters.create(lambda _, __, ___:BLOCKLISTING)
+BlockFilter = filters.create(lambda _, __, ___: BLOCKLISTING)
 Audio = filters.create(audio_)
 Video = filters.create(video_)
 Photo = filters.create(photo_)
@@ -286,27 +276,24 @@ Media = filters.create(media_)
         | (VideoNote & filters.video_note)
         | (Media & filters.media)
     ),
-    group=1
+    group=1,
 )
 async def bl_action(_, message: Message):
     try:
         found = await BLOCKED.find_one({"chat_id": message.chat.id})
         if not found:
             return
-        if not found['block_tog']:
+        if not found["block_tog"]:
             return
-        if found['blocked'][msg_type(message)]:
+        if found["blocked"][msg_type(message)]:
             user_ = message.from_user.id
             name_ = full_name(await userge.get_users(user_))
             chat_id = message.chat.id
             await message.delete()
             msg = await take_action(chat_id, user_)
-            if found['block_mode'] == "None":
+            if found["block_mode"] == "None":
                 return
-            await userge.bot.send_message(
-                message.chat.id,
-                msg
-            )
+            await userge.bot.send_message(message.chat.id, msg)
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
 
