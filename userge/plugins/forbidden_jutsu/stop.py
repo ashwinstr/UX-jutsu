@@ -23,4 +23,5 @@ async def forbidden_sudo(msg, cmd: str) -> bool:
             fr"|\{Config.SUDO_TRIGGER}"
             fr"\{regex_stop}"
         )
+    )
             
