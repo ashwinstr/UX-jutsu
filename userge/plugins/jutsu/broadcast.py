@@ -3,7 +3,6 @@
 
 
 import asyncio
-import re
 
 from pyrogram import filters
 from pyrogram.errors import FloodWait
