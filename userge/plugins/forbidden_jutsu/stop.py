@@ -5,7 +5,7 @@ import re
 
 from userge import Config
 
-regex_stop = r"(addsudo)" r"|(delsudo)" r"|(addscmd).*"
+regex_stop = r"(addsudo)" r"|(delsudo)" r"|(addscmd)" r".*"
 
 
 async def forbidden_sudo(msg, cmd: str) -> bool:
