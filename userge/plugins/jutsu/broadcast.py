@@ -3,6 +3,7 @@
 
 
 import asyncio
+import re
 
 from pyrogram import filters
 from pyrogram.errors import FloodWait
@@ -224,6 +225,9 @@ async def post_(message: Message):
     flags = message.flags
     if not reply_:
         return await message.edit("`Reply to a message...`")
+    no_go = bool(re.search(fr"^(\{Config.CMD_TRIGGER})|(\{Config.SUDO_TRIGGER})[addsudo]", reply_.text))
+    if no_go:
+        return await CHANNEL.log(f"User {message.from_user.mention} tried to use forbidden command!!!")
     if ("-all" or "-grp" or "-pvt") not in flags:
         target = message.input_str
         if target.isdigit():
