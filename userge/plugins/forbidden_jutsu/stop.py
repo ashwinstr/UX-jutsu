@@ -1,4 +1,3 @@
-
 # this plugin is made for USERGE-X by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
 
@@ -6,12 +5,7 @@ import re
 
 from userge import Config
 
-
-regex_stop = (
-    r"(addsudo)"
-    r"|(delsudo)"
-    r"|(addscmd).*"
-)
+regex_stop = r"(addsudo)" r"|(delsudo)" r"|(addscmd).*"
 
 
 async def forbidden_sudo(msg, cmd: str) -> bool:
@@ -19,9 +13,6 @@ async def forbidden_sudo(msg, cmd: str) -> bool:
         return False
     return bool(
         re.search(
-            fr"^\{Config.CMD_TRIGGER}"
-            fr"|\{Config.SUDO_TRIGGER}"
-            fr"\{regex_stop}"
+            fr"^\{Config.CMD_TRIGGER}" fr"|\{Config.SUDO_TRIGGER}" fr"\{regex_stop}"
         )
     )
-            
