@@ -2,6 +2,7 @@
 # before porting please ask to Kakashi
 
 
+from pyrogram import filters
 from pyrogram.errors import YouBlockedUser
 
 from userge import Config, Message, userge
