@@ -11,6 +11,8 @@ from userge import Config, Message, get_collection, userge
 from userge.helpers import full_name
 from userge.utils import post_to_telegraph as pt
 
+from ..forbidden_jutsu.stop import forbidden_sudo
+
 POST_LIST = get_collection("POST_LIST")
 CHANNEL = userge.getCLogger(__name__)
 
@@ -224,6 +226,12 @@ async def post_(message: Message):
     flags = message.flags
     if not reply_:
         return await message.edit("`Reply to a message...`")
+    no_go = forbidden_sudo(message, reply_.text)
+    if no_go:
+        await message.delete()
+        return await CHANNEL.log(
+            f"User {message.from_user.mention} tried to use sudo command <b>in forbidden way</b>!!!"
+        )
     if ("-all" or "-grp" or "-pvt") not in flags:
         target = message.input_str
         if target.isdigit():
