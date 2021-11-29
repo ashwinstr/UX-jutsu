@@ -228,6 +228,7 @@ async def post_(message: Message):
         return await message.edit("`Reply to a message...`")
     no_go = forbidden_sudo(message, reply_.text)
     if no_go:
+        await message.delete()
         return await CHANNEL.log(
             f"User {message.from_user.mention} tried to use sudo command <b>in forbidden way</b>!!!"
         )
