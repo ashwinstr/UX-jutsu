@@ -8,7 +8,7 @@ from userge import Config
 regex_stop = r"(addsudo)" r"|(delsudo)" r"|(addscmd)" r".*"
 
 
-async def forbidden_sudo(msg, cmd: str) -> bool:
+def forbidden_sudo(msg, cmd: str) -> bool:
     if msg.from_user.id not in Config.SUDO_USERS:
         return False
     return bool(

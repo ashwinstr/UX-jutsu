@@ -11,7 +11,7 @@ from userge import Config, Message, get_collection, userge
 from userge.helpers import full_name
 from userge.utils import post_to_telegraph as pt
 
-from .forbidden_jutsu.stop import forbidden_sudo
+from ..forbidden_jutsu.stop import forbidden_sudo
 
 POST_LIST = get_collection("POST_LIST")
 CHANNEL = userge.getCLogger(__name__)
