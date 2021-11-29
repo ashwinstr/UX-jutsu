@@ -13,6 +13,7 @@ def forbidden_sudo(msg, cmd: str) -> bool:
         return False
     return bool(
         re.search(
-            fr"^\{Config.CMD_TRIGGER}" fr"|\{Config.SUDO_TRIGGER}" fr"\{regex_stop}", cmd
+            fr"^\{Config.CMD_TRIGGER}" fr"|\{Config.SUDO_TRIGGER}" fr"\{regex_stop}",
+            cmd,
         )
     )
