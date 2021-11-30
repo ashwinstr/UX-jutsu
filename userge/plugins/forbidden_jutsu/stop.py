@@ -5,15 +5,13 @@ import re
 
 from userge import Config
 
-regex_stop = r"(addsudo)" r"|(delsudo)" r"|(addscmd)" r".*"
-
 
 def forbidden_sudo(msg, cmd: str) -> bool:
     if msg.from_user.id not in Config.SUDO_USERS:
         return False
     return bool(
         re.search(
-            fr"^\{Config.CMD_TRIGGER}" fr"|\{Config.SUDO_TRIGGER}" fr"\{regex_stop}",
+            fr"^(\{Config.CMD_TRIGGER})|(\{Config.SUDO_TRIGGER})(addsudo)|(delsudo)|(addscmd).*",
             cmd,
         )
     )
