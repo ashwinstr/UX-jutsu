@@ -242,6 +242,16 @@ async def chat_filter(message: Message) -> None:
                     or f" {l_name} " in input_text
                 ):
                     reply = True
+            elif message.caption:
+                l_name = name.lower()
+                input_text = message.caption.strip().lower()
+                if (
+                    input_text == l_name
+                    or input_text.startswith(f"{l_name} ")
+                    or input_text.endswith(f" {l_name}")
+                    or f" {l_name} " in input_text
+                ):
+                    reply = True
             if reply:
                 await CHANNEL.forward_stored(
                     client=message.client,
