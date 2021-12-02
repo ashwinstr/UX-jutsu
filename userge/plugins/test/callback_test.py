@@ -1,7 +1,7 @@
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import userge, Message
+from userge import Message, userge
 
 CHANNEL = userge.getCLogger(__name__)
 
@@ -15,18 +15,17 @@ CHANNEL = userge.getCLogger(__name__)
 )
 async def test_call(message: Message):
     btn_ = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(text="one", callback_data="testing")
-            ]
-        ]
+        [[InlineKeyboardButton(text="one", callback_data="testing")]]
     )
-    await userge.bot.send_message(message.chat.id, "testing", reply_to_message_id=message.message_id, reply_markup=btn_)
+    await userge.bot.send_message(
+        message.chat.id,
+        "testing",
+        reply_to_message_id=message.message_id,
+        reply_markup=btn_,
+    )
 
 
-@userge.bot.on_callback_query(
-    filters.regex(pattern=r"^testing$")
-)
+@userge.bot.on_callback_query(filters.regex(pattern=r"^testing$"))
 async def call_test(_, c_q: CallbackQuery):
     try:
         match_ = c_q
