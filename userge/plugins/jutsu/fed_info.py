@@ -41,7 +41,7 @@ async def f_stat(message: Message):
     try:
         async with userge.conversation(bot_) as conv:
             await conv.send_message(f"!fstat {user_id}")
-            resp = await conv.get_response(mark_read=True, filters=filters.edited)
+            response = await conv.get_response(mark_read=True, filters=filters.edited)
     except YouBlockedUser:
         await message.err("Unblock @missrose_bot first...", del_in=5)
         return
