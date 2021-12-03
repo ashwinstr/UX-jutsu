@@ -46,7 +46,7 @@ MODE_ = ["kick", "ban", "mute", "tmute", "None"]
 
 
 reset_ = {
-    chat_id": message.chat.id,
+    "chat_id": message.chat.id,
     "block_tog": True,
     "block_mode": None,
     "seconds": 0,
