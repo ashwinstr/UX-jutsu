@@ -85,14 +85,14 @@ async def call_test(_, c_q: CallbackQuery):
             for one in found["up"]:
                 try:
                     user_ = f"• {(await userge.get_users(one)).first_name}\n"
-                except:
+                except BaseException:
                     user_ = f"{one}\n"
                 list_ += user_
             list_ += "\nDOWN_VOTES BY:\n"
             for one in found["down"]:
                 try:
                     user_ = f"• {(await userge.get_users(one)).first_name}\n"
-                except:
+                except BaseException:
                     user_ = f"{one}\n"
                 list_ += user_
             return await c_q.answer(list_, show_alert=True)
