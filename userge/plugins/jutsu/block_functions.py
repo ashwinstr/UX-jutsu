@@ -6,7 +6,7 @@ BLOCKED = get_collection("BLOCKED")
 async def text_(_, __, message: Message) -> bool:
     found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if found:
-        return any(one in message.text for one in found['blocked']['text'])
+        return any(one in message.text for one in found["blocked"]["text"])
 
 
 async def audio_(_, __, message: Message) -> bool:

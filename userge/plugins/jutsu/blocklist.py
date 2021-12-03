@@ -13,13 +13,13 @@ from userge import Message, get_collection, userge
 from userge.helpers import admin_or_creator, full_name, msg_type
 
 from .block_functions import (
-    text_,
     animation_,
     audio_,
     document_,
     media_,
     photo_,
     sticker_,
+    text_,
     video_,
     video_note_,
     voice_,
@@ -61,7 +61,7 @@ reset_ = {
         "voice": False,
         "video_note": False,
         "media": False,
-    }
+    },
 }
 
 
@@ -88,9 +88,7 @@ async def bl_ock(message: Message):
     if blocking:
         block_tog = blocking["block_tog"]
     else:
-        await BLOCKED.insert_one(
-            reset_
-        )
+        await BLOCKED.insert_one(reset_)
         block_tog = True
     flags = message.flags
     if "-c" in flags:
@@ -165,7 +163,9 @@ async def bl_mode(message: Message):
     "addbl",
     about={
         "header": "add to blocklist",
-        "flags": {"-t": "text blocklist",},
+        "flags": {
+            "-t": "text blocklist",
+        },
         "options": TYPES_,
         "usage": "{tr}addbl [type of message]",
     },
@@ -173,15 +173,17 @@ async def bl_mode(message: Message):
 async def add_bl_(message: Message):
     """add to blocklist"""
     found = await BLOCKED.find_one({"chat_id": message.chat.id})
-    if not found or not found['block_tog']:
+    if not found or not found["block_tog"]:
         return await message.edit("Blocklist is disabled here.", del_in=5)
     if "-t" in message.flags:
         input_ = message.filtered_input_str
-        blocked = found['blocked']
-        if input_ in blocked['text']:
-            return await message.edit(f"Text `{input_}` is already in blocklist.", del_in=5)
-        (blocked['text']).append(input_)
-        blocked.update({'text': blocked['text']})
+        blocked = found["blocked"]
+        if input_ in blocked["text"]:
+            return await message.edit(
+                f"Text `{input_}` is already in blocklist.", del_in=5
+            )
+        (blocked["text"]).append(input_)
+        blocked.update({"text": blocked["text"]})
         await BLOCKED.update_one(
             {"chat_id": message.chat.id}, {"$set": {"blocked": blocked}}, upsert=True
         )
@@ -208,7 +210,14 @@ async def add_bl_(message: Message):
 
 @userge.on_cmd(
     "delbl",
-    about={"header": "remove from blocklist", "flags": {"-t": "un-blocklist text", "-all": "reset all",},"usage": "{tr}delbl [type of message]"},
+    about={
+        "header": "remove from blocklist",
+        "flags": {
+            "-t": "un-blocklist text",
+            "-all": "reset all",
+        },
+        "usage": "{tr}delbl [type of message]",
+    },
 )
 async def add_bl_(message: Message):
     """remove from blocklist"""
@@ -220,17 +229,21 @@ async def add_bl_(message: Message):
     found = await BLOCKED.find_one({"chat_id": message.chat.id})
     if "-t" in message.flags:
         if not found:
-            return await message.edit("This chat doesn't have blocklist enabled.", del_in=5)
-        blocked = found['blocked']
-        blocked_text = blocked['text']
+            return await message.edit(
+                "This chat doesn't have blocklist enabled.", del_in=5
+            )
+        blocked = found["blocked"]
+        blocked_text = blocked["text"]
         if input_ not in blocked_text:
             return await message.edit("Input is not blocklisted.", del_in=5)
         blocked_text.remove(input_)
-        blocked.update({'text': blocked_text})
+        blocked.update({"text": blocked_text})
         await BLOCKED.update_one(
-            {'chat_id': message.chat.id}, {'$set': {'blocked': blocked}}, upsert=True
+            {"chat_id": message.chat.id}, {"$set": {"blocked": blocked}}, upsert=True
         )
-        return await message.edit(f"Text <b>{input_}</b> removed from blocklist.", del_in=5)
+        return await message.edit(
+            f"Text <b>{input_}</b> removed from blocklist.", del_in=5
+        )
     input_ = input_.split()
     out_ = ""
     for block in input_:
