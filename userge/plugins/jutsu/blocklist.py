@@ -45,26 +45,6 @@ TYPES_ = [
 MODE_ = ["kick", "ban", "mute", "tmute", "None"]
 
 
-reset_ = {
-    "chat_id": message.chat.id,
-    "block_tog": True,
-    "block_mode": None,
-    "seconds": 0,
-    "blocked": {
-        "text": [],
-        "audio": False,
-        "video": False,
-        "photo": False,
-        "document": False,
-        "animation": False,
-        "sticker": False,
-        "voice": False,
-        "video_note": False,
-        "media": False,
-    },
-}
-
-
 DATA_ = {}
 
 
@@ -88,6 +68,24 @@ async def bl_ock(message: Message):
     if blocking:
         block_tog = blocking["block_tog"]
     else:
+        reset_ = {
+            "chat_id": message.chat.id,
+            "block_tog": True,
+            "block_mode": None,
+            "seconds": 0,
+            "blocked": {
+                "text": [],
+                "audio": False,
+                "video": False,
+                "photo": False,
+                "document": False,
+                "animation": False,
+                "sticker": False,
+                "voice": False,
+                "video_note": False,
+                "media": False,
+            },
+        }
         await BLOCKED.insert_one(reset_)
         block_tog = True
     flags = message.flags
