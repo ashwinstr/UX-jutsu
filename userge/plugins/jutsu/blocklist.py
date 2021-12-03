@@ -19,6 +19,7 @@ from .block_functions import (
     media_,
     photo_,
     sticker_,
+    text_,
     video_,
     video_note_,
     voice_,
@@ -29,6 +30,7 @@ BLOCKLISTING = os.environ.get("BLOCKLISTING")
 
 
 TYPES_ = [
+    "text",
     "audio",
     "video",
     "photo",
@@ -66,25 +68,25 @@ async def bl_ock(message: Message):
     if blocking:
         block_tog = blocking["block_tog"]
     else:
-        await BLOCKED.insert_one(
-            {
-                "chat_id": message.chat.id,
-                "block_tog": True,
-                "block_mode": None,
-                "seconds": 0,
-                "blocked": {
-                    "audio": False,
-                    "video": False,
-                    "photo": False,
-                    "document": False,
-                    "animation": False,
-                    "sticker": False,
-                    "voice": False,
-                    "video_note": False,
-                    "media": False,
-                },
-            }
-        )
+        reset_ = {
+            "chat_id": message.chat.id,
+            "block_tog": True,
+            "block_mode": None,
+            "seconds": 0,
+            "blocked": {
+                "text": [],
+                "audio": False,
+                "video": False,
+                "photo": False,
+                "document": False,
+                "animation": False,
+                "sticker": False,
+                "voice": False,
+                "video_note": False,
+                "media": False,
+            },
+        }
+        await BLOCKED.insert_one(reset_)
         block_tog = True
     flags = message.flags
     if "-c" in flags:
@@ -159,18 +161,36 @@ async def bl_mode(message: Message):
     "addbl",
     about={
         "header": "add to blocklist",
+        "flags": {
+            "-t": "text blocklist",
+        },
         "options": TYPES_,
         "usage": "{tr}addbl [type of message]",
     },
 )
 async def add_bl_(message: Message):
     """add to blocklist"""
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
+    if not found or not found["block_tog"]:
+        return await message.edit("Blocklist is disabled here.", del_in=5)
+    if "-t" in message.flags:
+        input_ = message.filtered_input_str
+        blocked = found["blocked"]
+        if input_ in blocked["text"]:
+            return await message.edit(
+                f"Text `{input_}` is already in blocklist.", del_in=5
+            )
+        (blocked["text"]).append(input_)
+        blocked.update({"text": blocked["text"]})
+        await BLOCKED.update_one(
+            {"chat_id": message.chat.id}, {"$set": {"blocked": blocked}}, upsert=True
+        )
+        return await message.edit(f"Text `{input_}` added to blocklist.", del_in=5)
     input_ = message.input_str
     if not input_:
         return await message.edit("`Provide input to add to blocklist...`", del_in=5)
     input_ = input_.split()
     out_ = ""
-    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     for block in input_:
         if block not in TYPES_:
             continue
@@ -188,18 +208,42 @@ async def add_bl_(message: Message):
 
 @userge.on_cmd(
     "delbl",
-    about={"header": "remove from blocklist", "usage": "{tr}delbl [type of message]"},
+    about={
+        "header": "remove from blocklist",
+        "flags": {
+            "-t": "un-blocklist text",
+            "-all": "reset all",
+        },
+        "usage": "{tr}delbl [type of message]",
+    },
 )
 async def add_bl_(message: Message):
     """remove from blocklist"""
-    input_ = message.input_str
+    input_ = message.filtered.input_str
     if not input_:
         return await message.edit(
             "`Provide input to remove from blocklist...`", del_in=5
         )
+    found = await BLOCKED.find_one({"chat_id": message.chat.id})
+    if "-t" in message.flags:
+        if not found:
+            return await message.edit(
+                "This chat doesn't have blocklist enabled.", del_in=5
+            )
+        blocked = found["blocked"]
+        blocked_text = blocked["text"]
+        if input_ not in blocked_text:
+            return await message.edit("Input is not blocklisted.", del_in=5)
+        blocked_text.remove(input_)
+        blocked.update({"text": blocked_text})
+        await BLOCKED.update_one(
+            {"chat_id": message.chat.id}, {"$set": {"blocked": blocked}}, upsert=True
+        )
+        return await message.edit(
+            f"Text <b>{input_}</b> removed from blocklist.", del_in=5
+        )
     input_ = input_.split()
     out_ = ""
-    found = await BLOCKED.find_one({"chat_id": message.chat.id})
     for block in input_:
         if block not in TYPES_:
             continue
@@ -227,6 +271,7 @@ async def list_bl(message: Message):
         out_ = (
             f"### <b>BLOCKLIST for chat {message.chat.title}</b> ###\n"
             f"<b>Blocklist:</b> {found['block_tog']}\n\n"
+            f"<b>Text:</b> {found['blocked']['text']}\n"
             f"<b>Photos:</b> {found['blocked']['photo']}\n"
             f"<b>Videos:</b> {found['blocked']['video']}\n"
             f"<b>Audios:</b> {found['blocked']['audio']}\n"
@@ -256,6 +301,7 @@ async def reset_bl(message: Message):
 
 
 BlockFilter = filters.create(lambda _, __, ___: BLOCKLISTING)
+Text = filters.create(text_)
 Audio = filters.create(audio_)
 Video = filters.create(video_)
 Photo = filters.create(photo_)
@@ -272,7 +318,8 @@ Media = filters.create(media_)
     & ~filters.bot
     & BlockFilter
     & (
-        (Audio & filters.audio)
+        (Text & filters.text)
+        | (Audio & filters.audio)
         | (Video & filters.video)
         | (Photo & filters.photo)
         | (Document & filters.document)
