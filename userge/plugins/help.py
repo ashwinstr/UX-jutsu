@@ -647,7 +647,7 @@ if userge.has_bot:
                         )
                     )
                 else:
-                    media_type = media_['type']
+                    media_type = media_["type"]
                     if media_type == "photo":
                         results.append(
                             InlineQueryResultPhoto(
