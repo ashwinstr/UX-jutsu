@@ -25,7 +25,7 @@ from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key
 
-from .bot.alive import Bot_Alive, media_
+from .bot.alive import Bot_Alive
 from .bot.gogo import Anime
 from .bot.utube_inline import (
     download_button,
@@ -84,6 +84,7 @@ REPO_X = InlineQueryResultArticle(
 
 media_link = ""
 
+
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
     if data:
@@ -91,7 +92,7 @@ async def _init() -> None:
     media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
     if media_:
         global media_link
-        media_link = media_['url']
+        media_link = media_["url"]
     else:
         media_link = "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
 

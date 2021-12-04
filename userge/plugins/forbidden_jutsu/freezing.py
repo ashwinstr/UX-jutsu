@@ -34,7 +34,11 @@ async def freezer_(message: Message):
     try:
         help_ = True if plugin_name == "help" else False
         plugin_parent = userge.manager.plugins[plugin_name].parent
-        loc_ = f"userge/plugins/{plugin_parent}/{plugin_name}.py" if not help_ else "userge/plugins/help.py"
+        loc_ = (
+            f"userge/plugins/{plugin_parent}/{plugin_name}.py"
+            if not help_
+            else "userge/plugins/help.py"
+        )
         old_ = loc_
         new_ = loc_.replace(".py", "")
     except Exception as e:
