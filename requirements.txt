@@ -46,7 +46,6 @@ urbandict>=0.5
 vcsi
 wget>=3.2
 wikipedia>=1.4.0
-yo
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 ruamel.yaml==0.17.17
 ujson>=4.0.1
