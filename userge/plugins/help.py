@@ -643,10 +643,25 @@ if userge.has_bot:
                             reply_markup=buttons,
                         )
                     )
-                    return
                 else:
                     media_type = media_['type']
-                    media_type = "photo"
+                    if media_type == "photo":
+                        results.append(
+                            InlineQueryResultPhoto(
+                                photo_url=alive_media,
+                                caption=alive_info,
+                                reply_markup=buttons,
+                            )
+                        )
+                    elif media_type == "gif":
+                        results.append(
+                            InlineQueryResultAnimation(
+                                photo_url=alive_media,
+                                caption=alive_info,
+                                reply_markup=buttons,
+                            )
+                        )
+                return
                 if not Config.ALIVE_MEDIA:
                     results.append(
                         InlineQueryResultPhoto(
