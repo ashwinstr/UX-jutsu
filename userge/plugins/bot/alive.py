@@ -12,7 +12,6 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
 from userge.helpers import msg_type
-from userge.plugins.help import SAVED_SETTINGS
 from userge.utils import get_file_id, rand_array
 
 _ALIVE_REGEX = comp_regex(
