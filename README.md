@@ -57,12 +57,12 @@
 ## How To Deploy 
 * With Heroku:
 <p align="center">
-   <a href = "https://heroku.com/deploy?template=https://github.com/ashwinstr/MyGpack"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a>
+   <a href = "https://heroku.com/deploy?template=https://github.com/MatrixMenXD/MyGpack"><img src="https://telegra.ph/file/57c4edb389224c9cf9996.png" alt="Press to Takeoff" width="490px"></a>
 </p>
 <br>
 
 * With Railway<br>
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2FAnonymousx97%2FUX-JUTSU-RAILWAY&envs=API_ID%2CAPI_HASH%2CDATABASE_URL%2CHU_STRING_SESSION%2CBOT_TOKEN%2COWNER_ID%2CLOG_CHANNEL_ID%2CCMD_TRIGGER%2CUPSTREAM_REPO&API_IDDesc=Telegram+api_id&API_HASHDesc=Telegram+api_hash&DATABASE_URLDesc=Get+it+from+cloud.mongodb.com&HU_STRING_SESSIONDesc=Telegram+string+session&BOT_TOKENDesc=Telegram+bot+token%2C+get+it+with+the+help+of+%40BotFather&OWNER_IDDesc=Your+user+ID&LOG_CHANNEL_IDDesc=Channel+for+userbot+to+log&CMD_TRIGGERDesc=Command+trigger+to+execute+userbot+command&UPSTREAM_REPODesc=Repo+from+which+updates+will+be+pulled&CMD_TRIGGERDefault=.&UPSTREAM_REPODefault=https%3A%2F%2Fgithub.com%2FAnonymousx97%2FUX-JUTSU-RAILWAY&referralCode=fMjN28)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https%3A%2F%2Fgithub.com%2FMatrixMenXD%2FCyborgXDroid&envs=API_ID%2CAPI_HASH%2CDATABASE_URL%2CHU_STRING_SESSION%2CBOT_TOKEN%2COWNER_ID%2CLOG_CHANNEL_ID%2CCMD_TRIGGER%2CUPSTREAM_REPO&API_IDDesc=Telegram+api_id&API_HASHDesc=Telegram+api_hash&DATABASE_URLDesc=Get+it+from+cloud.mongodb.com&HU_STRING_SESSIONDesc=Telegram+string+session&BOT_TOKENDesc=Telegram+bot+token%2C+get+it+with+the+help+of+%40BotFather&OWNER_IDDesc=Your+user+ID&LOG_CHANNEL_IDDesc=Channel+for+userbot+to+log&CMD_TRIGGERDesc=Command+trigger+to+execute+userbot+command&UPSTREAM_REPODesc=Repo+from+which+updates+will+be+pulled&CMD_TRIGGERDefault=.&UPSTREAM_REPODefault=https%3A%2F%2Fgithub.com%2FMatrixMenXD%2FCyborgXDroid&referralCode=UJAXXy)
 
 
 > **NOTE** : your can fill other vars as your need and they are optional. ([Heroku] settings -> reveal config vars) ([Railway] -> variables)
@@ -76,7 +76,7 @@
 #### By HEROKU
 - [open your app](https://dashboard.heroku.com/apps/) then go to **more** -> **run console** and type `bash genStr` and click **run**.
 #### On REPL
-- [Generate on REPL](https://repl.it/@Leorio/stringsessiongen#main.py)
+- [Generate on REPL](https://repl.it/@NotShroudX97/HyperGenX#main.py)
 ### Read more
 <details>
   <summary><b>Details and Guides</b></summary>
