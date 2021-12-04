@@ -17,7 +17,6 @@ from pyrogram.types import (  # InlineQueryResultCachedDocument,; InlineQueryRes
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
-from userge.helpers.jutsu_tools import msg_type
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, userge

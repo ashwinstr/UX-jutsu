@@ -9,10 +9,10 @@ from pyrogram.errors import BadRequest, FloodWait, Forbidden, MediaEmpty
 from pyrogram.file_id import PHOTO_TYPES, FileId
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, Message, get_version, userge, versions, get_collection
+from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
-from userge.utils import get_file_id, rand_array
 from userge.helpers import msg_type
+from userge.utils import get_file_id, rand_array
 
 _ALIVE_REGEX = comp_regex(
     r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
@@ -27,9 +27,9 @@ LOGGER = userge.getLogger(__name__)
 
 async def _init() -> None:
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA, media_
-    found = await MEDIA_.find_one({'_id': "ALIVE_MEDIA"})
+    found = await MEDIA_.find_one({"_id": "ALIVE_MEDIA"})
     if found:
-        media_ = found['url']
+        media_ = found["url"]
     else:
         media_ = "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
     if Config.ALIVE_MEDIA and Config.ALIVE_MEDIA.lower() != "false":
@@ -55,7 +55,9 @@ async def _init() -> None:
     "a_media",
     about={
         "header": "set alive media",
-        "flags": {"-c": "check alive media.",},
+        "flags": {
+            "-c": "check alive media.",
+        },
         "usage": "{tr}a_media [reply to media]",
     },
 )
@@ -65,11 +67,15 @@ async def set_alive_media(message: Message):
         return await message.edit(f"The alive media is set to [<b>THIS</b>]({media_}).")
     reply_ = message.reply_to_message
     if not reply_:
-        return await message.edit("`Reply to media to set it as alive media.`", del_in=5)
-    if msg_type(reply_) not in ['gif', 'photo', 'video']:
+        return await message.edit(
+            "`Reply to media to set it as alive media.`", del_in=5
+        )
+    if msg_type(reply_) not in ["gif", "photo", "video"]:
         return await message.edit("`Reply to media only.`", del_in=5)
     link_ = (await reply_.forward(Config.LOG_CHANNEL_ID)).link
-    await MEDIA_.update_one({'_id': "ALIVE_MEDIA"}, {"$set": {"url": link_}}, upsert=True)
+    await MEDIA_.update_one(
+        {"_id": "ALIVE_MEDIA"}, {"$set": {"url": link_}}, upsert=True
+    )
     await message.edit(f"Alive media set. [<b>Preview</b>]({link_})")
 
 
