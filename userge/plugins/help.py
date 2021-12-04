@@ -634,16 +634,19 @@ if userge.has_bot:
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
                 media_ = await MEDIA_.find_one({"_id": "ALIVE_MEDIA"})
-                alive_media = media_['url'] if media_ 
-                if media_link:
+                alive_media = media_['url'] if media_ else "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
+                if not media_:
                     results.append(
                         InlineQueryResultAnimation(
-                            photo_url=media_link,
+                            photo_url=alive_media,
                             caption=alive_info,
                             reply_markup=buttons,
                         )
                     )
                     return
+                else:
+                    media_type = media_['type']
+                    media_type = "photo"
                 if not Config.ALIVE_MEDIA:
                     results.append(
                         InlineQueryResultPhoto(
