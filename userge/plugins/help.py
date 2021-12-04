@@ -641,7 +641,7 @@ if userge.has_bot:
                 if not media_:
                     results.append(
                         InlineQueryResultAnimation(
-                            photo_url=alive_media,
+                            animation_url=alive_media,
                             caption=alive_info,
                             reply_markup=buttons,
                         )
@@ -659,7 +659,7 @@ if userge.has_bot:
                     elif media_type == "gif":
                         results.append(
                             InlineQueryResultAnimation(
-                                photo_url=alive_media,
+                                animation_url=alive_media,
                                 caption=alive_info,
                                 reply_markup=buttons,
                             )
