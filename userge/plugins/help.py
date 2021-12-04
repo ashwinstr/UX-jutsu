@@ -19,6 +19,7 @@ from pyrogram.types import (
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
+from userge.helpers.jutsu_tools import msg_type
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, userge
@@ -27,7 +28,7 @@ from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key
 
-from .bot.alive import Bot_Alive
+from .bot.alive import Bot_Alive, media_
 from .bot.gogo import Anime
 from .bot.utube_inline import (
     download_button,
@@ -39,6 +40,8 @@ from .bot.utube_inline import (
 from .fun.stylish import Styled, font_gen
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
+
+MEDIA_ = get_collection("ALIVE_MEDIA")
 
 CHANNEL = userge.getCLogger(__name__)
 
@@ -632,6 +635,14 @@ if userge.has_bot:
                 me = await userge.get_me()
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
+                if media_:
+                    results.append(
+                        InlineQueryResultAnimation(
+                            photo_url=media_,
+                            caption=alive_info,
+                            reply_markup=buttons,
+                        )
+                    )
                 if not Config.ALIVE_MEDIA:
                     results.append(
                         InlineQueryResultPhoto(
@@ -640,6 +651,7 @@ if userge.has_bot:
                             reply_markup=buttons,
                         )
                     )
+                    return
                 else:
                     if Config.ALIVE_MEDIA.lower().strip() == "false":
                         results.append(
