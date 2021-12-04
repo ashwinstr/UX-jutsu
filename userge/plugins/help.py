@@ -14,8 +14,8 @@ from pyrogram.types import (
     InlineQuery,
     InlineQueryResultAnimation,
     InlineQueryResultArticle,
-    InlineQueryResultCachedDocument,
-    InlineQueryResultCachedPhoto,
+#    InlineQueryResultCachedDocument,
+#    InlineQueryResultCachedPhoto,
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
