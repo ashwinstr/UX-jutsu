@@ -11,6 +11,7 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 
 from userge import Config, Message, get_version, userge, versions, get_collection
 from userge.core.ext import RawClient
+from userge.plugins.help import SAVED_SETTINGS
 from userge.utils import get_file_id, rand_array
 from userge.helpers import msg_type
 
@@ -20,14 +21,14 @@ _ALIVE_REGEX = comp_regex(
 _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA = None, None
 media_ = None
 
-MEDIA_ = get_collection("SAVED_SETTINGS")
+SAVED_SETTINGS = get_collection("CONFIGS")
 
 LOGGER = userge.getLogger(__name__)
 
 
 async def _init() -> None:
     global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA, media_
-    found = await MEDIA_.find_one({'_id': "ALIVE_MEDIA"})
+    found = await SAVED_SETTINGS.find_one({'_id': "ALIVE_MEDIA"})
     if found:
         media_ = found['url']
     else:
@@ -69,7 +70,7 @@ async def set_alive_media(message: Message):
     if msg_type(reply_) not in ['gif', 'photo', 'video']:
         return await message.edit("`Reply to media only.`", del_in=5)
     link_ = (await reply_.forward(Config.LOG_CHANNEL_ID)).link
-    await MEDIA_.update_one({'_id': "ALIVE_MEDIA"}, {"$set": {"url": link_}}, upsert=True)
+    await SAVED_SETTINGS.update_one({'_id': "ALIVE_MEDIA"}, {"$set": {"url": link_}}, upsert=True)
     await message.edit(f"Alive media set. [<b>Preview</b>]({link_})")
 
 

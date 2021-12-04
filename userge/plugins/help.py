@@ -83,11 +83,18 @@ REPO_X = InlineQueryResultArticle(
     ),
 )
 
+media_link = ""
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
     if data:
         Config.USE_USER_FOR_CLIENT_CHECKS = bool(data["is_user"])
+    media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
+    if media_:
+        global media_link
+        media_link = media_['url']
+    else:
+        media_link = "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
 
 
 @userge.on_cmd(
@@ -633,10 +640,10 @@ if userge.has_bot:
                 me = await userge.get_me()
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
-                if media_:
+                if media_link:
                     results.append(
                         InlineQueryResultAnimation(
-                            photo_url=media_,
+                            photo_url=media_link,
                             caption=alive_info,
                             reply_markup=buttons,
                         )
