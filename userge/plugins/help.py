@@ -641,6 +641,7 @@ if userge.has_bot:
                             reply_markup=buttons,
                         )
                     )
+                    return
                 if not Config.ALIVE_MEDIA:
                     results.append(
                         InlineQueryResultPhoto(
