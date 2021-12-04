@@ -83,7 +83,6 @@ REPO_X = InlineQueryResultArticle(
 )
 
 
-
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
     if data:
@@ -634,7 +633,11 @@ if userge.has_bot:
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
                 media_ = await MEDIA_.find_one({"_id": "ALIVE_MEDIA"})
-                alive_media = media_['url'] if media_ else "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
+                alive_media = (
+                    media_["url"]
+                    if media_
+                    else "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
+                )
                 if not media_:
                     results.append(
                         InlineQueryResultAnimation(
