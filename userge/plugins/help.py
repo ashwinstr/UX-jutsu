@@ -14,6 +14,8 @@ from pyrogram.types import (
     InlineQuery,
     InlineQueryResultAnimation,
     InlineQueryResultArticle,
+    InlineQueryResultCachedDocument,
+    InlineQueryResultCachedPhoto,
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
@@ -683,7 +685,7 @@ if userge.has_bot:
                                     await CHANNEL.log(str(b_rr))
                             if Bot_Alive.is_photo(c_file_id):
                                 results.append(
-                                (
+                                    InlineQueryResultCachedPhoto(
                                         file_id=c_file_id,
                                         caption=alive_info,
                                         reply_markup=buttons,
@@ -718,7 +720,7 @@ if userge.has_bot:
                     type_ = cnote.get("type")
                     if type_ == "image":
                         results.append(
-                        (
+                            InlineQueryResultCachedPhoto(
                                 file_id=cnote.get("file_id"),
                                 caption=cnote.get("caption"),
                                 reply_markup=cnote.get("buttons"),
@@ -980,7 +982,7 @@ if userge.has_bot:
                             if inline_db["media_valid"]:
                                 if saved_msg.photo:
                                     results.append(
-                                    (
+                                        InlineQueryResultCachedPhoto(
                                             file_id=media_data,
                                             caption=textx,
                                             reply_markup=buttonsx,
