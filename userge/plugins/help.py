@@ -7,15 +7,13 @@ import ujson
 from html_telegraph_poster import TelegraphPoster
 from pyrogram import filters
 from pyrogram.errors import BadRequest, MessageIdInvalid, MessageNotModified
-from pyrogram.types import (
+from pyrogram.types import (  # InlineQueryResultCachedDocument,; InlineQueryResultCachedPhoto,
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     InlineQuery,
     InlineQueryResultAnimation,
     InlineQueryResultArticle,
-    InlineQueryResultCachedDocument,
-    InlineQueryResultCachedPhoto,
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
@@ -39,6 +37,8 @@ from .bot.utube_inline import (
 from .fun.stylish import Styled, font_gen
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
+
+MEDIA_ = get_collection("ALIVE_MEDIA")
 
 CHANNEL = userge.getCLogger(__name__)
 
@@ -82,11 +82,19 @@ REPO_X = InlineQueryResultArticle(
     ),
 )
 
+media_link = ""
+
 
 async def _init() -> None:
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
     if data:
         Config.USE_USER_FOR_CLIENT_CHECKS = bool(data["is_user"])
+    media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
+    if media_:
+        global media_link
+        media_link = media_["url"]
+    else:
+        media_link = "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
 
 
 @userge.on_cmd(
@@ -632,6 +640,15 @@ if userge.has_bot:
                 me = await userge.get_me()
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
+                if media_link:
+                    results.append(
+                        InlineQueryResultAnimation(
+                            photo_url=media_link,
+                            caption=alive_info,
+                            reply_markup=buttons,
+                        )
+                    )
+                    return
                 if not Config.ALIVE_MEDIA:
                     results.append(
                         InlineQueryResultPhoto(
@@ -640,6 +657,7 @@ if userge.has_bot:
                             reply_markup=buttons,
                         )
                     )
+                    return
                 else:
                     if Config.ALIVE_MEDIA.lower().strip() == "false":
                         results.append(

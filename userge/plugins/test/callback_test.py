@@ -83,11 +83,17 @@ async def call_test(_, c_q: CallbackQuery):
                 )
             list_ = "Vote list is as below:\n\nUP_VOTES BY:\n"
             for one in found["up"]:
-                user_ = f"• {(await userge.bot.get_users(one)).first_name}\n"
+                try:
+                    user_ = f"• {(await userge.get_users(one)).first_name}\n"
+                except BaseException:
+                    user_ = f"{one}\n"
                 list_ += user_
             list_ += "\nDOWN_VOTES BY:\n"
             for one in found["down"]:
-                user_ = f"• {(await userge.bot.get_users(one)).first_name}\n"
+                try:
+                    user_ = f"• {(await userge.get_users(one)).first_name}\n"
+                except BaseException:
+                    user_ = f"{one}\n"
                 list_ += user_
             return await c_q.answer(list_, show_alert=True)
         await c_q.edit_message_text(
