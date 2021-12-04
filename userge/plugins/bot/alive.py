@@ -71,11 +71,15 @@ async def set_alive_media(message: Message):
         return await message.edit(
             "`Reply to media to set it as alive media.`", del_in=5
         )
-    if msg_type(reply_) not in ["gif", "photo", "video"]:
+    type_ = msg_type(reply_)
+    if type_ not in ["gif", "photo"]:
         return await message.edit("`Reply to media only.`", del_in=5)
     link_ = (await reply_.forward(Config.LOG_CHANNEL_ID)).link
     await SAVED_SETTINGS.update_one(
         {"_id": "ALIVE_MEDIA"}, {"$set": {"url": link_}}, upsert=True
+    )
+    await SAVED_SETTINGS.update_one(
+        {"_id": "ALIVE_MEDIA"}, {"$set": {"type": type_}}, upsert=True
     )
     await message.edit(f"Alive media set. [<b>Preview</b>]({link_})")
 
