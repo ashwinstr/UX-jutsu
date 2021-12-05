@@ -15,7 +15,7 @@ from pathlib import Path
 from time import time
 
 import wget
-import youtube_dl as ytdl
+# import youtube_dl as ytdl
 
 from userge import Config, Message, pool, userge
 from userge.utils import humanbytes, time_formatter
