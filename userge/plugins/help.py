@@ -728,20 +728,12 @@ if userge.has_bot:
                                     )
                                 )
             if string == "testing":
-                btn_ = InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                text="testing", url="t.me/Kakashi_HTK"
-                            ),
-                        ],
-                    ]
-                )
+                buttons=Bot_Alive.alive_buttons()
                 results.append(
                     InlineQueryResultPhoto(
                         photo_url="https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg",
                         caption="Testing.",
-                        reply_markup=btn_,
+                        reply_markup=buttons,
                     )
                 )
 
