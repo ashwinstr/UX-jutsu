@@ -90,8 +90,8 @@ async def _init() -> None:
         Config.USE_USER_FOR_CLIENT_CHECKS = bool(data["is_user"])
     media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
     if media_:
-        Config.NEW_ALIVE_MEDIA = media_['url']
-        Config.ALIVE_MEDIA_TYPE = media_['type']
+        Config.NEW_ALIVE_MEDIA = media_["url"]
+        Config.ALIVE_MEDIA_TYPE = media_["type"]
     else:
         Config.NEW_ALIVE_MEDIA = "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
         Config.ALIVE_MEDIA_TYPE = "photo"
