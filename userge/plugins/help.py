@@ -726,17 +726,6 @@ if userge.has_bot:
                                         reply_markup=buttons,
                                     )
                                 )
-            if string == "testing":
-                me = await userge.get_me()
-                a_caption = Bot_Alive.alive_info(me)
-                buttons=Bot_Alive.alive_buttons()
-                results.append(
-                    InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg",
-                        caption=a_caption,
-                        reply_markup=buttons,
-                    )
-                )
 
             if string == "geass":
                 results.append(
