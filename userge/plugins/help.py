@@ -639,6 +639,7 @@ if userge.has_bot:
                     else "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
                 )
                 if not media_:
+                    print("Getting into no media.")
                     results.append(
                         InlineQueryResultPhoto(
                             photo_url=alive_media,
@@ -648,6 +649,7 @@ if userge.has_bot:
                     )
                 else:
                     media_type = media_["type"]
+                    print("Getting into media.")
                     if media_type == "photo":
                         results.append(
                             InlineQueryResultPhoto(
