@@ -82,6 +82,7 @@ REPO_X = InlineQueryResultArticle(
 
 media_, alive_media, media_type = None, None, None
 
+
 async def _init() -> None:
     global media_, alive_media, media_type
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})

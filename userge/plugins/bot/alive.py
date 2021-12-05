@@ -12,8 +12,8 @@ from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMa
 from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
 from userge.helpers import msg_type
-from userge.utils import get_file_id, rand_array
 from userge.plugins.utils.telegraph import upload_media_
+from userge.utils import get_file_id, rand_array
 
 _ALIVE_REGEX = comp_regex(
     r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
@@ -89,7 +89,9 @@ async def set_alive_media(message: Message):
         {"_id": "ALIVE_MEDIA"}, {"$set": {"type": type_}}, upsert=True
     )
     link_log = (await reply_.forward(Config.LOG_CHANNEL_ID)).link
-    await message.edit(f"Alive media set. [<b>Preview</b>]({link_log})", disable_web_page_preview=True)
+    await message.edit(
+        f"Alive media set. [<b>Preview</b>]({link_log})", disable_web_page_preview=True
+    )
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
