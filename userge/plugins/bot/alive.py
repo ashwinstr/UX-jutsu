@@ -26,12 +26,7 @@ LOGGER = userge.getLogger(__name__)
 
 
 async def _init() -> None:
-    global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA, media_
-    found = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
-    if found:
-        media_ = found["url"]
-    else:
-        media_ = "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
+    global _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA
     if Config.ALIVE_MEDIA and Config.ALIVE_MEDIA.lower() != "false":
         am_type, am_link = await Bot_Alive.check_media_link(Config.ALIVE_MEDIA.strip())
         if am_type and am_type == "tg_media":
@@ -57,14 +52,25 @@ async def _init() -> None:
         "header": "set alive media",
         "flags": {
             "-c": "check alive media.",
+            "-r": "reset alive media.",
         },
         "usage": "{tr}a_media [reply to media]",
     },
 )
 async def set_alive_media(message: Message):
     """set alive media"""
+    found = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
     if "-c" in message.flags:
+        if found:
+            media_ = found['url']
+        else:
+            media_ = "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
         return await message.edit(f"The alive media is set to [<b>THIS</b>]({media_}).")
+    elif "-r" in message.flags:
+        if not found:
+            return await message.edit("`No alive media is set.`", del_in=5)
+        await SAVED_SETTINGS.delete_one({"_id": "ALIVE_MEDIA"})
+        return await message.edit("`Alive media reset to default.`", del_in=5)
     reply_ = message.reply_to_message
     if not reply_:
         return await message.edit(
