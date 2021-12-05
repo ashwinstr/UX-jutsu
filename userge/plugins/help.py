@@ -61,20 +61,20 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
-    url="https://github.com/code-rgb/USERGE-X",
+    url="https://github.com/ashwinstr/UX-jutsu",
     description="Setup Your Own",
     thumb_url="https://telegra.ph/file/8fa91f9c7f6f4f6b8fa6c.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    "🔥 USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
+                    "🔥 USERGE-X Repo", url="https://github.com/ashwinstr/UX-jutsu"
                 ),
                 InlineKeyboardButton(
                     "🚀 Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
-                        "https://github.com/code-pms/MyGpack"
+                        "https://github.com/ash/MyGpack"
                     ),
                 ),
             ]
@@ -731,6 +731,21 @@ if userge.has_bot:
                                         reply_markup=buttons,
                                     )
                                 )
+            if string == "testing":
+                btn_ = InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(text="testing", url="t.me/Kakashi_HTK"),
+                        ],
+                    ]
+                )
+                results.append(
+                    InlineQueryResultPhoto(
+                        photo_url="https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg",
+                        caption="Testing.",
+                        reply_markup=btn_,
+                    )
+                )
 
             if string == "geass":
                 results.append(
