@@ -80,11 +80,17 @@ REPO_X = InlineQueryResultArticle(
     ),
 )
 
+media_, alive_media, media_type = None, None, None
 
 async def _init() -> None:
+    global media_, alive_media, media_type
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
     if data:
         Config.USE_USER_FOR_CLIENT_CHECKS = bool(data["is_user"])
+    media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
+    if media_:
+        alive_media = media_['url']
+        media_type = media_['type']
 
 
 @userge.on_cmd(
@@ -630,7 +636,6 @@ if userge.has_bot:
                 me = await userge.get_me()
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
-                media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
                 if not media_:
                     results.append(
                         InlineQueryResultPhoto(
@@ -640,8 +645,6 @@ if userge.has_bot:
                         )
                     )
                 else:
-                    media_type = media_["type"]
-                    alive_media = media_["url"]
                     if media_type == "photo":
                         results.append(
                             InlineQueryResultPhoto(
@@ -741,7 +744,7 @@ if userge.has_bot:
                 )
                 results.append(
                     InlineQueryResultPhoto(
-                        photo_url="https://t.me/c/1162980334/20953",
+                        photo_url="https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg",
                         caption="Testing.",
                         reply_markup=btn_,
                     )

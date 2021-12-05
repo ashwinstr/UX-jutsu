@@ -13,6 +13,7 @@ from userge import Config, Message, get_collection, get_version, userge, version
 from userge.core.ext import RawClient
 from userge.helpers import msg_type
 from userge.utils import get_file_id, rand_array
+from userge.plugins.utils.telegraph import upload_media_
 
 _ALIVE_REGEX = comp_regex(
     r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
@@ -79,14 +80,16 @@ async def set_alive_media(message: Message):
     type_ = msg_type(reply_)
     if type_ not in ["gif", "photo"]:
         return await message.edit("`Reply to media only.`", del_in=5)
-    link_ = (await reply_.forward(Config.LOG_CHANNEL_ID)).link
+    link_ = await upload_media_(message)
+    whole_link = f"https://telegra.ph{link_}"
     await SAVED_SETTINGS.update_one(
-        {"_id": "ALIVE_MEDIA"}, {"$set": {"url": link_}}, upsert=True
+        {"_id": "ALIVE_MEDIA"}, {"$set": {"url": whole_link}}, upsert=True
     )
     await SAVED_SETTINGS.update_one(
         {"_id": "ALIVE_MEDIA"}, {"$set": {"type": type_}}, upsert=True
     )
-    await message.edit(f"Alive media set. [<b>Preview</b>]({link_})")
+    link_log = (await reply_.forward(Config.LOG_CHANNEL_ID)).link
+    await message.edit(f"Alive media set. [<b>Preview</b>]({link_log})", disable_web_page_preview=True)
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
