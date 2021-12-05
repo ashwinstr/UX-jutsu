@@ -63,7 +63,7 @@ async def set_alive_media(message: Message):
     found = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
     if "-c" in message.flags:
         if found:
-            media_ = found['url']
+            media_ = found["url"]
         else:
             media_ = "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
         return await message.edit(f"The alive media is set to [<b>THIS</b>]({media_}).")
