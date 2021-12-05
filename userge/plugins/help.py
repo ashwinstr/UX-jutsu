@@ -82,6 +82,7 @@ REPO_X = InlineQueryResultArticle(
 
 media_, alive_media, media_type = None, None, None
 
+
 async def _init() -> None:
     global media_, alive_media, media_type
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
@@ -89,8 +90,8 @@ async def _init() -> None:
         Config.USE_USER_FOR_CLIENT_CHECKS = bool(data["is_user"])
     media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
     if media_:
-        alive_media = media_['url']
-        media_type = media_['type']
+        alive_media = media_["url"]
+        media_type = media_["type"]
 
 
 @userge.on_cmd(
