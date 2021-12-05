@@ -636,12 +636,12 @@ if userge.has_bot:
                 alive_media = (
                     media_["url"]
                     if media_
-                    else "https://telegra.ph/file/e7c9bc9cdf7cae7e8d532.mp4"
+                    else "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
                 )
                 if not media_:
                     results.append(
-                        InlineQueryResultAnimation(
-                            animation_url=alive_media,
+                        InlineQueryResultPhoto(
+                            photo_url=alive_media,
                             caption=alive_info,
                             reply_markup=buttons,
                         )
