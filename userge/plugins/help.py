@@ -728,7 +728,7 @@ if userge.has_bot:
                                     )
                                 )
             if string == "testing":
-                buttons=Bot_Alive.alive_buttons()
+                buttons = Bot_Alive.alive_buttons()
                 results.append(
                     InlineQueryResultPhoto(
                         photo_url="https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg",
