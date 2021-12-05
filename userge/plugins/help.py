@@ -633,23 +633,17 @@ if userge.has_bot:
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
                 media_ = await MEDIA_.find_one({"_id": "ALIVE_MEDIA"})
-                alive_media = (
-                    media_["url"]
-                    if media_
-                    else "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
-                )
                 if not media_:
-                    print("Getting into no media.")
                     results.append(
                         InlineQueryResultPhoto(
-                            photo_url=alive_media,
+                            photo_url="https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg",
                             caption=alive_info,
                             reply_markup=buttons,
                         )
                     )
                 else:
                     media_type = media_["type"]
-                    print("Getting into media.")
+                    alive_media = media_["url"]
                     if media_type == "photo":
                         results.append(
                             InlineQueryResultPhoto(
