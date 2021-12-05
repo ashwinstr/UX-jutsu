@@ -15,12 +15,14 @@ from pathlib import Path
 from time import time
 
 import wget
-# import youtube_dl as ytdl
 
 from userge import Config, Message, pool, userge
 from userge.utils import humanbytes, time_formatter
 
 from .uploads import upload
+
+# import youtube_dl as ytdl
+
 
 LOGGER = userge.getLogger(__name__)
 
