@@ -741,7 +741,7 @@ if userge.has_bot:
                 )
                 results.append(
                     InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg",
+                        photo_url="https://t.me/c/1162980334/20953",
                         caption="Testing.",
                         reply_markup=btn_,
                     )
