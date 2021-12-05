@@ -90,8 +90,9 @@ async def set_alive_media(message: Message):
     )
     link_log = (await reply_.forward(Config.LOG_CHANNEL_ID)).link
     await message.edit(
-        f"Alive media set. [<b>Preview</b>]({link_log})", disable_web_page_preview=True
+        f"`Alive media set.` [<b>Preview</b>]({link_log})\n`Bot soft restarting, please wait...`", disable_web_page_preview=True
     )
+    asyncio.get_event_loop().create_task(userge.restart())
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
