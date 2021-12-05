@@ -38,8 +38,6 @@ from .fun.stylish import Styled, font_gen
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
 
-MEDIA_ = get_collection("ALIVE_MEDIA")
-
 CHANNEL = userge.getCLogger(__name__)
 
 _CATEGORY = {
@@ -632,7 +630,7 @@ if userge.has_bot:
                 me = await userge.get_me()
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
-                media_ = await MEDIA_.find_one({"_id": "ALIVE_MEDIA"})
+                media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
                 if not media_:
                     results.append(
                         InlineQueryResultPhoto(
