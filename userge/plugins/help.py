@@ -89,8 +89,11 @@ async def _init() -> None:
         Config.USE_USER_FOR_CLIENT_CHECKS = bool(data["is_user"])
     media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
     if media_:
-        alive_media = media_['url']
-        media_type = media_['type']
+        Config.NEW_ALIVE_MEDIA = media_['url']
+        Config.ALIVE_MEDIA_TYPE = media_['type']
+    else:
+        Config.NEW_ALIVE_MEDIA = "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
+        Config.ALIVE_MEDIA_TYPE = "photo"
 
 
 @userge.on_cmd(
@@ -636,31 +639,22 @@ if userge.has_bot:
                 me = await userge.get_me()
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
-                if not media_:
+                if Config.ALIVE_MEDIA_TYPE == "photo":
                     results.append(
                         InlineQueryResultPhoto(
-                            photo_url="https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg",
+                            photo_url=Config.NEW_ALIVE_MEDIA,
                             caption=alive_info,
                             reply_markup=buttons,
                         )
                     )
-                else:
-                    if media_type == "photo":
-                        results.append(
-                            InlineQueryResultPhoto(
-                                photo_url=alive_media,
-                                caption=alive_info,
-                                reply_markup=buttons,
-                            )
+                elif Config.ALIVE_MEDIA_TYPE == "gif":
+                    results.append(
+                        InlineQueryResultAnimation(
+                            animation_url=Config.NEW_ALIVE_MEDIA,
+                            caption=alive_info,
+                            reply_markup=buttons,
                         )
-                    elif media_type == "gif":
-                        results.append(
-                            InlineQueryResultAnimation(
-                                animation_url=alive_media,
-                                caption=alive_info,
-                                reply_markup=buttons,
-                            )
-                        )
+                    )
                 return
                 if not Config.ALIVE_MEDIA:
                     results.append(
