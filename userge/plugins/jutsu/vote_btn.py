@@ -1,4 +1,3 @@
-import logging
 import re
 import traceback
 
@@ -144,7 +143,7 @@ async def vote_callback(_, c_q: CallbackQuery):
             return await c_q.answer(list_, show_alert=True)
         btn_ = vote_buttons(text_up, text_down, anon)
         await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
-    except:
+    except BaseException:
         tb = traceback.format_exc()
         await userge.send_message(Config.LOG_CHANNEL_ID, tb)
 
