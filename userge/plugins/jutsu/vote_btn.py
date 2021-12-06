@@ -145,7 +145,7 @@ async def vote_callback(_, c_q: CallbackQuery):
         await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
     except BaseException:
         tb = traceback.format_exc()
-        await userge.send_message(Config.LOG_CHANNEL_ID, tb)
+        await userge.send_message(Config.LOG_CHANNEL_ID, f"```{tb}```")
 
 
 def vote_buttons(up_, down_, anon_) -> InlineKeyboardMarkup:
