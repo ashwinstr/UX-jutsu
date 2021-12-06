@@ -502,6 +502,7 @@ if userge.has_bot:
         str_y = i_q.split(" ", 1)  # trigger and Text
         string_split = string.split()  # All lower and Split each word
         iq_user_id = inline_query.from_user.id
+        reply_ = inline_query.reply_to_message
         if (
             (iq_user_id in Config.OWNER_ID)
             or (
@@ -727,17 +728,21 @@ if userge.has_bot:
                 )
 
             if string == "voting":
+                if not reply_:
+                    return
                 up = "0 likes"
                 down = "0 dislikes"
                 anon = False
                 results.append(
                     InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/37a747082ee7ed8085a85.jpg",
+                        photo_url="https://telegra.ph/file/fffb70c7b824b8c4e020b.jpg",
                         caption="Vote your opinion.",
                         reply_markup=vote_buttons(up, down, anon),
                     )
                 )
             if string == "anon_voting":
+                if not reply_:
+                    return
                 up = "0 likes"
                 down = "0 dislikes"
                 anon = True
