@@ -12,10 +12,10 @@ CHANNEL = userge.getCLogger(__name__)
 
 
 @userge.on_cmd(
-    "call",
+    "voting",
     about={
-        "header": "testing callback query",
-        "usage": "{tr}call",
+        "header": "make voting button",
+        "usage": "{tr}voting",
     },
 )
 async def test_call(message: Message):

@@ -725,6 +725,17 @@ if userge.has_bot:
                     )
                 )
 
+            if string == "voting":
+                results.append(
+                    InlineQueryResultArticle(
+                        title="Voting for replied message.",
+                        input_message_content=InputTextMessageContent(
+                            "Vote your opinion below."
+                        ),
+                        reply_markup=Bot_Alive.alive_buttons(),
+                    )
+                )
+
             if len(string_split) == 2 and (string_split[0] == "ofox"):
                 codename = string_split[1]
                 t = TelegraphPoster(use_api=True)
