@@ -61,9 +61,14 @@ async def test_call(message: Message):
             }
         )
     btn_ = vote_buttons(up, down, anon)
-    await userge.bot.send_message(
+    if anon:
+        pic_ = "https://telegra.ph/file/b23ac25afde3d6b99a591.jpg"
+    else:
+        pic_ = "https://telegra.ph/file/fffb70c7b824b8c4e020b.jpg"
+    await userge.bot.send_photo(
         message.chat.id,
-        head_,
+        photo=pic_,
+        caption=head_,
         reply_to_message_id=reply_id,
         reply_markup=btn_,
     )
