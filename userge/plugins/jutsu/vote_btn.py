@@ -78,7 +78,9 @@ async def test_call(message: Message):
 async def vote_callback(_, c_q: CallbackQuery):
     try:
         if not c_q.message.reply_to_message:
-            return await c_q.answer("This voting message is not a reply.", show_alert=True)
+            return await c_q.answer(
+                "This voting message is not a reply.", show_alert=True
+            )
         vote_msg = c_q.message.reply_to_message.message_id
         found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{vote_msg}"})
         if not found:
