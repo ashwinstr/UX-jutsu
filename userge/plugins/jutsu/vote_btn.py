@@ -29,7 +29,9 @@ async def _init() -> None:
     "voting",
     about={
         "header": "make voting button",
-        "flags": {"-a": "anonymous",},
+        "flags": {
+            "-a": "anonymous",
+        },
         "usage": "{tr}voting",
     },
 )
@@ -44,9 +46,9 @@ async def test_call(message: Message):
     head_ = "Anonymous voting." if anon else "Voting."
     found = await VOTE.find_one({"_id": f"{message.chat.id}_{reply_id}"})
     if found:
-        up = found['up']
-        down = found['down']
-        anon = found['anonymous']
+        up = found["up"]
+        down = found["down"]
+        anon = found["anonymous"]
     else:
         up = "0 likes"
         down = "0 dislikes"
@@ -58,7 +60,7 @@ async def test_call(message: Message):
                 "anonymous": anon,
             }
         )
-    btn_= vote_buttons(up, down, anon)
+    btn_ = vote_buttons(up, down, anon)
     await userge.bot.send_message(
         message.chat.id,
         head_,
@@ -73,7 +75,9 @@ async def vote_callback(_, c_q: CallbackQuery):
         vote_msg = c_q.message.reply_to_message.message_id
         found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{vote_msg}"})
         if not found:
-            return await c_q.answer("This voting message has been stopped.", show_alert=True)
+            return await c_q.answer(
+                "This voting message has been stopped.", show_alert=True
+            )
         votes_up = found["up"]
         votes_down = found["down"]
         anon = found["anonymous"]
@@ -128,10 +132,8 @@ async def vote_callback(_, c_q: CallbackQuery):
                     user_ = f"{one}\n"
                 list_ += user_
             return await c_q.answer(list_, show_alert=True)
-        btn_= vote_buttons(text_up, text_down, anon)
-        await c_q.edit_message_text(
-            "Thanks for the vote.", reply_markup=btn_
-        )
+        btn_ = vote_buttons(text_up, text_down, anon)
+        await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
     except Exception as e:
         await userge.send_message(Config.LOG_CHANNEL_ID, e)
         logging.exception(e)
