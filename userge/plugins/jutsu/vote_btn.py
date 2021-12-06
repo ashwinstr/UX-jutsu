@@ -1,5 +1,6 @@
 import logging
 import re
+import traceback
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
@@ -143,10 +144,9 @@ async def vote_callback(_, c_q: CallbackQuery):
             return await c_q.answer(list_, show_alert=True)
         btn_ = vote_buttons(text_up, text_down, anon)
         await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
-    except Exception as e:
-        await userge.send_message(Config.LOG_CHANNEL_ID, e)
-        logging.exception(e)
-        raise
+    except:
+        tb = traceback.format_exc()
+        await userge.send_message(Config.LOG_CHANNEL_ID, tb)
 
 
 def vote_buttons(up_, down_, anon_) -> InlineKeyboardMarkup:
