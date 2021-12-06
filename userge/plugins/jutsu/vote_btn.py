@@ -11,40 +11,72 @@ VOTE = get_collection("VOTES")
 CHANNEL = userge.getCLogger(__name__)
 
 
+async def _init() -> None:
+    no = 0
+    async for one in VOTE.find():
+        no += 1
+    if no > 20:
+        del_ = no - 20
+        deleted = 0
+        async for one in VOTE.find():
+            await VOTE.delete_one(one)
+            deleted += 1
+            if deleted == del_:
+                break
+
+
 @userge.on_cmd(
     "voting",
     about={
         "header": "make voting button",
+        "flags": {"-a": "anonymous",},
         "usage": "{tr}voting",
     },
 )
 async def test_call(message: Message):
-    up = "0 likes"
-    down = "0 dislikes"
+    anon = False
+    if "-a" in message.flags:
+        anon = True
+    reply_ = message.reply_to_message
+    if not reply_:
+        return await message.edit("`Reply to a message to vote for.`", del_in=5)
+    reply_id = reply_.message_id
+    head_ = "Anonymous voting." if anon else "Voting."
+    found = await VOTE.find_one({"_id": f"{message.chat.id}_{reply_id}"})
+    if found:
+        up = found['up']
+        down = found['down']
+        anon = found['anonymous']
+    else:
+        up = "0 likes"
+        down = "0 dislikes"
+        await VOTE.insert_one(
+            {
+                "_id": f"{message.chat.id}_{reply_id}",
+                "up": up,
+                "down": down,
+                "anonymous": anon,
+            }
+        )
+    btn_= vote_buttons(up, down, anon)
     await userge.bot.send_message(
         message.chat.id,
-        "Voting for replied message.",
-        reply_to_message_id=message.reply_to_message.message_id,
-        reply_markup=buttons(up, down),
+        head_,
+        reply_to_message_id=reply_id,
+        reply_markup=btn_,
     )
 
 
 @userge.bot.on_callback_query(filters.regex(pattern=r"^vote_.*"))
-async def call_test(_, c_q: CallbackQuery):
+async def vote_callback(_, c_q: CallbackQuery):
     try:
         vote_msg = c_q.message.reply_to_message.message_id
         found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{vote_msg}"})
         if not found:
-            await VOTE.insert_one(
-                {
-                    "_id": f"{c_q.message.chat.id}_{vote_msg}",
-                    "up": [],
-                    "down": [],
-                },
-            )
-            found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{vote_msg}"})
+            return await c_q.answer("This voting message has been stopped.", show_alert=True)
         votes_up = found["up"]
         votes_down = found["down"]
+        anon = found["anonymous"]
         tapper = c_q.from_user.id
         if "up" in c_q.data:
             text_up = c_q.message.reply_markup.inline_keyboard[0][0].text
@@ -96,8 +128,9 @@ async def call_test(_, c_q: CallbackQuery):
                     user_ = f"{one}\n"
                 list_ += user_
             return await c_q.answer(list_, show_alert=True)
+        btn_= vote_buttons(text_up, text_down, anon)
         await c_q.edit_message_text(
-            "Thanks for the vote.", reply_markup=buttons(text_up, text_down)
+            "Thanks for the vote.", reply_markup=btn_
         )
     except Exception as e:
         await userge.send_message(Config.LOG_CHANNEL_ID, e)
@@ -105,12 +138,20 @@ async def call_test(_, c_q: CallbackQuery):
         raise
 
 
-def buttons(up_, down_) -> InlineKeyboardMarkup:
-    btn_ = [
-        [
-            InlineKeyboardButton(text=up_, callback_data="vote_up"),
-            InlineKeyboardButton(text=down_, callback_data="vote_down"),
-        ],
-        [InlineKeyboardButton(text="List of votes.", callback_data="vote_list")],
-    ]
+def vote_buttons(up_, down_, anon_) -> InlineKeyboardMarkup:
+    if anon_:
+        btn_ = [
+            [
+                InlineKeyboardButton(text=up_, callback_data="vote_up"),
+                InlineKeyboardButton(text=down_, callback_data="vote_down"),
+            ],
+        ]
+    else:
+        btn_ = [
+            [
+                InlineKeyboardButton(text=up_, callback_data="vote_up"),
+                InlineKeyboardButton(text=down_, callback_data="vote_down"),
+            ],
+            [InlineKeyboardButton(text="List of votes.", callback_data="vote_list")],
+        ]
     return InlineKeyboardMarkup(btn_)

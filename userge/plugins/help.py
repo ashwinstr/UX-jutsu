@@ -37,6 +37,7 @@ from .bot.utube_inline import (
 from .fun.stylish import Styled, font_gen
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
+from .jutsu.vote_btn import vote_buttons
 
 CHANNEL = userge.getCLogger(__name__)
 
@@ -726,13 +727,25 @@ if userge.has_bot:
                 )
 
             if string == "voting":
+                up = "0 likes"
+                down = "0 dislikes"
+                anon = False
                 results.append(
-                    InlineQueryResultArticle(
-                        title="Voting for replied message.",
-                        input_message_content=InputTextMessageContent(
-                            "Vote your opinion below."
-                        ),
-                        reply_markup=Bot_Alive.alive_buttons(),
+                    InlineQueryResultPhoto(
+                        photo_url="https://telegra.ph/file/37a747082ee7ed8085a85.jpg",
+                        caption="Vote your opinion.",
+                        reply_markup=vote_buttons(up, down, anon),
+                    )
+                )
+            if string == "anon_voting":
+                up = "0 likes"
+                down = "0 dislikes"
+                anon = True
+                results.append(
+                    InlineQueryResultPhoto(
+                        photo_url="https://telegra.ph/file/b23ac25afde3d6b99a591.jpg",
+                        caption="Vote your opinion anonymously.",
+                        reply_markup=vote_buttons(up, down, anon),
                     )
                 )
 
@@ -1112,7 +1125,7 @@ if userge.has_bot:
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
                 input_message_content=InputTextMessageContent(" 𝐒𝐇𝐀𝐑𝐈𝐍𝐆𝐀𝐍 MAIN MENU "),
-                url="https://github.com/code-rgb/USERGE-X",
+                url="https://github.com/ashwinstr/UX-jutsu",
                 description="Sharingan Main Menu",
                 thumb_url="https://telegra.ph/file/8fa91f9c7f6f4f6b8fa6c.jpg",
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
