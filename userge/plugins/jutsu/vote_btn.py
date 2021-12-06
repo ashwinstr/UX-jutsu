@@ -55,8 +55,8 @@ async def test_call(message: Message):
         await VOTE.insert_one(
             {
                 "_id": f"{message.chat.id}_{reply_id}",
-                "up": up,
-                "down": down,
+                "up": [],
+                "down": [],
                 "anonymous": anon,
             }
         )
