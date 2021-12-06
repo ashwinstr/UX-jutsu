@@ -502,7 +502,6 @@ if userge.has_bot:
         str_y = i_q.split(" ", 1)  # trigger and Text
         string_split = string.split()  # All lower and Split each word
         iq_user_id = inline_query.from_user.id
-        reply_ = inline_query.reply_to_message
         if (
             (iq_user_id in Config.OWNER_ID)
             or (
@@ -728,8 +727,6 @@ if userge.has_bot:
                 )
 
             if string == "voting":
-                if not reply_:
-                    return
                 up = "0 likes"
                 down = "0 dislikes"
                 anon = False
@@ -741,8 +738,6 @@ if userge.has_bot:
                     )
                 )
             if string == "anon_voting":
-                if not reply_:
-                    return
                 up = "0 likes"
                 down = "0 dislikes"
                 anon = True
