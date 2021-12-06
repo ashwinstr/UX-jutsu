@@ -126,7 +126,7 @@ async def vote_callback(_, c_q: CallbackQuery):
                 return await c_q.answer(
                     "Only the bot owner can see this list.", show_alert=True
                 )
-            list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦 BY:\n"
+            list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦 by\n"
             for one in found["up"]:
                 try:
                     user_ = f"• {(await userge.get_users(one)).first_name}\n"
