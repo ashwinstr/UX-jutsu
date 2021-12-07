@@ -383,7 +383,7 @@ if userge.has_bot:
                         user_ = f"{one}\n"
                     list_ += user_
                 return await c_q.answer(list_, show_alert=True)
-            btn_ = vote_buttons(text_up, text_down, anon)
+            btn_ = vote_buttons(text_up, text_down, anon, id_)
             await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
         except BaseException:
             tb = traceback.format_exc()

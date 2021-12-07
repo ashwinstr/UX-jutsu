@@ -79,6 +79,7 @@ async def ivote_(message: Message):
         chat_id=message.chat.id,
         query_id=res.query_id,
         result_id=res.results[0].id,
+        reply_to_message_id=True,
     )
 
 
