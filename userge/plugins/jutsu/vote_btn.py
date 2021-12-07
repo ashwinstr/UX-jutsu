@@ -78,7 +78,9 @@ async def vote_(message: Message):
     "ivoting",
     about={
         "header": "inline voting buttons",
-        "flags": {"-a": "anonymous voting",},
+        "flags": {
+            "-a": "anonymous voting",
+        },
         "usage": "{tr}ivoting [reply to message]",
     },
 )
