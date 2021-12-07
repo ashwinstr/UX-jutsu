@@ -32,8 +32,8 @@ async def vote_(message: Message):
         down = found["down"]
         anon = found["anonymous"]
     else:
-        up = "0 likes"
-        down = "0 dislikes"
+        up = []
+        down = []
         await VOTE.insert_one(
             {
                 "_id": f"{message.chat.id}_{reply_id}",
@@ -42,7 +42,7 @@ async def vote_(message: Message):
                 "anonymous": anon,
             }
         )
-    btn_ = vote_buttons(up, down, anon)
+    btn_ = vote_buttons(len(up), len(down), anon)
     if anon:
         pic_ = "https://telegra.ph/file/b23ac25afde3d6b99a591.jpg"
     else:
@@ -86,15 +86,15 @@ def vote_buttons(up_, down_, anon_, id_) -> InlineKeyboardMarkup:
     if anon_:
         btn_ = [
             [
-                InlineKeyboardButton(text=up_, callback_data=f"anon_vote_up_{id_}"),
-                InlineKeyboardButton(text=down_, callback_data=f"anon_vote_down_{id_}"),
+                InlineKeyboardButton(text=f"{up_} likes", callback_data=f"anon_vote_up_{id_}"),
+                InlineKeyboardButton(text=f"{down_} dislikes", callback_data=f"anon_vote_down_{id_}"),
             ],
         ]
     else:
         btn_ = [
             [
-                InlineKeyboardButton(text=up_, callback_data=f"vote_up_{id_}"),
-                InlineKeyboardButton(text=down_, callback_data=f"vote_down_{id_}"),
+                InlineKeyboardButton(text=f"{up_} likes", callback_data=f"vote_up_{id_}"),
+                InlineKeyboardButton(text=f"{down_} dislikes", callback_data=f"vote_down_{id_}"),
             ],
             [
                 InlineKeyboardButton(

@@ -336,31 +336,28 @@ if userge.has_bot:
             anon = found["anonymous"]
             tapper = c_q.from_user.id
             if "up" in c_q.data:
-                await userge.send_message(Config.LOG_CHANNEL_ID, str(c_q))
-                text_up = c_q.message.reply_markup.inline_keyboard[0][0].text
-                text_down = c_q.message.reply_markup.inline_keyboard[0][1].text
-                number = (re.search(r"\d+", text_up)).group(0)
+                text_up = len(votes_up)
+                text_down = len(votes_down)
                 if tapper in votes_up:
                     votes_up.remove(tapper)
-                    text_up = re.sub(r"\d+", f"{int(number) - 1}", text_up, count=1)
+                    text_up -= 1
                 else:
                     votes_up.append(tapper)
-                    text_up = re.sub(r"\d+", f"{int(number) + 1}", text_up, count=1)
+                    text_up += 1
                 await VOTE.update_one(
                     {"_id": f"vote_{id_}"},
                     {"$set": {"up": votes_up}},
                     upsert=True,
                 )
             elif "down" in c_q.data:
-                text_up = c_q.message.reply_markup.inline_keyboard[0][0].text
-                text_down = c_q.message.reply_markup.inline_keyboard[0][1].text
-                number = (re.search(r"\d+", text_down)).group(0)
+                text_up = len(votes_up)
+                text_down = len(votes_down)
                 if tapper in votes_down:
                     votes_down.remove(tapper)
-                    text_down = re.sub(r"\d+", f"{int(number) - 1}", text_down, count=1)
+                    text_down -= 1
                 else:
                     votes_down.append(tapper)
-                    text_down = re.sub(r"\d+", f"{int(number) + 1}", text_down, count=1)
+                    text_down += 1
                 await VOTE.update_one(
                     {"_id": f"vote_{id_}"},
                     {"$set": {"down": votes_down}},
