@@ -7,20 +7,6 @@ VOTE = get_collection("VOTES")
 CHANNEL = userge.getCLogger(__name__)
 
 
-async def _init() -> None:
-    no = 0
-    async for one in VOTE.find():
-        no += 1
-    if no > 20:
-        del_ = no - 20
-        deleted = 0
-        async for one in VOTE.find():
-            await VOTE.delete_one(one)
-            deleted += 1
-            if deleted == del_:
-                break
-
-
 @userge.on_cmd(
     "voting",
     about={
