@@ -336,7 +336,7 @@ if userge.has_bot:
             anon = found["anonymous"]
             tapper = c_q.from_user.id
             if "up" in c_q.data:
-                text_up = c_q.message.reply_markup.inline_keyboard[0][0].text
+                text_up = c_q.reply_markup.inline_keyboard[0][0].text
                 text_down = c_q.message.reply_markup.inline_keyboard[0][1].text
                 number = (re.search(r"\d+", text_up)).group(0)
                 if tapper in votes_up:
