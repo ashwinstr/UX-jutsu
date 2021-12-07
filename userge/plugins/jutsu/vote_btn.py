@@ -86,15 +86,23 @@ def vote_buttons(up_, down_, anon_, id_) -> InlineKeyboardMarkup:
     if anon_:
         btn_ = [
             [
-                InlineKeyboardButton(text=f"{up_} likes", callback_data=f"anon_vote_up_{id_}"),
-                InlineKeyboardButton(text=f"{down_} dislikes", callback_data=f"anon_vote_down_{id_}"),
+                InlineKeyboardButton(
+                    text=f"{up_} likes", callback_data=f"anon_vote_up_{id_}"
+                ),
+                InlineKeyboardButton(
+                    text=f"{down_} dislikes", callback_data=f"anon_vote_down_{id_}"
+                ),
             ],
         ]
     else:
         btn_ = [
             [
-                InlineKeyboardButton(text=f"{up_} likes", callback_data=f"vote_up_{id_}"),
-                InlineKeyboardButton(text=f"{down_} dislikes", callback_data=f"vote_down_{id_}"),
+                InlineKeyboardButton(
+                    text=f"{up_} likes", callback_data=f"vote_up_{id_}"
+                ),
+                InlineKeyboardButton(
+                    text=f"{down_} dislikes", callback_data=f"vote_down_{id_}"
+                ),
             ],
             [
                 InlineKeyboardButton(
