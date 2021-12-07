@@ -315,8 +315,7 @@ if userge.has_bot:
             text, reply_markup=InlineKeyboardMarkup(buttons)
         )
 
-    @userge.bot.on_callback_query(filters.regex(pattern=r"^vote_.*"))
-    @check_owner
+    @userge.bot.on_callback_query(filters.regex(pattern=r"vote_.*"))
     async def vote_callback(_, c_q: CallbackQuery):
         try:
             id_ = (c_q.data).split("_")[-1]
