@@ -72,8 +72,7 @@ async def ivote_(message: Message):
     if not reply_:
         return await message.edit("`Reply to a message to vote for.`", del_in=5)
     bot_u = (await userge.bot.get_me()).username
-    rnd_id = userge.rnd_id()
-    query_ = f"anon_vote_{rnd_id}" if "-a" in message.flags else f"voting_{rnd_id}"
+    query_ = f"anon_vote" if "-a" in message.flags else f"voting"
     res = await userge.get_inline_bot_results(bot_u, query_)
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,

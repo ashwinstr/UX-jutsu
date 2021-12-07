@@ -1042,9 +1042,9 @@ if userge.has_bot:
                                 )
 
             if "voting_" in string:
-                up = "0 likes"
-                down = "0 dislikes"
-                id_ = string.split("_", 1)[-1]
+                id_ = userge.rnd_id()
+                up = 0
+                down = 0
                 anon = False
                 results.append(
                     InlineQueryResultPhoto(
@@ -1056,9 +1056,9 @@ if userge.has_bot:
                     )
                 )
             if "anon_vote" in string:
-                up = "0 likes"
-                down = "0 dislikes"
-                id_ = string.split("_", 1)[-1]
+                id_ = userge.rnd_id()
+                up = 0
+                down = 0
                 anon = True
                 results.append(
                     InlineQueryResultPhoto(
