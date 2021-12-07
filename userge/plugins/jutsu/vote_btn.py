@@ -35,7 +35,7 @@ async def _init() -> None:
         "usage": "{tr}voting",
     },
 )
-async def test_call(message: Message):
+async def vote_(message: Message):
     anon = False
     if "-a" in message.flags:
         anon = True
@@ -74,14 +74,34 @@ async def test_call(message: Message):
     )
 
 
+@userge.on_cmd(
+    "ivoting",
+    about={
+        "header": "inline voting buttons",
+        "flags": {"-a": "anonymous voting",},
+        "usage": "{tr}ivoting [reply to message]",
+    },
+)
+async def ivote_(message: Message):
+    """inline voting buttons"""
+    reply_ = message.reply_to_message
+    if not reply_:
+        return await message.edit("`Reply to a message to vote for.`", del_in=5)
+    bot_u = (await userge.bot.get_me()).username
+    query_ = "anon_voting" if "-a" in message.flags else "voting"
+    res = await userge.get_inline_bot_results(bot_u, query_)
+    await userge.send_inline_bot_result(
+        chat_id=message.chat.id,
+        query_id=res.query_id,
+        result_id=res.results[0].id,
+    )
+
+
 @userge.bot.on_callback_query(filters.regex(pattern=r"^vote_.*"))
 async def vote_callback(_, c_q: CallbackQuery):
     try:
-        if not c_q.message.reply_to_message:
-            return await c_q.answer(
-                "This voting message is not a reply.", show_alert=True
-            )
-        vote_msg = c_q.message.reply_to_message.message_id
+        msg_ = await userge.get_messages(c_q.message.message_id)
+        vote_msg = msg_.reply_to_message.message_id
         found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{vote_msg}"})
         if not found:
             return await c_q.answer(
