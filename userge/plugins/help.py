@@ -368,14 +368,14 @@ if userge.has_bot:
                     return await c_q.answer(
                         "Only the bot owner can see this list.", show_alert=True
                     )
-                list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦 by\n"
+                list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦\n"
                 for one in found["up"]:
                     try:
                         user_ = f"• {(await userge.get_users(one)).first_name}\n"
                     except BaseException:
                         user_ = f"{one}\n"
                     list_ += user_
-                list_ += "\n𝗗𝗢𝗪𝗡 𝗩𝗢𝗧𝗘𝗦 by\n"
+                list_ += "\n𝗗𝗢𝗪𝗡 𝗩𝗢𝗧𝗘𝗦\n"
                 for one in found["down"]:
                     try:
                         user_ = f"• {(await userge.get_users(one)).first_name}\n"
