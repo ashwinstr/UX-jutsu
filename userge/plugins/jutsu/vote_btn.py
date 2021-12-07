@@ -100,7 +100,7 @@ async def ivote_(message: Message):
 @userge.bot.on_callback_query(filters.regex(pattern=r"^vote_.*"))
 async def vote_callback(_, c_q: CallbackQuery):
     try:
-        msg_ = await userge.get_messages(c_q.message.message_id)
+        msg_ = await userge.get_messages(c_q.inline_message_id)
         vote_msg = msg_.reply_to_message.message_id
         found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{vote_msg}"})
         if not found:
