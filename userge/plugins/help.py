@@ -320,17 +320,17 @@ if userge.has_bot:
         try:
             id_ = (c_q.data).split("_")[-1]
             anon = True if "anon" in c_q.data else False
-            found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{id_}"})
+            found = await VOTE.find_one({"_id": f"vote_{id_}"})
             if not found:
                 await VOTE.insert_one(
                     {
-                        "_id": f"{c_q.message.chat.id}_{id_}",
+                        "_id": f"vote_{id_}",
                         "up": [],
                         "down": [],
                         "anonymous": anon,
                     }
                 )
-            found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{id_}"})
+            found = await VOTE.find_one({"_id": f"vote_{id_}"})
             votes_up = found["up"]
             votes_down = found["down"]
             anon = found["anonymous"]
@@ -346,7 +346,7 @@ if userge.has_bot:
                     votes_up.append(tapper)
                     text_up = re.sub(r"\d+", f"{int(number) + 1}", text_up, count=1)
                 await VOTE.update_one(
-                    {"_id": f"{c_q.message.chat.id}_{id_}"},
+                    {"_id": f"vote_{id_}"},
                     {"$set": {"up": votes_up}},
                     upsert=True,
                 )
@@ -361,7 +361,7 @@ if userge.has_bot:
                     votes_down.append(tapper)
                     text_down = re.sub(r"\d+", f"{int(number) + 1}", text_down, count=1)
                 await VOTE.update_one(
-                    {"_id": f"{c_q.message.chat.id}_{id_}"},
+                    {"_id": f"vote_{id_}"},
                     {"$set": {"down": votes_down}},
                     upsert=True,
                 )
