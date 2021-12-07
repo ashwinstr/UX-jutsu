@@ -2,7 +2,6 @@ aiofiles>=0.6.0
 aiohttp[speedups]>=3.7.3
 asyncurban>=0.3.3
 beautifulsoup4>=4.9.1
-covid>=2.4.0
 cowpy>=1.1.0
 dnspython>=2.0.0
 gitpython>=3.1.11
@@ -11,21 +10,17 @@ google-auth-httplib2>=0.0.4
 google-auth-oauthlib>=0.4.2
 google_images_download
 googletrans==3.1.0a0
-google_trans_new>=1.1.9
 hachoir>=3.1.1
 heroku3>=4.2.3
 html-telegraph-poster>=0.2.31
-imutils
 lyricsgenius>=3.0.0
 motor>=2.3.0
 numpy
 oauth2client>=4.1.3
-opencv-python
 Pillow==8.4.0
 psutil>=5.7.3
 pybase64>=1.1.1
 PyDictionary>=2.0.1
-PyPDF2
 git+https://github.com/ashwinstr/pyrogram.git@x21
 pySmartDL>=1.3.4
 python-dotenv>=0.15.0
@@ -33,7 +28,6 @@ pytz>=2020.4
 rarfile>=4.0
 removebg>=0.4
 requests>=2.25.0
-scikit-image
 search-engine-parser
 selenium==3.141.0
 setuptools>=40.3.0

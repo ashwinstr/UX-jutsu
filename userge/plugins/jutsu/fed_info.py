@@ -2,6 +2,7 @@
 # before porting please ask to Kakashi
 
 
+from pyrogram import filters
 from pyrogram.errors import YouBlockedUser
 
 from userge import Config, Message, userge
@@ -27,23 +28,23 @@ async def f_stat(message: Message):
         get_u = await userge.get_users(user_)
         user_name = full_name(get_u)
         user_id = get_u.id
+        await message.edit(
+            f"Fetching fstat of user <a href='tg://user?id={user_id}'><b>{user_name}</b></a>..."
+        )
     except BaseException:
         await message.edit(
             f"Fetching fstat of user <b>{user_}</b>...\nWARNING: User not found in your database, checking Rose's database."
         )
         user_name = user_
         user_id = user_
-    await message.edit(
-        f"Fetching fstat of user <a href='tg://user?id={user_id}'><b>{user_name}</b></a>..."
-    )
     bot_ = "MissRose_bot"
     try:
-        query_ = await userge.send_message(bot_, f"!fstat {user_id}")
+        async with userge.conversation(bot_) as conv:
+            await conv.send_message(f"!fstat {user_id}")
+            response = await conv.get_response(mark_read=True, filters=filters.edited)
     except YouBlockedUser:
         await message.err("Unblock @missrose_bot first...", del_in=5)
         return
-    try:
-        response = await gr(query_, timeout=4, mark_read=True)
     except Exception as e:
         return await message.edit(f"<b>ERROR:</b> `{e}`")
     fail = "Could not find a user"

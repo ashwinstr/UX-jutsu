@@ -9,14 +9,19 @@ from pyrogram.errors import BadRequest, FloodWait, Forbidden, MediaEmpty
 from pyrogram.file_id import PHOTO_TYPES, FileId
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Config, Message, get_version, userge, versions
+from userge import Config, Message, get_collection, get_version, userge, versions
 from userge.core.ext import RawClient
+from userge.helpers import msg_type
+from userge.plugins.utils.telegraph import upload_media_
 from userge.utils import get_file_id, rand_array
 
 _ALIVE_REGEX = comp_regex(
     r"http[s]?://(i\.imgur\.com|telegra\.ph/file|t\.me)/(\w+)(?:\.|/)(gif|jpg|png|jpeg|[0-9]+)(?:/([0-9]+))?"
 )
 _USER_CACHED_MEDIA, _BOT_CACHED_MEDIA = None, None
+media_ = None
+
+SAVED_SETTINGS = get_collection("CONFIGS")
 
 LOGGER = userge.getLogger(__name__)
 
@@ -40,6 +45,55 @@ async def _init() -> None:
                     )
             except Exception as b_rr:
                 LOGGER.debug(b_rr)
+
+
+@userge.on_cmd(
+    "a_media",
+    about={
+        "header": "set alive media",
+        "flags": {
+            "-c": "check alive media.",
+            "-r": "reset alive media.",
+        },
+        "usage": "{tr}a_media [reply to media]",
+    },
+)
+async def set_alive_media(message: Message):
+    """set alive media"""
+    found = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
+    if "-c" in message.flags:
+        if found:
+            media_ = found["url"]
+        else:
+            media_ = "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
+        return await message.edit(f"The alive media is set to [<b>THIS</b>]({media_}).")
+    elif "-r" in message.flags:
+        if not found:
+            return await message.edit("`No alive media is set.`", del_in=5)
+        await SAVED_SETTINGS.delete_one({"_id": "ALIVE_MEDIA"})
+        return await message.edit("`Alive media reset to default.`", del_in=5)
+    reply_ = message.reply_to_message
+    if not reply_:
+        return await message.edit(
+            "`Reply to media to set it as alive media.`", del_in=5
+        )
+    type_ = msg_type(reply_)
+    if type_ not in ["gif", "photo"]:
+        return await message.edit("`Reply to media only.`", del_in=5)
+    link_ = await upload_media_(message)
+    whole_link = f"https://telegra.ph{link_}"
+    await SAVED_SETTINGS.update_one(
+        {"_id": "ALIVE_MEDIA"}, {"$set": {"url": whole_link}}, upsert=True
+    )
+    await SAVED_SETTINGS.update_one(
+        {"_id": "ALIVE_MEDIA"}, {"$set": {"type": type_}}, upsert=True
+    )
+    link_log = (await reply_.forward(Config.LOG_CHANNEL_ID)).link
+    await message.edit(
+        f"`Alive media set.` [<b>Preview</b>]({link_log})\n`Bot soft restarting, please wait...`",
+        disable_web_page_preview=True,
+    )
+    asyncio.get_event_loop().create_task(userge.restart())
 
 
 @userge.on_cmd("alive", about={"header": "Just For Fun"}, allow_channels=False)
@@ -230,7 +284,7 @@ class Bot_Alive:
     def alive_info(me):
         u_name = " ".join([me.first_name, me.last_name or ""])
         alive_info = f"""
-­<a href="https://t.me/xplugin"><b>𝐒𝐇𝐀𝐑𝐈𝐍𝐆𝐀𝐍</a> is on and analysing.</b>
+­<a href="https://t.me/xplugin"><b>𝐕𝐄𝐍𝐎𝐌</a> is spreading.</b>
 
   🐍   <b>Python      :</b>    <code>v{versions.__python_version__}</code>
   🔥   <b>Pyrogram :</b>    <code>v{versions.__pyro_version__}</code>
@@ -255,7 +309,9 @@ class Bot_Alive:
                 InlineKeyboardButton(text="🔧  SETTINGS", callback_data="settings_btn"),
             ],
             [
-                InlineKeyboardButton(text="✖️  XPLUGINS", url="t.me/xplugin_support"),
+                InlineKeyboardButton(
+                    text="✖️  XPLUGINS", url="t.me/ux_xplugin_support"
+                ),
                 InlineKeyboardButton(text="⚡  REPO", url=Config.UPSTREAM_REPO),
             ],
         ]

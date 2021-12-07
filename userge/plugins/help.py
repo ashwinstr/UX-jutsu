@@ -1,5 +1,6 @@
 import os
 import re
+import traceback
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
 
@@ -7,15 +8,13 @@ import ujson
 from html_telegraph_poster import TelegraphPoster
 from pyrogram import filters
 from pyrogram.errors import BadRequest, MessageIdInvalid, MessageNotModified
-from pyrogram.types import (
+from pyrogram.types import (  # InlineQueryResultCachedDocument,; InlineQueryResultCachedPhoto,
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     InlineQuery,
     InlineQueryResultAnimation,
     InlineQueryResultArticle,
-    InlineQueryResultCachedDocument,
-    InlineQueryResultCachedPhoto,
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
@@ -37,6 +36,7 @@ from .bot.utube_inline import (
     ytsearch_data,
 )
 from .fun.stylish import Styled, font_gen
+from .jutsu.vote_btn import vote_buttons
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
 
@@ -54,26 +54,28 @@ _CATEGORY = {
     "bot": "💠",
     "custom": "🔧",
     "jutsu": "👁‍🗨",
+    "forbidden_jutsu": "⚠️",
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
+VOTE = get_collection("VOTES")
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
-    url="https://github.com/code-rgb/USERGE-X",
+    url="https://github.com/ashwinstr/UX-jutsu",
     description="Setup Your Own",
     thumb_url="https://telegra.ph/file/8fa91f9c7f6f4f6b8fa6c.jpg",
     reply_markup=InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    "🔥 USERGE-X Repo", url="https://github.com/code-rgb/USERGE-X"
+                    "🔥 USERGE-X Repo", url="https://github.com/ashwinstr/UX-jutsu"
                 ),
                 InlineKeyboardButton(
                     "🚀 Deploy USERGE-X",
                     url=(
                         "https://heroku.com/deploy?template="
-                        "https://github.com/code-pms/MyGpack"
+                        "https://github.com/ash/MyGpack"
                     ),
                 ),
             ]
@@ -81,11 +83,21 @@ REPO_X = InlineQueryResultArticle(
     ),
 )
 
+media_, alive_media, media_type = None, None, None
+
 
 async def _init() -> None:
+    global media_, alive_media, media_type
     data = await SAVED_SETTINGS.find_one({"_id": "CURRENT_CLIENT"})
     if data:
         Config.USE_USER_FOR_CLIENT_CHECKS = bool(data["is_user"])
+    media_ = await SAVED_SETTINGS.find_one({"_id": "ALIVE_MEDIA"})
+    if media_:
+        Config.NEW_ALIVE_MEDIA = media_["url"]
+        Config.ALIVE_MEDIA_TYPE = media_["type"]
+    else:
+        Config.NEW_ALIVE_MEDIA = "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
+        Config.ALIVE_MEDIA_TYPE = "photo"
 
 
 @userge.on_cmd(
@@ -302,6 +314,80 @@ if userge.has_bot:
         await callback_query.edit_message_text(
             text, reply_markup=InlineKeyboardMarkup(buttons)
         )
+
+    @userge.bot.on_callback_query(filters.regex(pattern=r"vote_.*"))
+    async def vote_callback(_, c_q: CallbackQuery):
+        try:
+            id_ = (c_q.data).split("_")[-1]
+            anon = True if "anon" in c_q.data else False
+            found = await VOTE.find_one({"_id": f"vote_{id_}"})
+            if not found:
+                await VOTE.insert_one(
+                    {
+                        "_id": f"vote_{id_}",
+                        "up": [],
+                        "down": [],
+                        "anonymous": anon,
+                    }
+                )
+            found = await VOTE.find_one({"_id": f"vote_{id_}"})
+            votes_up = found["up"]
+            votes_down = found["down"]
+            anon = found["anonymous"]
+            tapper = c_q.from_user.id
+            if "up" in c_q.data:
+                text_up = len(votes_up)
+                text_down = len(votes_down)
+                if tapper in votes_up:
+                    votes_up.remove(tapper)
+                    text_up -= 1
+                else:
+                    votes_up.append(tapper)
+                    text_up += 1
+                await VOTE.update_one(
+                    {"_id": f"vote_{id_}"},
+                    {"$set": {"up": votes_up}},
+                    upsert=True,
+                )
+            elif "down" in c_q.data:
+                text_up = len(votes_up)
+                text_down = len(votes_down)
+                if tapper in votes_down:
+                    votes_down.remove(tapper)
+                    text_down -= 1
+                else:
+                    votes_down.append(tapper)
+                    text_down += 1
+                await VOTE.update_one(
+                    {"_id": f"vote_{id_}"},
+                    {"$set": {"down": votes_down}},
+                    upsert=True,
+                )
+            elif "list" in c_q.data:
+                if c_q.from_user.id not in Config.OWNER_ID:
+                    return await c_q.answer(
+                        "Only the bot owner can see this list.", show_alert=True
+                    )
+                list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦 by\n"
+                for one in found["up"]:
+                    try:
+                        user_ = f"• {(await userge.get_users(one)).first_name}\n"
+                    except BaseException:
+                        user_ = f"{one}\n"
+                    list_ += user_
+                list_ += "\n𝗗𝗢𝗪𝗡 𝗩𝗢𝗧𝗘𝗦 by\n"
+                for one in found["down"]:
+                    try:
+                        user_ = f"• {(await userge.get_users(one)).first_name}\n"
+                    except BaseException:
+                        user_ = f"{one}\n"
+                    list_ += user_
+                return await c_q.answer(list_, show_alert=True)
+            btn_ = vote_buttons(text_up, text_down, anon, id_)
+            await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
+        except BaseException:
+            tb = traceback.format_exc()
+            await userge.send_message(Config.LOG_CHANNEL_ID, f"```{tb}```")
 
     def is_filter(name: str) -> bool:
         split_ = name.split(".")
@@ -631,75 +717,22 @@ if userge.has_bot:
                 me = await userge.get_me()
                 alive_info = Bot_Alive.alive_info(me)
                 buttons = Bot_Alive.alive_buttons()
-                if not Config.ALIVE_MEDIA:
+                if Config.ALIVE_MEDIA_TYPE == "photo":
                     results.append(
                         InlineQueryResultPhoto(
-                            photo_url=Bot_Alive.alive_default_imgs(),
+                            photo_url=Config.NEW_ALIVE_MEDIA,
                             caption=alive_info,
                             reply_markup=buttons,
                         )
                     )
-                else:
-                    if Config.ALIVE_MEDIA.lower().strip() == "false":
-                        results.append(
-                            InlineQueryResultArticle(
-                                title="USERGE-X",
-                                input_message_content=InputTextMessageContent(
-                                    alive_info, disable_web_page_preview=True
-                                ),
-                                description="ALIVE",
-                                reply_markup=buttons,
-                            )
+                elif Config.ALIVE_MEDIA_TYPE == "gif":
+                    results.append(
+                        InlineQueryResultAnimation(
+                            animation_url=Config.NEW_ALIVE_MEDIA,
+                            caption=alive_info,
+                            reply_markup=buttons,
                         )
-                    else:
-                        _media_type, _media_url = await Bot_Alive.check_media_link(
-                            Config.ALIVE_MEDIA
-                        )
-                        if _media_type == "url_gif":
-                            results.append(
-                                InlineQueryResultAnimation(
-                                    animation_url=_media_url,
-                                    caption=alive_info,
-                                    reply_markup=buttons,
-                                )
-                            )
-                        elif _media_type == "url_image":
-                            results.append(
-                                InlineQueryResultPhoto(
-                                    photo_url=_media_url,
-                                    caption=alive_info,
-                                    reply_markup=buttons,
-                                )
-                            )
-                        elif _media_type == "tg_media":
-                            c_file_id = Bot_Alive.get_bot_cached_fid()
-                            if c_file_id is None:
-                                try:
-                                    c_file_id = get_file_id(
-                                        await userge.bot.get_messages(
-                                            _media_url[0], _media_url[1]
-                                        )
-                                    )
-                                except Exception as b_rr:
-                                    await CHANNEL.log(str(b_rr))
-                            if Bot_Alive.is_photo(c_file_id):
-                                results.append(
-                                    InlineQueryResultCachedPhoto(
-                                        file_id=c_file_id,
-                                        caption=alive_info,
-                                        reply_markup=buttons,
-                                    )
-                                )
-                            else:
-                                results.append(
-                                    InlineQueryResultCachedDocument(
-                                        title="USERGE-X",
-                                        file_id=c_file_id,
-                                        caption=alive_info,
-                                        description="ALIVE",
-                                        reply_markup=buttons,
-                                    )
-                                )
+                    )
 
             if string == "geass":
                 results.append(
@@ -1008,6 +1041,35 @@ if userge.has_bot:
                                     )
                                 )
 
+            if "voting" in string:
+                id_ = userge.rnd_id()
+                up = 0
+                down = 0
+                anon = False
+                results.append(
+                    InlineQueryResultPhoto(
+                        photo_url="https://telegra.ph/file/fffb70c7b824b8c4e020b.jpg",
+                        title="Vote.",
+                        description="Vote your opinion.",
+                        caption="Vote your opinion.",
+                        reply_markup=vote_buttons(up, down, anon, id_),
+                    )
+                )
+            if "anon_vote" in string:
+                id_ = userge.rnd_id()
+                up = 0
+                down = 0
+                anon = True
+                results.append(
+                    InlineQueryResultPhoto(
+                        photo_url="https://telegra.ph/file/b23ac25afde3d6b99a591.jpg",
+                        title="Anonymous vote.",
+                        description="Vote your opinion anonymously.",
+                        caption="Vote your opinion anonymously.",
+                        reply_markup=vote_buttons(up, down, anon, id_),
+                    )
+                )
+
             if str_y[0].lower() == "stylish" and len(str_y) == 2:
                 results = []
                 for f_name in Styled.font_choice:
@@ -1145,7 +1207,7 @@ if userge.has_bot:
             MAIN_MENU = InlineQueryResultArticle(
                 title="Main Menu",
                 input_message_content=InputTextMessageContent(" 𝐒𝐇𝐀𝐑𝐈𝐍𝐆𝐀𝐍 MAIN MENU "),
-                url="https://github.com/code-rgb/USERGE-X",
+                url="https://github.com/ashwinstr/UX-jutsu",
                 description="Sharingan Main Menu",
                 thumb_url="https://telegra.ph/file/8fa91f9c7f6f4f6b8fa6c.jpg",
                 reply_markup=InlineKeyboardMarkup(main_menu_buttons()),
