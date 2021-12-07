@@ -1,10 +1,6 @@
-import re
-import traceback
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
-
-from userge import Config, Message, get_collection, userge
+from userge import Message, get_collection, userge
 
 VOTE = get_collection("VOTES")
 
@@ -114,6 +110,10 @@ def vote_buttons(up_, down_, anon_, id_) -> InlineKeyboardMarkup:
                 InlineKeyboardButton(text=up_, callback_data=f"vote_up_{id_}"),
                 InlineKeyboardButton(text=down_, callback_data=f"vote_down_{id_}"),
             ],
-            [InlineKeyboardButton(text="List of votes.", callback_data=f"vote_list_{id_}")],
+            [
+                InlineKeyboardButton(
+                    text="List of votes.", callback_data=f"vote_list_{id_}"
+                )
+            ],
         ]
     return InlineKeyboardMarkup(btn_)

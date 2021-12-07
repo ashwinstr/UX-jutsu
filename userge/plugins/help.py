@@ -1,8 +1,8 @@
 import os
 import re
+import traceback
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
-import traceback
 
 import ujson
 from html_telegraph_poster import TelegraphPoster
@@ -314,7 +314,7 @@ if userge.has_bot:
         await callback_query.edit_message_text(
             text, reply_markup=InlineKeyboardMarkup(buttons)
         )
-    
+
     @userge.bot.on_callback_query(filters.regex(pattern=r"^vote_.*"))
     @check_owner
     async def vote_callback(_, c_q: CallbackQuery):
@@ -1043,7 +1043,7 @@ if userge.has_bot:
                                         reply_markup=buttonsx,
                                     )
                                 )
-            
+
             if "voting_" in string:
                 up = "0 likes"
                 down = "0 dislikes"
