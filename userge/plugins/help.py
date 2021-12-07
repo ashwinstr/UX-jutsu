@@ -1041,7 +1041,7 @@ if userge.has_bot:
                                     )
                                 )
 
-            if "voting_" in string:
+            if "voting" in string:
                 id_ = userge.rnd_id()
                 up = 0
                 down = 0
