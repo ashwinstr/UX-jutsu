@@ -2,6 +2,7 @@ import os
 import re
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
+import traceback
 
 import ujson
 from html_telegraph_poster import TelegraphPoster
@@ -57,6 +58,7 @@ _CATEGORY = {
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
+VOTE = get_collection("VOTES")
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
@@ -312,6 +314,83 @@ if userge.has_bot:
         await callback_query.edit_message_text(
             text, reply_markup=InlineKeyboardMarkup(buttons)
         )
+    
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^vote_.*"))
+    @check_owner
+    async def vote_callback(_, c_q: CallbackQuery):
+        try:
+            id_ = (c_q.data).split("_")[-1]
+            anon = True if "anon" in c_q.data else False
+            found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{id_}"})
+            if not found:
+                await VOTE.insert_one(
+                    {
+                        "_id": f"{c_q.message.chat.id}_{id_}",
+                        "up": [],
+                        "down": [],
+                        "anonymous": anon,
+                    }
+                )
+            found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{id_}"})
+            votes_up = found["up"]
+            votes_down = found["down"]
+            anon = found["anonymous"]
+            tapper = c_q.from_user.id
+            if "up" in c_q.data:
+                text_up = c_q.message.reply_markup.inline_keyboard[0][0].text
+                text_down = c_q.message.reply_markup.inline_keyboard[0][1].text
+                number = (re.search(r"\d+", text_up)).group(0)
+                if tapper in votes_up:
+                    votes_up.remove(tapper)
+                    text_up = re.sub(r"\d+", f"{int(number) - 1}", text_up, count=1)
+                else:
+                    votes_up.append(tapper)
+                    text_up = re.sub(r"\d+", f"{int(number) + 1}", text_up, count=1)
+                await VOTE.update_one(
+                    {"_id": f"{c_q.message.chat.id}_{id_}"},
+                    {"$set": {"up": votes_up}},
+                    upsert=True,
+                )
+            elif "down" in c_q.data:
+                text_up = c_q.message.reply_markup.inline_keyboard[0][0].text
+                text_down = c_q.message.reply_markup.inline_keyboard[0][1].text
+                number = (re.search(r"\d+", text_down)).group(0)
+                if tapper in votes_down:
+                    votes_down.remove(tapper)
+                    text_down = re.sub(r"\d+", f"{int(number) - 1}", text_down, count=1)
+                else:
+                    votes_down.append(tapper)
+                    text_down = re.sub(r"\d+", f"{int(number) + 1}", text_down, count=1)
+                await VOTE.update_one(
+                    {"_id": f"{c_q.message.chat.id}_{id_}"},
+                    {"$set": {"down": votes_down}},
+                    upsert=True,
+                )
+            elif "list" in c_q.data:
+                if c_q.from_user.id not in Config.OWNER_ID:
+                    return await c_q.answer(
+                        "Only the bot owner can see this list.", show_alert=True
+                    )
+                list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦 by\n"
+                for one in found["up"]:
+                    try:
+                        user_ = f"• {(await userge.get_users(one)).first_name}\n"
+                    except BaseException:
+                        user_ = f"{one}\n"
+                    list_ += user_
+                list_ += "\n𝗗𝗢𝗪𝗡 𝗩𝗢𝗧𝗘𝗦 by\n"
+                for one in found["down"]:
+                    try:
+                        user_ = f"• {(await userge.get_users(one)).first_name}\n"
+                    except BaseException:
+                        user_ = f"{one}\n"
+                    list_ += user_
+                return await c_q.answer(list_, show_alert=True)
+            btn_ = vote_buttons(text_up, text_down, anon)
+            await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
+        except BaseException:
+            tb = traceback.format_exc()
+            await userge.send_message(Config.LOG_CHANNEL_ID, f"```{tb}```")
 
     def is_filter(name: str) -> bool:
         split_ = name.split(".")
@@ -726,29 +805,6 @@ if userge.has_bot:
                     )
                 )
 
-            if string == "voting":
-                up = "0 likes"
-                down = "0 dislikes"
-                anon = False
-                results.append(
-                    InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/fffb70c7b824b8c4e020b.jpg",
-                        caption="Vote your opinion.",
-                        reply_markup=vote_buttons(up, down, anon),
-                    )
-                )
-            if string == "anon_voting":
-                up = "0 likes"
-                down = "0 dislikes"
-                anon = True
-                results.append(
-                    InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/b23ac25afde3d6b99a591.jpg",
-                        caption="Vote your opinion anonymously.",
-                        reply_markup=vote_buttons(up, down, anon),
-                    )
-                )
-
             if len(string_split) == 2 and (string_split[0] == "ofox"):
                 codename = string_split[1]
                 t = TelegraphPoster(use_api=True)
@@ -987,6 +1043,35 @@ if userge.has_bot:
                                         reply_markup=buttonsx,
                                     )
                                 )
+            
+            if "voting_" in string:
+                up = "0 likes"
+                down = "0 dislikes"
+                id_ = string.split("_", 1)[-1]
+                anon = False
+                results.append(
+                    InlineQueryResultPhoto(
+                        photo_url="https://telegra.ph/file/fffb70c7b824b8c4e020b.jpg",
+                        title="Vote.",
+                        description="Vote your opinion.",
+                        caption="Vote your opinion.",
+                        reply_markup=vote_buttons(up, down, anon, id_),
+                    )
+                )
+            if "anon_vote" in string:
+                up = "0 likes"
+                down = "0 dislikes"
+                id_ = string.split("_", 1)[-1]
+                anon = True
+                results.append(
+                    InlineQueryResultPhoto(
+                        photo_url="https://telegra.ph/file/b23ac25afde3d6b99a591.jpg",
+                        title="Anonymous vote.",
+                        description="Vote your opinion anonymously.",
+                        caption="Vote your opinion anonymously.",
+                        reply_markup=vote_buttons(up, down, anon, id_),
+                    )
+                )
 
             if str_y[0].lower() == "stylish" and len(str_y) == 2:
                 results = []

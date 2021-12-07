@@ -90,7 +90,8 @@ async def ivote_(message: Message):
     if not reply_:
         return await message.edit("`Reply to a message to vote for.`", del_in=5)
     bot_u = (await userge.bot.get_me()).username
-    query_ = "anon_voting" if "-a" in message.flags else "voting"
+    rnd_id = userge.rnd_id()
+    query_ = f"anon_vote_{rnd_id}" if "-a" in message.flags else f"voting_{rnd_id}"
     res = await userge.get_inline_bot_results(bot_u, query_)
     await userge.send_inline_bot_result(
         chat_id=message.chat.id,
@@ -99,91 +100,20 @@ async def ivote_(message: Message):
     )
 
 
-@userge.bot.on_callback_query(filters.regex(pattern=r"^vote_.*"))
-async def vote_callback(_, c_q: CallbackQuery):
-    try:
-        msg_ = await userge.get_messages(c_q.inline_message_id)
-        vote_msg = msg_.reply_to_message.message_id
-        found = await VOTE.find_one({"_id": f"{c_q.message.chat.id}_{vote_msg}"})
-        if not found:
-            return await c_q.answer(
-                "This voting message has been stopped.", show_alert=True
-            )
-        votes_up = found["up"]
-        votes_down = found["down"]
-        anon = found["anonymous"]
-        tapper = c_q.from_user.id
-        if "up" in c_q.data:
-            text_up = c_q.message.reply_markup.inline_keyboard[0][0].text
-            text_down = c_q.message.reply_markup.inline_keyboard[0][1].text
-            number = (re.search(r"\d+", text_up)).group(0)
-            if tapper in votes_up:
-                votes_up.remove(tapper)
-                text_up = re.sub(r"\d+", f"{int(number) - 1}", text_up, count=1)
-            else:
-                votes_up.append(tapper)
-                text_up = re.sub(r"\d+", f"{int(number) + 1}", text_up, count=1)
-            await VOTE.update_one(
-                {"_id": f"{c_q.message.chat.id}_{vote_msg}"},
-                {"$set": {"up": votes_up}},
-                upsert=True,
-            )
-        elif "down" in c_q.data:
-            text_up = c_q.message.reply_markup.inline_keyboard[0][0].text
-            text_down = c_q.message.reply_markup.inline_keyboard[0][1].text
-            number = (re.search(r"\d+", text_down)).group(0)
-            if tapper in votes_down:
-                votes_down.remove(tapper)
-                text_down = re.sub(r"\d+", f"{int(number) - 1}", text_down, count=1)
-            else:
-                votes_down.append(tapper)
-                text_down = re.sub(r"\d+", f"{int(number) + 1}", text_down, count=1)
-            await VOTE.update_one(
-                {"_id": f"{c_q.message.chat.id}_{vote_msg}"},
-                {"$set": {"down": votes_down}},
-                upsert=True,
-            )
-        elif "list" in c_q.data:
-            if c_q.from_user.id not in Config.OWNER_ID:
-                return await c_q.answer(
-                    "Only the bot owner can see this list.", show_alert=True
-                )
-            list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦 by\n"
-            for one in found["up"]:
-                try:
-                    user_ = f"• {(await userge.get_users(one)).first_name}\n"
-                except BaseException:
-                    user_ = f"{one}\n"
-                list_ += user_
-            list_ += "\n𝗗𝗢𝗪𝗡 𝗩𝗢𝗧𝗘𝗦 by\n"
-            for one in found["down"]:
-                try:
-                    user_ = f"• {(await userge.get_users(one)).first_name}\n"
-                except BaseException:
-                    user_ = f"{one}\n"
-                list_ += user_
-            return await c_q.answer(list_, show_alert=True)
-        btn_ = vote_buttons(text_up, text_down, anon)
-        await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
-    except BaseException:
-        tb = traceback.format_exc()
-        await userge.send_message(Config.LOG_CHANNEL_ID, f"```{tb}```")
-
-
-def vote_buttons(up_, down_, anon_) -> InlineKeyboardMarkup:
+def vote_buttons(up_, down_, anon_, id_) -> InlineKeyboardMarkup:
     if anon_:
         btn_ = [
             [
-                InlineKeyboardButton(text=up_, callback_data="vote_up"),
-                InlineKeyboardButton(text=down_, callback_data="vote_down"),
+                InlineKeyboardButton(text=up_, callback_data=f"anon_vote_up_{id_}"),
+                InlineKeyboardButton(text=down_, callback_data=f"anon_vote_down_{id_}"),
             ],
         ]
     else:
         btn_ = [
             [
-                InlineKeyboardButton(text=up_, callback_data="vote_up"),
-                InlineKeyboardButton(text=down_, callback_data="vote_down"),
+                InlineKeyboardButton(text=up_, callback_data=f"vote_up_{id_}"),
+                InlineKeyboardButton(text=down_, callback_data=f"vote_down_{id_}"),
             ],
-            [InlineKeyboardButton(text="List of votes.", callback_data="vote_list")],
+            [InlineKeyboardButton(text="List of votes.", callback_data=f"vote_list_{id_}")],
         ]
     return InlineKeyboardMarkup(btn_)
