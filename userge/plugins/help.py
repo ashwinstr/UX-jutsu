@@ -36,7 +36,7 @@ from .bot.utube_inline import (
     ytsearch_data,
 )
 from .fun.stylish import Styled, font_gen
-from .jutsu.vote_btn import vote_buttons
+from .jutsu.ivoting import vote_buttons
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
 
