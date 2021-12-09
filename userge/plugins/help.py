@@ -364,7 +364,10 @@ if userge.has_bot:
                     upsert=True,
                 )
             elif "list" in c_q.data:
-                if c_q.from_user.id not in Config.OWNER_ID and c_q.from_user.id not in Config.TRUSTED_SUDO_USERS:
+                if (
+                    c_q.from_user.id not in Config.OWNER_ID
+                    and c_q.from_user.id not in Config.TRUSTED_SUDO_USERS
+                ):
                     return await c_q.answer(
                         "Only the bot owner can see this list.", show_alert=True
                     )
