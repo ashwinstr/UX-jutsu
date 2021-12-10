@@ -430,7 +430,15 @@ if userge.has_bot:
                     upsert=True
                 )
                 await c_q.answer(notice, show_alert=True)
-                await c_q.edit_message_text(f"Attention everyone!!!\n{len(users_)}👁‍🗨")
+                btn_ = InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{id_}_{notice}"),
+                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{id_}_{notice}")
+                        ],
+                    ]
+                )
+                await c_q.edit_message_text(f"Attention everyone!!!\n{len(users_)}👁‍🗨", reply_markup=btn_)
             else:
                 if user_ not in Config.OWNER_ID and user_ not in Config.TRUSTED_SUDO_USERS:
                     await c_q.answer("Only owner or trusted sudo users can see this list.", show_alert=True)
