@@ -18,7 +18,6 @@ from pyrogram.types import (  # InlineQueryResultCachedDocument,; InlineQueryRes
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
-from userge.plugins.jutsu.attention_callback import SEEN_BY
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, userge
