@@ -1134,7 +1134,7 @@ if userge.has_bot:
                     )
                 )
             
-            if str_y[0] == "attention":
+            if str_y[0] == "attent":
                 notice = str_y[-1]
                 rnd_id = userge.rnd_id()
                 btn_ = InlineKeyboardMarkup(
