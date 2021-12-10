@@ -426,7 +426,7 @@ if userge.has_bot:
                 )
                 await SEEN_BY.update_one(
                     {"_id": id_},
-                    {"$set": {"user_first_name": seen_by}},
+                    {"$set": {"user_first_names": seen_by}},
                     upsert=True
                 )
                 await c_q.answer(notice, show_alert=True)
