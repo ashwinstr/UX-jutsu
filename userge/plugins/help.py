@@ -397,7 +397,7 @@ if userge.has_bot:
         try:
             query_ = c_q.data
             split_ = query_.split("_", 1)
-            id_ = split_[-2]
+            id_ = split_[-1]
             notice_path = "userge/xcache/notice.json"
             if not os.path.exists(notice_path):
                 await c_q.answer("This message doesn't exist anymore", show_alert=True)
