@@ -444,7 +444,7 @@ if userge.has_bot:
                         ],
                     ]
                 )
-                await c_q.edit_message_text(f"Attention everyone!!!\n{len(users_)}👁‍🗨", reply_markup=btn_)
+                await c_q.edit_message_text(f"**Attention everyone!!!**\n👁‍🗨 **Seen by:** {len(users_)} people.", reply_markup=btn_)
             else:
                 if user_ not in Config.OWNER_ID and user_ not in Config.TRUSTED_SUDO_USERS:
                     await c_q.answer("Only owner or trusted sudo users can see this list.", show_alert=True)
