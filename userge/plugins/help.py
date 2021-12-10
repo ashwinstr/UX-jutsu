@@ -420,7 +420,18 @@ if userge.has_bot:
                 else:
                     users_.append(user_)
                     seen_by.append((await userge.get_users(user_)).first_name)
+                await SEEN_BY.update_one(
+                    {"_id": id_},
+                    {"$set": {"seen": users_}},
+                    upsert=True
+                )
+                await SEEN_BY.update_one(
+                    {"_id": id_},
+                    {"$set": {"user_first_name": seen_by}},
+                    upsert=True
+                )
                 await c_q.answer(notice, show_alert=True)
+                await c_q.edit_message_text(f"Attention everyone!!!\n{len(users_)}👁‍🗨")
             else:
                 if user_ not in Config.OWNER_ID and user_ not in Config.TRUSTED_SUDO_USERS:
                     await c_q.answer("Only owner or trusted sudo users can see this list.", show_alert=True)
