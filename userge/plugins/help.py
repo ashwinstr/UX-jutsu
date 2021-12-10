@@ -1146,6 +1146,7 @@ if userge.has_bot:
                             reply_markup=vote_buttons(up, down, anon, id_),
                         )
                     )
+                    
             if str_y[0] == "anon_vote" and len(str_y) == 2:
                 id_ = userge.rnd_id()
                 up = 0
@@ -1169,6 +1170,8 @@ if userge.has_bot:
                             input_message_content=InputTextMessageContent(str_y[1]),
                             description="Vote your opinion.",
                             reply_markup=vote_buttons(up, down, anon, id_),
+                        )
+                    )
             
             if str_y[0] == "attent" and len(str_y) == 2:
                 notice = str_y[-1]
