@@ -395,7 +395,7 @@ if userge.has_bot:
                     list_ += f"{one}\n"
                 return await c_q.answer(list_, show_alert=True)
             btn_ = vote_buttons(text_up, text_down, anon, id_)
-            await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
+            await c_q.edit_message_reply_markup(reply_markup=btn_)
         except BaseException:
             tb = traceback.format_exc()
             await userge.send_message(Config.LOG_CHANNEL_ID, f"```{tb}```")
