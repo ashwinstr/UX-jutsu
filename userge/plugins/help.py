@@ -1146,11 +1146,11 @@ if userge.has_bot:
                     ]
                 )
                 results.append(
-                    InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/1e389fef521a6cc86cfdf.jpg",
+                    InlineQueryResultArticle(
                         title="Attention please!",
+                        input_content_message=InputTextMessageContent("Attention message sent by my owner."),
                         description="Attention everyone!!!",
-                        caption="Attention everyone!!!",
+                        thumb_url="https://telegra.ph/file/1e389fef521a6cc86cfdf.jpg",
                         reply_markup=btn_,
                     )
                 )
