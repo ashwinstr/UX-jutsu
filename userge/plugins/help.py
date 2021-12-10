@@ -1069,6 +1069,27 @@ if userge.has_bot:
                         reply_markup=vote_buttons(up, down, anon, id_),
                     )
                 )
+            
+            if str_y[0] == "attention":
+                notice = str_y[1]
+                rnd_id = userge.rnd_id()
+                btn_ = InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(text="What is it!!?", callback_data=f"attention_{rnd_id}_{notice}"),
+                            InlineKeyboardButton(text="Seen by.", callback_data=f"attentionseen_{rnd_id}_{notice}")
+                        ],
+                    ]
+                )
+                results.append(
+                    InlineQueryResultPhoto(
+                        photo_url="https://telegra.ph/file/1e389fef521a6cc86cfdf.jpg",
+                        title="Attention please!",
+                        description="Attention everyone!!!",
+                        caption="Attention everyone!!!",
+                        reply_markup=btn_,
+                    )
+                )
 
             if str_y[0].lower() == "stylish" and len(str_y) == 2:
                 results = []
