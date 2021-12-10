@@ -327,13 +327,17 @@ if userge.has_bot:
                     {
                         "_id": f"vote_{id_}",
                         "up": [],
+                        "up_names": [],
                         "down": [],
+                        "down_names": [],
                         "anonymous": anon,
                     }
                 )
             found = await VOTE.find_one({"_id": f"vote_{id_}"})
             votes_up = found["up"]
+            votes_up_names = found['up_names']
             votes_down = found["down"]
+            votes_down_names = found['down_names']
             anon = found["anonymous"]
             tapper = c_q.from_user.id
             if "up" in c_q.data:
@@ -341,13 +345,20 @@ if userge.has_bot:
                 text_down = len(votes_down)
                 if tapper in votes_up:
                     votes_up.remove(tapper)
+                    votes_up_names.remove((await userge.get_users(tapper)).first_name)
                     text_up -= 1
                 else:
                     votes_up.append(tapper)
+                    votes_up_names.append((await userge.get_users(tapper)).first_name)
                     text_up += 1
                 await VOTE.update_one(
                     {"_id": f"vote_{id_}"},
                     {"$set": {"up": votes_up}},
+                    upsert=True,
+                )
+                await VOTE.update_one(
+                    {"_id": f"vote_{id_}"},
+                    {"$set": {"up_names": votes_up_names}},
                     upsert=True,
                 )
             elif "down" in c_q.data:
@@ -355,13 +366,20 @@ if userge.has_bot:
                 text_down = len(votes_down)
                 if tapper in votes_down:
                     votes_down.remove(tapper)
+                    votes_down_names.remove((await userge.get_users(tapper)).first_name)
                     text_down -= 1
                 else:
                     votes_down.append(tapper)
+                    votes_down_names.append((await userge.get_users(tapper)).first_name)
                     text_down += 1
                 await VOTE.update_one(
                     {"_id": f"vote_{id_}"},
                     {"$set": {"down": votes_down}},
+                    upsert=True,
+                )
+                await VOTE.update_one(
+                    {"_id": f"vote_{id_}"},
+                    {"$set": {"down_names": votes_down_names}},
                     upsert=True,
                 )
             elif "list" in c_q.data:
@@ -370,19 +388,11 @@ if userge.has_bot:
                         "Only the bot owner can see this list.", show_alert=True
                     )
                 list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦\n"
-                for one in found["up"]:
-                    try:
-                        user_ = f"• {(await userge.get_users(one)).first_name}\n"
-                    except BaseException:
-                        user_ = f"{one}\n"
-                    list_ += user_
+                for one in found["up_names"]:
+                    list_ += f"{one}\n"
                 list_ += "\n𝗗𝗢𝗪𝗡 𝗩𝗢𝗧𝗘𝗦\n"
                 for one in found["down"]:
-                    try:
-                        user_ = f"• {(await userge.get_users(one)).first_name}\n"
-                    except BaseException:
-                        user_ = f"{one}\n"
-                    list_ += user_
+                    list_ += f"{one}\n"
                 return await c_q.answer(list_, show_alert=True)
             btn_ = vote_buttons(text_up, text_down, anon, id_)
             await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
@@ -1140,7 +1150,7 @@ if userge.has_bot:
                     )
                 )
             
-            if str_y[0] == "attent":
+            if str_y[0] == "attent" and len(str_y) == 2:
                 notice = str_y[-1]
                 rnd_id = userge.rnd_id()
                 btn_ = InlineKeyboardMarkup(
