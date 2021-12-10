@@ -396,9 +396,15 @@ if userge.has_bot:
     async def notice_(_, c_q: CallbackQuery):
         try:
             query_ = c_q.data
-            split_ = query_.split("_", 2)
+            split_ = query_.split("_", 1)
             id_ = split_[-2]
-            notice = split_[-1]
+            notice_path = "userge/xcache/notice.json"
+            if not os.path.exists(notice_path):
+                await c_q.answer("This message doesn't exist anymore", show_alert=True)
+                return
+            with open(notice_path) as f:
+                n_data = ujson.load(f)
+                view_data = n_data.get(id_)
             found = await SEEN_BY.find_one({"_id": id_})
             user_ = c_q.from_user.id
             if not found:
@@ -406,7 +412,7 @@ if userge.has_bot:
                     {
                         "_id": id_,
                         "seen": [],
-                        "notice": notice,
+                        "notice": view_data['notice'],
                         "user_first_names": [],
                     }
                 )
@@ -429,12 +435,12 @@ if userge.has_bot:
                     {"$set": {"user_first_names": seen_by}},
                     upsert=True
                 )
-                await c_q.answer(notice, show_alert=True)
+                await c_q.answer(view_data['notice'], show_alert=True)
                 btn_ = InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{id_}_{notice}"),
-                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{id_}_{notice}")
+                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{id_}"),
+                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{id_}")
                         ],
                     ]
                 )
@@ -1140,11 +1146,26 @@ if userge.has_bot:
                 btn_ = InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{rnd_id}_{notice}"),
-                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{rnd_id}_{notice}")
+                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{rnd_id}"),
+                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{rnd_id}")
                         ],
                     ]
                 )
+                attention = os.path.join(Config.CACHE_PATH, "notice.json")
+                notice_data = {
+                    rnd_id: {
+                        "sender": iq_user_id,
+                        "notice": notice,
+                    }
+                }
+                if os.path.exists(attention):
+                    with open(attention) as outfile:
+                        view_data = ujson.load(outfile)
+                    view_data.update(notice_data)
+                else:
+                    view_data = notice_data
+                with open(attention, "w") as r:
+                    ujson.dump(view_data, r, indent=4)
                 results.append(
                     InlineQueryResultArticle(
                         title="Attention please!",
