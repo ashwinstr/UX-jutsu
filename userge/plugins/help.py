@@ -18,6 +18,7 @@ from pyrogram.types import (  # InlineQueryResultCachedDocument,; InlineQueryRes
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )
+from userge.plugins.jutsu.attention_callback import SEEN_BY
 from youtubesearchpython import VideosSearch
 
 from userge import Config, Message, get_collection, userge
@@ -59,6 +60,7 @@ _CATEGORY = {
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
 VOTE = get_collection("VOTES")
+SEEN_BY = get_collection("SEEN_BY")
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
@@ -389,7 +391,7 @@ if userge.has_bot:
             tb = traceback.format_exc()
             await userge.send_message(Config.LOG_CHANNEL_ID, f"```{tb}```")
 
-    @userge.on_callback_query(
+    @userge.bot.on_callback_query(
         filters.regex(pattern=r"^notice.*")
     )
     async def notice_(_, c_q: CallbackQuery):
@@ -1120,7 +1122,7 @@ if userge.has_bot:
                 btn_ = InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice{rnd_id}_{notice}"),
+                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{rnd_id}_{notice}"),
                             InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{rnd_id}_{notice}")
                         ],
                     ]
