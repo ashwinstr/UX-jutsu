@@ -71,6 +71,18 @@ _COMMANDS = {
         "help_txt": "**Anime Downloader**\nSearch Anime via inline bot and then choose episodes number and desired quality\n\n>>> `anime [Query]`",
         "i_q": "anime Naruto",
     },
+    "voting": {
+        "help_txt": "**Voting buttons**\nGive content through inline and add buttons to it for voting.\n\n>>> `voting [Query]|[telegraph link]`",
+        "i_q": "voting Do you like this inline command?",
+    },
+    "anonymous voting": {
+        "help_txt": "**Anonymous voting buttons**\nGive content through inline and add buttons to it for voting. No one can see the votes.\n\n>>> `anon_vote [Query]|[telegraph link]`",
+        "i_q": "anon_vote Do you like hentai?",
+    },
+    "attention/notice": {
+        "help_txt": "**Notice or content for attention in gorup**\nSee who has seen your notice.\n\n>>> `attent [content]`",
+        "i_q": "attent Anyone interested in trying my bot?",
+    },
 }
 
 

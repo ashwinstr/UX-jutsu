@@ -1146,20 +1146,29 @@ if userge.has_bot:
                             reply_markup=vote_buttons(up, down, anon, id_),
                         )
                     )
-            if "anon_vote" in string:
+            if str_y[0] == "anon_vote" and len(str_y) == 2:
                 id_ = userge.rnd_id()
                 up = 0
                 down = 0
                 anon = True
-                results.append(
-                    InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/b23ac25afde3d6b99a591.jpg",
-                        title="Anonymous vote.",
-                        description="Vote your opinion anonymously.",
-                        caption="Vote your opinion anonymously.",
-                        reply_markup=vote_buttons(up, down, anon, id_),
+                tele_ = bool(re.search(r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$", str_y[1]))
+                if tele_:
+                    results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=str_y[1],
+                            title="Vote.",
+                            description="Vote your opinion.",
+                            caption="Vote your opinion.",
+                            reply_markup=vote_buttons(up, down, anon, id_),
+                        )
                     )
-                )
+                else:
+                    results.append(
+                        InlineQueryResultArticle(
+                            title="Vote.",
+                            input_message_content=InputTextMessageContent(str_y[1]),
+                            description="Vote your opinion.",
+                            reply_markup=vote_buttons(up, down, anon, id_),
             
             if str_y[0] == "attent" and len(str_y) == 2:
                 notice = str_y[-1]
