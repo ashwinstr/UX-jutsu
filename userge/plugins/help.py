@@ -59,6 +59,7 @@ _CATEGORY = {
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
 VOTE = get_collection("VOTES")
+SEEN_BY = get_collection("SEEN_BY")
 REPO_X = InlineQueryResultArticle(
     title="Repo",
     input_message_content=InputTextMessageContent("**Here's how to setup USERGE-X** "),
@@ -326,13 +327,17 @@ if userge.has_bot:
                     {
                         "_id": f"vote_{id_}",
                         "up": [],
+                        "up_names": [],
                         "down": [],
+                        "down_names": [],
                         "anonymous": anon,
                     }
                 )
             found = await VOTE.find_one({"_id": f"vote_{id_}"})
             votes_up = found["up"]
+            votes_up_names = found['up_names']
             votes_down = found["down"]
+            votes_down_names = found['down_names']
             anon = found["anonymous"]
             tapper = c_q.from_user.id
             if "up" in c_q.data:
@@ -340,13 +345,20 @@ if userge.has_bot:
                 text_down = len(votes_down)
                 if tapper in votes_up:
                     votes_up.remove(tapper)
+                    votes_up_names.remove((await userge.get_users(tapper)).first_name)
                     text_up -= 1
                 else:
                     votes_up.append(tapper)
+                    votes_up_names.append((await userge.get_users(tapper)).first_name)
                     text_up += 1
                 await VOTE.update_one(
                     {"_id": f"vote_{id_}"},
                     {"$set": {"up": votes_up}},
+                    upsert=True,
+                )
+                await VOTE.update_one(
+                    {"_id": f"vote_{id_}"},
+                    {"$set": {"up_names": votes_up_names}},
                     upsert=True,
                 )
             elif "down" in c_q.data:
@@ -354,13 +366,20 @@ if userge.has_bot:
                 text_down = len(votes_down)
                 if tapper in votes_down:
                     votes_down.remove(tapper)
+                    votes_down_names.remove((await userge.get_users(tapper)).first_name)
                     text_down -= 1
                 else:
                     votes_down.append(tapper)
+                    votes_down_names.append((await userge.get_users(tapper)).first_name)
                     text_down += 1
                 await VOTE.update_one(
                     {"_id": f"vote_{id_}"},
                     {"$set": {"down": votes_down}},
+                    upsert=True,
+                )
+                await VOTE.update_one(
+                    {"_id": f"vote_{id_}"},
+                    {"$set": {"down_names": votes_down_names}},
                     upsert=True,
                 )
             elif "list" in c_q.data:
@@ -372,25 +391,86 @@ if userge.has_bot:
                         "Only the bot owner can see this list.", show_alert=True
                     )
                 list_ = "𝗩𝗼𝘁𝗲 𝗹𝗶𝘀𝘁:\n\n𝗨𝗣 𝗩𝗢𝗧𝗘𝗦\n"
-                for one in found["up"]:
-                    try:
-                        user_ = f"• {(await userge.get_users(one)).first_name}\n"
-                    except BaseException:
-                        user_ = f"{one}\n"
-                    list_ += user_
+                for one in found["up_names"]:
+                    list_ += f"{one}\n"
                 list_ += "\n𝗗𝗢𝗪𝗡 𝗩𝗢𝗧𝗘𝗦\n"
                 for one in found["down"]:
-                    try:
-                        user_ = f"• {(await userge.get_users(one)).first_name}\n"
-                    except BaseException:
-                        user_ = f"{one}\n"
-                    list_ += user_
+                    list_ += f"{one}\n"
                 return await c_q.answer(list_, show_alert=True)
             btn_ = vote_buttons(text_up, text_down, anon, id_)
-            await c_q.edit_message_text("Thanks for the vote.", reply_markup=btn_)
+            await c_q.edit_message_reply_markup(reply_markup=btn_)
         except BaseException:
             tb = traceback.format_exc()
             await userge.send_message(Config.LOG_CHANNEL_ID, f"```{tb}```")
+
+    @userge.bot.on_callback_query(
+        filters.regex(pattern=r"^notice.*")
+    )
+    async def notice_(_, c_q: CallbackQuery):
+        try:
+            query_ = c_q.data
+            split_ = query_.split("_", 1)
+            id_ = split_[-1]
+            notice_path = "userge/xcache/notice.json"
+            if not os.path.exists(notice_path):
+                await c_q.answer("This message doesn't exist anymore", show_alert=True)
+                return
+            with open(notice_path) as f:
+                n_data = ujson.load(f)
+                view_data = n_data.get(id_)
+            found = await SEEN_BY.find_one({"_id": id_})
+            user_ = c_q.from_user.id
+            if not found:
+                await SEEN_BY.insert_one(
+                    {
+                        "_id": id_,
+                        "seen": [],
+                        "notice": view_data['notice'],
+                        "user_first_names": [],
+                    }
+                )
+            found = await SEEN_BY.find_one({"_id": id_})
+            if "seen" not in c_q.data:
+                users_ = found['seen']
+                seen_by = found['user_first_names']
+                if user_ in users_:
+                    pass
+                else:
+                    users_.append(user_)
+                    seen_by.append((await userge.get_users(user_)).first_name)
+                await SEEN_BY.update_one(
+                    {"_id": id_},
+                    {"$set": {"seen": users_}},
+                    upsert=True
+                )
+                await SEEN_BY.update_one(
+                    {"_id": id_},
+                    {"$set": {"user_first_names": seen_by}},
+                    upsert=True
+                )
+                await c_q.answer(view_data['notice'], show_alert=True)
+                btn_ = InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{id_}"),
+                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{id_}")
+                        ],
+                    ]
+                )
+                await c_q.edit_message_text(f"**Attention everyone!!!**\n👁‍🗨 **Seen by:** {len(users_)} people.", reply_markup=btn_)
+            else:
+                if user_ not in Config.OWNER_ID and user_ not in Config.TRUSTED_SUDO_USERS:
+                    await c_q.answer("Only owner or trusted sudo users can see this list.", show_alert=True)
+                else:
+                    users_ = found['seen']
+                    seen_by = found['user_first_names']
+                    list_ = f"Notice seen by: [{len(users_)}]\n\n"
+                    for one in seen_by:
+                        list_ += f"• {one}\n"
+                    await c_q.answer(list_, show_alert=True)
+        except:
+            tb = traceback.format_exc()
+            await userge.send_message(Config.LOG_CHANNEL_ID, f"#ATTENTION\n\n```{tb}```")
 
     def is_filter(name: str) -> bool:
         split_ = name.split(".")
@@ -1044,32 +1124,91 @@ if userge.has_bot:
                                     )
                                 )
 
-            if "voting" in string:
+            if str_y[0] == "voting" and len(str_y) == 2:
                 id_ = userge.rnd_id()
                 up = 0
                 down = 0
                 anon = False
-                results.append(
-                    InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/fffb70c7b824b8c4e020b.jpg",
-                        title="Vote.",
-                        description="Vote your opinion.",
-                        caption="Vote your opinion.",
-                        reply_markup=vote_buttons(up, down, anon, id_),
+                tele_ = bool(re.search(r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$", str_y[1]))
+                if tele_:
+                    results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=str_y[1],
+                            title="Vote.",
+                            description="Vote your opinion.",
+                            caption="Vote your opinion.",
+                            reply_markup=vote_buttons(up, down, anon, id_),
+                        )
                     )
-                )
-            if "anon_vote" in string:
+                else:
+                    results.append(
+                        InlineQueryResultArticle(
+                            title="Vote.",
+                            input_message_content=InputTextMessageContent(str_y[1]),
+                            description="Vote your opinion.",
+                            reply_markup=vote_buttons(up, down, anon, id_),
+                        )
+                    )
+                    
+            if str_y[0] == "anon_vote" and len(str_y) == 2:
                 id_ = userge.rnd_id()
                 up = 0
                 down = 0
                 anon = True
+                tele_ = bool(re.search(r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$", str_y[1]))
+                if tele_:
+                    results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=str_y[1],
+                            title="Vote.",
+                            description="Vote your opinion.",
+                            caption="Vote your opinion.",
+                            reply_markup=vote_buttons(up, down, anon, id_),
+                        )
+                    )
+                else:
+                    results.append(
+                        InlineQueryResultArticle(
+                            title="Vote.",
+                            input_message_content=InputTextMessageContent(str_y[1]),
+                            description="Vote your opinion.",
+                            reply_markup=vote_buttons(up, down, anon, id_),
+                        )
+                    )
+            
+            if str_y[0] == "attent" and len(str_y) == 2:
+                notice = str_y[-1]
+                rnd_id = userge.rnd_id()
+                btn_ = InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{rnd_id}"),
+                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{rnd_id}")
+                        ],
+                    ]
+                )
+                attention = os.path.join(Config.CACHE_PATH, "notice.json")
+                notice_data = {
+                    rnd_id: {
+                        "sender": iq_user_id,
+                        "notice": notice,
+                    }
+                }
+                if os.path.exists(attention):
+                    with open(attention) as outfile:
+                        view_data = ujson.load(outfile)
+                    view_data.update(notice_data)
+                else:
+                    view_data = notice_data
+                with open(attention, "w") as r:
+                    ujson.dump(view_data, r, indent=4)
                 results.append(
-                    InlineQueryResultPhoto(
-                        photo_url="https://telegra.ph/file/b23ac25afde3d6b99a591.jpg",
-                        title="Anonymous vote.",
-                        description="Vote your opinion anonymously.",
-                        caption="Vote your opinion anonymously.",
-                        reply_markup=vote_buttons(up, down, anon, id_),
+                    InlineQueryResultArticle(
+                        title="Attention please!",
+                        input_message_content=InputTextMessageContent("Attention message sent by my owner."),
+                        description="Attention everyone!!!",
+                        thumb_url="https://telegra.ph/file/1e389fef521a6cc86cfdf.jpg",
+                        reply_markup=btn_,
                     )
                 )
 
