@@ -1,3 +1,5 @@
+
+from asyncio import gather
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Message, get_collection, userge
@@ -23,13 +25,17 @@ async def ivote_(message: Message):
     if not reply_:
         return await message.edit("`Reply to a message to vote for.`", del_in=5)
     bot_u = (await userge.bot.get_me()).username
-    query_ = f"anon_vote" if "-a" in message.flags else f"voting"
+    q = message.filtered_input_str
+    query_ = f"anon_vote {q}" if "-a" in message.flags else f"voting {q}"
     res = await userge.get_inline_bot_results(bot_u, query_)
-    await userge.send_inline_bot_result(
-        chat_id=message.chat.id,
-        query_id=res.query_id,
-        result_id=res.results[0].id,
-        reply_to_message_id=reply_.message_id,
+    await gather(
+        message.delete(),
+        userge.send_inline_bot_result(
+            chat_id=message.chat.id,
+            query_id=res.query_id,
+            result_id=res.results[0].id,
+            reply_to_message_id=reply_.message_id,
+        )
     )
 
 
