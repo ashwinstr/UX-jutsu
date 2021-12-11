@@ -1,5 +1,5 @@
-
 from asyncio import gather
+
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Message, get_collection, userge
@@ -35,7 +35,7 @@ async def ivote_(message: Message):
             query_id=res.query_id,
             result_id=res.results[0].id,
             reply_to_message_id=reply_.message_id,
-        )
+        ),
     )
 
 

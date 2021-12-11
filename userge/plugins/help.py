@@ -335,9 +335,9 @@ if userge.has_bot:
                 )
             found = await VOTE.find_one({"_id": f"vote_{id_}"})
             votes_up = found["up"]
-            votes_up_names = found['up_names']
+            votes_up_names = found["up_names"]
             votes_down = found["down"]
-            votes_down_names = found['down_names']
+            votes_down_names = found["down_names"]
             anon = found["anonymous"]
             tapper = c_q.from_user.id
             if "up" in c_q.data:
@@ -403,9 +403,7 @@ if userge.has_bot:
             tb = traceback.format_exc()
             await userge.send_message(Config.LOG_CHANNEL_ID, f"```{tb}```")
 
-    @userge.bot.on_callback_query(
-        filters.regex(pattern=r"^notice.*")
-    )
+    @userge.bot.on_callback_query(filters.regex(pattern=r"^notice.*"))
     async def notice_(_, c_q: CallbackQuery):
         try:
             query_ = c_q.data
@@ -425,52 +423,63 @@ if userge.has_bot:
                     {
                         "_id": id_,
                         "seen": [],
-                        "notice": view_data['notice'],
+                        "notice": view_data["notice"],
                         "user_first_names": [],
                     }
                 )
             found = await SEEN_BY.find_one({"_id": id_})
             if "seen" not in c_q.data:
-                users_ = found['seen']
-                seen_by = found['user_first_names']
+                users_ = found["seen"]
+                seen_by = found["user_first_names"]
                 if user_ in users_:
                     pass
                 else:
                     users_.append(user_)
                     seen_by.append((await userge.get_users(user_)).first_name)
                 await SEEN_BY.update_one(
-                    {"_id": id_},
-                    {"$set": {"seen": users_}},
-                    upsert=True
+                    {"_id": id_}, {"$set": {"seen": users_}}, upsert=True
                 )
                 await SEEN_BY.update_one(
-                    {"_id": id_},
-                    {"$set": {"user_first_names": seen_by}},
-                    upsert=True
+                    {"_id": id_}, {"$set": {"user_first_names": seen_by}}, upsert=True
                 )
-                await c_q.answer(view_data['notice'], show_alert=True)
+                await c_q.answer(view_data["notice"], show_alert=True)
                 btn_ = InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{id_}"),
-                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{id_}")
+                            InlineKeyboardButton(
+                                text="What is it!!?", callback_data=f"notice_{id_}"
+                            ),
+                            InlineKeyboardButton(
+                                text="Seen by.", callback_data=f"noticeseen_{id_}"
+                            ),
                         ],
                     ]
                 )
-                await c_q.edit_message_text(f"**Attention everyone!!!**\n👁‍🗨 **Seen by:** {len(users_)} people.", reply_markup=btn_)
+                await c_q.edit_message_text(
+                    f"**Attention everyone!!!**\n👁‍🗨 **Seen by:** {len(users_)} people.",
+                    reply_markup=btn_,
+                )
             else:
-                if user_ not in Config.OWNER_ID and user_ not in Config.TRUSTED_SUDO_USERS:
-                    await c_q.answer("Only owner or trusted sudo users can see this list.", show_alert=True)
+                if (
+                    user_ not in Config.OWNER_ID
+                    and user_ not in Config.TRUSTED_SUDO_USERS
+                ):
+                    await c_q.answer(
+                        "Only owner or trusted sudo users can see this list.",
+                        show_alert=True,
+                    )
                 else:
-                    users_ = found['seen']
-                    seen_by = found['user_first_names']
+                    users_ = found["seen"]
+                    seen_by = found["user_first_names"]
                     list_ = f"Notice seen by: [{len(users_)}]\n\n"
                     for one in seen_by:
                         list_ += f"• {one}\n"
                     await c_q.answer(list_, show_alert=True)
-        except:
+        except BaseException:
             tb = traceback.format_exc()
-            await userge.send_message(Config.LOG_CHANNEL_ID, f"#ATTENTION\n\n```{tb}```")
+            await userge.send_message(
+                Config.LOG_CHANNEL_ID, f"#ATTENTION\n\n```{tb}```"
+            )
 
     def is_filter(name: str) -> bool:
         split_ = name.split(".")
@@ -1129,7 +1138,12 @@ if userge.has_bot:
                 up = 0
                 down = 0
                 anon = False
-                tele_ = bool(re.search(r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$", str_y[1]))
+                tele_ = bool(
+                    re.search(
+                        r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$",
+                        str_y[1],
+                    )
+                )
                 if tele_:
                     results.append(
                         InlineQueryResultPhoto(
@@ -1149,13 +1163,18 @@ if userge.has_bot:
                             reply_markup=vote_buttons(up, down, anon, id_),
                         )
                     )
-                    
+
             if str_y[0] == "anon_vote" and len(str_y) == 2:
                 id_ = userge.rnd_id()
                 up = 0
                 down = 0
                 anon = True
-                tele_ = bool(re.search(r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$", str_y[1]))
+                tele_ = bool(
+                    re.search(
+                        r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$",
+                        str_y[1],
+                    )
+                )
                 if tele_:
                     results.append(
                         InlineQueryResultPhoto(
@@ -1175,15 +1194,19 @@ if userge.has_bot:
                             reply_markup=vote_buttons(up, down, anon, id_),
                         )
                     )
-            
+
             if str_y[0] == "attent" and len(str_y) == 2:
                 notice = str_y[-1]
                 rnd_id = userge.rnd_id()
                 btn_ = InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton(text="What is it!!?", callback_data=f"notice_{rnd_id}"),
-                            InlineKeyboardButton(text="Seen by.", callback_data=f"noticeseen_{rnd_id}")
+                            InlineKeyboardButton(
+                                text="What is it!!?", callback_data=f"notice_{rnd_id}"
+                            ),
+                            InlineKeyboardButton(
+                                text="Seen by.", callback_data=f"noticeseen_{rnd_id}"
+                            ),
                         ],
                     ]
                 )
@@ -1205,7 +1228,9 @@ if userge.has_bot:
                 results.append(
                     InlineQueryResultArticle(
                         title="Attention please!",
-                        input_message_content=InputTextMessageContent("Attention message sent by my owner."),
+                        input_message_content=InputTextMessageContent(
+                            "Attention message sent by my owner."
+                        ),
                         description="Attention everyone!!!",
                         thumb_url="https://telegra.ph/file/1e389fef521a6cc86cfdf.jpg",
                         reply_markup=btn_,

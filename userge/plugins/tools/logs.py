@@ -61,10 +61,10 @@ async def check_logs(message: Message):
                             final_url = _URL + key + file_ext
                             final_url_raw = f"{_URL}raw/{key}{file_ext}"
                             reply_text = "**Here Are Your Logs** :\n"
-                            reply_text += (
-                                f"• [NEKO/SPACE]({final_url})            • [RAW]({final_url_raw})"
+                            reply_text += f"• [NEKO/SPACE]({final_url})            • [RAW]({final_url_raw})"
+                            await message.edit(
+                                reply_text, disable_web_page_preview=True
                             )
-                            await message.edit(reply_text, disable_web_page_preview=True)
                             paste_ = True
                         except BaseException as e:
                             await userge.send_message(
@@ -74,14 +74,15 @@ async def check_logs(message: Message):
                             paste_ = False
                     if resp.status != 201 or not paste_:
                         await message.edit(
-                            "`Failed to reach Neko/Spacebin! Sending as document...`", del_in=5
+                            "`Failed to reach Neko/Spacebin! Sending as document...`",
+                            del_in=5,
                         )
                         await message.client.send_document(
                             chat_id=message.chat.id,
                             document="logs/userge.log",
                             caption="**USERGE-X Logs**",
                         )
-        except:
+        except BaseException:
             await message.edit(
                 "`Failed to reach Neko/Spacebin! Sending as document...`", del_in=5
             )
