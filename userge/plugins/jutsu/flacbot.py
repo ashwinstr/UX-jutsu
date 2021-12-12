@@ -1,7 +1,6 @@
 # plugin made for USERGE-X by @Kakashi_HTK(TG)/@ashwinstr(GH)
 # before porting please ask to Kakashi
 
-from pyrogram.errors import IndexError
 
 from userge import Config, Message, userge
 from userge.helpers import capitaled
