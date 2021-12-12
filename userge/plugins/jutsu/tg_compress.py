@@ -1,7 +1,6 @@
-
 import os
 
-from userge import userge, Message
+from userge import Message, userge
 from userge.helpers import msg_type
 
 
@@ -29,9 +28,13 @@ async def compress_(message: Message):
         return
     await message.reply("`Compressing...`")
     if msg_type(reply_) == "photo":
-        await userge.send_photo(message.chat.id, down_, reply_to_message_id=reply_.message_id)
+        await userge.send_photo(
+            message.chat.id, down_, reply_to_message_id=reply_.message_id
+        )
     elif msg_type(reply_) == "video":
-        await userge.send_video(message.chat.id, down_, reply_to_message_id=reply_.message_id)
+        await userge.send_video(
+            message.chat.id, down_, reply_to_message_id=reply_.message_id
+        )
     else:
         await reply_.reply("The replied document is not compressible...", del_in=5)
     await message.delete()
