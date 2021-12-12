@@ -23,7 +23,7 @@ async def compress_(message: Message):
     down_ = await userge.download_media(reply_)
     if "-d" in message.flags:
         await message.reply("`Processing document...`")
-        await userge.send_document(message.chat.id, down_, force_docment=True, reply_to_message_id=reply_.message_id)
+        await userge.send_document(message.chat.id, down_, force_document=True, reply_to_message_id=reply_.message_id)
         await message.delete()
         os.remove(down_)
         return
