@@ -210,14 +210,6 @@ async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, 
     raise "No response found in time limit."
 
 
-#async def get_response(msg, filter_user: Union[int, str] = 0, timeout: int = 5, mark_read: bool = False):
-#    try:
-#       _response = await asyncio.wait_for(response(msg, filter_user, mark_read), timeout=timeout)
-#    except:
-#        raise
-#    return _response
-
-
 def full_name(user: dict):
     try:
         f_name = " ".join([user.first_name, user.last_name or ""])
@@ -232,14 +224,20 @@ def msg_type(message):
         type_ = "audio"
     elif message.animation:
         type_ = "gif"
-    elif message.document:
-        type_ = "file"
     elif message.photo:
         type_ = "photo"
     elif message.sticker:
         type_ = "sticker"
     elif message.video:
         type_ = "video"
+    elif message.document:
+        doc_ = message.document
+        if doc_.file_name.endswith((".jpg", ".jpeg", ".png", "webp")):
+            type_ = "photo"
+        elif doc_.file_name.endswith((".mp4", ".gif", "webm")):
+            type_ = "video"
+        else:
+            type_ = "file"
     return type_
 
 
