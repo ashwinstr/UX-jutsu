@@ -25,6 +25,7 @@ from userge.utils import runcmd, terminate
 SAVED_SETTINGS = get_collection("CONFIGS")
 DISABLED_CHATS = get_collection("DISABLED_CHATS")
 FROZEN = get_collection("FROZEN")
+UPDATE_MSG = get_collection("UPDATE_MSG")
 
 MAX_IDLE_TIME = 300
 LOG = userge.getLogger(__name__)
@@ -78,12 +79,16 @@ async def restart_(message: Message):
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
     if "h" in message.flags:
         if Config.HEROKU_APP:
-            await message.edit(
-                "`Heroku app found, trying to restart dyno...\nthis will take upto 30 sec`",
-                del_in=3,
+            update = await message.edit(
+                "`Heroku app found, trying to restart dyno...\nthis will take upto 30 sec`"
             )
             await FROZEN.drop()
             Config.HEROKU_APP.restart()
+            await UPDATE_MSG.update_one(
+                {"_id": "UPDATE_MSG"},
+                {"$set": {"message": f"{update.chat.id}/{update.message_id}"}},
+                upsert=True
+            )
             time.sleep(30)
         else:
             await message.edit("`Restarting [HARD] ...`", del_in=1)
