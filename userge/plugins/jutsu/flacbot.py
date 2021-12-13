@@ -11,7 +11,9 @@ from userge.helpers import capitaled
     about={
         "header": "download music with FlacBot",
         "description": "change quality with flac_q",
-        "flags": {"-r": "use rFlacBot",},
+        "flags": {
+            "-r": "use rFlacBot",
+        },
         "usage": "{tr}flac [artist and song name]",
     },
 )
@@ -89,9 +91,12 @@ async def flac_quality(message: Message):
     input_ = message.filtered_input_str
     if not input_:
         return await message.edit("`Provide quality to set...`", del_in=5)
-    if (input_ not in ["flac", "320", "256", "128"] and "-r" not in message.flags) or (input_ not in ["flac", "320", "128"] and "-r" in message.flags):
+    if (input_ not in ["flac", "320", "256", "128"] and "-r" not in message.flags) or (
+        input_ not in ["flac", "320", "128"] and "-r" in message.flags
+    ):
         return await message.edit(
-            f"`Input not found in available options, see '{Config.CMD_TRIGGER}help flac_q'...`", del_in=5
+            f"`Input not found in available options, see '{Config.CMD_TRIGGER}help flac_q'...`",
+            del_in=5,
         )
     if input_ == "flac":
         if "-r" in message.flags:
