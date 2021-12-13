@@ -6,4 +6,4 @@ CHANNEL = userge.getCLogger(__name__)
 
 
 async def _init() -> None:
-    await CHANNEL.log("`STARTED...`")
+    await CHANNEL.log("`### BOT restarted successfully ###`")
