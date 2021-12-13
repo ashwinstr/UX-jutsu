@@ -87,12 +87,10 @@ async def restart_(message: Message):
             await UPDATE_MSG.update_one(
                 {"_id": "UPDATE_MSG"},
                 {"$set": {"message": f"{update.chat.id}/{update.message_id}"}},
-                upsert=True
+                upsert=True,
             )
             await UPDATE_MSG.update_one(
-                {"_id": "UPDATE_MSG"},
-                {"$set": {"time": be_update}},
-                upsert=True
+                {"_id": "UPDATE_MSG"}, {"$set": {"time": be_update}}, upsert=True
             )
             Config.HEROKU_APP.restart()
             time.sleep(30)
@@ -102,12 +100,10 @@ async def restart_(message: Message):
             await UPDATE_MSG.update_one(
                 {"_id": "UPDATE_MSG"},
                 {"$set": {"message": f"{update.chat.id}/{update.message_id}"}},
-                upsert=True
+                upsert=True,
             )
             await UPDATE_MSG.update_one(
-                {"_id": "UPDATE_MSG"},
-                {"$set": {"time": be_update}},
-                upsert=True
+                {"_id": "UPDATE_MSG"}, {"$set": {"time": be_update}}, upsert=True
             )
             await FROZEN.drop()
             asyncio.get_event_loop().create_task(userge.restart(hard=True))
