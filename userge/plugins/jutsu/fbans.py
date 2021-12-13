@@ -213,6 +213,7 @@ async def fban_(message: Message):
             await userge.send_message(
                 chat_id,
                 f"/fban {user} {reason}",
+                disable_web_page_preview=True,
             )
         except UserBannedInChannel:
             pass
