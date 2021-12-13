@@ -19,31 +19,8 @@ from pyrogram.errors import StickersetInvalid, YouBlockedUser
 from pyrogram.raw.functions.messages import GetStickerSet
 from pyrogram.raw.types import InputStickerSetShortName
 
-from userge import Config, Message, userge, get_collection
+from userge import Config, Message, userge
 from userge.utils import get_response
-
-SAVED_SETTINGS = get_collection("CONFIGS")
-
-
-@userge.on_cmd(
-    "setkang",
-    about={
-        "header": "set kang channel",
-        "usage": "{tr}setkang [in private channel",
-    },
-)
-async def set_kang(message: Message):
-    """set kang channel"""
-    channel = message.chat
-    if channel.type != "channel":
-        return await message.edit("`Kang channel must be a CHANNEL...`", del_in=5)
-    chat_id = channel.id
-    await SAVED_SETTINGS.update_one(
-        {"_id": "KANG_CHANNEL"},
-        {"$set": {"chat_id": chat_id}},
-        upsert=True
-    )
-    await message.edit("`This chat is set as KANG_CHANNEL...`")
 
 
 @userge.on_cmd(
@@ -69,13 +46,8 @@ async def kang_(message: Message):
     """kang a sticker"""
     user = await userge.get_me()
     replied = message.reply_to_message
-    found = await SAVED_SETTINGS.find_one({"_id": "KANG_CHANNEL"})
-    if not found:
-        return await message.edit(f"Kang channel not found, use `{Config.CMD_TRIGGER}setkang` in a private channel to set <b>kang channel</b> first.", del_in=5)
-    kang_c = int(found['chat_id'])
-    stick = await replied.forward(kang_c)
-    await message.edit("`Kanging in kang channel...`", del_in=1)
-    kang_msg = await userge.send_message(kang_c, "`Processing...`", reply_to_message_id=stick.message_id)
+    await message.edit("`Kanging in log channel...`", del_in=1)
+    kang_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "`Processing...`")
     photo = None
     emoji_ = None
     is_anim = False
@@ -99,7 +71,7 @@ async def kang_(message: Message):
             await kang_msg.edit("`Unsupported File!`")
             return
         await kang_msg.edit(f"`{random.choice(KANGING_STR)}`")
-        photo = await userge.download_media(message=stick, file_name=Config.DOWN_PATH)
+        photo = await userge.download_media(message=replied, file_name=Config.DOWN_PATH)
     else:
         await kang_msg.edit("`I can't kang that...`")
         return
