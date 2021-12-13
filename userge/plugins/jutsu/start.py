@@ -25,6 +25,7 @@ async def _init() -> None:
                 message_id=int(msg_id),
                 text=f"### <b>UX-jutsu updated successfully.</b> ###\nUpdate time - <b>{took_time}</b>"
             )
+            await CHANNEL.log(f"Update time - <b>{took_time}</b>")
         except:
             await CHANNEL.log("`### UX-jutsu started successfully. ###`")
         await UPDATE.drop()
