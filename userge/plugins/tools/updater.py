@@ -113,9 +113,15 @@ async def check_update(message: Message):
                     "**USERGE-X Successfully Updated!**\n"
                     "`Now restarting... Wait for a while!`",
                 )
+                be_update = time()
                 await UPDATE_MSG.update_one(
                     {"_id": "UPDATE_MSG"},
                     {"$set": {"message": f"{update.chat.id}/{update.message_id}"}},
+                    upsert=True
+                )
+                await UPDATE_MSG.update_one(
+                    {"_id": "UPDATE_MSG"},
+                    {"$set": {"time": be_update}},
                     upsert=True
                 )
                 asyncio.get_event_loop().create_task(userge.restart(True))

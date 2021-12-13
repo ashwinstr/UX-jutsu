@@ -83,15 +83,32 @@ async def restart_(message: Message):
                 "`Heroku app found, trying to restart dyno...\nthis will take upto 30 sec`"
             )
             await FROZEN.drop()
-            Config.HEROKU_APP.restart()
+            be_update = time.time()
             await UPDATE_MSG.update_one(
                 {"_id": "UPDATE_MSG"},
                 {"$set": {"message": f"{update.chat.id}/{update.message_id}"}},
                 upsert=True
             )
+            await UPDATE_MSG.update_one(
+                {"_id": "UPDATE_MSG"},
+                {"$set": {"time": be_update}},
+                upsert=True
+            )
+            Config.HEROKU_APP.restart()
             time.sleep(30)
         else:
-            await message.edit("`Restarting [HARD] ...`", del_in=1)
+            update = await message.edit("`Restarting [HARD] ...`")
+            be_update = time.time()
+            await UPDATE_MSG.update_one(
+                {"_id": "UPDATE_MSG"},
+                {"$set": {"message": f"{update.chat.id}/{update.message_id}"}},
+                upsert=True
+            )
+            await UPDATE_MSG.update_one(
+                {"_id": "UPDATE_MSG"},
+                {"$set": {"time": be_update}},
+                upsert=True
+            )
             await FROZEN.drop()
             asyncio.get_event_loop().create_task(userge.restart(hard=True))
     else:
