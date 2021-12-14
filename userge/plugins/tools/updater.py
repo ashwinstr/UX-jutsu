@@ -124,6 +124,11 @@ async def check_update(message: Message):
                     {"$set": {"time": be_update}},
                     upsert=True
                 )
+                await UPDATE_MSG.update_one(
+                    {"_id": "UPDATE_MSG"},
+                    {"$set": {"process": "updated"}},
+                    upsert=True
+                )
                 asyncio.get_event_loop().create_task(userge.restart(True))
         elif push_to_heroku:
             await _pull_from_repo(repo, branch)

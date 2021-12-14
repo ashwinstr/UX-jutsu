@@ -109,6 +109,11 @@ async def restart_(message: Message):
                 {"$set": {"time": be_update}},
                 upsert=True
             )
+            await UPDATE_MSG.update_one(
+                {"_id": "UPDATE_MSG"},
+                {"$set": {"process": "restarted"}},
+                upsert=True
+            )
             await FROZEN.drop()
             asyncio.get_event_loop().create_task(userge.restart(hard=True))
     else:
