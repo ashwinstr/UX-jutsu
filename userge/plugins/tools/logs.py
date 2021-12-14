@@ -10,6 +10,7 @@ import aiohttp
 import traceback
 
 from userge import Config, Message, logging, pool, userge
+from userge.plugins.help import CHANNEL
 
 _URL = "https://spaceb.in/" if Config.HEROKU_APP else "https://nekobin.com/"
 
@@ -78,15 +79,17 @@ async def check_logs(message: Message):
                             "`Failed to reach Neko/Spacebin! Sending as document...`",
                             del_in=5,
                         )
+                        await CHANNEL.log(str(resp.status))
                         await message.client.send_document(
                             chat_id=message.chat.id,
                             document="logs/userge.log",
                             caption="**USERGE-X Logs**",
                         )
-        except BaseException:
+        except BaseException as e:
             await message.edit(
                 "`Failed to reach Neko/Spacebin! Sending as document...`", del_in=5
             )
+            await CHANNEL.log(f"<b>ERROR:</b> {e}")
             await message.client.send_document(
                 chat_id=message.chat.id,
                 document="logs/userge.log",
