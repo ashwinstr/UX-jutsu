@@ -28,7 +28,7 @@ async def _init() -> None:
             )
             await CHANNEL.log(f"Update/restart time - <b>{took_time}</b>")
         except:
-            await CHANNEL.log(f"`### UX-jutsu {found['process']} successfully. ###`")
+            await CHANNEL.log(f"`### UX-jutsu updated/restarted successfully. ###`")
         await UPDATE.drop()
     else:
         await CHANNEL.log("`### UX-jutsu started successfully. ###`")
