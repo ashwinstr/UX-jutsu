@@ -7,6 +7,7 @@
 # All rights reserved.
 
 import aiohttp
+import traceback
 
 from userge import Config, Message, logging, pool, userge
 
@@ -66,10 +67,10 @@ async def check_logs(message: Message):
                                 reply_text, disable_web_page_preview=True
                             )
                             paste_ = True
-                        except BaseException as e:
+                        except:
                             await userge.send_message(
                                 Config.LOG_CHANNEL_ID,
-                                f"Failed to load <b>logs</b> in Neko/Spacebin,\n<b>ERROR</b>:`{e}`",
+                                f"Failed to load <b>logs</b> in Neko/Spacebin,\n<b>ERROR</b>:`{traceback.format_exc()}`",
                             )
                             paste_ = False
                     if resp.status != 201 or not paste_:
