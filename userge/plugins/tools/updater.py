@@ -110,7 +110,7 @@ async def check_update(message: Message):
             )
             if not push_to_heroku:
                 update = await message.edit(
-                    "**USERGE-X Successfully Updated!**\n"
+                    "**USERGE-X update process started!**\n"
                     "`Now restarting... Wait for a while!`",
                 )
                 be_update = time()

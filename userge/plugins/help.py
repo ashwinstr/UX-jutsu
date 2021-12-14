@@ -1065,7 +1065,7 @@ if userge.has_bot:
                 await SEEN_BY.insert_one(
                     {
                         "_id": rnd_id,
-                        "seen": view_data["seen"],
+                        "seen": view_data[rnd_id]["seen"],
                         "notice": view_data["notice"],
                         "user_first_names": view_data["user_first_names"],
                         "sender": view_data["sender"]
