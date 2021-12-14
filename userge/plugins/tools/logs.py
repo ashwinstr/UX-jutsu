@@ -53,7 +53,7 @@ async def check_logs(message: Message):
                 text = d_f.read()
             async with aiohttp.ClientSession() as ses:
                 async with ses.post(
-                    _URL + "api/v2/pastes/", json={"content": text}
+                    _URL + "api/documents", json={"content": text}
                 ) as resp:
                     if resp.status == 201:
                         try:
