@@ -5,6 +5,7 @@ import os
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.errors import MessageNotModified
 
 from userge import userge, get_collection, Config
 
@@ -74,10 +75,13 @@ async def notice_(_, c_q: CallbackQuery):
                     ],
                 ]
             )
-            await c_q.edit_message_text(
-                f"**Attention everyone!!!**\n👁‍🗨 **Seen by:** {len(users_)} people.",
-                reply_markup=btn_,
-            )
+            try:
+                await c_q.edit_message_text(
+                    f"**Attention everyone!!!**\n👁‍🗨 **Seen by:** {len(users_)} people.",
+                    reply_markup=btn_,
+                )
+            except MessageNotModified:
+                pass
         else:
             if (
                 user_ not in Config.OWNER_ID
