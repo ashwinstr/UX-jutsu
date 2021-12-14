@@ -44,8 +44,12 @@ async def notice_(_, c_q: CallbackQuery):
         user_ = c_q.from_user.id
         found = await SEEN_BY.find_one({"_id": id_})
         if "seen" not in c_q.data:
-            users_ = found["seen"]
-            seen_by = found["user_first_names"]
+            try:
+                users_ = found["seen"]
+                seen_by = found["user_first_names"]
+            except:
+                users_ = []
+                seen_by = []
             if user_ in users_:
                 pass
             else:
