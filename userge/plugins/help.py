@@ -1044,24 +1044,16 @@ if userge.has_bot:
                         ],
                     ]
                 )
+                await CHANNEL.log(f"### NOTICE SENT ###\n\n`{notice}`")
                 attention = os.path.join(Config.CACHE_PATH, "notice.json")
                 notice_data = {
                     rnd_id: {
                         "sender": iq_user_id,
                         "notice": notice,
+                        "seen": [],
+                        "user_first_names": [],
                     }
                 }
-                found = await SEEN_BY.find_one({"_id": "ATTENTION"})
-                if found:
-                    data = found['data']
-                else:
-                    data = []
-                data.append(notice_data)
-                await SEEN_BY.update_one(
-                    {"_id": "ATTENTION"},
-                    {"$set": {"data": data}},
-                    upsert=True
-                )
                 if os.path.exists(attention):
                     with open(attention) as outfile:
                         view_data = ujson.load(outfile)
@@ -1070,6 +1062,15 @@ if userge.has_bot:
                     view_data = notice_data
                 with open(attention, "w") as r:
                     ujson.dump(view_data, r, indent=4)
+                await SEEN_BY.insert_one(
+                    {
+                        "_id": rnd_id,
+                        "seen": view_data["seen"],
+                        "notice": view_data["notice"],
+                        "user_first_names": view_data["user_first_names"],
+                        "sender": view_data["sender"]
+                    }
+                )
                 results.append(
                     InlineQueryResultArticle(
                         title="Attention please!",

@@ -14,7 +14,14 @@ async def _init() -> None:
     attention = os.path.join(Config.CACHE_PATH, "notice.json")
     found = await SEEN_BY.find_one({"_id": "ATTENTION"})
     if found:
-        notice_data = found['data']
+        notice_data = {
+            found['_id']: {
+                "sender": found['sender'],
+                "notice": found['notice'],
+                "seen": found['seen'],
+                "user_first_names": found['user_first_names'],
+            }
+        }
     else:
         return
     with open(attention, "w") as r:
@@ -34,17 +41,7 @@ async def notice_(_, c_q: CallbackQuery):
         with open(notice_path) as f:
             n_data = ujson.load(f)
             view_data = n_data.get(id_)
-        found = await SEEN_BY.find_one({"_id": id_})
         user_ = c_q.from_user.id
-        if not found:
-            await SEEN_BY.insert_one(
-                {
-                    "_id": id_,
-                    "seen": [],
-                    "notice": view_data["notice"],
-                    "user_first_names": [],
-                }
-            )
         found = await SEEN_BY.find_one({"_id": id_})
         if "seen" not in c_q.data:
             users_ = found["seen"]
