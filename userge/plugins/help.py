@@ -1051,6 +1051,17 @@ if userge.has_bot:
                         "notice": notice,
                     }
                 }
+                found = await SEEN_BY.find_one({"_id": "ATTENTION"})
+                if found:
+                    data = found['data']
+                else:
+                    data = []
+                data.append(notice_data)
+                await SEEN_BY.update_one(
+                    {"_id": "ATTENTION"},
+                    {"$set": {"data": data}},
+                    upsert=True
+                )
                 if os.path.exists(attention):
                     with open(attention) as outfile:
                         view_data = ujson.load(outfile)

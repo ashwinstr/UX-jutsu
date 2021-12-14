@@ -1,6 +1,7 @@
 
 import ujson
 import traceback
+import os
 
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
@@ -8,6 +9,16 @@ from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardBu
 from userge import userge, get_collection, Config
 
 SEEN_BY = get_collection("SEEN_BY")
+
+async def _init() -> None:
+    attention = os.path.join(Config.CACHE_PATH, "notice.json")
+    found = await SEEN_BY.find_one({"_id": "ATTENTION"})
+    if found:
+        notice_data = found['data']
+    else:
+        return
+    with open(attention, "w") as r:
+        ujson.dump(notice_data, r, indent=4)
 
 
 @userge.bot.on_callback_query(filters.regex(pattern=r"^notice.*"))
