@@ -1044,7 +1044,7 @@ if userge.has_bot:
                         ],
                     ]
                 )
-                await CHANNEL.log(f"### NOTICE SENT ###\n\n`{notice}`")
+
                 attention = os.path.join(Config.CACHE_PATH, "notice.json")
                 notice_data = {
                     rnd_id: {
@@ -1066,9 +1066,9 @@ if userge.has_bot:
                     {
                         "_id": rnd_id,
                         "seen": view_data[rnd_id]["seen"],
-                        "notice": view_data["notice"],
-                        "user_first_names": view_data["user_first_names"],
-                        "sender": view_data["sender"]
+                        "notice": view_data[rnd_id]["notice"],
+                        "user_first_names": view_data[rnd_id]["user_first_names"],
+                        "sender": view_data[rnd_id]["sender"]
                     }
                 )
                 results.append(
