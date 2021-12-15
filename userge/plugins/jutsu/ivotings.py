@@ -2,9 +2,9 @@ import traceback
 from asyncio import gather
 
 from pyrogram import filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import Message, get_collection, userge, Config
+from userge import Config, Message, get_collection, userge
 
 VOTE = get_collection("VOTES")
 
@@ -39,6 +39,7 @@ async def ivote_(message: Message):
             reply_to_message_id=reply_.message_id,
         ),
     )
+
 
 @userge.bot.on_callback_query(filters.regex(pattern=r"vote_.*"))
 async def vote_callback(_, c_q: CallbackQuery):

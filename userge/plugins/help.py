@@ -1,6 +1,5 @@
 import os
 import re
-import traceback
 from math import ceil
 from typing import Any, Callable, Dict, List, Union
 
@@ -1068,7 +1067,7 @@ if userge.has_bot:
                         "seen": view_data[rnd_id]["seen"],
                         "notice": view_data[rnd_id]["notice"],
                         "user_first_names": view_data[rnd_id]["user_first_names"],
-                        "sender": view_data[rnd_id]["sender"]
+                        "sender": view_data[rnd_id]["sender"],
                     }
                 )
                 results.append(

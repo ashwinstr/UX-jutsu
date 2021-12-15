@@ -1,26 +1,26 @@
+import os
+import traceback
 
 import ujson
-import traceback
-import os
-
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import MessageNotModified
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from userge import userge, get_collection, Config
+from userge import Config, get_collection, userge
 
 SEEN_BY = get_collection("SEEN_BY")
+
 
 async def _init() -> None:
     attention = os.path.join(Config.CACHE_PATH, "notice.json")
     found = await SEEN_BY.find_one({"_id": "ATTENTION"})
     if found:
         notice_data = {
-            found['_id']: {
-                "sender": found['sender'],
-                "notice": found['notice'],
-                "seen": found['seen'],
-                "user_first_names": found['user_first_names'],
+            found["_id"]: {
+                "sender": found["sender"],
+                "notice": found["notice"],
+                "seen": found["seen"],
+                "user_first_names": found["user_first_names"],
             }
         }
     else:
@@ -48,7 +48,7 @@ async def notice_(_, c_q: CallbackQuery):
             try:
                 users_ = found["seen"]
                 seen_by = found["user_first_names"]
-            except:
+            except BaseException:
                 users_ = []
                 seen_by = []
             if user_ in users_:
@@ -83,10 +83,7 @@ async def notice_(_, c_q: CallbackQuery):
             except MessageNotModified:
                 pass
         else:
-            if (
-                user_ not in Config.OWNER_ID
-                and user_ not in Config.TRUSTED_SUDO_USERS
-            ):
+            if user_ not in Config.OWNER_ID and user_ not in Config.TRUSTED_SUDO_USERS:
                 await c_q.answer(
                     "Only owner or trusted sudo users can see this list.",
                     show_alert=True,
@@ -100,6 +97,4 @@ async def notice_(_, c_q: CallbackQuery):
                 await c_q.answer(list_, show_alert=True)
     except BaseException:
         tb = traceback.format_exc()
-        await userge.send_message(
-            Config.LOG_CHANNEL_ID, f"#ATTENTION\n\n```{tb}```"
-        )
+        await userge.send_message(Config.LOG_CHANNEL_ID, f"#ATTENTION\n\n```{tb}```")

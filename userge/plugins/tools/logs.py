@@ -6,8 +6,9 @@
 #
 # All rights reserved.
 
-import aiohttp
 import traceback
+
+import aiohttp
 
 from userge import Config, Message, logging, pool, userge
 from userge.plugins.help import CHANNEL
@@ -68,7 +69,7 @@ async def check_logs(message: Message):
                                 reply_text, disable_web_page_preview=True
                             )
                             paste_ = True
-                        except:
+                        except BaseException:
                             await userge.send_message(
                                 Config.LOG_CHANNEL_ID,
                                 f"Failed to load <b>logs</b> in Neko/Spacebin,\n<b>ERROR</b>:`{traceback.format_exc()}`",
