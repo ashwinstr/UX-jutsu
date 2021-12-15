@@ -7,8 +7,10 @@
 # All rights reserved.
 
 import aiohttp
+import traceback
 
 from userge import Config, Message, logging, pool, userge
+from userge.plugins.help import CHANNEL
 
 _URL = "https://spaceb.in/" if Config.HEROKU_APP else "https://nekobin.com/"
 
@@ -51,7 +53,7 @@ async def check_logs(message: Message):
                 text = d_f.read()
             async with aiohttp.ClientSession() as ses:
                 async with ses.post(
-                    _URL + "api/v2/pastes/", json={"content": text}
+                    _URL + "api/documents", json={"content": text}
                 ) as resp:
                     if resp.status == 201:
                         try:
@@ -66,10 +68,10 @@ async def check_logs(message: Message):
                                 reply_text, disable_web_page_preview=True
                             )
                             paste_ = True
-                        except BaseException as e:
+                        except:
                             await userge.send_message(
                                 Config.LOG_CHANNEL_ID,
-                                f"Failed to load <b>logs</b> in Neko/Spacebin,\n<b>ERROR</b>:`{e}`",
+                                f"Failed to load <b>logs</b> in Neko/Spacebin,\n<b>ERROR</b>:`{traceback.format_exc()}`",
                             )
                             paste_ = False
                     if resp.status != 201 or not paste_:
@@ -77,15 +79,17 @@ async def check_logs(message: Message):
                             "`Failed to reach Neko/Spacebin! Sending as document...`",
                             del_in=5,
                         )
+                        await CHANNEL.log(str(resp.status))
                         await message.client.send_document(
                             chat_id=message.chat.id,
                             document="logs/userge.log",
                             caption="**USERGE-X Logs**",
                         )
-        except BaseException:
+        except BaseException as e:
             await message.edit(
                 "`Failed to reach Neko/Spacebin! Sending as document...`", del_in=5
             )
+            await CHANNEL.log(f"<b>ERROR:</b> {e}")
             await message.client.send_document(
                 chat_id=message.chat.id,
                 document="logs/userge.log",
