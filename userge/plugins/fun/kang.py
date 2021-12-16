@@ -130,7 +130,7 @@ async def kang_(message: Message):
                     if is_anim:
                         packname += "_anim"
                         packnick += " (Animated)"
-                    await message.edit(
+                    await kang_msg.edit(
                         "`Switching to Pack "
                         + str(pack)
                         + " due to insufficient space`"
