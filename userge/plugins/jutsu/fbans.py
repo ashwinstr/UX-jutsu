@@ -548,7 +548,7 @@ async def unfban_(message: Message):
     if message.reply_to_message:
         reason = input
     else:
-        reason = input[1:]
+        reason = input.split(" ", 1)[1]
     PROOF_CHANNEL = FBAN_LOG_CHANNEL if FBAN_LOG_CHANNEL else Config.LOG_CHANNEL_ID
     error_msg = "Provide a User ID or reply to a User"
     if user is None:
