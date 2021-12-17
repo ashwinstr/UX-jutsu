@@ -246,7 +246,10 @@ def extract_id(mention: str):
         return "Input is not a mention but an id..."
     elif mention.startswith("@"):
         return "Input is not a mention but a username..."
-    men = mention.html
+    try:
+        men = mention.html
+    except:
+        men = mention
     filter = re.search(r"\d+", men)
     if filter: 
         return filter.group(0)
