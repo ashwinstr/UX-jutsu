@@ -249,7 +249,7 @@ def extract_id(mention):
     try:
         men = mention.html
     except:
-        raise "Input is not a mention."
+        return "Input is not a mention."
     filter = re.search(r"\d+", men)
     if filter: 
         return filter.group(0)
