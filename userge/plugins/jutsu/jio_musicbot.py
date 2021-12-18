@@ -1,6 +1,6 @@
 from asyncio import gather
 
-from userge import userge, Message
+from userge import Message, userge
 from userge.config import Config
 
 
@@ -22,7 +22,7 @@ async def jio_music(message: Message):
         log_ = await userge.send_inline_bot_result(
             Config.LOG_CHANNEL_ID,
             query_id=result.query_id,
-            result_id=result.results[0].id
+            result_id=result.results[0].id,
         )
         await gather(
             userge.copy_message(
