@@ -241,12 +241,15 @@ def msg_type(message):
     return type_
 
 
-def extract_id(mention: str):
-    if mention.isdigit():
-        return "Input is not a mention but an id..."
+def extract_id(mention):
+    if str(mention).isdigit():
+        return "Input is not a mention but an ID..."
     elif mention.startswith("@"):
         return "Input is not a mention but a username..."
-    men = mention.html
+    try:
+        men = mention.html
+    except:
+        return "Input is not a mention."
     filter = re.search(r"\d+", men)
     if filter: 
         return filter.group(0)

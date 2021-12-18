@@ -141,7 +141,6 @@ async def delfed_(message: Message):
 )
 async def fban_(message: Message):
     """Bans a user from connected Feds."""
-    message.flags
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}</b>"]
     PROOF_CHANNEL = FBAN_LOG_CHANNEL if FBAN_LOG_CHANNEL else Config.LOG_CHANNEL_ID
     input = message.filtered_input_str
@@ -156,7 +155,7 @@ async def fban_(message: Message):
         split_ = input.split(" ", 1)
         user = split_[0]
         if not user.isdigit() and not user.startswith("@"):
-            user = extract_id(user)
+            user = extract_id(message.text)
         reason = split_[1]
     else:
         user = message.reply_to_message.from_user.id
@@ -360,7 +359,7 @@ async def fban_p(message: Message):
         split_ = input.split(" ", 1)
         user = split_[0]
         if not user.isdigit() and not user.startswith("@"):
-            user = extract_id(user)
+            user = extract_id(message.text)
         reason = split_[1]
         try:
             user_ = await userge.get_users(user)
