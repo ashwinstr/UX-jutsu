@@ -156,7 +156,10 @@ async def fban_(message: Message):
         user = split_[0]
         if not user.isdigit() and not user.startswith("@"):
             user = extract_id(message.text)
-        reason = split_[1]
+        if len(split_) == 2:
+            reason = split_[1]
+        else:
+            reason = "not specified"
     else:
         user = message.reply_to_message.from_user.id
         reason = input
