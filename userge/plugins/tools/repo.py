@@ -9,8 +9,17 @@
 from userge import Config, Message, userge
 
 
-@userge.on_cmd("repo", about={"header": "get repo link and details"})
+@userge.on_cmd(
+    "repo",
+    about={
+        "header": "get repo link and details",
+        "flags": {"-d": " Disables Link preview "},
+    },
+)
 async def see_repo(message: Message):
     """see repo"""
     output = f"• **repo** : [USERGE-X]({Config.UPSTREAM_REPO})"
-    await message.edit(output)
+    if "-d" in message.flags:
+        await message.edit(output, disable_web_page_preview=True)
+    else:
+        await message.edit(output)
