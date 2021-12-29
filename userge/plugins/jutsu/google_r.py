@@ -1,10 +1,12 @@
-
 import os
-from userge import userge, Message
+
+from userge import Message, userge
 
 
 async def _init() -> None:
-    os.system("wget https://raw.githubusercontent.com/jarun/googler/v4.3.2/googler &&  chmod +x googler")
+    os.system(
+        "wget https://raw.githubusercontent.com/jarun/googler/v4.3.2/googler &&  chmod +x googler"
+    )
 
 
 @userge.on_cmd(
