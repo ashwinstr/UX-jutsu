@@ -19,6 +19,7 @@ async def googl_er(message: Message):
     query_ = message.input_str
     if not query_:
         return await message.edit("`Query not found.`", del_in=5)
+    await message.edit("`Searching...`")
     response = os.popen(f"./googler {query_}").read()
     resp = response.split("\n\n")
     out_ = f"<u><b>The google search for '{query_}' is as below...</u></b>\n\n"
