@@ -406,7 +406,7 @@ async def fban_p(message: Message):
             msg_id=proof,
             reason=reason,
         )
-        reported = "</b>and <b>reported "
+        reported = "</b> and <b>reported "
     else:
         reported = ""
     async for data in FED_LIST.find():
