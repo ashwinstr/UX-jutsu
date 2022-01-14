@@ -32,7 +32,7 @@ from userge.utils.exceptions import ProcessCanceled
 
 _CREDS: object = None
 _AUTH_FLOW: object = None
-_PARENT_ID = ""
+_PARENT_ID = os.environ.get("G_DRIVE_PARENT_ID", None)
 OAUTH_SCOPE = [
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/drive.file",
