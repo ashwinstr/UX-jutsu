@@ -1,6 +1,6 @@
 # pylint: disable=missing-module-docstring
 #
-# Copyright (C) 2020-2021 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
+# Copyright (C) 2020-2022 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
 #
 # This file is part of < https://github.com/UsergeTeam/Userge > project,
 # and is released under the "GNU v3.0 License Agreement".
@@ -10,16 +10,17 @@
 
 __all__ = ['SendAsFile']
 
-import os
 import inspect
+import os
 from typing import Union, Optional
 
 import aiofiles
 
 from userge import logging, Config
 from userge.utils import secure_text
-from ...ext import RawClient
 from ... import types
+from ...ext import RawClient
+from pyrogram.parser import Parser
 
 _LOG = logging.getLogger(__name__)
 _LOG_STR = "<<<!  :::::  %s  :::::  !>>>"
@@ -68,6 +69,7 @@ class SendAsFile(RawClient):  # pylint: disable=missing-class-docstring
         """
         if text and chat_id not in Config.AUTH_CHATS:
             text = secure_text(str(text))
+        text = (await Parser(self).parse(text)).get("message")
         async with aiofiles.open(filename, "w+", encoding="utf8") as out_file:
             await out_file.write(text)
         _LOG.debug(_LOG_STR, f"Uploading {filename} To Telegram")
