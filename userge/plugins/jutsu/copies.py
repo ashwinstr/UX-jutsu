@@ -32,16 +32,20 @@ async def copy_channel_(message: Message):
     from_chann = input_.split()[0]
     to_chann = input_.split()[1]
     try:
-        if from_chann.isdigit():
+        try:
             from_chann = int(from_chann)
+        except:
+            pass
         from_ = await userge.get_chat(from_chann)
     except BaseException as e:
         return await message.edit(
             f"`Given from_channel '{from_chann}' is invalid...`\nERROR: {str(e)}", del_in=5
         )
     try:
-        if to_chann.isdigit():
+        try:
             to_chann = int(to_chann)
+        except:
+            pass
         to_ = await userge.get_chat(to_chann)
     except BaseException:
         return await message.edit(
