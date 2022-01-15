@@ -234,6 +234,8 @@ async def post_(message: Message):
         )
     if ("-all" or "-grp" or "-pvt") not in flags:
         target = message.input_str
+        if target == "log":
+            target = str(Config.LOG_CHANNEL_ID)
         if target.isdigit():
             target = int(target)
         try:

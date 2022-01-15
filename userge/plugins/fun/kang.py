@@ -108,7 +108,7 @@ async def kang_(message: Message):
         exist = False
         try:
             exist = await message.client.send(
-                GetStickerSet(stickerset=InputStickerSetShortName(short_name=packname, hash=0))
+                GetStickerSet(stickerset=InputStickerSetShortName(short_name=packname), hash=0)
             )
         except StickersetInvalid:
             pass

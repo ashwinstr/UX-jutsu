@@ -15,12 +15,6 @@ FROZEN = get_collection("FROZEN")
 UPDATE_MSG = get_collection("UPDATE_MSG")
 
 
-async def _init():
-    start = userge.uptime
-    if start == "0h, 0m, 1s":
-        await CHANNEL.log("Bot started...")
-
-
 @userge.on_cmd(
     "update",
     about={
