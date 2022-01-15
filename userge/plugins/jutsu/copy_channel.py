@@ -58,31 +58,18 @@ async def copy_channel_(message: Message):
             f"Need admin rights to copy posts to {to_.title}...", del_in=5
         )
     total = 0
-    del_list = []
+    list_ = []
     await message.edit(
         f"`Copying posts from `<b>{from_.title}</b>` to `<b>{to_.title}</b>..."
     )
     async for post in userge.search_messages(from_.id):
-        total += 1
-        try:
-            # first posting, which'll be in reverse order of original posts
-            first_post = await userge.copy_messages(to_.id, from_.id, post.message_id)
-            del_list.append(first_post.message_id)
-        except FloodWait as e:
-            await asyncio.sleep(e.x + 3)
-    await message.edit(
-        f"`Posting the {total} posts again to correct the their order...`"
-    )
-    for post_again in del_list:
-        try:
-            # second posting to correct the order
-            await userge.copy_messages(message.chat.id, message.chat.id, post_again)
-        except FloodWait as e:
-            await asyncio.sleep(e.x + 3)
+        list_.append(post.message_id)
+    list_.reverse()
     try:
-        await userge.delete_messages(del_list)
-    except FloodWait as e:
-        await asyncio.sleep(e.x + 3)
+        await userge.copy_message(to_.id, from_.id, list_)
+    except Exception as e:
+        await CHANNEL.log(f"ERROR: {str(e)}")
+        return await message.edit("`Something went wrong, see log channel for error...`")
     out_ = f"`Forwarded `<b>{total}</b>` from `<b>{from_.title}</b>` to `<b>{to_.title}</b>`.`"
     await message.edit(out_)
     await CHANNEL.log(out_)

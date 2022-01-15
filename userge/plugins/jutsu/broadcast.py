@@ -217,7 +217,9 @@ async def list_post(message: Message):
             "-grp": "send to all groups in list",
             "-pvt": "send to all private chats in list",
         },
-        "usage": "{tr}post [flag] [reply to message]",
+        "usage": "{tr}post [flag] [reply to message]\n"
+        "use 'here' for current chat\n"
+        "user 'log' for log channel",
     },
 )
 async def post_(message: Message):
@@ -236,6 +238,8 @@ async def post_(message: Message):
         target = message.input_str
         if target == "log":
             target = str(Config.LOG_CHANNEL_ID)
+        elif target == "here":
+            target = str(message.chat.id)
         if target.isdigit():
             target = int(target)
         try:
