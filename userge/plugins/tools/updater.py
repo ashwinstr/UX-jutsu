@@ -148,7 +148,7 @@ def _get_updates(repo: Repo, branch: str) -> str:
     out = ""
     upst = Config.UPSTREAM_REPO.rstrip("/")
     for i in repo.iter_commits(f"HEAD..{Config.UPSTREAM_REMOTE}/{branch}"):
-        out += f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👷 __{i.author}__\n\n"
+        out += f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👤 __{i.author}__\n\n"
     return out
 
 
@@ -160,7 +160,7 @@ def _get_updates_pr(git_u_n: str, branch: str) -> str:
     out = ""
     upst = pr_up.rstrip("/")
     for i in repo.iter_commits(f"HEAD..{pr_up}/{branch}"):
-        out += f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👷 __{i.author}__\n\n"
+        out += f"🔨 **#{i.count()}** : [{i.summary}]({upst}/commit/{i}) 👤 __{i.author}__\n\n"
     return out
 
 
