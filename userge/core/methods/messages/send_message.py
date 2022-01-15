@@ -36,6 +36,7 @@ class SendMessage(RawClient):  # pylint: disable=missing-class-docstring
                            disable_notification: Optional[bool] = None,
                            reply_to_message_id: Optional[int] = None,
                            schedule_date: Optional[int] = None,
+                           protect_content: Optional[bool] = False,
                            reply_markup: Union[InlineKeyboardMarkup,
                                                ReplyKeyboardMarkup,
                                                ReplyKeyboardRemove,
@@ -107,6 +108,7 @@ class SendMessage(RawClient):  # pylint: disable=missing-class-docstring
                                          disable_notification=disable_notification,
                                          reply_to_message_id=reply_to_message_id,
                                          schedule_date=schedule_date,
+                                         protect_content=protect_content,
                                          reply_markup=reply_markup)
         module = inspect.currentframe().f_back.f_globals['__name__']
         if log:
