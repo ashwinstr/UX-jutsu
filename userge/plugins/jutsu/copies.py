@@ -74,7 +74,10 @@ async def copy_channel_(message: Message):
         list_.append(post.message_id)
     list_.reverse()
     try:
-        await userge.copy_message(to_.id, from_.id, list_)
+        for one_msg in list_:
+            await userge.copy_message(to_.id, from_.id, one_msg)
+    except FloodWait as e:
+        await asyncio.sleep(e.x + 3)
     except Exception as e:
         await CHANNEL.log(f"ERROR: {str(e)}")
         return await message.edit("`Something went wrong, see log channel for error...`")
