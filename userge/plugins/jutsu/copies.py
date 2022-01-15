@@ -76,6 +76,7 @@ async def copy_channel_(message: Message):
     try:
         for one_msg in list_:
             await userge.copy_message(to_.id, from_.id, one_msg)
+            total += 1
     except FloodWait as e:
         await asyncio.sleep(e.x + 3)
     except Exception as e:
