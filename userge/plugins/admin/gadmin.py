@@ -181,7 +181,7 @@ async def ban_user(message: Message):
 
     try:
         get_mem = await message.client.get_chat_member(chat_id, user_id)
-        await message.client.kick_chat_member(chat_id, user_id, int(ban_period))
+        await message.client.ban_chat_member(chat_id, user_id, int(ban_period))
         await message.edit(
             "#BAN\n\n"
             f"USER: [{get_mem.user.first_name}](tg://user?id={get_mem.user.id}) "
@@ -277,7 +277,8 @@ async def kick_usr(message: Message):
         return
     try:
         get_mem = await message.client.get_chat_member(chat_id, user_id)
-        await message.client.kick_chat_member(chat_id, user_id, int(time.time() + 60))
+        await message.client.ban_chat_member(chat_id, user_id)
+        await message.client.unban_chat_member(chat_id, user_id)
         await message.edit(
             "#KICK\n\n"
             f"USER: [{get_mem.user.first_name}](tg://user?id={get_mem.user.id}) "
@@ -496,8 +497,11 @@ async def zombie_clean(message: Message):
             async for member in message.client.iter_chat_members(chat_id):
                 if member.user.is_deleted:
                     try:
-                        await message.client.kick_chat_member(
-                            chat_id, member.user.id, int(time.time() + 45)
+                        await message.client.ban_chat_member(
+                            chat_id, member.user.id
+                        )
+                        await message.client.unban_chat_member(
+                            chat_id, member.user.id
                         )
                     except UserAdminInvalid:
                         del_users -= 1

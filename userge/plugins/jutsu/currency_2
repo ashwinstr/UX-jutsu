@@ -43,7 +43,6 @@ async def cur_conv(message: Message):
     filterinput = get_emoji_regex().sub("", message.input_str)
     curcon = filterinput.upper().split()
 
-    li
     if len(curcon) == 3:
         amount, currency_to, currency_from = curcon
     else:
