@@ -4,7 +4,9 @@ from userge import Message, userge
 
 
 async def _init() -> None:
-    os.system("wget -c https://raw.githubusercontent.com/jarun/googler/v4.3.2/googler &&  chmod +x googler")
+    os.system(
+        "wget -c https://raw.githubusercontent.com/jarun/googler/v4.3.2/googler &&  chmod +x googler"
+    )
 
 
 @userge.on_cmd(
@@ -33,7 +35,7 @@ async def googl_er(message: Message):
         link_ = (two[1]).strip()
         try:
             desc = (two[2]).strip()
-        except:
+        except BaseException:
             desc = ""
         out_ += f"<b>{title}</b>\n{link_}\n<i>{desc}</i>\n\n"
         no_ += 1
