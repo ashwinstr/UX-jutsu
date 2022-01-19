@@ -8,7 +8,7 @@ gitpython>=3.1.11
 google-api-python-client>=1.12.8
 google-auth-httplib2>=0.0.4
 google-auth-oauthlib>=0.4.2
-google_images_download
+git+https://github.com/Joeclinton1/google-images-download@patch-1
 googletrans==3.1.0a0
 hachoir>=3.1.1
 heroku3>=4.2.3
