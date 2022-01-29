@@ -143,7 +143,7 @@ async def gban_user(message: Message):
     gbanned_chats = []
     for chat in chats:
         try:
-            await chat.kick_member(user_id)
+            await chat.ban_member(user_id)
             gbanned_chats.append(chat.id)
             await CHANNEL.log(
                 r"\\**#Antispam_Log**//"
@@ -286,7 +286,7 @@ async def gban_new(message: Message):
             if me_status not in status_ or user_status in status_:
                 continue
             try:
-                await userge.kick_chat_member(chat_.id, user_id)
+                await userge.ban_chat_member(chat_.id, user_id)
                 gbanned_chats.append[chat_.id]
             except BaseException:
                 failed += f"• {chat_.title} - {chat_.type}\n"
@@ -496,7 +496,7 @@ async def gban_at_entry(message: Message):
             else:
                 chat_ids = [chat_id]
             await asyncio.gather(
-                message.client.kick_chat_member(chat_id, user_id),
+                message.client.ban_chat_member(chat_id, user_id),
                 message.reply(
                     r"\\**#𝑿_Antispam**//"
                     "\n\nGlobally Banned User Detected in this Chat.\n\n"
@@ -533,7 +533,7 @@ async def gban_at_entry(message: Message):
                         else None
                     )
                     await asyncio.gather(
-                        message.client.kick_chat_member(chat_id, user_id),
+                        message.client.ban_chat_member(chat_id, user_id),
                         message.reply(
                             r"\\**#𝑿_Antispam**//"
                             "\n\nGlobally Banned User Detected in this Chat.\n\n"
@@ -567,7 +567,7 @@ async def gban_at_entry(message: Message):
                 ):
                     reason = iv["results"]["attributes"]["blacklist_reason"]
                     await asyncio.gather(
-                        message.client.kick_chat_member(chat_id, user_id),
+                        message.client.ban_chat_member(chat_id, user_id),
                         message.reply(
                             r"\\**#𝑿_Antispam**//"
                             "\n\nGlobally Banned User Detected in this Chat.\n\n"
@@ -594,7 +594,7 @@ async def gban_at_entry(message: Message):
             else:
                 if intruder:
                     await asyncio.gather(
-                        message.client.kick_chat_member(chat_id, user_id),
+                        message.client.ban_chat_member(chat_id, user_id),
                         message.reply(
                             r"\\**#𝑿_Antispam**//"
                             "\n\nGlobally Banned User Detected in this Chat.\n\n"
