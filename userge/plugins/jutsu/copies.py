@@ -34,17 +34,18 @@ async def copy_channel_(message: Message):
     try:
         try:
             from_chann = int(from_chann)
-        except:
+        except BaseException:
             pass
         from_ = await userge.get_chat(from_chann)
     except BaseException as e:
         return await message.edit(
-            f"`Given from_channel '{from_chann}' is invalid...`\nERROR: {str(e)}", del_in=5
+            f"`Given from_channel '{from_chann}' is invalid...`\nERROR: {str(e)}",
+            del_in=5,
         )
     try:
         try:
             to_chann = int(to_chann)
-        except:
+        except BaseException:
             pass
         to_ = await userge.get_chat(to_chann)
     except BaseException:
@@ -81,7 +82,9 @@ async def copy_channel_(message: Message):
         await asyncio.sleep(e.x + 3)
     except Exception as e:
         await CHANNEL.log(f"ERROR: {str(e)}")
-        return await message.edit("`Something went wrong, see log channel for error...`")
+        return await message.edit(
+            "`Something went wrong, see log channel for error...`"
+        )
     out_ = f"`Forwarded `<b>{total}</b>` from `<b>{from_.title}</b>` to `<b>{to_.title}</b>`.`"
     await message.edit(out_)
     await CHANNEL.log(out_)
