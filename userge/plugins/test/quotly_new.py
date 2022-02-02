@@ -6,7 +6,6 @@ import os
 import requests
 
 from textwrap import wrap
-from urllib import request
 from PIL import Image, ImageDraw, ImageFont
 
 from userge import userge, Message
@@ -15,7 +14,7 @@ from userge.utils import media_to_image
 
 CHANNEL = userge.getCLogger(__name__)
 
-FONT_FILE_TO_USE = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
+FONT_FILE_TO_USE = "resources/DejavuSansMono.ttf"
 
 
 def get_warp_length(width):
@@ -43,7 +42,8 @@ async def q_pic(message: Message):
         input_str = input_.strip()
     else:
         reply_to = reply_.message_id
-    pfp = None
+        input_str = reply_.text or reply_.caption
+    pfp_ = None
     msg_ = await message.edit("`Making quote pic...`")
     mediatype = msg_type(reply_)
     if (
@@ -76,7 +76,7 @@ async def q_pic(message: Message):
     text = "\n".join(wrap(input_str, 25))
     text = "“" + text + "„"
     font = ImageFont.truetype(FONT_FILE_TO_USE, 50)
-    img = Image.open(pfp)
+    img = Image.open(pfp_)
     if "-b" in message.flags:
         img = img.convert("L")
     img = img.convert("RGBA").resize((1024, 1024))
@@ -105,12 +105,17 @@ async def q_pic(message: Message):
     if "-s" in message.flags:
         output.name = "Jutsu.Webp"
         img.save(output, "webp")
+        sticker = True
     else:
         output.name = "Jutsu.png"
         img.save(output, "PNG")
+        sticker = False
     output.seek(0)
-    await userge.send_document(message.chat.id, output, reply_to=reply_to)
+    if sticker:
+        await userge.send_sticker(message.chat.id, output, reply_to_message_id=reply_to)
+    else:
+        await userge.send_photo(message.chat.id, output, reply_to_message_id=reply_to)
     await msg_.delete()
-    for i in [pfp]:
+    for i in [pfp_]:
         if os.path.lexists(i):
             os.remove(i)
