@@ -1,5 +1,6 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
+import os
 import re
 import asyncio
 from typing import Union
@@ -11,6 +12,7 @@ from pyrogram.raw.types import (
     InputReportReasonSpam,
 )
 from userge import userge
+from userge.core.types.bound import message
 
 
 # capitalise
@@ -254,3 +256,15 @@ def extract_id(mention):
     if filter: 
         return filter.group(0)
     return "ID not found."
+
+
+async def get_profile_pic(user_: Union[int, str]):
+    try:
+        user_entity = await userge.get_users(user_)
+    except Exception as e:
+        return e
+    if user_entity.from_user.photo:
+        pfp_ = await userge.download_media(user_entity.from_user.photo.big_file_id)
+        return pfp_
+    else:
+        return None
