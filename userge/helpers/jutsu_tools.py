@@ -263,7 +263,7 @@ async def get_profile_pic(user_: Union[int, str]):
         user_entity = await userge.get_users(user_)
     except Exception as e:
         return e
-    if user_entity.from_user.photo:
+    if user_entity.photo:
         pfp_ = await userge.download_media(user_entity.from_user.photo.big_file_id)
         return pfp_
     else:
