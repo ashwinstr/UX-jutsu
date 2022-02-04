@@ -11,7 +11,7 @@ def forbidden_sudo(msg, cmd: str) -> bool:
         return False
     return bool(
         re.search(
-            fr"^(\{Config.CMD_TRIGGER})|(\{Config.SUDO_TRIGGER})(addsudo)|(delsudo)|(addscmd).*",
+            rf"^(\{Config.CMD_TRIGGER})|(\{Config.SUDO_TRIGGER})(addsudo)|(delsudo)|(addscmd).*",
             cmd,
         )
     )

@@ -260,7 +260,7 @@ async def paste_(message: Message) -> None:
     replied = message.reply_to_message
     file_type = None
     if not text and replied:
-        if replied.document and replied.document.file_size < 2 ** 20 * 10:
+        if replied.document and replied.document.file_size < 2**20 * 10:
             file_type = os.path.splitext(replied.document.file_name)[1].lstrip(".")
             path = await replied.download(Config.DOWN_PATH)
             async with aiofiles.open(path, "r") as d_f:
