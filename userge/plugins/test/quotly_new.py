@@ -3,13 +3,13 @@
 
 import io
 import os
-import requests
-
 from textwrap import wrap
+
+import requests
 from PIL import Image, ImageDraw, ImageFont
 
-from userge import userge, Message
-from userge.helpers import msg_type, get_profile_pic
+from userge import Message, userge
+from userge.helpers import get_profile_pic, msg_type
 from userge.utils import media_to_image
 
 CHANNEL = userge.getCLogger(__name__)
@@ -37,7 +37,9 @@ async def q_pic(message: Message):
     input_ = message.filtered_input_str
     reply_ = message.reply_to_message
     if not input_ and not reply_:
-        return await message.edit("`Either reply to message or provide input...`", del_in=5)
+        return await message.edit(
+            "`Either reply to message or provide input...`", del_in=5
+        )
     elif input_:
         input_str = input_.strip()
     else:

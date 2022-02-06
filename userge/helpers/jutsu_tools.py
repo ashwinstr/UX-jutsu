@@ -1,6 +1,5 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
-import os
 import re
 import asyncio
 from typing import Union
@@ -12,7 +11,6 @@ from pyrogram.raw.types import (
     InputReportReasonSpam,
 )
 from userge import userge
-from userge.core.types.bound import message
 
 
 # capitalise

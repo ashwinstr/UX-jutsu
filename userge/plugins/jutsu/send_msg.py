@@ -1,5 +1,4 @@
-
-from userge import userge, Message
+from userge import Message, userge
 
 CHANNEL = userge.getCLogger(__name__)
 
@@ -17,6 +16,11 @@ async def send_message_and_reply(message: Message):
     reply_ = message.reply_to_message
     reply_to = reply_.message_id if reply_ else None
     try:
-        await userge.send_message(message.chat.id, text_, reply_to_message_id=reply_to, disable_web_page_preview=True)
+        await userge.send_message(
+            message.chat.id,
+            text_,
+            reply_to_message_id=reply_to,
+            disable_web_page_preview=True,
+        )
     except Exception as e:
         await CHANNEL.log(f"<b>ERROR:</b> {e}")
