@@ -316,11 +316,9 @@ async def gban_new(message: Message):
     await message.edit(out_)
     await CHANNEL.log(
         r"\\**#Antispam_Log**//"
-        f"\n**User:** {mention_html(user_id, firstname)}\n"
+        f"\n**User:** {mention_html(user_id, user_n)}\n"
         f"**User ID:** `{user_id}`\n"
-        f"**Chat:** {chat.title}\n"
-        f"**Chat ID:** `{chat.id}`\n"
-        f"**Reason:** `{reason}`\n\n$GBAN #id{user_id}"
+        f"**Reason:** `{reason_}`\n\n$GBAN #id{user_id}"
     )
 
 
