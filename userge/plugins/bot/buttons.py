@@ -16,8 +16,8 @@ from userge.helpers import msg_type
 from userge.utils import get_file_id
 from userge.utils import parse_buttons as pb
 
-from .bot_pm import get_bot_info
-from ..utils.telegraph import upload_media_
+from userge.plugins.bot.bot_pm import get_bot_info
+from userge.plugins.utils.telegraph import upload_media_
 
 BTN_REGEX = comp_regex(
     r"\[([^\[]+?)](\[buttonurl:(?:/{0,2})(.+?)(:same)?]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
@@ -179,7 +179,7 @@ async def inline_buttons(message: Message):
     },
     check_downpath=True,
 )
-async def inline_buttons(message: Message):
+async def in_butt_ons(message: Message):
     await message.edit("<code>Creating an Inline Button...</code>")
     reply = message.reply_to_message
     msg_content = None
@@ -205,15 +205,15 @@ async def inline_buttons(message: Message):
 
     rnd_id = userge.rnd_id()
     msg_content = check_brackets(msg_content)
+    InlineDB.save_msg(rnd_id, msg_content, media_valid, media_id)
     if reply.media:
-        down_ = await userge.download_media(reply)
-        url_ = upload_media_(down_)
+        url_ = await upload_media_(message)
         type_ = msg_type(reply)
     await IBUTTON.insert_one(
         {
             "_id": rnd_id,
-            "url": url_,
-            "type": type_
+            "url": f"https://telegra.ph{url_}",
+            "type": str(type_)
         }
     )
     x = await userge.get_inline_bot_results(

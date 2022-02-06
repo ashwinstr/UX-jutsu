@@ -968,12 +968,45 @@ if userge.has_bot:
                                 )
 
             if "inbtn_" in str_y[0]:
-                rnd_id = str_y.split("_", 1)[1]
+                rnd_id = (str_y.split("_", 1))[1]
                 found = await IBUTTON.find_one({"_id": rnd_id})
+                inline_db_path = f"{Config.CACHE_PATH}/inline_db.json"
+                if os.path.exists(inline_db_path):
+                    with open(inline_db_path, "r") as data_file:
+                        view_db = ujson.load(data_file)
+                    data_count_n = 1
+                    reverse_list = list(view_db)
+                    reverse_list.reverse()
+                    for butt_ons in reverse_list:
+                        if data_count_n > 30:
+                            view_db.pop(butt_ons, None)
+                        data_count_n += 1
+                    with open(inline_db_path, "w") as data_file:
+                        ujson.dump(view_db, data_file)
+                    if str_y[0] == "btn":
+                        inline_storage = list(view_db)
+                    else:
+                        rnd_id = (str_y[0].split("_", 1))[1]
+                        inline_storage = [rnd_id]
+                    if len(inline_storage) == 0:
+                        return
+                    for inline_content in inline_storage:
+                        inline_db = view_db.get(inline_content)
+                        if inline_db:
+                            if (
+                                inline_db["media_valid"]
+                                and int(inline_db["media_id"]) != 0
+                            ):
+                                saved_msg = await userge.bot.get_messages(
+                                    Config.LOG_CHANNEL_ID, int(inline_db["media_id"])
+                                )
+                                media_data = get_file_id(saved_msg)
+                            textx, buttonsx = pb(inline_db["msg_content"])
+                textx, buttonsx = pb(inline_db["msg_content"])
                 if found['type'] == "photo":
                     results.append(
                         InlineQueryResultPhoto(
-                            photo_url=found['url_'],
+                            photo_url=found['url'],
                             caption=textx,
                             reply_markup=buttonsx,
                         )
@@ -981,7 +1014,7 @@ if userge.has_bot:
                 elif found['type'] == "gif":
                     results.append(
                         InlineQueryResultAnimation(
-                            animation_url=found['url_'],
+                            animation_url=found['url'],
                             caption=textx,
                             reply_markup=buttonsx,
                         )
