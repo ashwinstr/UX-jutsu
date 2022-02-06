@@ -368,7 +368,7 @@ async def load(message: Message) -> None:
         replied = message.reply_to_message
         if replied and replied.document:
             file_ = replied.document
-            if file_.file_name.endswith(".py") and file_.file_size < 2 ** 20:
+            if file_.file_name.endswith(".py") and file_.file_size < 2**20:
                 if not os.path.isdir(Config.TMP_PATH):
                     os.makedirs(Config.TMP_PATH)
                 t_path = os.path.join(Config.TMP_PATH, file_.file_name)
