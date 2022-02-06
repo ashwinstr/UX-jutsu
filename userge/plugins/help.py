@@ -57,6 +57,7 @@ _CATEGORY = {
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
+IBUTTON = get_collection("INLINE_BUTTON")
 VOTE = get_collection("VOTES")
 SEEN_BY = get_collection("SEEN_BY")
 REPO_X = InlineQueryResultArticle(
@@ -965,6 +966,36 @@ if userge.has_bot:
                                         reply_markup=buttonsx,
                                     )
                                 )
+
+            if "inbtn_" in str_y[0]:
+                rnd_id = str_y.split("_", 1)[1]
+                found = await IBUTTON.find_one({"_id": rnd_id})
+                if found['type'] == "photo":
+                    results.append(
+                        InlineQueryResultPhoto(
+                            photo_url=found['url_'],
+                            caption=textx,
+                            reply_markup=buttonsx,
+                        )
+                    )
+                elif found['type'] == "gif":
+                    results.append(
+                        InlineQueryResultAnimation(
+                            animation_url=found['url_'],
+                            caption=textx,
+                            reply_markup=buttonsx,
+                        )
+                    )
+                elif found['type'] == "text":
+                    results.append(
+                        InlineQueryResultArticle(
+                            title=textx,
+                            input_message_content=InputTextMessageContent(
+                                textx
+                            ),
+                            reply_markup=buttonsx,
+                        )
+                    )
 
             if str_y[0] == "voting" and len(str_y) == 2:
                 id_ = userge.rnd_id()

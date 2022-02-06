@@ -119,3 +119,76 @@ async def q_pic(message: Message):
     for i in [pfp_]:
         if os.path.lexists(i):
             os.remove(i)
+
+
+@userge.on_cmd(
+    "q_n",
+    about={
+        "header": "Makes your message as sticker quote.",
+        "usage": "{tr}q [reply to message]",
+    },
+)
+async def sticker_chat(message: Message):
+    "Makes your message as sticker quote"
+    reply_ = message.reply_to_message
+    if not reply_:
+        return await message.edit(
+            "`Reply to a message to quote...`", del_in=5
+        )
+    fetchmsg = reply_.text
+    repliedreply = None
+    mediatype = msg_type(reply_)
+    if mediatype and mediatype in ["photo", "video", "gif"]:
+        return await message.edit("`Replied message is not supported...`", del_in=5)
+    msg_ = await message.edit("`Making quote...`")
+    user_ = (
+        await userge.get_user(reply_.forward_from.from_user.id)
+        if reply_.forward_from
+        else reply_.from_user.id
+    )
+    res, catmsg = await process(fetchmsg, user, catquotes.client, reply, repliedreply)
+    if not res:
+        return
+    outfi = os.path.join("./temp", "sticker.png")
+    catmsg.save(outfi)
+    endfi = convert_tosticker(outfi)
+    await catquotes.client.send_file(catquotes.chat_id, endfi, reply_to=reply)
+    await catevent.delete()
+    os.remove(endfi)
+
+
+@catub.cat_cmd(
+    pattern="rq(?:\s|$)([\s\S]*)",
+    command=("rq", plugin_category),
+    info={
+        "header": "Makes your message along with the previous replied message as sticker quote",
+        "usage": "{tr}rq",
+    },
+)
+async def stickerchat(catquotes):
+    "To make sticker message."
+    reply = await catquotes.get_reply_message()
+    if not reply:
+        return await edit_or_reply(
+            catquotes, "`I cant quote the message . reply to a message`"
+        )
+    fetchmsg = reply.message
+    repliedreply = await reply.get_reply_message()
+    mediatype = media_type(reply)
+    if mediatype and mediatype in ["Photo", "Round Video", "Gif"]:
+        return await edit_or_reply(catquotes, "`Replied message is not supported now`")
+    catevent = await edit_or_reply(catquotes, "`Making quote...`")
+    user = (
+        await catquotes.client.get_entity(reply.forward.sender)
+        if reply.fwd_from
+        else reply.sender
+    )
+    res, catmsg = await process(fetchmsg, user, catquotes.client, reply, repliedreply)
+    if not res:
+        return
+    outfi = os.path.join("./temp", "sticker.png")
+    catmsg.save(outfi)
+    endfi = convert_tosticker(outfi)
+    await catquotes.client.send_file(catquotes.chat_id, endfi, reply_to=reply)
+    await catevent.delete()
+    os.remove(endfi)
