@@ -65,7 +65,7 @@ async def set_alive_media(message: Message):
         if found:
             media_ = found["url"]
         else:
-            media_ = "https://telegra.ph/file/1fb4c193b5ac0c593f528.jpg"
+            media_ = "https://telegra.ph/file/0cf760742f0c7c9406425.gif"
         return await message.edit(f"The alive media is set to [<b>THIS</b>]({media_}).")
     elif "-r" in message.flags:
         if not found:
