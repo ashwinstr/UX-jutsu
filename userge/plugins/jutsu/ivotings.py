@@ -1,8 +1,18 @@
+
+import re
 import traceback
 from asyncio import gather
 
 from pyrogram import filters
-from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    InlineQuery,
+    InlineQueryResultPhoto,
+    InlineQueryResultArticle,
+    InputTextMessageContent,
+)
 
 from userge import Config, Message, get_collection, userge
 
@@ -158,3 +168,71 @@ def vote_buttons(up_, down_, anon_, id_) -> InlineKeyboardMarkup:
             ],
         ]
     return InlineKeyboardMarkup(btn_)
+
+
+@userge.on_inline_query()
+async def alive_inline_q(_, inline_query: InlineQuery):
+    results = []
+    i_q = inline_query.query
+    str_y = i_q.split(" ", 1)
+    if str_y[0] == "voting" and len(str_y) == 2:
+        id_ = userge.rnd_id()
+        up = 0
+        down = 0
+        anon = False
+        tele_ = bool(
+            re.search(
+                r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$",
+                str_y[1],
+            )
+        )
+        if tele_:
+            results.append(
+                InlineQueryResultPhoto(
+                    photo_url=str_y[1],
+                    title="Vote.",
+                    description="Vote your opinion.",
+                    caption="Vote your opinion.",
+                    reply_markup=vote_buttons(up, down, anon, id_),
+                )
+            )
+        else:
+            results.append(
+                InlineQueryResultArticle(
+                    title="Vote.",
+                    input_message_content=InputTextMessageContent(str_y[1]),
+                    description="Vote your opinion.",
+                    reply_markup=vote_buttons(up, down, anon, id_),
+                )
+            )
+
+    if str_y[0] == "anon_vote" and len(str_y) == 2:
+        id_ = userge.rnd_id()
+        up = 0
+        down = 0
+        anon = True
+        tele_ = bool(
+            re.search(
+                r"http[s]?\:\/\/telegra\.ph\/file\/.*\.(gif|jpg|png|jpeg)$",
+                str_y[1],
+            )
+        )
+        if tele_:
+            results.append(
+                InlineQueryResultPhoto(
+                    photo_url=str_y[1],
+                    title="Vote.",
+                    description="Vote your opinion.",
+                    caption="Vote your opinion.",
+                    reply_markup=vote_buttons(up, down, anon, id_),
+                )
+            )
+        else:
+            results.append(
+                InlineQueryResultArticle(
+                    title="Vote.",
+                    input_message_content=InputTextMessageContent(str_y[1]),
+                    description="Vote your opinion.",
+                    reply_markup=vote_buttons(up, down, anon, id_),
+                )
+            )
