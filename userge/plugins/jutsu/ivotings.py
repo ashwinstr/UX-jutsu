@@ -170,7 +170,7 @@ def vote_buttons(up_, down_, anon_, id_) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(btn_)
 
 
-@userge.bot.on_inline_query()
+""" @userge.bot.on_inline_query()
 async def alive_inline_q(_, inline_query: InlineQuery):
     results = []
     i_q = inline_query.query
@@ -244,4 +244,4 @@ async def alive_inline_q(_, inline_query: InlineQuery):
                         description="Vote your opinion.",
                         reply_markup=vote_buttons(up, down, anon, id_),
                     )
-                )
+                ) """
