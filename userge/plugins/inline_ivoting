@@ -11,7 +11,7 @@ from pyrogram.types import (
 from userge import userge, Config
 from .jutsu.ivotings import vote_buttons
 
-@userge.on_inline_query()
+@userge.bot.on_inline_query()
 async def alive_inline_q(_, inline_query: InlineQuery):
     results = []
     i_q = inline_query.query
