@@ -71,6 +71,7 @@ async def set_alive_media(message: Message):
         if not found:
             return await message.edit("`No alive media is set.`", del_in=5)
         await SAVED_SETTINGS.delete_one({"_id": "ALIVE_MEDIA"})
+        asyncio.get_event_loop().create_task(userge.restart())
         return await message.edit("`Alive media reset to default.`", del_in=5)
     reply_ = message.reply_to_message
     if not reply_:

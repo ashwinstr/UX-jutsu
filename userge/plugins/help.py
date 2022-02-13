@@ -7,7 +7,9 @@ import ujson
 from html_telegraph_poster import TelegraphPoster
 from pyrogram import filters
 from pyrogram.errors import BadRequest, MessageIdInvalid, MessageNotModified
-from pyrogram.types import (  # InlineQueryResultCachedDocument,; InlineQueryResultCachedPhoto,
+from pyrogram.types import (
+    InlineQueryResultCachedDocument,
+    InlineQueryResultCachedPhoto,
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
