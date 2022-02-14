@@ -18,13 +18,13 @@ async def alive_inline_q(_, inline_query: InlineQuery):
     str_y = i_q.split(" ", 1)
     iq_user_id = inline_query.from_user.id
     if (
-            (iq_user_id in Config.OWNER_ID)
-            or (
-                iq_user_id in Config.SUDO_USERS
-                or iq_user_id in Config.TRUSTED_SUDO_USERS
-            )
-            and Config.SUDO_ENABLED
-        ):
+        (iq_user_id in Config.OWNER_ID)
+        or (
+            iq_user_id in Config.SUDO_USERS
+            or iq_user_id in Config.TRUSTED_SUDO_USERS
+        )
+        and Config.SUDO_ENABLED
+    ):
         if str_y[0] == "voting" and len(str_y) == 2:
             id_ = userge.rnd_id()
             up = 0
