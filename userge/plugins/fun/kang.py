@@ -51,6 +51,7 @@ async def kang_(message: Message):
     media_ = None
     emoji_ = None
     is_anim = False
+    is_video = False
     resize = False
     if replied and replied.media:
         if replied.photo:
