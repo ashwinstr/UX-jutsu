@@ -51,6 +51,7 @@ async def kang_(message: Message):
     media_ = None
     emoji_ = None
     is_anim = False
+    is_video = False
     resize = False
     if replied and replied.media:
         if replied.photo:
@@ -64,13 +65,17 @@ async def kang_(message: Message):
         ):
             resize = True
             is_video = True
+        elif replied.animation:
+            resize = True
+            is_video = True
         elif replied.sticker:
             if not replied.sticker.file_name:
                 await kang_msg.edit("`Sticker has no Name!`")
                 return
             emoji_ = replied.sticker.emoji
             is_anim = replied.sticker.is_animated
-            if not replied.sticker.file_name.endswith(".tgs"):
+            is_video = replied.sticker.is_video
+            if not (replied.sticker.file_name.endswith(".tgs") or replied.sticker.file_name.endswith('.webm')):
                 resize = True
         else:
             await kang_msg.edit("`Unsupported File!`")
@@ -270,12 +275,14 @@ async def sticker_pack_info_(message: Message):
     await message.edit(out_str)
 
 
-async def resize_photo(media: str, video: bool) -> io.BytesIO:
+async def resize_photo(media: str, video: bool) -> str:
     """Resize the given photo to 512x512"""
     if video:
         resized_video = f"{media}.webm"
-        cmd = f"ffmpeg -i {media} -ss 00:00:00 -to 00:00:03 -map 0:v" + \
+        cmd = (
+            f"ffmpeg -i {media} -ss 00:00:00 -to 00:00:03 -map 0:v" + \
             f" -c:v libvpx-vp9 -vf scale=512:512,fps=fps=30 {resized_video}"
+        )
         await runcmd(cmd)
         os.remove(media)
         return resized_video
