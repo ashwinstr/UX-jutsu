@@ -271,7 +271,7 @@ async def sticker_pack_info_(message: Message):
     await message.edit(out_str)
 
 
-async def resize_photo(media: str, video: bool) -> io.BytesIO:
+async def resize_photo(media: str, video: bool) -> str:
     """Resize the given photo to 512x512"""
     if video:
         resized_video = f"{media}.webm"
