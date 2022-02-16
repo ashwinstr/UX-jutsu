@@ -971,7 +971,7 @@ if userge.has_bot:
                                     )
                                 )
 
-            """ if str_y[0] == "voting" and len(str_y) == 2:
+            if str_y[0] == "voting" and len(str_y) == 2:
                 id_ = userge.rnd_id()
                 up = 0
                 down = 0
@@ -1031,7 +1031,7 @@ if userge.has_bot:
                             description="Vote your opinion.",
                             reply_markup=vote_buttons(up, down, anon, id_),
                         )
-                    ) """
+                    )
 
             if str_y[0] == "attent" and len(str_y) == 2:
                 notice = str_y[-1]
