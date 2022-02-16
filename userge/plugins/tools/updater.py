@@ -41,7 +41,7 @@ async def check_update(message: Message):
     if Config.HEROKU_ENV:
         await message.edit(
             "**Heroku App detected !** Updates have been disabled for Safety.\n"
-            f"To check changelog do `{Config.CMD_TRIGGER}fetchup`, and to pull updates do `{Config.CMD_TRIGGER}restart -h`."
+            f"To check changelog do `{Config.CMD_TRIGGER}fetch_up`, and to pull updates do `{Config.CMD_TRIGGER}restart -h`."
         )
         return
     flags = list(message.flags)
