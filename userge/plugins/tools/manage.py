@@ -19,7 +19,7 @@ LOAD_MSG = get_collection("LOAD_MSG")
 
 
 async def _init() -> None:
-    found = await LOAD_MSG.find({"_id": "LOAD"})
+    found = await LOAD_MSG.find_one({"_id": "LOAD"})
     if found:
         try:
             await userge.edit_message_text(
