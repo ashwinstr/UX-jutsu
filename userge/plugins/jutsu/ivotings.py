@@ -1,18 +1,8 @@
-
-import re
 import traceback
 from asyncio import gather
 
 from pyrogram import filters
-from pyrogram.types import (
-    CallbackQuery,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    InlineQuery,
-    InlineQueryResultPhoto,
-    InlineQueryResultArticle,
-    InputTextMessageContent,
-)
+from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
 from userge import Config, Message, get_collection, userge
 

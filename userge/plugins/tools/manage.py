@@ -8,10 +8,10 @@
 #
 # All rights reserved.
 
-import os
 import asyncio
+import os
 
-from userge import Config, Message, userge, get_collection
+from userge import Config, Message, get_collection, userge
 from userge.plugins import ROOT
 from userge.utils import get_import_path
 
@@ -23,12 +23,12 @@ async def _init() -> None:
     if found:
         try:
             await userge.edit_message_text(
-                chat_id=found['chat'],
-                message_id=found['last_msg_id'],
-                text=f"`Plugin {found['plugin']} loaded successfully...`"
+                chat_id=found["chat"],
+                message_id=found["last_msg_id"],
+                text=f"`Plugin {found['plugin']} loaded successfully...`",
             )
             await LOAD_MSG.drop()
-        except:
+        except BaseException:
             pass
 
 
@@ -414,7 +414,7 @@ async def load(message: Message) -> None:
                                 "_id": "LOAD",
                                 "chat": end_msg.chat.id,
                                 "last_msg_id": end_msg.message_id,
-                                "plugin": plugin
+                                "plugin": plugin,
                             }
                         )
                         asyncio.get_event_loop().create_task(userge.restart())

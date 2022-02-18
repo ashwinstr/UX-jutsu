@@ -60,9 +60,7 @@ async def kang_(message: Message):
             resize = True
         elif replied.document and "tgsticker" in replied.document.mime_type:
             is_anim = True
-        elif (
-            replied.document and "video" in replied.document.mime_type
-        ):
+        elif replied.document and "video" in replied.document.mime_type:
             resize = True
             is_video = True
         elif replied.animation:
@@ -75,13 +73,18 @@ async def kang_(message: Message):
             emoji_ = replied.sticker.emoji
             is_anim = replied.sticker.is_animated
             is_video = replied.sticker.is_video
-            if not (replied.sticker.file_name.endswith(".tgs") or replied.sticker.file_name.endswith('.webm')):
+            if not (
+                replied.sticker.file_name.endswith(".tgs")
+                or replied.sticker.file_name.endswith(".webm")
+            ):
                 resize = True
         else:
             await kang_msg.edit("`Unsupported File!`")
             return
         await kang_msg.edit(f"`{random.choice(KANGING_STR)}`")
-        media_ = await userge.download_media(message=replied, file_name=Config.DOWN_PATH)
+        media_ = await userge.download_media(
+            message=replied, file_name=Config.DOWN_PATH
+        )
     else:
         await kang_msg.edit("`I can't kang that...`")
         return
@@ -118,7 +121,7 @@ async def kang_(message: Message):
         if is_video:
             packname += "_video"
             packnick += " (Video)"
-            cmd = '/newvideo'
+            cmd = "/newvideo"
         exist = False
         try:
             exist = await message.client.send(
@@ -280,8 +283,8 @@ async def resize_photo(media: str, video: bool) -> str:
     if video:
         resized_video = f"{media}.webm"
         cmd = (
-            f"ffmpeg -i {media} -ss 00:00:00 -to 00:00:03 -map 0:v" + \
-            f" -c:v libvpx-vp9 -vf scale=512:512,fps=fps=30 {resized_video}"
+            f"ffmpeg -i {media} -ss 00:00:00 -to 00:00:03 -map 0:v"
+            + f" -c:v libvpx-vp9 -vf scale=512:512,fps=fps=30 {resized_video}"
         )
         await runcmd(cmd)
         os.remove(media)
