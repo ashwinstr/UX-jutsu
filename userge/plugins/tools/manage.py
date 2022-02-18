@@ -9,6 +9,7 @@
 # All rights reserved.
 
 import os
+import asyncio
 
 from userge import Config, Message, userge
 from userge.plugins import ROOT
@@ -383,7 +384,8 @@ async def load(message: Message) -> None:
                     os.remove(t_path)
                     await message.err(i_e)
                 else:
-                    await message.edit(f"`Loaded {plugin}`", del_in=3, log=__name__)
+                    await message.edit(f"`Loaded {plugin}, now restarting...`", del_in=3, log=__name__)
+                    asyncio.get_event_loop().create_task(userge.restart())
             else:
                 await message.edit("`Plugin Not Found`")
         else:
