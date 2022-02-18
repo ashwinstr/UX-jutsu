@@ -7,7 +7,9 @@ import ujson
 from html_telegraph_poster import TelegraphPoster
 from pyrogram import filters
 from pyrogram.errors import BadRequest, MessageIdInvalid, MessageNotModified
-from pyrogram.types import (  # InlineQueryResultCachedDocument,; InlineQueryResultCachedPhoto,
+from pyrogram.types import (
+    InlineQueryResultCachedDocument,
+    InlineQueryResultCachedPhoto,
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -39,6 +41,8 @@ from .jutsu.ivotings import vote_buttons
 from .misc.redditdl import reddit_thumb_link
 from .utils.notes import get_inote
 
+# from .inline_ivoting import alive_inline_q
+
 CHANNEL = userge.getCLogger(__name__)
 
 _CATEGORY = {
@@ -57,6 +61,7 @@ _CATEGORY = {
 }
 # Database
 SAVED_SETTINGS = get_collection("CONFIGS")
+IBUTTON = get_collection("INLINE_BUTTON")
 VOTE = get_collection("VOTES")
 SEEN_BY = get_collection("SEEN_BY")
 REPO_X = InlineQueryResultArticle(

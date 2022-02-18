@@ -20,7 +20,7 @@ from pyrogram.raw.functions.messages import GetStickerSet
 from pyrogram.raw.types import InputStickerSetShortName
 
 from userge import Config, Message, userge
-from userge.utils import get_response
+from userge.utils import get_response, runcmd
 
 
 @userge.on_cmd(
@@ -48,9 +48,10 @@ async def kang_(message: Message):
     replied = message.reply_to_message
     await message.edit("`Kanging in log channel...`", del_in=1)
     kang_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "`Processing...`")
-    photo = None
+    media_ = None
     emoji_ = None
     is_anim = False
+    is_video = False
     resize = False
     if replied and replied.media:
         if replied.photo:
@@ -59,23 +60,32 @@ async def kang_(message: Message):
             resize = True
         elif replied.document and "tgsticker" in replied.document.mime_type:
             is_anim = True
+        elif (
+            replied.document and "video" in replied.document.mime_type
+        ):
+            resize = True
+            is_video = True
+        elif replied.animation:
+            resize = True
+            is_video = True
         elif replied.sticker:
             if not replied.sticker.file_name:
                 await kang_msg.edit("`Sticker has no Name!`")
                 return
             emoji_ = replied.sticker.emoji
             is_anim = replied.sticker.is_animated
-            if not replied.sticker.file_name.endswith(".tgs"):
+            is_video = replied.sticker.is_video
+            if not (replied.sticker.file_name.endswith(".tgs") or replied.sticker.file_name.endswith('.webm')):
                 resize = True
         else:
             await kang_msg.edit("`Unsupported File!`")
             return
         await kang_msg.edit(f"`{random.choice(KANGING_STR)}`")
-        photo = await userge.download_media(message=replied, file_name=Config.DOWN_PATH)
+        media_ = await userge.download_media(message=replied, file_name=Config.DOWN_PATH)
     else:
         await kang_msg.edit("`I can't kang that...`")
         return
-    if photo:
+    if media_:
         args = message.filtered_input_str.split()
         pack = 1
         if len(args) == 2:
@@ -100,11 +110,15 @@ async def kang_(message: Message):
         packnick = f"{custom_packnick} vol.{pack}"
         cmd = "/newpack"
         if resize:
-            photo = resize_photo(photo)
+            media_ = await resize_photo(media_, is_video)
         if is_anim:
             packname += "_anim"
             packnick += " (Animated)"
             cmd = "/newanimated"
+        if is_video:
+            packname += "_video"
+            packnick += " (Video)"
+            cmd = '/newvideo'
         exist = False
         try:
             exist = await message.client.send(
@@ -132,6 +146,9 @@ async def kang_(message: Message):
                     if is_anim:
                         packname += "_anim"
                         packnick += " (Animated)"
+                    if is_video:
+                        packname += "_video"
+                        packnick += " (Video)"
                     await kang_msg.edit(
                         "`Switching to Pack "
                         + str(pack)
@@ -144,7 +161,7 @@ async def kang_(message: Message):
                         await conv.get_response(mark_read=True)
                         await conv.send_message(packnick)
                         await conv.get_response(mark_read=True)
-                        await conv.send_document(photo)
+                        await conv.send_document(media_)
                         await conv.get_response(mark_read=True)
                         await conv.send_message(emoji_)
                         await conv.get_response(mark_read=True)
@@ -166,7 +183,7 @@ async def kang_(message: Message):
                             f"**Sticker** {out} __in a Different Pack__**!**"
                         )
                         return
-                await conv.send_document(photo)
+                await conv.send_document(media_)
                 rsp = await conv.get_response(mark_read=True)
                 if "Sorry, the file type is invalid." in rsp.text:
                     await kang_msg.edit(
@@ -189,7 +206,7 @@ async def kang_(message: Message):
                 await conv.get_response(mark_read=True)
                 await conv.send_message(packnick)
                 await conv.get_response(mark_read=True)
-                await conv.send_document(photo)
+                await conv.send_document(media_)
                 rsp = await conv.get_response(mark_read=True)
                 if "Sorry, the file type is invalid." in rsp.text:
                     await kang_msg.edit(
@@ -214,8 +231,8 @@ async def kang_(message: Message):
             else f"[kanged](t.me/addstickers/{packname})"
         )
         await kang_msg.edit(f"**Sticker** {out}**!**")
-        if os.path.exists(str(photo)):
-            os.remove(photo)
+        if os.path.exists(str(media_)):
+            os.remove(media_)
 
 
 @userge.on_cmd(
@@ -258,9 +275,18 @@ async def sticker_pack_info_(message: Message):
     await message.edit(out_str)
 
 
-def resize_photo(photo: str) -> io.BytesIO:
+async def resize_photo(media: str, video: bool) -> str:
     """Resize the given photo to 512x512"""
-    image = Image.open(photo)
+    if video:
+        resized_video = f"{media}.webm"
+        cmd = (
+            f"ffmpeg -i {media} -ss 00:00:00 -to 00:00:03 -map 0:v" + \
+            f" -c:v libvpx-vp9 -vf scale=512:512,fps=fps=30 {resized_video}"
+        )
+        await runcmd(cmd)
+        os.remove(media)
+        return resized_video
+    image = Image.open(media)
     maxsize = 512
     scale = maxsize / max(image.width, image.height)
     new_size = (int(image.width * scale), int(image.height * scale))
@@ -268,7 +294,7 @@ def resize_photo(photo: str) -> io.BytesIO:
     resized_photo = io.BytesIO()
     resized_photo.name = "sticker.png"
     image.save(resized_photo, "PNG")
-    os.remove(photo)
+    os.remove(media)
     return resized_photo
 
 

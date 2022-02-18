@@ -5,22 +5,27 @@
 import os
 from asyncio import gather
 from re import compile as comp_regex
+from webbrowser import get
 
 import ujson
 from pyrogram.errors import BadRequest, UserIsBot
 from pyrogram.types import ReplyKeyboardRemove
 
-from userge import Config, Message, userge
+from userge import Config, Message, userge, get_collection
+from userge.helpers import msg_type
 from userge.utils import get_file_id
 from userge.utils import parse_buttons as pb
 
-from .bot_pm import get_bot_info
+from userge.plugins.bot.bot_pm import get_bot_info
+from userge.plugins.utils.telegraph import upload_media_
 
 BTN_REGEX = comp_regex(
     r"\[([^\[]+?)](\[buttonurl:(?:/{0,2})(.+?)(:same)?]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
 )
 PATH = "./userge/xcache/inline_db.json"
 CHANNEL = userge.getCLogger(__name__)
+
+IBUTTON = get_collection("INLINE_BUTTON")
 
 
 class Inline_DB:
@@ -158,6 +163,70 @@ async def inline_buttons(message: Message):
             result_id=x.results[0].id,
         ),
         message.delete(),
+    )
+
+
+@userge.on_cmd(
+    "inbutt",
+    about={
+        "header": "Create buttons Using Inline Bot",
+        "description": "First Create a Inline via @Botfather and "
+        "Add bot token To Config Vars",
+        "usage": "{tr}inbutt [reply to button msg]",
+        "buttons": "<code>Description [name][buttonurl:link] or [name](buttonurl:link)</code> - <b>add a url button</b>\n"
+        "<code>[name][buttonurl:link:same]</code> - "
+        "<b>add a url button to same row</b>",
+    },
+    check_downpath=True,
+)
+async def in_butt_ons(message: Message):
+    await message.edit("<code>Creating an Inline Button...</code>")
+    reply = message.reply_to_message
+    msg_content = None
+    media_valid = False
+    media_id = 0
+    if reply:
+        media_valid = bool(get_file_id(reply))
+
+    if message.input_str:
+        msg_content = message.input_str
+        if media_valid:
+            media_id = (await reply.forward(Config.LOG_CHANNEL_ID)).message_id
+
+    elif reply:
+        if media_valid:
+            media_id = (await reply.forward(Config.LOG_CHANNEL_ID)).message_id
+            msg_content = reply.caption.html if reply.caption else None
+        elif reply.text:
+            msg_content = reply.text.html
+
+    if not msg_content:
+        return await message.err("Content not found", del_in=5)
+
+    rnd_id = userge.rnd_id()
+    msg_content = check_brackets(msg_content)
+    InlineDB.save_msg(rnd_id, msg_content, media_valid, media_id)
+    if reply.media:
+        url_ = await upload_media_(message)
+        type_ = msg_type(reply)
+    await IBUTTON.insert_one(
+        {
+            "_id": rnd_id,
+            "url": f"https://telegra.ph{url_}",
+            "type": str(type_)
+        }
+    )
+    x = await userge.get_inline_bot_results(
+        (await get_bot_info())["bot"].uname, f"inbtn_{rnd_id}"
+    )
+    await gather(
+        userge.send_inline_bot_result(
+            chat_id=message.chat.id,
+            query_id=x.query_id,
+            result_id=x.results[0].id,
+        ),
+        message.delete(),
+        await IBUTTON.drop()
     )
 
 

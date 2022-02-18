@@ -9,10 +9,27 @@
 # All rights reserved.
 
 import os
+import asyncio
 
-from userge import Config, Message, userge
+from userge import Config, Message, userge, get_collection
 from userge.plugins import ROOT
 from userge.utils import get_import_path
+
+LOAD_MSG = get_collection("LOAD_MSG")
+
+
+async def _init() -> None:
+    found = await LOAD_MSG.find_one({"_id": "LOAD"})
+    if found:
+        try:
+            await userge.edit_message_text(
+                chat_id=found['chat'],
+                message_id=found['last_msg_id'],
+                text=f"`Plugin {found['plugin']} loaded successfully...`"
+            )
+            await LOAD_MSG.drop()
+        except:
+            pass
 
 
 @userge.on_cmd(
@@ -365,6 +382,7 @@ async def load(message: Message) -> None:
         await message.edit(out_str, del_in=0, log=__name__)
     else:
         await message.edit("`Loading...`")
+        restart_ = False
         replied = message.reply_to_message
         if replied and replied.document:
             file_ = replied.document
@@ -374,6 +392,7 @@ async def load(message: Message) -> None:
                 t_path = os.path.join(Config.TMP_PATH, file_.file_name)
                 if os.path.isfile(t_path):
                     os.remove(t_path)
+                    restart_ = True
                 await replied.download(file_name=t_path)
                 plugin = get_import_path(ROOT, t_path)
                 try:
@@ -383,7 +402,22 @@ async def load(message: Message) -> None:
                     os.remove(t_path)
                     await message.err(i_e)
                 else:
-                    await message.edit(f"`Loaded {plugin}`", del_in=3, log=__name__)
+                    out_ = f"`Loaded {plugin} `"
+                    del_in_ = 3
+                    if restart_:
+                        out_ += "`and now restarting...`"
+                        del_in_ = -1
+                    end_msg = await message.edit(out_, del_in=del_in_, log=__name__)
+                    if restart_:
+                        await LOAD_MSG.insert_one(
+                            {
+                                "_id": "LOAD",
+                                "chat": end_msg.chat.id,
+                                "last_msg_id": end_msg.message_id,
+                                "plugin": plugin
+                            }
+                        )
+                        asyncio.get_event_loop().create_task(userge.restart())
             else:
                 await message.edit("`Plugin Not Found`")
         else:
