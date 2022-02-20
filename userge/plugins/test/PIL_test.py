@@ -1,12 +1,11 @@
-
-
-import textwrap
 import os
-import numpy as np
+import textwrap
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
-from userge import userge, Message, Config
+from userge import Config, Message, userge
+
 
 @userge.on_cmd(
     "imging",
@@ -40,7 +39,11 @@ async def image_ing(message: Message):
 async def pfp_stick_(message: Message):
     await message.edit("`Sending...`")
     reply_ = message.reply_to_message
-    pfp_id = reply_.from_user.photo.big_file_id if reply_ else message.from_user.photo.big_file_id
+    pfp_id = (
+        reply_.from_user.photo.big_file_id
+        if reply_
+        else message.from_user.photo.big_file_id
+    )
     down_pfp = await userge.download_media(pfp_id)
     o_pfp = Image.open(down_pfp).convert("RGB")
     npImage = np.array(o_pfp)
@@ -56,7 +59,7 @@ async def pfp_stick_(message: Message):
 
     save_ = f"{Config.DOWN_PATH}/TESTING.webp"
     Image.fromarray(npImage).save(save_)
-    
+
     await message.reply_document(save_)
     os.remove(save_)
 
@@ -77,10 +80,14 @@ async def rect_angle(message: Message):
     f_h = 15
     b_font_ = "resources/lucidagrandebold.ttf"
     b_f_h = 25
-    w_, h_ = (40 + max((len(name_) * 5), (len(text_) * 5)) + 40), (15 + b_f_h + 10 + f_h + 15)
+    w_, h_ = (40 + max((len(name_) * 5), (len(text_) * 5)) + 40), (
+        15 + b_f_h + 10 + f_h + 15
+    )
     img_1 = Image.new("RGB", (w_, h_), "white")
     draw_1 = ImageDraw.Draw(img_1)
-    draw_1.rounded_rectangle([30, 0, w_, h_], fill="white", outline="white", width=1, radius=20)
+    draw_1.rounded_rectangle(
+        [30, 0, w_, h_], fill="white", outline="white", width=1, radius=20
+    )
     n_Font = ImageFont.truetype(b_font_, 12)
     draw_1.text((40, 15), text=name_, font=n_Font, fill=(115, 147, 179))
     t_Font = ImageFont.truetype(font_, 10)
@@ -89,7 +96,9 @@ async def rect_angle(message: Message):
 
     alpha_1 = Image.new("L", (w_, h_), 0)
     draw_r = ImageDraw.Draw(alpha_1)
-    draw_r.rounded_rectangle([30, 0, w_, h_], fill="white", outline="white", width=1, radius=20)
+    draw_r.rounded_rectangle(
+        [30, 0, w_, h_], fill="white", outline="white", width=1, radius=20
+    )
 
     npAlpha_1 = np.array(alpha_1)
 
@@ -125,7 +134,9 @@ async def cu_tee(message: Message):
         else:
             no_input = True
         if no_input:
-            return await message.edit("`Reply to a user with custom input...`", del_in=3)
+            return await message.edit(
+                "`Reply to a user with custom input...`", del_in=3
+            )
     else:
         text_ = reply_.text if reply_ else message.filtered_input_str or ""
     font_ = "resources/Roboto-Regular.ttf"
@@ -152,8 +163,12 @@ async def cu_tee(message: Message):
     draw_1 = ImageDraw.Draw(img_1)
     draw_r = ImageDraw.Draw(alpha_1)
 
-    draw_1.rounded_rectangle([100, 0, min(w_, 512), h_], fill="white", outline="white", width=1, radius=20)
-    draw_r.rounded_rectangle([100, 0, min(w_, 512), h_], fill="white", outline="white", width=1, radius=20)
+    draw_1.rounded_rectangle(
+        [100, 0, min(w_, 512), h_], fill="white", outline="white", width=1, radius=20
+    )
+    draw_r.rounded_rectangle(
+        [100, 0, min(w_, 512), h_], fill="white", outline="white", width=1, radius=20
+    )
 
     draw_1.text((115, 15), text=name_, font=n_Font, fill=(0, 0, 128))
     draw_1.text((115, 45), text=text_, font=t_Font, fill=(0, 0, 0))
@@ -164,7 +179,11 @@ async def cu_tee(message: Message):
     npImage_1 = np.dstack((npImage_1, npAlpha_1))
 
     # round pfp
-    pfp_id = reply_.from_user.photo.big_file_id if reply_ else message.from_user.photo.big_file_id
+    pfp_id = (
+        reply_.from_user.photo.big_file_id
+        if reply_
+        else message.from_user.photo.big_file_id
+    )
     down_pfp = await userge.download_media(pfp_id)
     o_pfp = Image.open(down_pfp).convert("RGB")
     o_pfp = o_pfp.resize((pfp_w, pfp_h))
@@ -179,7 +198,7 @@ async def cu_tee(message: Message):
 
     path_r = f"{Config.DOWN_PATH}/quoted_r.webp"
     path_p = f"{Config.DOWN_PATH}/quoted_p.webp"
-    
+
     Image.fromarray(npImage_1).save(path_r)
     Image.fromarray(npImage_2).save(path_p)
 

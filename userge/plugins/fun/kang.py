@@ -85,7 +85,10 @@ async def kang_(message: Message):
             emoji_ = replied.sticker.emoji
             is_anim = replied.sticker.is_animated
             is_video = replied.sticker.is_video
-            if not (replied.sticker.file_name.endswith(".tgs") or replied.sticker.file_name.endswith('.webm')):
+            if not (
+                replied.sticker.file_name.endswith(".tgs")
+                or replied.sticker.file_name.endswith(".webm")
+            ):
                 resize = True
             name_ = replied.sticker.file_name
         else:
@@ -129,7 +132,7 @@ async def kang_(message: Message):
         if is_video:
             packname += "_video"
             packnick += " (Video)"
-            cmd = '/newvideo'
+            cmd = "/newvideo"
         exist = False
         try:
             exist = await message.client.send(

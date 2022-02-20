@@ -8,14 +8,14 @@ from html_telegraph_poster import TelegraphPoster
 from pyrogram import filters
 from pyrogram.errors import BadRequest, MessageIdInvalid, MessageNotModified
 from pyrogram.types import (
-    InlineQueryResultCachedDocument,
-    InlineQueryResultCachedPhoto,
     CallbackQuery,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     InlineQuery,
     InlineQueryResultAnimation,
     InlineQueryResultArticle,
+    InlineQueryResultCachedDocument,
+    InlineQueryResultCachedPhoto,
     InlineQueryResultPhoto,
     InputTextMessageContent,
 )

@@ -5,19 +5,17 @@
 import os
 from asyncio import gather
 from re import compile as comp_regex
-from webbrowser import get
 
 import ujson
 from pyrogram.errors import BadRequest, UserIsBot
 from pyrogram.types import ReplyKeyboardRemove
 
-from userge import Config, Message, userge, get_collection
+from userge import Config, Message, get_collection, userge
 from userge.helpers import msg_type
-from userge.utils import get_file_id
-from userge.utils import parse_buttons as pb
-
 from userge.plugins.bot.bot_pm import get_bot_info
 from userge.plugins.utils.telegraph import upload_media_
+from userge.utils import get_file_id
+from userge.utils import parse_buttons as pb
 
 BTN_REGEX = comp_regex(
     r"\[([^\[]+?)](\[buttonurl:(?:/{0,2})(.+?)(:same)?]|\(buttonurl:(?:/{0,2})(.+?)(:same)?\))"
@@ -210,11 +208,7 @@ async def in_butt_ons(message: Message):
         url_ = await upload_media_(message)
         type_ = msg_type(reply)
     await IBUTTON.insert_one(
-        {
-            "_id": rnd_id,
-            "url": f"https://telegra.ph{url_}",
-            "type": str(type_)
-        }
+        {"_id": rnd_id, "url": f"https://telegra.ph{url_}", "type": str(type_)}
     )
     x = await userge.get_inline_bot_results(
         (await get_bot_info())["bot"].uname, f"inbtn_{rnd_id}"
@@ -226,7 +220,7 @@ async def in_butt_ons(message: Message):
             result_id=x.results[0].id,
         ),
         message.delete(),
-        await IBUTTON.drop()
+        await IBUTTON.drop(),
     )
 
 
