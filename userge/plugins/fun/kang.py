@@ -14,6 +14,8 @@ import random
 
 from bs4 import BeautifulSoup as bs
 from PIL import Image
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
 from pyrogram import emoji
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
 from pyrogram.raw.functions.messages import GetStickerSet
@@ -56,18 +58,26 @@ async def kang_(message: Message):
     if replied and replied.media:
         if replied.photo:
             resize = True
+            name_ = "photo.png"
         elif replied.document and "image" in replied.document.mime_type:
             resize = True
+            name_ = replied.document.file_name
         elif replied.document and "tgsticker" in replied.document.mime_type:
             is_anim = True
+            name_ = replied.document.file_name
         elif (
             replied.document and "video" in replied.document.mime_type
         ):
             resize = True
             is_video = True
+            name_ = replied.document.file_name
         elif replied.animation:
             resize = True
             is_video = True
+            try:
+                name_ = replied.document.file_name
+            except:
+                name_ = "animation.webm"
         elif replied.sticker:
             if not replied.sticker.file_name:
                 await kang_msg.edit("`Sticker has no Name!`")
@@ -77,11 +87,12 @@ async def kang_(message: Message):
             is_video = replied.sticker.is_video
             if not (replied.sticker.file_name.endswith(".tgs") or replied.sticker.file_name.endswith('.webm')):
                 resize = True
+            name_ = replied.sticker.file_name
         else:
             await kang_msg.edit("`Unsupported File!`")
             return
         await kang_msg.edit(f"`{random.choice(KANGING_STR)}`")
-        media_ = await userge.download_media(message=replied, file_name=Config.DOWN_PATH)
+        media_ = await userge.download_media(message=replied, file_name=f"{Config.DOWN_PATH}/{name_}")
     else:
         await kang_msg.edit("`I can't kang that...`")
         return
@@ -183,7 +194,10 @@ async def kang_(message: Message):
                             f"**Sticker** {out} __in a Different Pack__**!**"
                         )
                         return
-                await conv.send_document(media_)
+                try:
+                    await conv.send_document(media_)
+                except:
+                    await userge.send_message(Config.LOG_CHANNEL_ID, media_)
                 rsp = await conv.get_response(mark_read=True)
                 if "Sorry, the file type is invalid." in rsp.text:
                     await kang_msg.edit(
@@ -278,18 +292,29 @@ async def sticker_pack_info_(message: Message):
 async def resize_photo(media: str, video: bool) -> str:
     """Resize the given photo to 512x512"""
     if video:
+        metadata = extractMetadata(createParser(media))
+        width = round(metadata.get('width', 512))
+        height = round(metadata.get('height', 512))
+
+        if height == width:
+            height, width = 512, 512
+        elif height > width:
+            height, width = 512, -1
+        elif width > height:
+            height, width = -1, 512
+
         resized_video = f"{media}.webm"
-        cmd = (
-            f"ffmpeg -i {media} -ss 00:00:00 -to 00:00:03 -map 0:v" + \
-            f" -c:v libvpx-vp9 -vf scale=512:512,fps=fps=30 {resized_video}"
-        )
+        cmd = f"ffmpeg -i {media} -ss 00:00:00 -to 00:00:03 -map 0:v -bufsize 256k" + \
+            f" -c:v libvpx-vp9 -vf scale={width}:{height},fps=fps=30 {resized_video}"
         await runcmd(cmd)
         os.remove(media)
         return resized_video
+
     image = Image.open(media)
     maxsize = 512
     scale = maxsize / max(image.width, image.height)
     new_size = (int(image.width * scale), int(image.height * scale))
+
     image = image.resize(new_size, Image.LANCZOS)
     resized_photo = io.BytesIO()
     resized_photo.name = "sticker.png"
