@@ -32,7 +32,7 @@ async def _init() -> None:
     if found:
         Config.LOG_KANG = found['switch']
     else:
-        Config.LOG_KANG = False
+        Config.LOG_KANG = True
 
 
 @userge.on_cmd(
@@ -334,7 +334,7 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
         metadata = extractMetadata(createParser(media))
         width = round(metadata.get('width', 512))
         height = round(metadata.get('height', 512))
-        s = int((metadata.get('duration')).split(":")[-1])
+        s = int(str(metadata.get('duration')).split(":")[-1])
 
         if height == width:
             height, width = 512, 512
