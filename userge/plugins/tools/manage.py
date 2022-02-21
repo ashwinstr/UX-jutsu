@@ -375,7 +375,7 @@ async def load(message: Message) -> None:
                     os.makedirs(Config.TMP_PATH)
                 t_path = os.path.join(Config.TMP_PATH, file_.file_name)
                 if os.path.isfile(t_path):
-                    os.remove(f"rm {t_path}")
+                    os.remove(t_path)
                     plugin_name = (file_.file_name).replace(".py", "")
                     NewMessage = message
                     NewMessage._filtered_input_str = plugin_name
