@@ -109,6 +109,12 @@ class Message(RawMessage):
         return self._flags
 
     @property
+    def replied(self):
+        """ Return reply_to_message"""
+        _replied = self.reply_to_message
+        return _replied
+
+    @property
     def process_is_canceled(self) -> bool:
         """ Returns True if process canceled """
         if self.message_id in _CANCEL_LIST:

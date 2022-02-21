@@ -13,12 +13,16 @@ from userge import Config, Message, userge
     "repo",
     about={
         "header": "get repo link and details",
-        "flags": {"-d": " Disables Link preview "},
+        "flags": {
+            "-d": " Disables Link preview ",
+            "-g": "MyGpack",
+        },
     },
 )
 async def see_repo(message: Message):
     """see repo"""
-    output = f"• **repo** : [USERGE-X]({Config.UPSTREAM_REPO})"
+    repo_ = "[GPACK](https://github.com/ashwinstr/MyGpack)" if "-g" in message.flags else f"[UX-JUTSU]({Config.UPSTREAM_REPO})"
+    output = f"• **repo** : {repo_}"
     if "-d" in message.flags:
         await message.edit(output, disable_web_page_preview=True)
     else:
