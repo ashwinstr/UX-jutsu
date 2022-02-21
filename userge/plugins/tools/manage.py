@@ -375,7 +375,6 @@ async def load(message: Message) -> None:
                     os.makedirs(Config.TMP_PATH)
                 t_path = os.path.join(Config.TMP_PATH, file_.file_name)
                 if os.path.isfile(t_path):
-                    os.remove(t_path)
                     plugin_name = (file_.file_name).replace(".py", "")
                     NewMessage = message
                     NewMessage._filtered_input_str = plugin_name
@@ -387,8 +386,9 @@ async def load(message: Message) -> None:
                 try:
                     if reload_:
                         await load(NewMessage)
-                    await userge.load_plugin(plugin, reload_plugin=True)
-                    await userge.finalize_load()
+                    else:
+                        await userge.load_plugin(plugin, reload_plugin=True)
+                        await userge.finalize_load()
                 except (ImportError, SyntaxError, NameError) as i_e:
                     os.remove(t_path)
                     await message.err(i_e)
