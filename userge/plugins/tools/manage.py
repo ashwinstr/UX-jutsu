@@ -379,7 +379,7 @@ async def load(message: Message) -> None:
                     plugin_name = (file_.file_name).replace(".py", "")
                     NewMessage = message
                     NewMessage.filtered_input_str = plugin_name
-                    NewMessage.flags = {"p"}
+                    NewMessage.flags = {"-p"}
                     await unload(NewMessage)
                     reload_ = True
                 await replied.download(file_name=t_path)
