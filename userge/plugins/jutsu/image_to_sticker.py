@@ -14,27 +14,19 @@ from userge import Config, Message, userge
     },
 )
 async def stik_(message: Message):
-    reply = message.reply_to_message
+    reply = message.replied
     if not reply:
-        await message.edit("Please reply to image to convert...", del_in=5)
-        return
-    reply_m_id = reply.message_id
-    await message.edit("Converting...")
-    if not os.path.isdir(Config.DOWN_PATH):
-        os.makedirs(Config.DOWN_PATH)
-    file_n = "stick.webp"
-    reply_img = await userge.get_messages(message.chat.id, reply_m_id)
-    down_to = Config.DOWN_PATH
-    down_file_n = os.path.join(down_to, file_n)
-    down_file_n = await userge.download_media(reply_img, down_file_n)
-    if os.path.exists(down_file_n):
-        stikk = await userge.send_document(
-            message.chat.id,
-            down_file_n,
-            force_document=False,
-            reply_to_message_id=reply_m_id,
-        )
-        os.remove(down_file_n)
+        return await message.edit("`Reply to image to convert...`", del_in=5)
+    await message.edit("`Converting...`")
+    if reply.photo:
+        name_ = "sticker.webp"
+        path_ = os.path.join(Config.DOWN_PATH, name_)
+        if os.path.isfile(path_):
+            os.remove(path_)
+        down_ = await reply.download(path_)
+        await reply.reply_sticker(down_)
+        os.remove(down_)
         await message.delete()
     else:
-        await message.edit("Couldn't find the file...", del_in=5)
+        return await message.edit("`Unsupported file.`", del_in=5)
+    
