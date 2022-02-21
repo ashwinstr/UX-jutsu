@@ -391,7 +391,7 @@ async def load(message: Message) -> None:
                     os.makedirs(Config.TMP_PATH)
                 t_path = os.path.join(Config.TMP_PATH, file_.file_name)
                 if os.path.isfile(t_path):
-                    await runcmd(f"rm {t_path}")
+                    os.system(f"rm {t_path}")
                     restart_ = False
                 await replied.download(file_name=t_path)
                 plugin = get_import_path(ROOT, t_path)
