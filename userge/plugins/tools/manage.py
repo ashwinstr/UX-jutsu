@@ -377,7 +377,7 @@ async def load(message: Message) -> None:
                 if os.path.isfile(t_path):
                     await runcmd(f"rm {t_path}")
                     plugin_name = (file_.file_name).replace(".py", "")
-                    NewMessage = Message
+                    NewMessage = message
                     NewMessage.filtered_input_str = plugin_name
                     NewMessage.flags = {"p"}
                     await unload(NewMessage)
