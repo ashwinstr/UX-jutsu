@@ -379,12 +379,12 @@ async def load(message: Message) -> None:
                     NewMessage = message
                     NewMessage._filtered_input_str = plugin_name
                     NewMessage._flags = {"p"}
-                    await unload(NewMessage)
                     reload_ = True
                 await replied.download(file_name=t_path)
                 plugin = get_import_path(ROOT, t_path)
                 try:
                     if reload_:
+                        await unload(NewMessage)
                         await load(NewMessage)
                     else:
                         await userge.load_plugin(plugin, reload_plugin=True)
