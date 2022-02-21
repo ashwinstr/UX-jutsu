@@ -385,6 +385,8 @@ async def load(message: Message) -> None:
                 await replied.download(file_name=t_path)
                 plugin = get_import_path(ROOT, t_path)
                 try:
+                    if reload_:
+                        await load(NewMessage)
                     await userge.load_plugin(plugin, reload_plugin=True)
                     await userge.finalize_load()
                 except (ImportError, SyntaxError, NameError) as i_e:
