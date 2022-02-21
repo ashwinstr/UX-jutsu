@@ -13,7 +13,7 @@ import asyncio
 
 from userge import Config, Message, userge, get_collection
 from userge.plugins import ROOT
-from userge.utils import get_import_path
+from userge.utils import get_import_path, runcmd
 
 LOAD_MSG = get_collection("LOAD_MSG")
 
@@ -391,8 +391,8 @@ async def load(message: Message) -> None:
                     os.makedirs(Config.TMP_PATH)
                 t_path = os.path.join(Config.TMP_PATH, file_.file_name)
                 if os.path.isfile(t_path):
-                    os.remove(t_path)
-                    restart_ = True
+                    await runcmd(f"rm {t_path}")
+                    restart_ = False
                 await replied.download(file_name=t_path)
                 plugin = get_import_path(ROOT, t_path)
                 try:
