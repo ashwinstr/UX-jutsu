@@ -16,20 +16,62 @@ from bs4 import BeautifulSoup as bs
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from PIL import Image
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
 from pyrogram import emoji
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
 from pyrogram.raw.functions.messages import GetStickerSet
 from pyrogram.raw.types import InputStickerSetShortName
 
-from userge import Config, Message, userge
+from userge import Config, Message, userge, get_collection
 from userge.utils import get_response, runcmd
+
+SAVED_SETTINGS = get_collection("CONFIGS")
+
+
+async def _init() -> None:
+    found = await SAVED_SETTINGS.find_one({"_id": "LOG_KANG"})
+    if found:
+        Config.LOG_KANG = found['switch']
+    else:
+        Config.LOG_KANG = True
+
+
+@userge.on_cmd(
+    "log_kang",
+    about={
+        "header": "toggle 'kang in log channel' switch",
+        "flags": {
+            "-c": "check",
+        },
+        "usage": "{tr}log_kang",
+    },
+)
+async def log_kang(message: Message):
+    if "-c" in message.flags:
+        out_ = "ON" if Config.LOG_KANG else "OFF"
+        return await message.edit(f"`Logging kang in channel is {out_}.", del_in=5)
+    if Config.LOG_KANG:
+        Config.LOG_KANG = False
+        await SAVED_SETTINGS.update_one(
+            {"_id": "LOG_KANG"},
+            {"$set": {"switch": False}},
+            upsert=True
+        )
+    else:
+        Config.LOG_KANG = True
+        await SAVED_SETTINGS.update_one(
+            {"_id": "LOG_KANG"},
+            {"$set": {"switch": True}},
+            upsert=True
+        )
 
 
 @userge.on_cmd(
     "kang",
     about={
         "header": "kangs stickers or creates new ones",
-        "flags": {"-s": "without link", "-d": "without trace"},
+        "flags": {"-s": "without link", "-d": "without trace", "-f": "fast-forward video stickers to fit in 3 seconds"},
         "usage": "Reply {tr}kang [emoji('s)] [pack number] to a sticker or "
         "an image to kang it to your userbot pack.",
         "examples": [
@@ -48,13 +90,17 @@ async def kang_(message: Message):
     """kang a sticker"""
     user = await userge.get_me()
     replied = message.reply_to_message
-    await message.edit("`Kanging in log channel...`", del_in=1)
-    kang_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "`Processing...`")
+    if Config.LOG_KANG:
+        await message.edit("`Kanging in log channel...`", del_in=1)
+        kang_msg = await userge.send_message(Config.LOG_CHANNEL_ID, "`Processing...`")
+    else:
+        kang_msg = await message.edit("`Processing...`")
     media_ = None
     emoji_ = None
     is_anim = False
     is_video = False
     resize = False
+    ff_vid = False
     if replied and replied.media:
         if replied.photo:
             resize = True
@@ -68,14 +114,15 @@ async def kang_(message: Message):
         elif replied.document and "video" in replied.document.mime_type:
             resize = True
             is_video = True
-            name_ = replied.document.file_name
+            ff_vid = True if "-f" in message.flags else False
         elif replied.animation:
             resize = True
             is_video = True
-            try:
-                name_ = replied.document.file_name
-            except BaseException:
-                name_ = "animation.webm"
+            ff_vid = True if "-f" in message.flags else False
+        elif replied.video:
+            resize = True
+            is_video = True
+            ff_vid = True if "-f" in message.flags else False
         elif replied.sticker:
             if not replied.sticker.file_name:
                 await kang_msg.edit("`Sticker has no Name!`")
@@ -88,14 +135,12 @@ async def kang_(message: Message):
                 or replied.sticker.file_name.endswith(".webm")
             ):
                 resize = True
-            name_ = replied.sticker.file_name
+                ff_vid = True if "-f" in message.flags else False
         else:
             await kang_msg.edit("`Unsupported File!`")
             return
         await kang_msg.edit(f"`{random.choice(KANGING_STR)}`")
-        media_ = await userge.download_media(
-            message=replied, file_name=f"{Config.DOWN_PATH}/{name_}"
-        )
+        media_ = await userge.download_media(message=replied, file_name=f"{Config.DOWN_PATH}")
     else:
         await kang_msg.edit("`I can't kang that...`")
         return
@@ -124,7 +169,7 @@ async def kang_(message: Message):
         packnick = f"{custom_packnick} vol.{pack}"
         cmd = "/newpack"
         if resize:
-            media_ = await resize_photo(media_, is_video)
+            media_ = await resize_photo(media_, is_video, ff_vid)
         if is_anim:
             packname += "_anim"
             packnick += " (Animated)"
@@ -292,12 +337,14 @@ async def sticker_pack_info_(message: Message):
     await message.edit(out_str)
 
 
-async def resize_photo(media: str, video: bool) -> str:
+async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
     """Resize the given photo to 512x512"""
     if video:
         metadata = extractMetadata(createParser(media))
-        width = round(metadata.get("width", 512))
-        height = round(metadata.get("height", 512))
+        width = round(metadata.get('width', 512))
+        height = round(metadata.get('height', 512))
+        sec = str(metadata.get('duration')).split(":")[-1]
+        s = float(sec)
 
         if height == width:
             height, width = 512, 512
@@ -307,10 +354,12 @@ async def resize_photo(media: str, video: bool) -> str:
             height, width = -1, 512
 
         resized_video = f"{media}.webm"
-        cmd = (
-            f"ffmpeg -i {media} -ss 00:00:00 -to 00:00:03 -map 0:v -bufsize 256k"
-            + f" -c:v libvpx-vp9 -vf scale={width}:{height},fps=fps=30 {resized_video}"
-        )
+        if fast_forward:
+            trim_ = 3/float(s + 0.01) - 0.01
+            cmd_ = f"-filter:v 'setpts={trim_}*PTS',scale={width}:{height}"
+        else:
+            cmd_ = f"-ss 00:00:00 -to 00:00:03 -filter:v scale={width}:{height}"
+        cmd = f"ffmpeg -i {media} {cmd_} -an -c:v libvpx-vp9 -r 30 -fs 256K {resized_video}"
         await runcmd(cmd)
         os.remove(media)
         return resized_video

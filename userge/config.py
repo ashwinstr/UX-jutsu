@@ -124,6 +124,7 @@ class Config:
     BOT_ANTIFLOOD = False
     NEW_ALIVE_MEDIA = None
     ALIVE_MEDIA_TYPE = None
+    LOG_KANG = True
 
 
 def get_version() -> str:
