@@ -11,5 +11,6 @@ from .jutsu_tools import (
     msg_type,
     extract_id,
     get_profile_pic,
-    Media_Info
+    Media_Info,
+    current_time
 )

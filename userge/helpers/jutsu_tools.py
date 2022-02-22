@@ -2,6 +2,7 @@
 
 import re
 import asyncio
+import time
 from typing import Union
 
 from pymediainfo import MediaInfo
@@ -272,6 +273,7 @@ async def get_profile_pic(user_: Union[int, str]):
 
 class Media_Info:
     def data(media: str) -> dict:
+        "Get downloaded media's information"
         found = False
         media_info = MediaInfo.parse(media)
         for track in media_info.tracks:
@@ -305,3 +307,33 @@ class Media_Info:
             "file_size": media_size_2
         } if found else None
         return dict_
+
+
+def current_time(hour_diff: float) -> dict:
+    "get current time with time difference in hours as input"
+    time_sec = time.time()
+    diff_in_hour = hour_diff
+    diff_in_seconds = diff_in_hour * 60 * 60
+    current_time_in_seconds = time_sec + diff_in_seconds
+    day_ = current_time_in_seconds / (60 * 60 * 24)
+    hour_ = (day_ - int(day_)) * 24
+    minutes_ = (hour_ - int(hour_)) * 60
+    minutes_ = int(minutes_)
+    hour_ = int(hour_)
+    if minutes_ > 59:
+        hour_ += 1
+        minutes_ -= 60
+    if hour_ > 23:
+        hour_ -= 24
+    if hour_ < 12:
+        stamp_ = "AM"
+    else:
+        stamp_ = "PM"
+    minutes_ = f"{minutes_:02}"
+    hour_ = f"{hour_:02}"
+    time_dict = {
+        "H": hour_,
+        "M": minutes_,
+        "STAMP": stamp_
+    }
+    return time_dict
