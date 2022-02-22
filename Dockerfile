@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.9.10
 
 ENV PIP_NO_CACHE_DIR 1
 ENV LANG C.UTF-8
