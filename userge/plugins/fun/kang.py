@@ -334,7 +334,8 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
         metadata = extractMetadata(createParser(media))
         width = round(metadata.get('width', 512))
         height = round(metadata.get('height', 512))
-        s = int(str(metadata.get('duration')).split(":")[-1])
+        sec = str(metadata.get('duration')).split(":")[-1]
+        s = float(sec)
 
         if height == width:
             height, width = 512, 512
@@ -345,11 +346,11 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
 
         resized_video = f"{media}.webm"
         if fast_forward:
-            trim_ = 3/s
-            cmd_ = f"-filter:v 'setpts={trim_}*PTS'"
+            trim_ = 3/float(s + 0.01) - 0.01
+            cmd_ = f"-filter:v 'setpts={trim_}*PTS',scale={width}:{height}"
         else:
-            cmd_ = "-ss 00:00:00 -to 00:00:03"
-        cmd = f"ffmpeg -i {media} {cmd_} -c:v libvpx-vp9 -filter:v scale={width}:{height} -r 30 -an -fs 256k {resized_video}"
+            cmd_ = f"-ss 00:00:00 -to 00:00:03 -filter:v scale={width}:{height}"
+        cmd = f"ffmpeg -i {media} {cmd_} -an -c:v libvpx-vp9 -r 30 -fs 256K {resized_video}"
         await runcmd(cmd)
         os.remove(media)
         return resized_video
