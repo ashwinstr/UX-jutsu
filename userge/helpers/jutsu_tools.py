@@ -1,9 +1,10 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
-import os
 import re
 import asyncio
 from typing import Union
+
+from pymediainfo import MediaInfo
 from pyrogram.errors import UserNotParticipant
 from pyrogram.raw.functions.account import ReportPeer
 from pyrogram.raw.types import (
@@ -12,7 +13,6 @@ from pyrogram.raw.types import (
     InputReportReasonSpam,
 )
 from userge import userge
-from userge.core.types.bound import message
 
 
 # capitalise
@@ -268,3 +268,40 @@ async def get_profile_pic(user_: Union[int, str]):
         return pfp_
     else:
         return None
+
+
+class Media_Info:
+    def data(media: str) -> dict:
+        found = False
+        media_info = MediaInfo.parse(media)
+        for track in media_info.tracks:
+            if track.track_type == "Video":
+                found = True
+                type_ = track.track_type
+                format_ = track.format
+                duration_1 = track.duration
+                other_duration_ = track.other_duration
+                duration_2 = f"{other_duration_[0]} - ({other_duration_[3]})" if other_duration_ else None
+                pixel_ratio_ = [track.width, track.height]
+                aspect_ratio_1 = track.display_aspect_ratio
+                other_aspect_ratio_ = track.other_display_aspect_ratio
+                aspect_ratio_2 = other_aspect_ratio_[0] if other_aspect_ratio_ else None
+                fps_ = track.frame_rate
+                fc_ = track.frame_count
+                media_size_1 = track.stream_size
+                other_media_size_ = track.other_stream_size
+                media_size_2 = [other_media_size_[1], other_media_size_[2], other_media_size_[3], other_media_size_[4]] if other_media_size_ else None
+        dict_ = {
+            "media_type": type_,
+            "format": format_,
+            "duration_in_ms": duration_1,
+            "duration": duration_2,
+            "pixel_sizes": pixel_ratio_,
+            "aspect_ratio_in_fraction": aspect_ratio_1,
+            "aspect_ratio": aspect_ratio_2,
+            "frame_rate": fps_,
+            "frame_count": fc_,
+            "file_size_in_bytes": media_size_1,
+            "file_size": media_size_2
+        } if found else None
+        return dict_

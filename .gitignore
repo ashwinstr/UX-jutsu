@@ -153,3 +153,6 @@ resources/ProductSans-Light.ttf
 resources/Roboto-Regular.ttf
 resources/font.ttf
 resources/Roboto-Medium.tff
+userge/plugins/test/PIL_test.py
+userge/plugins/test/wallhaven.py
+userge/plugins/test/update_temp_plugin.py

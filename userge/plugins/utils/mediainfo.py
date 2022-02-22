@@ -46,11 +46,12 @@ async def mediainfo(message: Message):
     if len(output_) != 0:
         out = output_[0]
     body_text = f"""
-<h2>JSON</h2>
+JSON
 <pre>{x_media}</pre>
 <br>
 
-<h2>DETAILS</h2>
+DETAILS
+<br>
 <pre>{out or 'Not Supported'}</pre>
 """
     text_ = media_type.split(".")[-1].upper()
