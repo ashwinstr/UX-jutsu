@@ -54,7 +54,7 @@ async def stik_(message: Message):
         w, h = -1, 512
     if "-f" in message.flags:
         dure_ = await duration(message)
-        trim_ = 3/float(dure_ + 0.01) - 0.01
+        trim_ = 3 / float(dure_ + 0.01) - 0.01
         cmd_ = f"-filter:v 'setpts={trim_}*PTS',scale={w}:{h}"
     else:
         cmd_ = f"-ss 00:00:00 -to 00:00:03 -filter:v scale={w}:{h}"
@@ -64,4 +64,3 @@ async def stik_(message: Message):
     await reply.reply_sticker(resized_video)
     os.remove(down_)
     os.remove(resized_video)
-    

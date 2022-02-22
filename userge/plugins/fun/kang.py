@@ -16,14 +16,12 @@ from bs4 import BeautifulSoup as bs
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from PIL import Image
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
 from pyrogram import emoji
 from pyrogram.errors import StickersetInvalid, YouBlockedUser
 from pyrogram.raw.functions.messages import GetStickerSet
 from pyrogram.raw.types import InputStickerSetShortName
 
-from userge import Config, Message, userge, get_collection
+from userge import Config, Message, get_collection, userge
 from userge.utils import get_response, runcmd
 
 SAVED_SETTINGS = get_collection("CONFIGS")
@@ -32,7 +30,7 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 async def _init() -> None:
     found = await SAVED_SETTINGS.find_one({"_id": "LOG_KANG"})
     if found:
-        Config.LOG_KANG = found['switch']
+        Config.LOG_KANG = found["switch"]
     else:
         Config.LOG_KANG = True
 
@@ -54,16 +52,12 @@ async def log_kang(message: Message):
     if Config.LOG_KANG:
         Config.LOG_KANG = False
         await SAVED_SETTINGS.update_one(
-            {"_id": "LOG_KANG"},
-            {"$set": {"switch": False}},
-            upsert=True
+            {"_id": "LOG_KANG"}, {"$set": {"switch": False}}, upsert=True
         )
     else:
         Config.LOG_KANG = True
         await SAVED_SETTINGS.update_one(
-            {"_id": "LOG_KANG"},
-            {"$set": {"switch": True}},
-            upsert=True
+            {"_id": "LOG_KANG"}, {"$set": {"switch": True}}, upsert=True
         )
 
 
@@ -71,7 +65,11 @@ async def log_kang(message: Message):
     "kang",
     about={
         "header": "kangs stickers or creates new ones",
-        "flags": {"-s": "without link", "-d": "without trace", "-f": "fast-forward video stickers to fit in 3 seconds"},
+        "flags": {
+            "-s": "without link",
+            "-d": "without trace",
+            "-f": "fast-forward video stickers to fit in 3 seconds",
+        },
         "usage": "Reply {tr}kang [emoji('s)] [pack number] to a sticker or "
         "an image to kang it to your userbot pack.",
         "examples": [
@@ -104,13 +102,12 @@ async def kang_(message: Message):
     if replied and replied.media:
         if replied.photo:
             resize = True
-            name_ = "photo.png"
         elif replied.document and "image" in replied.document.mime_type:
             resize = True
-            name_ = replied.document.file_name
+            replied.document.file_name
         elif replied.document and "tgsticker" in replied.document.mime_type:
             is_anim = True
-            name_ = replied.document.file_name
+            replied.document.file_name
         elif replied.document and "video" in replied.document.mime_type:
             resize = True
             is_video = True
@@ -140,7 +137,9 @@ async def kang_(message: Message):
             await kang_msg.edit("`Unsupported File!`")
             return
         await kang_msg.edit(f"`{random.choice(KANGING_STR)}`")
-        media_ = await userge.download_media(message=replied, file_name=f"{Config.DOWN_PATH}")
+        media_ = await userge.download_media(
+            message=replied, file_name=f"{Config.DOWN_PATH}"
+        )
     else:
         await kang_msg.edit("`I can't kang that...`")
         return
@@ -341,9 +340,9 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
     """Resize the given photo to 512x512"""
     if video:
         metadata = extractMetadata(createParser(media))
-        width = round(metadata.get('width', 512))
-        height = round(metadata.get('height', 512))
-        sec = str(metadata.get('duration')).split(":")[-1]
+        width = round(metadata.get("width", 512))
+        height = round(metadata.get("height", 512))
+        sec = str(metadata.get("duration")).split(":")[-1]
         s = float(sec)
 
         if height == width:
@@ -355,7 +354,7 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
 
         resized_video = f"{media}.webm"
         if fast_forward:
-            trim_ = 3/float(s + 0.01) - 0.01
+            trim_ = 3 / float(s + 0.01) - 0.01
             cmd_ = f"-filter:v 'setpts={trim_}*PTS',scale={width}:{height}"
         else:
             cmd_ = f"-ss 00:00:00 -to 00:00:03 -filter:v scale={width}:{height}"

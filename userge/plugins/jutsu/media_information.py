@@ -1,10 +1,8 @@
-
 import os
 
-from pprint import pprint
 from pymediainfo import MediaInfo
 
-from userge import userge, Message
+from userge import Message, userge
 
 
 @userge.on_cmd(
@@ -25,7 +23,7 @@ async def media_info_(message: Message):
         if track.track_type == "Video":
             try:
                 size_ = track.other_stream_size[3]
-            except:
+            except BaseException:
                 size_ = track.stream_size
             out_ = f"""
 <b><u>Media Info of the replied media.</u></b>
