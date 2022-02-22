@@ -23,19 +23,22 @@ async def media_info_(message: Message):
     out_ = "`Nothing found...`"
     for track in media_info.tracks:
         if track.track_type == "Video":
-#            data_ = track.to_data()
+            try:
+                size_ = track.other_stream_size[3]
+            except:
+                size_ = track.stream_size
             out_ = f"""
 <b><u>Media Info of the replied media.</u></b>
 
 • <b>Type:</b> {track.track_type}
 • <b>Format:</b> {track.format}
-• <b>Duration:</b> {track.other_duration[0]}
+• <b>Duration:</b> {track.other_duration[0]} - ({track.other_duration[3]})
 • <b>Width:</b> {track.width} pixels
 • <b>Height:</b> {track.height} pixels
 • <b>Aspect ratio:</b> {track.other_display_aspect_ratio[0]}
 • <b>Frame rate:</b> {track.frame_rate} FPS
 • <b>Frame count:</b> {track.frame_count}
-• <b>Size:</b> {track.other_stream_size[3]}
+• <b>Size:</b> {size_}
 """
     await message.edit(out_)
     os.remove(down_)
