@@ -6,3 +6,4 @@ class Font:
     DEJAVU = "resources/DejavuSansMono.ttf"
     LUCIDABOLD = "resources/lucidagrandebold.ttf"
     PRODUCTSANSLIGHT = "resources/ProductSans-Light.ttf"
+    ARIAL_UNI = "resources/arial-unicode-ms.ttf"
