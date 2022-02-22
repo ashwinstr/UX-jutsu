@@ -319,6 +319,7 @@ def current_time(hour_diff: float) -> dict:
     hour_ = (day_ - int(day_)) * 24
     minutes_ = (hour_ - int(hour_)) * 60
     minutes_ = int(minutes_)
+    hour_ = int(hour_)
     if minutes_ > 59:
         hour_ += 1
         minutes_ -= 60
@@ -328,6 +329,8 @@ def current_time(hour_diff: float) -> dict:
         stamp_ = "AM"
     else:
         stamp_ = "PM"
+    minutes_ = f"{minutes_:02}"
+    hour_ = f"{hour_:02}"
     time_dict = {
         "H": hour_,
         "M": minutes_,
