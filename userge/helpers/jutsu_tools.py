@@ -1,5 +1,6 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
+import os
 import re
 import asyncio
 import time
@@ -13,7 +14,7 @@ from pyrogram.raw.types import (
     InputReportReasonPornography,
     InputReportReasonSpam,
 )
-from userge import userge
+from userge import userge, Message
 
 
 # capitalise
@@ -272,8 +273,12 @@ async def get_profile_pic(user_: Union[int, str]):
 
 
 class Media_Info:
-    def data(media: str) -> dict:
+    async def data(message: Message):
         "Get downloaded media's information"
+        try:
+            media = await message.download()
+        except:
+            raise ValueError
         found = False
         media_info = MediaInfo.parse(media)
         for track in media_info.tracks:
@@ -293,19 +298,22 @@ class Media_Info:
                 media_size_1 = track.stream_size
                 other_media_size_ = track.other_stream_size
                 media_size_2 = [other_media_size_[1], other_media_size_[2], other_media_size_[3], other_media_size_[4]] if other_media_size_ else None
-        dict_ = {
-            "media_type": type_,
-            "format": format_,
-            "duration_in_ms": duration_1,
-            "duration": duration_2,
-            "pixel_sizes": pixel_ratio_,
-            "aspect_ratio_in_fraction": aspect_ratio_1,
-            "aspect_ratio": aspect_ratio_2,
-            "frame_rate": fps_,
-            "frame_count": fc_,
-            "file_size_in_bytes": media_size_1,
-            "file_size": media_size_2
-        } if found else None
+
+                dict_ = {
+                    "media_type": type_,
+                    "format": format_,
+                    "duration_in_ms": duration_1,
+                    "duration": duration_2,
+                    "pixel_sizes": pixel_ratio_,
+                    "aspect_ratio_in_fraction": aspect_ratio_1,
+                    "aspect_ratio": aspect_ratio_2,
+                    "frame_rate": fps_,
+                    "frame_count": fc_,
+                    "file_size_in_bytes": media_size_1,
+                    "file_size": media_size_2
+                } if found else None
+            elif track.track_type == "Photo":
+                return track
         return dict_
 
 
