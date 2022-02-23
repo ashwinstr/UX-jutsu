@@ -14,8 +14,7 @@ import asyncio
 from userge import Config, Message, userge, get_collection
 from userge.plugins import ROOT
 from userge.utils import get_import_path
-
-from userge.plugins.jutsu.start import Start
+from userge.helpers import Start
 
 
 @userge.on_cmd(

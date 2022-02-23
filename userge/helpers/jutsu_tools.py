@@ -1,5 +1,6 @@
 # tools for jutsu plugins by @Kakashi_HTK(tg)/@ashwinstr(gh)
 
+import os
 import re
 import asyncio
 import time
@@ -13,7 +14,7 @@ from pyrogram.raw.types import (
     InputReportReasonPornography,
     InputReportReasonSpam,
 )
-from userge import userge
+from userge import userge, Message
 
 
 # capitalise
@@ -293,6 +294,7 @@ class Media_Info:
                 media_size_1 = track.stream_size
                 other_media_size_ = track.other_stream_size
                 media_size_2 = [other_media_size_[1], other_media_size_[2], other_media_size_[3], other_media_size_[4]] if other_media_size_ else None
+
         dict_ = {
             "media_type": type_,
             "format": format_,
