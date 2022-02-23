@@ -14,3 +14,4 @@ from .jutsu_tools import (
     Media_Info,
     current_time
 )
+from ..plugins.jutsu.start import Start

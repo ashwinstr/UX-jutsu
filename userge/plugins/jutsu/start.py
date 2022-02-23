@@ -1,15 +1,18 @@
+from cgitb import text
 import time
 
-from userge import get_collection, userge
+from userge import get_collection, userge, Message
 from userge.utils import time_formatter
 
 CHANNEL = userge.getCLogger(__name__)
 
 UPDATE = get_collection("UPDATE_MSG")
+RESTART_MESSAGE = get_collection("RESTART_MESSAGE")
 
 
 async def _init() -> None:
     found = await UPDATE.find_one({"_id": "UPDATE_MSG"})
+    restart = await RESTART_MESSAGE.find_one({"_id": "RESTART_MSG"})
     if found:
         try:
             af_update = time.time()
@@ -29,5 +32,32 @@ async def _init() -> None:
         except BaseException:
             await CHANNEL.log(f"`### UX-jutsu updated/restarted successfully. ###`")
         await UPDATE.drop()
+    elif restart:
+        try:
+            chat_ = restart['chat_id']
+            msg_ = restart['message_id']
+            text_ = restart['text']
+            await userge.edit_message_text(
+                chat_id=chat_,
+                message_id=msg_,
+                text=text_
+            )
+        except:
+            pass
+        await RESTART_MESSAGE.drop()
     else:
         await CHANNEL.log("`### UX-jutsu started successfully. ###`")
+
+
+
+class Start:
+    async def save_msg(message: Message, text: str) -> None:
+        await RESTART_MESSAGE.insert_one(
+            {
+                "_id": "RESTART_MSG",
+                "chat_id": message.chat.id,
+                "message_id": message.message_id,
+                "text": text
+            }
+        )
+
