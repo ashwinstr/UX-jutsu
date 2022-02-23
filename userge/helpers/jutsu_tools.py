@@ -312,7 +312,7 @@ class Media_Info:
                     "file_size_in_bytes": media_size_1,
                     "file_size": media_size_2
                 } if found else None
-            elif track.track_type == "Photo":
+            elif track.track_type == "Image":
                 return track
         return dict_
 
