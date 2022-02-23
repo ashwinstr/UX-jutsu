@@ -157,3 +157,4 @@ userge/plugins/test/wallhaven.py
 userge/plugins/test/update_temp_plugin.py
 userge/plugins/test/PIL_test.py
 userge/plugins/test/PIL_test
+userge/plugins/test/media_info_test.py
