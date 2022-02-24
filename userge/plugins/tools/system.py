@@ -268,7 +268,7 @@ async def getvar_(message: Message) -> None:
         heroku_vars = Config.HEROKU_APP.config()
         if var_key in heroku_vars:
             await CHANNEL.log(
-                f"#HEROKU_VAR #GET\n\n`{var_key}` = `{heroku_vars[var_name]}`"
+                f"#HEROKU_VAR #GET\n\n`{var_key}` = `{heroku_vars[var_key]}`"
             )
             await message.edit(f"`Var {var_key} forwarded to log channel...`", del_in=3)
         else:
