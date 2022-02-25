@@ -1,7 +1,6 @@
-from cgitb import text
 import time
 
-from userge import get_collection, userge, Message
+from userge import Message, get_collection, userge
 from userge.utils import time_formatter
 
 CHANNEL = userge.getCLogger(__name__)
@@ -34,20 +33,15 @@ async def _init() -> None:
         await UPDATE.drop()
     elif restart:
         try:
-            chat_ = restart['chat_id']
-            msg_ = restart['message_id']
-            text_ = restart['text']
-            await userge.edit_message_text(
-                chat_id=chat_,
-                message_id=msg_,
-                text=text_
-            )
-        except:
+            chat_ = restart["chat_id"]
+            msg_ = restart["message_id"]
+            text_ = restart["text"]
+            await userge.edit_message_text(chat_id=chat_, message_id=msg_, text=text_)
+        except BaseException:
             pass
         await RESTART_MESSAGE.drop()
     else:
         await CHANNEL.log("`### UX-jutsu started successfully. ###`")
-
 
 
 class Start:
@@ -57,7 +51,6 @@ class Start:
                 "_id": "RESTART_MSG",
                 "chat_id": message.chat.id,
                 "message_id": message.message_id,
-                "text": text
+                "text": text,
             }
         )
-

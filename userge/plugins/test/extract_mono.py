@@ -1,7 +1,6 @@
-
 import re
 
-from userge import userge, Message
+from userge import Message, userge
 
 
 @userge.on_cmd(

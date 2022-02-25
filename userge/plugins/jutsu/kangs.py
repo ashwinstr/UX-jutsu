@@ -20,8 +20,8 @@ from pyrogram.raw.functions.messages import GetStickerSet
 from pyrogram.raw.types import InputStickerSetShortName
 
 from userge import Config, Message, get_collection, userge
-from userge.utils import get_response, runcmd
 from userge.helpers import Media_Info
+from userge.utils import get_response, runcmd
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 
@@ -339,9 +339,9 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
     """Resize the given photo to 512x512"""
     if video:
         info_ = Media_Info.data(media)
-        width = info_['pixel_sizes'][0]
-        height = info_['pixel_sizes'][1]
-        sec = info_['duration_in_ms']
+        width = info_["pixel_sizes"][0]
+        height = info_["pixel_sizes"][1]
+        sec = info_["duration_in_ms"]
         s = sec / 1000
 
         if height == width:
@@ -354,15 +354,15 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
         resized_video = f"{media}.webm"
         if fast_forward:
             if s > 3:
-                fract_ = 3/s
-                ff_f = round(fract_,  2)
+                fract_ = 3 / s
+                ff_f = round(fract_, 2)
                 set_pts_ = ff_f - 0.01 if ff_f > fract_ else ff_f
                 cmd_f = f"-filter:v 'setpts={set_pts_}*PTS',scale={width}:{height}"
             else:
                 cmd_f = f"-filter:v scale={width}:{height}"
         else:
             cmd_f = f"-ss 00:00:00 -to 00:00:03 -filter:v scale={width}:{height}"
-        fps_ = float(info_['frame_rate'])
+        fps_ = float(info_["frame_rate"])
         fps_cmd = "-r 30 " if fps_ > 30 else ""
         cmd = f"ffmpeg -i {media} {cmd_f} -an -c:v libvpx-vp9 {fps_cmd}-fs 256K {resized_video}"
         await runcmd(cmd)

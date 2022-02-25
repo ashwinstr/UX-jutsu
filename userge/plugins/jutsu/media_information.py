@@ -1,6 +1,6 @@
 import os
 
-from userge import userge, Message
+from userge import Message, userge
 from userge.helpers import Media_Info
 
 
