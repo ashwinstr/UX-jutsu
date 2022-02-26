@@ -44,6 +44,7 @@ async def _init() -> None:
             )
         except:
             pass
+        await CHANNEL.log("`### UX-jutsu restarted successfully. ###`")
         await RESTART_MESSAGE.drop()
     else:
         await CHANNEL.log("`### UX-jutsu started successfully. ###`")
