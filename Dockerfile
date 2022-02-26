@@ -16,7 +16,8 @@ RUN apt -qq update && apt -qq upgrade -y && \
     gnupg2 \
     wget \
     unzip \
-    tree
+    tree \
+    fonts-noto
 
 RUN mkdir -p /tmp/ && \
     cd /tmp/ && \
@@ -42,7 +43,6 @@ RUN apt -qq update && apt -qq install -y --no-install-recommends \
     p7zip-full \
     libfreetype6-dev libjpeg-dev libpng-dev libgif-dev libwebp-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/* \
-    apt install fonts-noto
 
 COPY requirements.txt .
 
