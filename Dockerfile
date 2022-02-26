@@ -42,7 +42,7 @@ RUN apt -qq update && apt -qq install -y --no-install-recommends \
     p7zip-full \
     libfreetype6-dev libjpeg-dev libpng-dev libgif-dev libwebp-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/* \
-    apt update && apt install fonts-noto -y
+    apt install fonts-noto -y
 
 COPY requirements.txt .
 
