@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.9.10
 
 ENV PIP_NO_CACHE_DIR 1
 ENV LANG C.UTF-8
@@ -41,8 +41,9 @@ RUN apt -qq update && apt -qq install -y --no-install-recommends \
     neofetch \
     p7zip-full \
     libfreetype6-dev libjpeg-dev libpng-dev libgif-dev libwebp-dev && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/* \
-    apt update && apt install fonts-noto -y
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/*
+
+RUN apt-get update && apt-get install fonts-noto -y
 
 COPY requirements.txt .
 
