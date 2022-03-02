@@ -348,7 +348,7 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
             if s > 3:
                 fract_ = 3/s
                 ff_f = round(fract_,  2)
-                set_pts_ = ff_f - 0.01 if ff_f > fract_ else ff_f
+                set_pts_ = ff_f - 0.02 if ff_f > fract_ else ff_f
                 cmd_f = f"-filter:v 'setpts={set_pts_}*PTS',scale={width}:{height}"
             else:
                 cmd_f = f"-filter:v scale={width}:{height}"
