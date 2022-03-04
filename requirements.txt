@@ -49,5 +49,5 @@ youtube_dl
 git+https://github.com/Nekos-life/Async-nekos.life-wrapper
 ruamel.yaml==0.17.21
 ujson>=4.0.1
-youtube-search-python==1.5.1
+youtube-search-python==1.6.2
 feedparser>=6.0.2
