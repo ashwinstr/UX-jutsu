@@ -945,7 +945,7 @@ if userge.has_bot:
                             if inline_db["media_valid"]:
                                 if saved_msg.photo:
                                     results.append(
-                                        InlineQueryResultPhoto(
+                                        InlineQueryResultCachedPhoto(
                                             photo_url=media_down,
                                             caption=textx,
                                             reply_markup=buttonsx,
