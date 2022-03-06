@@ -286,7 +286,7 @@ async def fban_(message: Message):
         "\nWARNING: don't use if any of the fed group has links blocklisted",
         "flags": {
             "-r": "remote fban, use with direct proof link",
-            "-d": "auto-delete message"
+            "-d": "auto-delete message",
         },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
     },
