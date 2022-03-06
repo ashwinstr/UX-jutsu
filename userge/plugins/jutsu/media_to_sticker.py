@@ -52,7 +52,7 @@ async def stik_(message: Message):
     elif width < height:
         w, h = -1, 512
     if "-f" in message.flags:
-        dure_ = (info_["duration_in_ms"]) / 1000
+        dure_ = int(info_["duration_in_ms"]) / 1000
         if dure_ > 3:
             fract_ = 3 / dure_
             ff_f = round(fract_, 2)
