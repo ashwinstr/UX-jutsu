@@ -155,7 +155,6 @@ resources/font.ttf
 resources/Roboto-Medium.tff
 userge/plugins/test/wallhaven.py
 userge/plugins/test/update_temp_plugin.py
-userge/plugins/test/PIL_test.py
-userge/plugins/test/PIL_test
-userge/plugins/test/media_info_test.py
 userge/plugins/test/unicode_image.py
+userge/plugins/test/my_quotly.py
+userge/plugins/test/tg_ss.py

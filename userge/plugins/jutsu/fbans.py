@@ -134,6 +134,9 @@ async def delfed_(message: Message):
     about={
         "header": "Fban user",
         "description": "Fban the user from the list of fed",
+        "flags": {
+            "-d": "auto-delete message",
+        },
         "usage": "{tr}fban [username|reply to user|user_id] [reason (optional)]",
     },
     allow_bots=False,
@@ -270,7 +273,8 @@ async def fban_(message: Message):
     )
     if sudo_:
         msg_ += f"**By:** {message.from_user.mention}"
-    await message.edit(msg_)
+    del_ = 3 if "-d" in message.flags else -1
+    await message.edit(msg_, del_in=del_)
     await userge.send_message(int(PROOF_CHANNEL), msg_)
 
 
@@ -282,6 +286,7 @@ async def fban_(message: Message):
         "\nWARNING: don't use if any of the fed group has links blocklisted",
         "flags": {
             "-r": "remote fban, use with direct proof link",
+            "-d": "auto-delete message"
         },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
     },
@@ -479,7 +484,8 @@ async def fban_p(message: Message):
     )
     if sudo_:
         msg_ += f"**By:** {message.from_user.mention}"
-    await message.edit(msg_, disable_web_page_preview=True)
+    del_ = 3 if "-d" in message.flags else -1
+    await message.edit(msg_, del_in=del_, disable_web_page_preview=True)
     await userge.send_message(
         int(FBAN_LOG_CHANNEL), msg_, disable_web_page_preview=True
     )
