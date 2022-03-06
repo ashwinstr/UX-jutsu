@@ -11,10 +11,10 @@
 import asyncio
 import os
 
-from userge import Config, Message, get_collection, userge
+from userge import Config, Message, userge
+from userge.helpers import Start
 from userge.plugins import ROOT
 from userge.utils import get_import_path
-from userge.helpers import Start
 
 
 @userge.on_cmd(
@@ -393,7 +393,9 @@ async def load(message: Message) -> None:
                         del_in_ = -1
                     end_msg = await message.edit(out_, del_in=del_in_, log=__name__)
                     if restart_:
-                        await Start.save_msg(end_msg, f"`Plugin {plugin} loaded successfully...`")
+                        await Start.save_msg(
+                            end_msg, f"`Plugin {plugin} loaded successfully...`"
+                        )
                         asyncio.get_event_loop().create_task(userge.restart())
             else:
                 await message.edit("`Plugin Not Found`")
