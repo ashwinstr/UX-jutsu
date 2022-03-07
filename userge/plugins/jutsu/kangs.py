@@ -360,6 +360,8 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
                 cmd_f = f"-filter:v 'setpts={set_pts_}*PTS',scale={width}:{height}"
             else:
                 cmd_f = f"-filter:v scale={width}:{height}"
+        else:
+            cmd_f = f"-filter:v scale={width}:{height}"
         fps_ = float(info_["frame_rate"])
         fps_cmd = "-r 30 " if fps_ > 30 else ""
         cmd = f"ffmpeg -i {media} {cmd_f} -ss 00:00:00 -to 00:00:03 -an -c:v libvpx-vp9 {fps_cmd}-fs 256K {resized_video}"
