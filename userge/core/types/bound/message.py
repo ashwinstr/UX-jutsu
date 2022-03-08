@@ -182,7 +182,7 @@ class Message(RawMessage):
                                 else items[0].lower()] = items[1] or ''
                 else:
                     line_ += ' ' + i
-            self._filtered_input_str += "\n" + line_.strip()
+            self._filtered_input_str += "\n" + line_.lstrip(' ')
         self._filtered_input_str = self._filtered_input_str.strip()
         _LOG.debug(
             _LOG_STR,
