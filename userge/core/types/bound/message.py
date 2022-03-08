@@ -173,16 +173,15 @@ class Message(RawMessage):
         del_pre = bool(self._kwargs.get('del_pre', False))
         input_str = self.input_str
         for n in input_str.strip().splitlines():
-            line_ = []
-            for i in n.split():
+            line_ = ""
+            for i in n.split(' '):
                 match = re.match(f"({prefix}[a-zA-Z]+)([0-9]*)$", i)
                 if match:
                     items: Sequence[str] = match.groups()
                     self._flags[items[0].lstrip(prefix).lower() if del_pre
                                 else items[0].lower()] = items[1] or ''
                 else:
-                    line_.append(i)
-            line_ = ' '.join(line_)
+                    line_ += i + ' '
             self._filtered_input_str += "\n" + line_
         self._filtered_input_str = self._filtered_input_str.strip()
         _LOG.debug(
