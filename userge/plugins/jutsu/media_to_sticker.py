@@ -13,7 +13,7 @@ from userge.utils import runcmd
         "header": "Image to sticker",
         "description": "Convert any image to sticker w/o sticker bot",
         "flags": {
-            "-f": "fast-forward [video/gif sticker]",
+            "-f": "fast-forward [video/gif sticker] [length of output sticker]",
         },
         "usage": "{tr}stick [reply to image]",
     },
@@ -52,20 +52,24 @@ async def stik_(message: Message):
     elif width < height:
         w, h = -1, 512
     if "-f" in message.flags:
-        dure_ = int(info_["duration_in_ms"]) / 1000
-        if dure_ > 3:
-            fract_ = 3 / dure_
+        try:
+            len_ = int(message.filtered_input_str)
+        except:
+            len_ = 3
+        dure_ = round(float(info_["duration_in_ms"]), 3) / 1000
+        if dure_ > len_:
+            fract_ = len_ / dure_
             ff_f = round(fract_, 2)
             set_pts_ = ff_f - 0.01 if ff_f > fract_ else ff_f
             cmd_f = f"-filter:v 'setpts={set_pts_}*PTS',scale={w}:{h}"
         else:
             cmd_f = f"-filter:v scale={w}:{h}"
     else:
-        cmd_f = f"-ss 00:00:00 -to 00:00:03 -filter:v scale={w}:{h}"
+        cmd_f = f"-filter:v scale={w}:{h}"
     fps_ = float(info_["frame_rate"])
     fps_cmd = "-r 30 " if fps_ > 30 else ""
     resized_video = f"{down_}.webm"
-    cmd = f"ffmpeg -i {down_} {cmd_f} -an {fps_cmd}-fs 256K {resized_video}"
+    cmd = f"ffmpeg -i {down_} {cmd_f} -ss 00:00:00 -to 00:00:03 -an {fps_cmd}-fs 256K {resized_video}"
     await runcmd(cmd)
     await reply.reply_sticker(resized_video)
     os.remove(down_)
