@@ -342,7 +342,7 @@ async def resize_photo(media: str, video: bool, fast_forward: bool) -> str:
         width = info_["pixel_sizes"][0]
         height = info_["pixel_sizes"][1]
         sec = info_["duration_in_ms"]
-        s = int(sec) / 1000
+        s = round(float(sec)) / 1000
 
         if height == width:
             height, width = 512, 512
