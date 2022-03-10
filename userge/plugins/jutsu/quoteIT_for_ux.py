@@ -82,7 +82,7 @@ async def make_tweet(message: Message):
             "-r": "add the replied message of quote message",
             "-f": "add fake text",
         },
-        "usage": "{tr}qit [reply to message]"
+        "usage": "{tr}qit [reply to message]",
     },
 )
 async def make_quote(message: Message):
