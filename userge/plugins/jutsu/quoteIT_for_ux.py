@@ -54,7 +54,7 @@ async def make_tweet(message: Message):
             break
         except:
             current_time = time.time()
-            if current_time - start_time > 10:
+            if current_time - start_time > 15:
                 return await message.edit("`Timeout.`", del_in=3)
     await asyncio.gather(
         userge.send_inline_bot_result(
@@ -122,7 +122,7 @@ async def make_quote(message: Message):
             break
         except:
             current_time = time.time()
-            if current_time - start_time > 10:
+            if current_time - start_time > 15:
                 return await message.edit("`Timeout.`", del_in=3)
     await asyncio.gather(
         userge.send_inline_bot_result(
