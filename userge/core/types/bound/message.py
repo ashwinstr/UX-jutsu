@@ -20,6 +20,7 @@ from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, Messa
 from pyrogram.errors.exceptions.forbidden_403 import MessageDeleteForbidden
 
 from userge import logging
+from userge.helpers import msg_type
 from ... import client as _client  # pylint: disable=unused-import
 
 _CANCEL_LIST: List[int] = []
@@ -188,6 +189,69 @@ class Message(RawMessage):
             _LOG_STR,
             f"Filtered Input String => [ {self._filtered_input_str}, {self._flags} ]")
         self._filtered = True
+
+    async def copy_protected_content(self,
+                                     chat_id: Union[int, str] = "me",
+                                     reply_to_message_id: Optional[int] = None) -> 'Message':
+        """\nYou can download and send any type of message protected content with this attribute
+        
+        Example:
+                message.copy_protected_content(chat_id="UX_xplugin_support")
+        Parameters:
+            chat_id (``str`` | ``int``):
+                username or id of target group/channel.
+        
+        Returns:
+            On success, the sent Message is returned.
+        """
+        msg_link = self.link
+        split_link = msg_link.split("/")
+        c_id = split_link[-2]
+        m_id = split_link[-1]
+        if c_id.isdigit() and len(c_id) == 10:
+            c_id = int("-100" + c_id)
+        protected_content = await self._client.get_messages(c_id, int(m_id))
+        caption = protected_content.caption
+        reply_markup = protected_content.reply_markup
+        type_ = msg_type(protected_content)
+        if type_ != "text":
+            down_ = await protected_content.download()
+        if type_ == "text":
+            return await self._client.send_message(chat_id=chat_id,
+                                                   text=protected_content.text, 
+                                                   reply_markup=reply_markup, 
+                                                   reply_to_message_id=reply_to_message_id)
+        elif protected_content.document:
+            return await self._client.send_document(chat_id=chat_id,
+                                                    document=down_,
+                                                    caption=caption,
+                                                    reply_to_message_id=reply_to_message_id)
+        elif type_ == "audio":
+            return await self._client.send_audio(chat_id=chat_id, 
+                                                 audio=down_, 
+                                                 caption=caption, 
+                                                 reply_markup=reply_markup,
+                                                 reply_to_message_id=reply_to_message_id)
+        elif type_ == "gif":
+            return await self._client.send_animation(chat_id=chat_id,
+                                                     animation=down_,
+                                                     caption=caption,
+                                                     reply_to_message_id=reply_to_message_id)
+        elif type_ == "photo":
+            return await self._client.send_photo(chat_id=chat_id,
+                                                 photo=down_,
+                                                 caption=caption,
+                                                 reply_to_message_id=reply_to_message_id)
+        elif type_ == "sticker":
+            return await self._client.send_sticker(chat_id=chat_id,
+                                                   sticker=down_,
+                                                   caption=caption,
+                                                   reply_to_message_id=reply_to_message_id)
+        elif type_ == "video":
+            return await self._client.send_video(chat_id=chat_id,
+                                                 video=down_,
+                                                 caption=caption,
+                                                 reply_to_message_id=reply_to_message_id)
 
     async def send_as_file(self,
                            text: str,
