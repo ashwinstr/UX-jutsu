@@ -20,7 +20,6 @@ from pyrogram.errors.exceptions.bad_request_400 import MessageNotModified, Messa
 from pyrogram.errors.exceptions.forbidden_403 import MessageDeleteForbidden
 
 from userge import logging
-from userge.helpers import msg_type
 from ... import client as _client  # pylint: disable=unused-import
 
 _CANCEL_LIST: List[int] = []
@@ -211,47 +210,7 @@ class Message(RawMessage):
         if c_id.isdigit() and len(c_id) == 10:
             c_id = int("-100" + c_id)
         protected_content = await self._client.get_messages(c_id, int(m_id))
-        caption = protected_content.caption
-        reply_markup = protected_content.reply_markup
-        type_ = msg_type(protected_content)
-        if type_ != "text":
-            down_ = await protected_content.download()
-        if type_ == "text":
-            return await self._client.send_message(chat_id=chat_id,
-                                                   text=protected_content.text, 
-                                                   reply_markup=reply_markup, 
-                                                   reply_to_message_id=reply_to_message_id)
-        elif protected_content.document:
-            return await self._client.send_document(chat_id=chat_id,
-                                                    document=down_,
-                                                    caption=caption,
-                                                    reply_to_message_id=reply_to_message_id)
-        elif type_ == "audio":
-            return await self._client.send_audio(chat_id=chat_id, 
-                                                 audio=down_, 
-                                                 caption=caption, 
-                                                 reply_markup=reply_markup,
-                                                 reply_to_message_id=reply_to_message_id)
-        elif type_ == "gif":
-            return await self._client.send_animation(chat_id=chat_id,
-                                                     animation=down_,
-                                                     caption=caption,
-                                                     reply_to_message_id=reply_to_message_id)
-        elif type_ == "photo":
-            return await self._client.send_photo(chat_id=chat_id,
-                                                 photo=down_,
-                                                 caption=caption,
-                                                 reply_to_message_id=reply_to_message_id)
-        elif type_ == "sticker":
-            return await self._client.send_sticker(chat_id=chat_id,
-                                                   sticker=down_,
-                                                   caption=caption,
-                                                   reply_to_message_id=reply_to_message_id)
-        elif type_ == "video":
-            return await self._client.send_video(chat_id=chat_id,
-                                                 video=down_,
-                                                 caption=caption,
-                                                 reply_to_message_id=reply_to_message_id)
+        return await protected_content.copy(chat_id, reply_to_message_id=reply_to_message_id)
 
     async def send_as_file(self,
                            text: str,
