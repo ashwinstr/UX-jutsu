@@ -1,10 +1,9 @@
-
 import asyncio
 import json
 import os
 import time
 
-from userge import userge, Message
+from userge import Message, userge
 
 
 @userge.on_cmd(
@@ -20,24 +19,30 @@ from userge import userge, Message
 async def make_tweet(message: Message):
     try:
         await userge.get_chat_member(-1001331162912, message.from_user.id)
-    except:
-        return await message.edit("First join **@UX_xplugin_support** and get approved by Kakashi.")
+    except BaseException:
+        return await message.edit(
+            "First join **@UX_xplugin_support** and get approved by Kakashi."
+        )
     reply_ = message.replied
     if not reply_:
         return await message.edit("`Reply to message...`", del_in=5)
     name_ = reply_.from_user.first_name
     username_ = "@" + reply_.from_user.username
     pfp_ = reply_.from_user.photo.big_file_id or None
-    text_ = reply_.text if reply_.text and "-f" not in message.flags else message.filtered_input_str
+    text_ = (
+        reply_.text
+        if reply_.text and "-f" not in message.flags
+        else message.filtered_input_str
+    )
     if not text_:
         return await message.edit("`Text not found...`", del_in=5)
     await message.edit("`Making tweet...`")
     bot_ = "QuoteIT_thebot"
     form_ = {
-        'cmd': 'TWEET_IT',
-        'name': name_,
-        'username': username_,
-        'text': text_,
+        "cmd": "TWEET_IT",
+        "name": name_,
+        "username": username_,
+        "text": text_,
     }
     json_ = json.dumps(form_, indent=4)
     if pfp_:
@@ -50,9 +55,11 @@ async def make_tweet(message: Message):
     start_time = time.time()
     while True:
         try:
-            result = await userge.get_inline_bot_results(bot_, f"tweetIT {message.from_user.id} -done")
+            result = await userge.get_inline_bot_results(
+                bot_, f"tweetIT {message.from_user.id} -done"
+            )
             break
-        except:
+        except BaseException:
             current_time = time.time()
             if current_time - start_time > 10:
                 return await message.edit("`Timeout.`", del_in=3)
@@ -61,9 +68,9 @@ async def make_tweet(message: Message):
             chat_id=message.chat.id,
             query_id=result.query_id,
             result_id=result.results[0].id,
-            reply_to_message_id=reply_.message_id
+            reply_to_message_id=reply_.message_id,
         ),
-        message.delete()
+        message.delete(),
     )
 
 
@@ -80,8 +87,10 @@ async def make_tweet(message: Message):
 async def make_quote(message: Message):
     try:
         await userge.get_chat_member(-1001331162912, message.from_user.id)
-    except:
-        return await message.edit("First join **@UX_xplugin_support** and get approved by Kakashi.")
+    except BaseException:
+        return await message.edit(
+            "First join **@UX_xplugin_support** and get approved by Kakashi."
+        )
     reply_ = message.replied
     if not reply_:
         return await message.edit("`Reply to message...`", del_in=5)
@@ -104,7 +113,7 @@ async def make_quote(message: Message):
         "name": name_,
         "text": text_,
         "reply_name": reply_name,
-        "reply_text": reply_text
+        "reply_text": reply_text,
     }
     json_ = json.dumps(form_, indent=4)
     if pfp_:
@@ -117,9 +126,11 @@ async def make_quote(message: Message):
     start_time = time.time()
     while True:
         try:
-            result = await userge.get_inline_bot_results(bot_, f"quoteIT {message.from_user.id} -done")
+            result = await userge.get_inline_bot_results(
+                bot_, f"quoteIT {message.from_user.id} -done"
+            )
             break
-        except:
+        except BaseException:
             current_time = time.time()
             if current_time - start_time > 10:
                 return await message.edit("`Timeout.`", del_in=3)
@@ -128,7 +139,7 @@ async def make_quote(message: Message):
             chat_id=message.chat.id,
             query_id=result.query_id,
             result_id=result.results[0].id,
-            reply_to_message_id=reply_.message_id
+            reply_to_message_id=reply_.message_id,
         ),
-        message.delete()
+        message.delete(),
     )
