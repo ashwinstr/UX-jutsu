@@ -189,6 +189,7 @@ class Message(RawMessage):
             f"Filtered Input String => [ {self._filtered_input_str}, {self._flags} ]")
         self._filtered = True
 
+    # credits to Uniborg for this idea
     async def copy_protected_content(self,
                                      chat_id: Union[int, str] = "me",
                                      reply_to_message_id: Optional[int] = None) -> 'Message':

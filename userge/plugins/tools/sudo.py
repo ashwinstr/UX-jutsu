@@ -256,6 +256,8 @@ async def add_sudo_cmd(message: Message):
         "fbanp",
         "fbanm",
         "unfban",
+        "reply",
+        "leave",
     ]
     if "-all" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()
