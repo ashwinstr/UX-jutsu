@@ -14,7 +14,7 @@ from userge import userge, Message
         "flags": {
             "-f": "add fake text in the fake tweet",
         },
-        "usage": "{tr}tweet_it [reply to message]",
+        "usage": "{tr}twit [reply to message]",
     },
 )
 async def make_tweet(message: Message):
@@ -54,7 +54,7 @@ async def make_tweet(message: Message):
             break
         except:
             current_time = time.time()
-            if current_time - start_time > 10:
+            if current_time - start_time > 15:
                 return await message.edit("`Timeout.`", del_in=3)
     await asyncio.gather(
         userge.send_inline_bot_result(
@@ -75,6 +75,7 @@ async def make_tweet(message: Message):
             "-r": "add the replied message of quote message",
             "-f": "add fake text",
         },
+        "usage": "{tr}qit [reply to message]"
     },
 )
 async def make_quote(message: Message):
@@ -121,7 +122,7 @@ async def make_quote(message: Message):
             break
         except:
             current_time = time.time()
-            if current_time - start_time > 10:
+            if current_time - start_time > 15:
                 return await message.edit("`Timeout.`", del_in=3)
     await asyncio.gather(
         userge.send_inline_bot_result(
