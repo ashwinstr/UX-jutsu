@@ -210,7 +210,7 @@ class Message(RawMessage):
         if c_id.isdigit() and len(c_id) == 10:
             c_id = int("-100" + c_id)
         protected_content = await self._client.get_messages(c_id, int(m_id))
-        return await protected_content.copy(chat_id, reply_to_message_id=reply_to_message_id)
+        return self.copy_protected_content = await protected_content.copy(chat_id, reply_to_message_id=reply_to_message_id)
 
     async def send_as_file(self,
                            text: str,
