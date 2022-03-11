@@ -189,6 +189,30 @@ class Message(RawMessage):
             f"Filtered Input String => [ {self._filtered_input_str}, {self._flags} ]")
         self._filtered = True
 
+    # credits to Uniborg for this idea
+    async def copy_protected_content(self,
+                                     chat_id: Union[int, str] = "me",
+                                     reply_to_message_id: Optional[int] = None) -> 'Message':
+        """\nYou can download and send any type of message protected content with this attribute
+        
+        Example:
+                message.copy_protected_content(chat_id="UX_xplugin_support")
+        Parameters:
+            chat_id (``str`` | ``int``):
+                username or id of target group/channel.
+        
+        Returns:
+            On success, the sent Message is returned.
+        """
+        msg_link = self.link
+        split_link = msg_link.split("/")
+        c_id = split_link[-2]
+        m_id = split_link[-1]
+        if c_id.isdigit() and len(c_id) == 10:
+            c_id = int("-100" + c_id)
+        protected_content = await self._client.get_messages(c_id, int(m_id))
+        return await protected_content.copy(chat_id, reply_to_message_id=reply_to_message_id)
+
     async def send_as_file(self,
                            text: str,
                            filename: str = "output.txt",
