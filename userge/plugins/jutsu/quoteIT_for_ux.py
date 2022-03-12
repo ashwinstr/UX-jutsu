@@ -41,11 +41,11 @@ async def make_tweet(message: Message):
     await message.edit("`Making tweet...`")
     bot_ = "QuoteIT_thebot"
     form_ = {
-        'cmd': 'TWEET_IT',
-        'name': name_,
-        'username': username_,
-        'text': text_,
-        'background': bg_,
+        "cmd": "TWEET_IT",
+        "name": name_,
+        "username": username_,
+        "text": text_,
+        "background": bg_,
     }
     json_ = json.dumps(form_, indent=4)
     if pfp_:
