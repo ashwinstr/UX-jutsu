@@ -13,6 +13,7 @@ from userge import userge, Message
         "header": "make replied message a fake tweet",
         "flags": {
             "-f": "add fake text in the fake tweet",
+            "-b": "black background",
         },
         "usage": "{tr}twit [reply to message]",
     },
@@ -29,6 +30,7 @@ async def make_tweet(message: Message):
     username_ = "@" + reply_.from_user.username
     pfp_ = reply_.from_user.photo.big_file_id or None
     text_ = reply_.text if reply_.text and "-f" not in message.flags else message.filtered_input_str
+    bg_ = (26, 43, 60) if "-b" not in message.flags else (0, 0, 0)
     if not text_:
         return await message.edit("`Text not found...`", del_in=5)
     await message.edit("`Making tweet...`")
@@ -38,6 +40,7 @@ async def make_tweet(message: Message):
         'name': name_,
         'username': username_,
         'text': text_,
+        'background': bg_,
     }
     json_ = json.dumps(form_, indent=4)
     if pfp_:
