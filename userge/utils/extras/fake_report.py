@@ -8,6 +8,8 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from requests import get
 
+from userge import Font
+
 
 async def reported_user_image(u_name: str):
     """reported user"""
@@ -19,8 +21,8 @@ async def reported_user_image(u_name: str):
     photo = Image.open(in_memory)
     drawing = ImageDraw.Draw(photo)
     white = (255, 255, 255)
-    font1 = ImageFont.truetype("resources/Roboto-Regular.ttf", 45)
-    font2 = ImageFont.truetype("resources/Roboto-Medium.ttf", 55)
+    font1 = ImageFont.truetype(Font.ROBOTO_REGULAR, 45)
+    font2 = ImageFont.truetype(Font.ROBOTO_MEDIUM, 55)
     drawing.text((132, 201), text1, fill=white, font=font2)
     x = 0
     for u_text in textwrap.wrap(text2, width=38):
