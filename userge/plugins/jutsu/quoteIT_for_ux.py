@@ -45,15 +45,15 @@ async def make_tweet(message: Message):
     json_ = json.dumps(form_, indent=4)
     if pfp_:
         down_ = await userge.download_media(pfp_)
-        await userge.send_photo(bot_, down_, caption=json_)
+        msg_ = await userge.send_photo(bot_, down_, caption=json_)
         os.remove(down_)
     else:
-        await userge.send_message(bot_, json_)
+        msg_ = await userge.send_message(bot_, json_)
     await asyncio.sleep(5)
     start_time = time.time()
     while True:
         try:
-            result = await userge.get_inline_bot_results(bot_, f"tweetIT {message.from_user.id} -done")
+            result = await userge.get_inline_bot_results(bot_, f"tweetIT {msg_.message_id} -done")
             break
         except:
             current_time = time.time()
@@ -113,15 +113,15 @@ async def make_quote(message: Message):
     json_ = json.dumps(form_, indent=4)
     if pfp_:
         down_ = await userge.download_media(pfp_)
-        await userge.send_photo(bot_, down_, caption=json_)
+        msg_ = await userge.send_photo(bot_, down_, caption=json_)
         os.remove(down_)
     else:
-        await userge.send_message(bot_, json_)
+        msg_ = await userge.send_message(bot_, json_)
     await asyncio.sleep(5)
     start_time = time.time()
     while True:
         try:
-            result = await userge.get_inline_bot_results(bot_, f"quoteIT {message.from_user.id} -done")
+            result = await userge.get_inline_bot_results(bot_, f"quoteIT {msg_.message_id} -done")
             break
         except:
             current_time = time.time()
