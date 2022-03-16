@@ -1,11 +1,10 @@
 import asyncio
 import json
 import os
-import re
-import time
 
 from pyrogram import filters
-from userge import userge, Message
+
+from userge import Message, userge
 
 
 @userge.on_cmd(
@@ -64,7 +63,9 @@ async def make_tweet(message: Message):
     resp = response.text
     if resp != "Sticker done.":
         return await message.edit(resp, del_in=5)
-    result = await userge.get_inline_bot_results(bot_, f"tweetIT {message.from_user.id} -done")
+    result = await userge.get_inline_bot_results(
+        bot_, f"tweetIT {message.from_user.id} -done"
+    )
     await asyncio.gather(
         userge.send_inline_bot_result(
             chat_id=message.chat.id,
@@ -133,7 +134,9 @@ async def make_quote(message: Message):
     resp = response.text
     if resp != "Sticker done.":
         return await message.edit(resp, del_in=5)
-    result = await userge.get_inline_bot_results(bot_, f"quoteIT {message.from_user.id} -done")
+    result = await userge.get_inline_bot_results(
+        bot_, f"quoteIT {message.from_user.id} -done"
+    )
     await asyncio.gather(
         userge.send_inline_bot_result(
             chat_id=message.chat.id,
