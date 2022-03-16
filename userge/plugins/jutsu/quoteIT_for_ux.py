@@ -49,7 +49,7 @@ async def make_tweet(message: Message):
         os.remove(down_)
     else:
         msg_ = await userge.send_message(bot_, json_)
-    await asyncio.sleep(5)
+    await asyncio.sleep(7.5)
     start_time = time.time()
     while True:
         try:
@@ -57,7 +57,7 @@ async def make_tweet(message: Message):
             break
         except:
             current_time = time.time()
-            if current_time - start_time > 15:
+            if current_time - start_time > 25:
                 return await message.edit("`Timeout.`", del_in=3)
     await asyncio.gather(
         userge.send_inline_bot_result(
