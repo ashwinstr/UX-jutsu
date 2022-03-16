@@ -239,7 +239,7 @@ async def doc_upload(
         msg = await message.client.send_document(
             chat_id=message.chat.id,
             document=str_path,
-	        force_document=True,
+            force_document=True,
             thumb=thumb,
             caption=path.name,
             parse_mode="html",
