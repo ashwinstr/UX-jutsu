@@ -13,6 +13,7 @@ from userge import userge, Message
         "header": "make replied message a fake tweet",
         "flags": {
             "-f": "add fake text in the fake tweet",
+            "-b": "black background",
         },
         "usage": "{tr}twit [reply to message]",
     },
@@ -29,6 +30,7 @@ async def make_tweet(message: Message):
     username_ = "@" + reply_.from_user.username
     pfp_ = reply_.from_user.photo.big_file_id or None
     text_ = reply_.text if reply_.text and "-f" not in message.flags else message.filtered_input_str
+    bg_ = (26, 43, 60) if "-b" not in message.flags else (0, 0, 0)
     if not text_:
         return await message.edit("`Text not found...`", del_in=5)
     await message.edit("`Making tweet...`")
@@ -38,15 +40,16 @@ async def make_tweet(message: Message):
         'name': name_,
         'username': username_,
         'text': text_,
+        'background': bg_,
     }
     json_ = json.dumps(form_, indent=4)
     if pfp_:
         down_ = await userge.download_media(pfp_)
-        await userge.send_photo(bot_, down_, caption=json_)
+        msg_ = await userge.send_photo(bot_, down_, caption=json_)
         os.remove(down_)
     else:
-        await userge.send_message(bot_, json_)
-    await asyncio.sleep(5)
+        msg_ = await userge.send_message(bot_, json_)
+    await asyncio.sleep(7.5)
     start_time = time.time()
     while True:
         try:
@@ -54,7 +57,7 @@ async def make_tweet(message: Message):
             break
         except:
             current_time = time.time()
-            if current_time - start_time > 15:
+            if current_time - start_time > 25:
                 return await message.edit("`Timeout.`", del_in=3)
     await asyncio.gather(
         userge.send_inline_bot_result(
@@ -110,10 +113,10 @@ async def make_quote(message: Message):
     json_ = json.dumps(form_, indent=4)
     if pfp_:
         down_ = await userge.download_media(pfp_)
-        await userge.send_photo(bot_, down_, caption=json_)
+        msg_ = await userge.send_photo(bot_, down_, caption=json_)
         os.remove(down_)
     else:
-        await userge.send_message(bot_, json_)
+        msg_ = await userge.send_message(bot_, json_)
     await asyncio.sleep(5)
     start_time = time.time()
     while True:
