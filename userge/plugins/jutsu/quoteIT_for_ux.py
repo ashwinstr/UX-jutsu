@@ -45,20 +45,23 @@ async def make_tweet(message: Message):
     json_ = json.dumps(form_, indent=4)
     if pfp_:
         down_ = await userge.download_media(pfp_)
-        msg_ = await userge.send_photo(bot_, down_, caption=json_)
+        await userge.send_photo(bot_, down_, caption=json_)
         os.remove(down_)
     else:
-        msg_ = await userge.send_message(bot_, json_)
-    await asyncio.sleep(7.5)
-    start_time = time.time()
+        await userge.send_message(bot_, json_)
+    attempt = 0
     while True:
+        attempt += 1
         try:
             result = await userge.get_inline_bot_results(bot_, f"tweetIT {message.from_user.id} -done")
+            found = True
             break
         except:
-            current_time = time.time()
-            if current_time - start_time > 25:
-                return await message.edit("`Timeout.`", del_in=3)
+            found = False
+        if attempt == 2:
+            break
+    if not found:
+        return await message.edit("`Timeout.`", del_in=3)
     await asyncio.gather(
         userge.send_inline_bot_result(
             chat_id=message.chat.id,
