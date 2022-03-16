@@ -2,8 +2,10 @@
 import asyncio
 import json
 import os
+import re
 import time
 
+from pyrogram import filters
 from userge import userge, Message
 
 
@@ -49,19 +51,15 @@ async def make_tweet(message: Message):
         os.remove(down_)
     else:
         await userge.send_message(bot_, json_)
-    attempt = 0
-    while True:
-        attempt += 1
-        try:
-            result = await userge.get_inline_bot_results(bot_, f"tweetIT {message.from_user.id} -done")
-            found = True
-            break
-        except:
-            found = False
-        if attempt == 2:
-            break
-    if not found:
-        return await message.edit("`Timeout.`", del_in=3)
+    try:
+        async with userge.conversation(bot_, timeout=20) as conv:
+            response = await conv.get_response(mark_read=True, filters=(filters.bot))
+    except TimeoutError:
+        return await message.edit("`Bot didn't respond...`", del_in=5)
+    resp = response.text
+    if resp != "Sticker done.":
+        return await message.edit(resp, del_in=5)
+    result = await userge.get_inline_bot_results(bot_, f"tweetIT {message.from_user.id} -done")
     await asyncio.gather(
         userge.send_inline_bot_result(
             chat_id=message.chat.id,
