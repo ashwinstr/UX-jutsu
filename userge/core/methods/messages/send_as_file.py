@@ -30,6 +30,7 @@ class SendAsFile(RawClient):  # pylint: disable=missing-class-docstring
                            chat_id: Union[int, str],
                            text: str,
                            filename: str = "output.txt",
+                           force_document: bool = True,
                            caption: str = '',
                            log: Union[bool, str] = False,
                            reply_to_message_id: Optional[int] = None) -> 'types.bound.Message':
@@ -52,6 +53,11 @@ class SendAsFile(RawClient):  # pylint: disable=missing-class-docstring
             filename (``str``, *optional*):
                 file_name for output file.
 
+            force_document (``bool``, *optional*):
+                Pass True to force sending files as document. Useful for video files that need to be sent as
+                document messages instead of video messages.
+                Defaults to True.
+
             caption (``str``, *optional*):
                 caption for output file.
 
@@ -73,6 +79,7 @@ class SendAsFile(RawClient):  # pylint: disable=missing-class-docstring
         _LOG.debug(_LOG_STR, f"Uploading {filename} To Telegram")
         msg = await self.send_document(chat_id=chat_id,
                                        document=filename,
+                                       force_document=True,
                                        caption=caption[:1024],
                                        disable_notification=True,
                                        reply_to_message_id=reply_to_message_id)
