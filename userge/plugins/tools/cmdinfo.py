@@ -38,7 +38,7 @@ async def see_info(message: Message):
     other_trigger = [".", Config.SUDO_TRIGGER]
     cmd_list = list(userge.manager.commands)
     found = True
-    if not (cmd_str.startswith(Config.CMD_TRIGGER) and (cmd_str in cmd_list)):
+    if not (cmd_str in cmd_list or (Config.CMD_TRIGGER + cmd_str) in cmd_list):
         found = False
         for character in other_trigger:
             if cmd_str.startswith(character) and (
