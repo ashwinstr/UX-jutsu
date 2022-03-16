@@ -53,7 +53,7 @@ async def make_tweet(message: Message):
     start_time = time.time()
     while True:
         try:
-            result = await userge.get_inline_bot_results(bot_, f"tweetIT {msg_.message_id} -done")
+            result = await userge.get_inline_bot_results(bot_, f"tweetIT {message.from_user.id} -done")
             break
         except:
             current_time = time.time()
@@ -121,7 +121,7 @@ async def make_quote(message: Message):
     start_time = time.time()
     while True:
         try:
-            result = await userge.get_inline_bot_results(bot_, f"quoteIT {msg_.message_id} -done")
+            result = await userge.get_inline_bot_results(bot_, f"quoteIT {message.from_user.id} -done")
             break
         except:
             current_time = time.time()
