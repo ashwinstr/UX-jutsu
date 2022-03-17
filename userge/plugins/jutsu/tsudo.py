@@ -12,6 +12,21 @@ async def _init() -> None:
 
 
 @userge.on_cmd(
+    "tsudo",
+    about={
+        "header": "check tsudo status",
+        "usage": "{tr}tsudo"
+    },
+)
+async def tsudo_check(message: Message):
+    user_ = message.from_user.id
+    if user_ in Config.TSUDO:
+        await message.edit("`Your TSUDO is enabled.`", del_in=5)
+    else:
+        await message.edit("`Your TSUDO is disabled.`", del_in=5)
+
+
+@userge.on_cmd(
     "distsudo",
     about={
         "header": "disable tsudo temporarily",
@@ -39,7 +54,7 @@ async def dis_tsudo(message: Message):
     },
 )
 async def dis_tsudo(message: Message):
-    " disable tsudo temporarily "
+    " enable tsudo temporarily "
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
         return
