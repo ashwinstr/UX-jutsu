@@ -26,8 +26,9 @@ async def dis_tsudo(message: Message):
     if user_  in Config.TSUDO:
         Config.TSUDO.remove(user_)
         await TSUDO_LIST.delete_one({"_id": user_})
+        await message.edit("`TSUDO disabled for you...`", del_in=5)
     else:
-        return await message.edit("`TSUDO for you is already disabled temporarily.`", del_in=5)
+        await message.edit("`TSUDO for you is already disabled temporarily.`", del_in=5)
 
 
 @userge.on_cmd(
@@ -45,5 +46,6 @@ async def dis_tsudo(message: Message):
     if user_  not in Config.TSUDO:
         Config.TSUDO.add(user_)
         await TSUDO_LIST.insert_one({"_id": user_})
+        await message.edit("`TSUDO enabled for you...`", del_in=5)
     else:
-        return await message.edit("`TSUDO for you is already enabled.`", del_in=5)
+        await message.edit("`TSUDO for you is already enabled.`", del_in=5)
