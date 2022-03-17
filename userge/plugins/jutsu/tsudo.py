@@ -6,21 +6,9 @@ TSUDO_LIST = get_collection("TSUDO_LIST")
 
 
 async def _init() -> None:
-    found = await TSUDO_LIST.find_one({"_id": "TSUDO_USERS"})
-    if found:
-        for one in found['users']:
-            Config.TSUDO.add(one)
-    else:
-        list_ = []
-        for one in Config.TRUSTED_SUDO_USERS:
-            Config.TSUDO.add(one)
-            list_.append(one)
-        await TSUDO_LIST.insert_one(
-            {
-                "_id": "TSUDO_USERS",
-                "users": list_
-            }
-        )
+    async for one in TSUDO_LIST.find():
+        Config.TSUDO.add(one['_id'])
+
 
 
 @userge.on_cmd(
@@ -36,16 +24,8 @@ async def dis_tsudo(message: Message):
     if user_ in Config.OWNER_ID:
         return
     if user_  in Config.TSUDO:
-        found = await TSUDO_LIST.find_one({"_id": "TSUDO_USERS"})
-        if found:
-            users = found['users']
-            users.remove(user_)
-            await TSUDO_LIST.update_one(
-                {"_id": "TSUDO_USERS"},
-                {"$set": {"users": users}},
-                upsert=True
-            )
-            Config.TSUDO.remove(user_)
+        Config.TSUDO.remove(user_)
+        await TSUDO_LIST.delete_one({"_id": user_})
     else:
         return await message.edit("`TSUDO for you is already disabled temporarily.`", del_in=5)
 
@@ -63,15 +43,7 @@ async def dis_tsudo(message: Message):
     if user_ in Config.OWNER_ID:
         return
     if user_  not in Config.TSUDO:
-        found = await TSUDO_LIST.find_one({"_id": "TSUDO_USERS"})
-        if found:
-            users = found['users']
-            users.append(user_)
-            await TSUDO_LIST.update_one(
-                {"_id": "TSUDO_USERS"},
-                {"$set": {"users": users}},
-                upsert=True
-            )
-            Config.TSUDO.append(user_)
+        Config.TSUDO.add(user_)
+        await TSUDO_LIST.insert_one({"_id": user_})
     else:
         return await message.edit("`TSUDO for you is already enabled.`", del_in=5)

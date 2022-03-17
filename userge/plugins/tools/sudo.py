@@ -18,6 +18,7 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 TRUSTED_SUDO_USERS = get_collection("trusted_sudo_users")
 SUDO_USERS_COLLECTION = get_collection("sudo_users")
 SUDO_CMDS_COLLECTION = get_collection("sudo_cmds")
+TSUDO_LIST = get_collection("TSUDO_LIST")
 
 
 async def _init() -> None:
@@ -109,6 +110,9 @@ async def add_sudo(message: Message):
             else:
                 pass
             Config.TRUSTED_SUDO_USERS.add(user["id"])
+            if user["id"] not in Config.TSUDO:
+                Config.TSUDO.add(user["id"])
+                await TSUDO_LIST.insert_one({"_id": user["id"]})
             await asyncio.gather(
                 TRUSTED_SUDO_USERS.insert_one(
                     {"_id": user["id"], "men": user["mention"]}
