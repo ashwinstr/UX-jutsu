@@ -7,7 +7,8 @@ TSUDO_LIST = get_collection("TSUDO_LIST")
 
 async def _init() -> None:
     async for one in TSUDO_LIST.find():
-        Config.TSUDO = one['users']
+        for two in one['users']:
+            Config.TSUDO.add(two)
 
 
 @userge.on_cmd(
