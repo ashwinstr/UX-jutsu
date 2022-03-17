@@ -53,7 +53,7 @@ async def dis_tsudo(message: Message):
         "usage": "{tr}entsudo",
     },
 )
-async def dis_tsudo(message: Message):
+async def en_tsudo(message: Message):
     " enable tsudo temporarily "
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
