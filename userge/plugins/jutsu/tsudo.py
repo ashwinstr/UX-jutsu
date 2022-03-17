@@ -6,13 +6,21 @@ TSUDO_LIST = get_collection("TSUDO_LIST")
 
 
 async def _init() -> None:
-    found = False
-    async for one in TSUDO_LIST.find():
-        Config.TSUDO = one['users']
-        found = True
-    if not found:
+    found = await TSUDO_LIST.find_one({"_id": "TSUDO_USERS"})
+    if found:
+        for one in found['users']:
+            Config.TSUDO.add(one)
+    else:
+        list_ = []
         for one in Config.TRUSTED_SUDO_USERS:
             Config.TSUDO.add(one)
+            list_.append(one)
+        await TSUDO_LIST.insert_one(
+            {
+                "_id": "TSUDO_USERS",
+                "users": list_
+            }
+        )
 
 
 @userge.on_cmd(
