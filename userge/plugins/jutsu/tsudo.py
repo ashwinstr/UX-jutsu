@@ -6,9 +6,11 @@ TSUDO_LIST = get_collection("TSUDO_LIST")
 
 
 async def _init() -> None:
+    found = False
     async for one in TSUDO_LIST.find():
         Config.TSUDO = one['users']
-    if not Config.TSUDO:
+        found = True
+    if not found:
         for one in Config.TRUSTED_SUDO_USERS:
             Config.TSUDO.add(one)
 
