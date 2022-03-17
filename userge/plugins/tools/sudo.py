@@ -262,6 +262,7 @@ async def add_sudo_cmd(message: Message):
         "unfban",
         "reply",
         "leave",
+        "tsudo",
         "distsudo",
         "entsudo",
     ]
