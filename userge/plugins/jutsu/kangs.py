@@ -242,8 +242,9 @@ async def kang_(message: Message):
                         return
                 try:
                     await conv.send_document(media_)
-                except BaseException:
-                    await userge.send_message(Config.LOG_CHANNEL_ID, media_)
+                except BaseException as e:
+                    await userge.send_message(Config.LOG_CHANNEL_ID, str(e))
+                    return
                 rsp = await conv.get_response(mark_read=True)
                 if "Sorry, the file type is invalid." in rsp.text:
                     await kang_msg.edit(

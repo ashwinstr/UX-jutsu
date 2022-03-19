@@ -21,6 +21,7 @@ from pyrogram.types import User
 from userge import Config, Message, get_collection, userge
 from userge.core.ext import RawClient
 from userge.utils import runcmd, terminate
+from userge.helpers import Start
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 DISABLED_CHATS = get_collection("DISABLED_CHATS")
@@ -79,36 +80,19 @@ async def restart_(message: Message):
         shutil.rmtree(Config.DOWN_PATH, ignore_errors=True)
     if "h" in message.flags:
         if Config.HEROKU_APP:
-            update = await message.edit(
-                "`Heroku app found, trying to restart dyno...\nthis will take upto 30 sec`"
+            await message.edit(
+                "`Heroku app found, trying to restart dyno...\nthis will take upto 01 minute and 30 seconds.`"
             )
-            await FROZEN.drop()
-            be_update = time.time()
-            await UPDATE_MSG.update_one(
-                {"_id": "UPDATE_MSG"},
-                {"$set": {"message": f"{update.chat.id}/{update.message_id}"}},
-                upsert=True,
-            )
-            await UPDATE_MSG.update_one(
-                {"_id": "UPDATE_MSG"}, {"$set": {"time": be_update}}, upsert=True
+            await Start.save_msg(
+                message, "<b>App updated successfully.</b>"
             )
             Config.HEROKU_APP.restart()
             time.sleep(30)
         else:
-            update = await message.edit("`Restarting [HARD] ...`")
-            be_update = time.time()
-            await UPDATE_MSG.update_one(
-                {"_id": "UPDATE_MSG"},
-                {"$set": {"message": f"{update.chat.id}/{update.message_id}"}},
-                upsert=True,
+            await message.edit("`Restarting [HARD] ...`")
+            await Start.save_msg(
+                message, "<b>App restarted successfully.</b>"
             )
-            await UPDATE_MSG.update_one(
-                {"_id": "UPDATE_MSG"}, {"$set": {"time": be_update}}, upsert=True
-            )
-            await UPDATE_MSG.update_one(
-                {"_id": "UPDATE_MSG"}, {"$set": {"process": "restarted"}}, upsert=True
-            )
-            await FROZEN.drop()
             asyncio.get_event_loop().create_task(userge.restart(hard=True))
     else:
         await message.edit("`Restarting [SOFT] ...`", del_in=1)
