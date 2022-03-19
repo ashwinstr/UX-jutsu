@@ -308,9 +308,9 @@ async def view_current_blockPM_msg(message: Message):
 )
 async def uninvitedPmHandler(message: Message):
     """pm message handler"""
-    me = await userge.get_me()
     if msg_type(message) is None:
         return
+    me = await userge.get_me()
     owner = " ".join([me.first_name, me.last_name or ""])
     user_dict = await userge.get_user_dict(message.from_user.id)
     user_dict.update({"chat": message.chat.title or owner or "this group"})
