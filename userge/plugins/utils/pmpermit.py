@@ -12,7 +12,7 @@ import asyncio
 from typing import Dict
 
 from userge import Config, Message, filters, get_collection, userge
-from userge.helpers import full_name, msg_type
+from userge.helpers import full_name
 from userge.utils import SafeDict
 from userge.utils.extras import reported_user_image
 
@@ -308,8 +308,6 @@ async def view_current_blockPM_msg(message: Message):
 )
 async def uninvitedPmHandler(message: Message):
     """pm message handler"""
-    if msg_type(message) is None:
-        return
     me = await userge.get_me()
     owner = " ".join([me.first_name, me.last_name or ""])
     user_dict = await userge.get_user_dict(message.from_user.id)

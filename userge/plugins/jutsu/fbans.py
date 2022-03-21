@@ -12,7 +12,7 @@ import asyncio
 import os
 
 from pyrogram import filters
-from pyrogram.errors import FloodWait, PeerIdInvalid, UserBannedInChannel, ChannelPrivate
+from pyrogram.errors import FloodWait, PeerIdInvalid, UserBannedInChannel
 
 from userge import Config, Message, get_collection, userge
 from userge.helpers import extract_id, report_user
@@ -111,14 +111,15 @@ async def delfed_(message: Message):
             chat_ = await message.client.get_chat(message.input_str or message.chat.id)
             chat_id = chat_.id
             chat_.title
-        except (PeerIdInvalid, IndexError, ChannelPrivate):
+        except (PeerIdInvalid, IndexError):
             chat_id = message.input_str
-            if not chat_id.isdigit() or not chat_id.startswith("-"):
+            id_ = chat_id.replace("-", "")
+            if not id_.isdigit() or not chat_id.startswith("-"):
                 return await message.err("Provide a valid chat ID...", del_in=7)
         out = f"Chat ID: {chat_id}\n"
         found = await FED_LIST.find_one({"chat_id": int(chat_id)})
         if found:
-            msg_ = out + f"Successfully removed Fed: **{found['fed_name']}**"
+            msg_ = out + f"Successfully Removed Fed: **{found['fed_name']}**"
             await message.edit(msg_, del_in=7)
             await FED_LIST.delete_one(found)
         else:

@@ -54,7 +54,7 @@ async def stik_(message: Message):
     if "-f" in message.flags:
         try:
             len_ = int(message.filtered_input_str)
-        except BaseException:
+        except:
             len_ = 3
         dure_ = round(float(info_["duration_in_ms"]), 3) / 1000
         if dure_ > len_:

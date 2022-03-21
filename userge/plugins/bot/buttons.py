@@ -11,7 +11,9 @@ from pyrogram.errors import BadRequest, UserIsBot
 from pyrogram.types import ReplyKeyboardRemove
 
 from userge import Config, Message, get_collection, userge
+from userge.helpers import msg_type
 from userge.plugins.bot.bot_pm import get_bot_info
+from userge.plugins.utils.telegraph import upload_media_
 from userge.utils import get_file_id
 from userge.utils import parse_buttons as pb
 

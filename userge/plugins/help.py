@@ -940,7 +940,7 @@ if userge.has_bot:
                                     Config.LOG_CHANNEL_ID, int(inline_db["media_id"])
                                 )
                                 media_data = get_file_id(saved_msg)
-                                await userge.download_media(media_data)
+                                media_down = await userge.download_media(media_data)
                             textx, buttonsx = pb(inline_db["msg_content"])
                             if inline_db["media_valid"]:
                                 if saved_msg.photo:

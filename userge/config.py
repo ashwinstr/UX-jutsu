@@ -125,8 +125,8 @@ class Config:
     NEW_ALIVE_MEDIA = None
     ALIVE_MEDIA_TYPE = None
     LOG_KANG = True
-    TSUDO: Set[int] = set()
-    TSUDO_CMD = ["tsudo", "entsudo"]
+    TSUDO = Set[int] = set()
+    TSUDO_CMD = ["entsudo"]
 
 
 def get_version() -> str:
