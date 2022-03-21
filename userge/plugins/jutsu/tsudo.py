@@ -1,22 +1,16 @@
-
-from userge import userge, Message, Config, get_collection
-
+from userge import Config, Message, get_collection, userge
 
 TSUDO_LIST = get_collection("TSUDO_LIST")
 
 
 async def _init() -> None:
     async for one in TSUDO_LIST.find():
-        Config.TSUDO.add(one['_id'])
-
+        Config.TSUDO.add(one["_id"])
 
 
 @userge.on_cmd(
     "tsudo",
-    about={
-        "header": "check tsudo status",
-        "usage": "{tr}tsudo"
-    },
+    about={"header": "check tsudo status", "usage": "{tr}tsudo"},
 )
 async def tsudo_check(message: Message):
     user_ = message.from_user.id
@@ -34,11 +28,11 @@ async def tsudo_check(message: Message):
     },
 )
 async def dis_tsudo(message: Message):
-    " disable tsudo temporarily "
+    "disable tsudo temporarily"
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
         return
-    if user_  in Config.TSUDO:
+    if user_ in Config.TSUDO:
         Config.TSUDO.remove(user_)
         await TSUDO_LIST.delete_one({"_id": user_})
         await message.edit("`TSUDO disabled for you...`", del_in=5)
@@ -54,11 +48,11 @@ async def dis_tsudo(message: Message):
     },
 )
 async def en_tsudo(message: Message):
-    " enable tsudo temporarily "
+    "enable tsudo temporarily"
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
         return
-    if user_  not in Config.TSUDO:
+    if user_ not in Config.TSUDO:
         Config.TSUDO.add(user_)
         await TSUDO_LIST.insert_one({"_id": user_})
         await message.edit("`TSUDO enabled for you...`", del_in=5)
