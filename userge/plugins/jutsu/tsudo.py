@@ -1,15 +1,29 @@
-from userge import Config, Message, get_collection, userge
+
+from userge import userge, Message, Config, get_collection
+
 
 TSUDO_LIST = get_collection("TSUDO_LIST")
 
 
 async def _init() -> None:
-    found = await TSUDO_LIST.find_one({"_id": "TSUDO_USERS"})
-    if found:
-        Config.TSUDO = found["users"]
+    async for one in TSUDO_LIST.find():
+        Config.TSUDO.add(one['_id'])
+
+
+
+@userge.on_cmd(
+    "tsudo",
+    about={
+        "header": "check tsudo status",
+        "usage": "{tr}tsudo"
+    },
+)
+async def tsudo_check(message: Message):
+    user_ = message.from_user.id
+    if user_ in Config.TSUDO:
+        await message.edit("`Your TSUDO is enabled.`", del_in=5)
     else:
-        Config.TSUDO = Config.TRUSTED_SUDO_USERS
-        await TSUDO_LIST.insert_one({"_id": "TSUDO_USERS", "users": Config.TSUDO})
+        await message.edit("`Your TSUDO is disabled.`", del_in=5)
 
 
 @userge.on_cmd(
@@ -20,23 +34,16 @@ async def _init() -> None:
     },
 )
 async def dis_tsudo(message: Message):
-    "disable tsudo temporarily"
+    " disable tsudo temporarily "
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
         return
-    if user_ in Config.TSUDO:
-        found = await TSUDO_LIST.find_one({"_id": "TSUDO_USERS"})
-        if found:
-            users = found["users"]
-            users.remove(user_)
-            await TSUDO_LIST.update_one(
-                {"_id": "TSUDO_USERS"}, {"$set": {"users": users}}, upsert=True
-            )
-            Config.TSUDO.remove(user_)
+    if user_  in Config.TSUDO:
+        Config.TSUDO.remove(user_)
+        await TSUDO_LIST.delete_one({"_id": user_})
+        await message.edit("`TSUDO disabled for you...`", del_in=5)
     else:
-        return await message.edit(
-            "`TSUDO for you is already disabled temporarily.`", del_in=5
-        )
+        await message.edit("`TSUDO for you is already disabled temporarily.`", del_in=5)
 
 
 @userge.on_cmd(
@@ -46,19 +53,14 @@ async def dis_tsudo(message: Message):
         "usage": "{tr}entsudo",
     },
 )
-async def dis_tsudo(message: Message):
-    "disable tsudo temporarily"
+async def en_tsudo(message: Message):
+    " enable tsudo temporarily "
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
         return
-    if user_ not in Config.TSUDO:
-        found = await TSUDO_LIST.find_one({"_id": "TSUDO_USERS"})
-        if found:
-            users = found["users"]
-            users.append(user_)
-            await TSUDO_LIST.update_one(
-                {"_id": "TSUDO_USERS"}, {"$set": {"users": users}}, upsert=True
-            )
-            Config.TSUDO.append(user_)
+    if user_  not in Config.TSUDO:
+        Config.TSUDO.add(user_)
+        await TSUDO_LIST.insert_one({"_id": user_})
+        await message.edit("`TSUDO enabled for you...`", del_in=5)
     else:
-        return await message.edit("`TSUDO for you is already enabled.`", del_in=5)
+        await message.edit("`TSUDO for you is already enabled.`", del_in=5)
