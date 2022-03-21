@@ -31,22 +31,20 @@ async def make_tweet(message: Message):
     name_ = reply_.from_user.first_name
     username_ = "@" + reply_.from_user.username
     pfp_ = reply_.from_user.photo.big_file_id or None
-    text_ = (
-        reply_.text
-        if reply_.text and "-f" not in message.flags
-        else message.filtered_input_str
-    )
+    text_ = reply_.text if reply_.text and "-f" not in message.flags else message.filtered_input_str
+    fake_ = True if "-f" in message.flags else False
     bg_ = (26, 43, 60) if "-b" not in message.flags else (0, 0, 0)
     if not text_:
         return await message.edit("`Text not found...`", del_in=5)
     await message.edit("`Making tweet...`")
     bot_ = "QuoteIT_thebot"
     form_ = {
-        "cmd": "TWEET_IT",
-        "name": name_,
-        "username": username_,
-        "text": text_,
-        "background": bg_,
+        'cmd': 'TWEET_IT',
+        'name': name_,
+        'username': username_,
+        'text': text_,
+        'background': bg_,
+        "fake": fake_
     }
     json_ = json.dumps(form_, indent=4)
     if pfp_:
@@ -101,6 +99,7 @@ async def make_quote(message: Message):
     name_ = reply_.from_user.first_name
     pfp_ = reply_.from_user.photo.big_file_id or None
     text_ = reply_.text if "-f" not in message.flags else message.filtered_input_str
+    fake_ = True if "-f" in message.flags else False
     if not text_:
         return await message.edit("`Text not found...`", del_in=5)
     await message.edit("`Making quote...`")
@@ -118,6 +117,7 @@ async def make_quote(message: Message):
         "text": text_,
         "reply_name": reply_name,
         "reply_text": reply_text,
+        "fake": fake_,
     }
     json_ = json.dumps(form_, indent=4)
     if pfp_:
