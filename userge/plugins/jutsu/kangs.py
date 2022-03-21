@@ -58,6 +58,8 @@ async def log_kang(message: Message):
         await SAVED_SETTINGS.update_one(
             {"_id": "LOG_KANG"}, {"$set": {"switch": True}}, upsert=True
         )
+    out_ = "ON" if Config.LOG_KANG else "OFF"
+    await message.edit(f"`Logging kang in channel is now {out_}.`")
 
 
 @userge.on_cmd(
