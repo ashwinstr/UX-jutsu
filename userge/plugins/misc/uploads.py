@@ -224,7 +224,6 @@ async def doc_upload(
     del_path: bool = False,
     extra: str = "",
     with_thumb: bool = True,
-    force_document: bool = True,
 ):
     str_path = str(path)
     sent: Message = await message.client.send_message(
@@ -239,7 +238,6 @@ async def doc_upload(
         msg = await message.client.send_document(
             chat_id=message.chat.id,
             document=str_path,
-            force_document=True,
             thumb=thumb,
             caption=path.name,
             parse_mode="html",
