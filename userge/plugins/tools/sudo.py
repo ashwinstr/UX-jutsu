@@ -260,7 +260,7 @@ async def add_sudo_cmd(message: Message):
         "leave",
         "distsudo",
         "entsudo",
-        "tsudo"
+        "tsudo",
     ]
     if "-all" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()
