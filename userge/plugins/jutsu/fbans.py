@@ -60,6 +60,41 @@ async def fban_sudo_tags(message: Message):
         {"_id": "FBAN_TAG"}, {"$set": {"data": Config.FBAN_TAG}}, upsert=True
     )
 
+async def _init() -> None:
+    found = await SAVED_SETTINGS.find_one({"_id": "F_ADEL"})
+    if found:
+        Config.F_ADEL = found["switch"]
+    else:
+        Config.F_ADEL = False
+
+
+@userge.on_cmd(
+    "f_adel",
+    about={
+        "header": "toggle auto delete Fban confirmation",
+        "flags": {
+            "-c": "check",
+        },
+        "usage": "{tr}f_adel",
+    },
+)
+async def f_adel(message: Message):
+    if "-c" in message.flags:
+        out_ = "ON" if Config.F_ADEL else "OFF"
+        return await message.edit(f"`Fban confirmation auto-delete : {out_}.`", del_in=5)
+    if Config.F_ADEL:
+        Config.F_ADEL = False
+        await SAVED_SETTINGS.update_one(
+            {"_id": "F_ADEL"}, {"$set": {"switch": False}}, upsert=True
+        )
+    else:
+        Config.F_ADEL = True
+        await SAVED_SETTINGS.update_one(
+            {"_id": "F_ADEL"}, {"$set": {"switch": True}}, upsert=True
+        )
+    out_ = "ON" if Config.F_ADEL else "OFF"
+    await message.edit(f"`Fban confirmation auto-delete : {out_}.`")
+
 
 @userge.on_cmd(
     "addf",
@@ -273,7 +308,7 @@ async def fban_(message: Message):
     )
     if sudo_:
         msg_ += f"**By:** {message.from_user.mention}"
-    del_ = 3 if "-d" in message.flags else -1
+    del_ = 3 if "-d" in message.flags or Config.F_ADEL else -1
     await message.edit(msg_, del_in=del_)
     await userge.send_message(int(PROOF_CHANNEL), msg_)
 
@@ -484,7 +519,7 @@ async def fban_p(message: Message):
     )
     if sudo_:
         msg_ += f"**By:** {message.from_user.mention}"
-    del_ = 3 if "-d" in message.flags else -1
+    del_ = 3 if "-d" in message.flags or Config.F_ADEL else -1
     await message.edit(msg_, del_in=del_, disable_web_page_preview=True)
     await userge.send_message(
         int(FBAN_LOG_CHANNEL), msg_, disable_web_page_preview=True
