@@ -110,15 +110,11 @@ async def add_sudo(message: Message):
             else:
                 pass
             Config.TRUSTED_SUDO_USERS.add(user["id"])
-<<<<<<< HEAD
             if user['id'] not in Config.TSUDO:
                 Config.TSUDO.add(user["id"])
                 await TSUDO_LIST.insert_one(
                     {"_id": user["id"]}
                 )
-=======
-            Config.TSUDO.add(user["id"])
->>>>>>> 26a9fb4d92049d3c28e835ed3aa9c4b63f3cf5b8
             await asyncio.gather(
                 TRUSTED_SUDO_USERS.insert_one(
                     {"_id": user["id"], "men": user["mention"]}
