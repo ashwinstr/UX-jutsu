@@ -13,7 +13,6 @@ async def _init() -> None:
             Config.TSUDO.add(one)
 
 
-
 @userge.on_cmd(
     "tsudo",
     about={"header": "check tsudo status", "usage": "{tr}tsudo"},
