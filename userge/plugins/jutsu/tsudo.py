@@ -1,3 +1,5 @@
+# new tsudo control for TRUSTED SUDO USERS
+
 from userge import Config, Message, get_collection, userge
 
 TSUDO_LIST = get_collection("TSUDO_LIST")
@@ -6,6 +8,10 @@ TSUDO_LIST = get_collection("TSUDO_LIST")
 async def _init() -> None:
     async for one in TSUDO_LIST.find():
         Config.TSUDO.add(one["_id"])
+    if Config.TSUDO == set():
+        for one in Config.TRUSTED_SUDO_USERS:
+            Config.TSUDO.add(one)
+
 
 
 @userge.on_cmd(

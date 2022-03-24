@@ -92,7 +92,7 @@ async def _init(r_c: Union['_client.Userge', '_client.UsergeBot'],
     global _U_ID, _B_ID  # pylint: disable=global-statement
     if r_m.from_user and (
         r_m.from_user.is_self or (
-            r_m.from_user.id in Config.SUDO_USERS) or (r_m.from_user.id in (Config.TRUSTED_SUDO_USERS and Config.TSUDO)) or (
+            r_m.from_user.id in Config.SUDO_USERS) or (r_m.from_user.id in Config.TRUSTED_SUDO_USERS and r_m.from_user.id in Config.TSUDO) or (
                 r_m.from_user.id in Config.OWNER_ID)):
         RawClient.LAST_OUTGOING_TIME = time.time()
     async with _INIT_LK:
@@ -222,7 +222,7 @@ class RawDecorator(RawClient):
         super().__init__(**kwargs)
 
     def on_filters(self, filters: RawFilter, group: int = 0,
-                   **kwargs: Union[bool]) -> 'RawDecorator._PYRORETTYPE':
+                   **kwargs: bool) -> 'RawDecorator._PYRORETTYPE':
         """ abstract on filter method """
 
     def _build_decorator(self,
@@ -292,7 +292,7 @@ class RawDecorator(RawClient):
                                     await _raise("`required permisson [pin_messages]`")
                                 return
                 if RawClient.DUAL_MODE and (flt.check_client or (
-                        r_m.from_user and (r_m.from_user.id in Config.SUDO_USERS or (r_m.from_user.id in (Config.TRUSTED_SUDO_USERS and Config.TSUDO))))):
+                        r_m.from_user and (r_m.from_user.id in Config.SUDO_USERS or (r_m.from_user.id in Config.TRUSTED_SUDO_USERS and r_m.from_user.id in Config.TSUDO)))):
                     cond = True
                     async with await _get_lock(str(flt)):
                         if flt.only_admins:

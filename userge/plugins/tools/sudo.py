@@ -13,6 +13,7 @@ import asyncio
 from pyrogram.errors import PeerIdInvalid
 
 from userge import Config, Message, get_collection, userge
+from userge.plugins.jutsu.tsudo import TSUDO_LIST
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 TRUSTED_SUDO_USERS = get_collection("trusted_sudo_users")
@@ -109,6 +110,11 @@ async def add_sudo(message: Message):
             else:
                 pass
             Config.TRUSTED_SUDO_USERS.add(user["id"])
+            if user['id'] not in Config.TSUDO:
+                Config.TSUDO.add(user["id"])
+                await TSUDO_LIST.insert_one(
+                    {"_id": user["id"]}
+                )
             await asyncio.gather(
                 TRUSTED_SUDO_USERS.insert_one(
                     {"_id": user["id"], "men": user["mention"]}
@@ -183,6 +189,9 @@ async def del_sudo(message: Message):
         return
     if user_id not in Config.TRUSTED_SUDO_USERS and user_id not in Config.SUDO_USERS:
         await message.edit(f"user : `{user_id}` already not in any **SUDO**!", del_in=5)
+    if user_id in Config.TSUDO:
+        Config.TSUDO.remove(user_id)
+        await TSUDO_LIST.delete_one({"_id": user_id})
     elif user_id in Config.TRUSTED_SUDO_USERS:
         Config.TRUSTED_SUDO_USERS.remove(user_id)
         await asyncio.gather(

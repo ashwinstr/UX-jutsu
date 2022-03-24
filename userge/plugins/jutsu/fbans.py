@@ -60,6 +60,7 @@ async def fban_sudo_tags(message: Message):
         {"_id": "FBAN_TAG"}, {"$set": {"data": Config.FBAN_TAG}}, upsert=True
     )
 
+
 async def _init() -> None:
     found = await SAVED_SETTINGS.find_one({"_id": "F_ADEL"})
     if found:
@@ -81,7 +82,9 @@ async def _init() -> None:
 async def f_adel(message: Message):
     if "-c" in message.flags:
         out_ = "ON" if Config.F_ADEL else "OFF"
-        return await message.edit(f"`Fban confirmation auto-delete : {out_}.`", del_in=5)
+        return await message.edit(
+            f"`Fban confirmation auto-delete : {out_}.`", del_in=5
+        )
     if Config.F_ADEL:
         Config.F_ADEL = False
         await SAVED_SETTINGS.update_one(
