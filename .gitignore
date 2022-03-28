@@ -159,3 +159,4 @@ userge/plugins/test/unicode_image.py
 userge/plugins/test/my_quotly.py
 userge/plugins/test/tg_ss.py
 userge/plugins/jutsu/protected_content_download.py
+userge/plugins/jutsu/deepl_translator.py

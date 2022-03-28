@@ -5,6 +5,7 @@ import os
 from pyrogram import filters
 
 from userge import Message, userge
+from userge.config import Config
 
 
 @userge.on_cmd(
@@ -22,15 +23,16 @@ async def make_tweet(message: Message):
     try:
         await userge.get_chat_member(-1001331162912, message.from_user.id)
     except BaseException:
-        return await message.edit(
-            "First join **@UX_xplugin_support** and get approved by Kakashi."
-        )
+        if message.from_user.id not in Config.TRUSTED_SUDO_USERS:
+            return await message.edit(
+                "First join **@UX_xplugin_support** and get approved by Kakashi."
+            )
     reply_ = message.replied
     if not reply_:
         return await message.edit("`Reply to message...`", del_in=5)
     name_ = reply_.from_user.first_name
     username_ = "@" + reply_.from_user.username
-    pfp_ = reply_.from_user.photo.big_file_id or None
+    pfp_ = reply_.from_user.photo.big_file_id if reply_.from_user.photo else None
     text_ = (
         reply_.text
         if reply_.text and "-f" not in message.flags
@@ -94,14 +96,15 @@ async def make_quote(message: Message):
     try:
         await userge.get_chat_member(-1001331162912, message.from_user.id)
     except BaseException:
-        return await message.edit(
-            "First join **@UX_xplugin_support** and get approved by Kakashi."
-        )
+        if message.from_user.id not in Config.TRUSTED_SUDO_USERS:
+            return await message.edit(
+                "First join **@UX_xplugin_support** and get approved by Kakashi."
+            )
     reply_ = message.replied
     if not reply_:
         return await message.edit("`Reply to message...`", del_in=5)
     name_ = reply_.from_user.first_name
-    pfp_ = reply_.from_user.photo.big_file_id or None
+    pfp_ = reply_.from_user.photo.big_file_id if reply_.from_user.photo else None
     text_ = reply_.text if "-f" not in message.flags else message.filtered_input_str
     fake_ = True if "-f" in message.flags else False
     if not text_:
