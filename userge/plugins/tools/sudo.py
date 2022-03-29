@@ -237,7 +237,7 @@ async def view_sudo(message: Message):
     async for user in SUDO_USERS_COLLECTION.find():
         total += 1
         out_str += f" 👤 {user['men']} #⃣ `{user['_id']}`\n"
-    await message.edit(out_str.format(tr_total, total), del_in=0)
+    await message.edit(out_str.format(tr_total, dis_total, total), del_in=0)
 
 
 @userge.on_cmd(
