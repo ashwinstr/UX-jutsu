@@ -166,6 +166,7 @@ async def del_sudo(message: Message):
     if "-all" in message.flags:
         Config.SUDO_USERS.clear()
         Config.TRUSTED_SUDO_USERS.clear()
+        Config.DISABLED_TSUDO.clear()
         await asyncio.gather(
             SUDO_USERS_COLLECTION.drop(),
             TRUSTED_SUDO_USERS.drop(),
@@ -219,7 +220,7 @@ async def del_sudo(message: Message):
 @userge.on_cmd("vsudo", about={"header": "view sudo users"}, allow_channels=False)
 async def view_sudo(message: Message):
     """view sudo users"""
-    if not Config.SUDO_USERS and not Config.TRUSTED_SUDO_USERS:
+    if not Config.SUDO_USERS and not Config.DISABLED_TSUDO and not Config.TRUSTED_SUDO_USERS:
         await message.edit("**SUDO** users not found!", del_in=5)
         return
     out_str = "**TRUSTED SUDO USERS**: [{}]\n\n"
