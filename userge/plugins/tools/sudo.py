@@ -28,6 +28,9 @@ async def _init() -> None:
     async for i in SUDO_USERS_COLLECTION.find():
         Config.SUDO_USERS.add(i["_id"])
     async for i in TRUSTED_SUDO_USERS.find():
+        in_disabled = await DISABLED_TSUDO.find_one({"_id": i["_id"]})
+        if in_disabled:
+            continue
         Config.TRUSTED_SUDO_USERS.add(i["_id"])
     async for i in SUDO_CMDS_COLLECTION.find():
         Config.ALLOWED_COMMANDS.add(i["_id"])

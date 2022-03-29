@@ -72,9 +72,9 @@ async def en_tsudo(_, message: Message):
         await asyncio.gather(
             DISABLED_TSUDO.delete_one({"_id": user_}),
             TRUSTED_SUDO_USERS.insert_one({"_id": user_}),
-            message.edit("`TSUDO enabled for you...`")
+            message.reply("`TSUDO enabled for you...`")
         )
     elif user_ not in Config.DISABLED_TSUDO and user_ in Config.TRUSTED_SUDO_USERS:
-        await message.edit("`TSUDO for you is already ENABLED.`", del_in=5)
+        await message.reply("`TSUDO for you is already ENABLED.`", del_in=5)
     else:
-        await message.edit("`You're not eligible for this command.`", del_in=5)
+        await message.reply("`You're not eligible for this command.`", del_in=5)
