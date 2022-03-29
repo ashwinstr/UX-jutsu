@@ -10,6 +10,7 @@
 
 __all__ = ["Config", "get_version"]
 
+from msilib.schema import Class
 import os
 from json.decoder import JSONDecodeError
 from re import compile as comp_regex
@@ -20,7 +21,7 @@ from git import Repo
 from pyrogram import filters
 from requests import Session
 
-from userge import logbot, logging
+from userge import logbot, logging, get_collection
 
 from . import versions
 
@@ -126,6 +127,11 @@ class Config:
     ALIVE_MEDIA_TYPE = None
     LOG_KANG = True
     DISABLED_TSUDO = filters.user([])
+
+
+class Collection:
+    TRUSTED_SUDOS = get_collection("TRUSTED_SUDO_USERS")
+    DISABLED_TSUDO = get_collection("DISABLED_TSUDO")
 
 
 def get_version() -> str:
