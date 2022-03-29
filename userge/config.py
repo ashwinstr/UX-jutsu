@@ -10,7 +10,6 @@
 
 __all__ = ["Config", "get_version"]
 
-from msilib.schema import Class
 import os
 from json.decoder import JSONDecodeError
 from re import compile as comp_regex
@@ -130,6 +129,7 @@ class Config:
 
 
 class Collection:
+    "db collections"
     TRUSTED_SUDOS = get_collection("TRUSTED_SUDO_USERS")
     DISABLED_TSUDO = get_collection("DISABLED_TSUDO")
 
