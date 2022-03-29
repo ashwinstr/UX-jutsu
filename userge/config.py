@@ -21,6 +21,7 @@ from pyrogram import filters
 from requests import Session
 
 from userge import logbot, logging
+# from userge.core import get_collection
 
 from . import versions
 
@@ -126,6 +127,12 @@ class Config:
     ALIVE_MEDIA_TYPE = None
     LOG_KANG = True
     DISABLED_TSUDO = filters.user([])
+
+
+""" class Collection:
+    "db collections"
+    TRUSTED_SUDOS = get_collection("TRUSTED_SUDO_USERS")
+    DISABLED_TSUDO = get_collection("DISABLED_TSUDO") """
 
 
 def get_version() -> str:
