@@ -13,7 +13,6 @@ import asyncio
 from pyrogram.errors import PeerIdInvalid
 
 from userge import Config, Message, get_collection, userge
-from userge.plugins.jutsu.tsudo import TSUDO_LIST
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 TRUSTED_SUDO_USERS = get_collection("trusted_sudo_users")
@@ -111,10 +110,12 @@ async def add_sudo(message: Message):
             if user["id"] in Config.SUDO_USERS:
                 Config.SUDO_USERS.remove(user["id"])
                 await SUDO_USERS_COLLECTION.delete_one({"_id": user["id"]})
-            elif user['id'] in Config.DISABLED_TSUDO:
-                await message.edit("`User is in DISABLED_TSUDO, tell them to enable...`")
+            elif user["id"] in Config.DISABLED_TSUDO:
+                await message.edit(
+                    "`User is in DISABLED_TSUDO, tell them to enable...`"
+                )
                 return
-            Config.TRUSTED_SUDO_USERS.add(user['id'])
+            Config.TRUSTED_SUDO_USERS.add(user["id"])
             await asyncio.gather(
                 TRUSTED_SUDO_USERS.insert_one(
                     {"_id": user["id"], "men": user["mention"]}
@@ -141,9 +142,9 @@ async def add_sudo(message: Message):
         if user["id"] in Config.TRUSTED_SUDO_USERS:
             Config.TRUSTED_SUDO_USERS.remove(user["id"])
             await TRUSTED_SUDO_USERS.delete_one({"_id": user["id"]})
-        elif user['id'] in Config.DISABLED_TSUDO:
-            Config.DISABLED_TSUDO.remove(user['id'])
-            await DISABLED_TSUDO.delete_one({"_id": user['id']})
+        elif user["id"] in Config.DISABLED_TSUDO:
+            Config.DISABLED_TSUDO.remove(user["id"])
+            await DISABLED_TSUDO.delete_one({"_id": user["id"]})
         Config.SUDO_USERS.add(user["id"])
         await asyncio.gather(
             SUDO_USERS_COLLECTION.insert_one(
@@ -190,7 +191,11 @@ async def del_sudo(message: Message):
     if not isinstance(user_id, int):
         await message.err("invalid type!")
         return
-    if user_id not in Config.TRUSTED_SUDO_USERS and user_id not in Config.DISABLED_TSUDO and user_id not in Config.SUDO_USERS:
+    if (
+        user_id not in Config.TRUSTED_SUDO_USERS
+        and user_id not in Config.DISABLED_TSUDO
+        and user_id not in Config.SUDO_USERS
+    ):
         await message.edit(f"user : `{user_id}` already not in any **SUDO**!", del_in=5)
     if user_id in Config.DISABLED_TSUDO:
         Config.DISABLED_TSUDO.remove(user_id)
@@ -225,7 +230,11 @@ async def del_sudo(message: Message):
 @userge.on_cmd("vsudo", about={"header": "view sudo users"}, allow_channels=False)
 async def view_sudo(message: Message):
     """view sudo users"""
-    if not Config.SUDO_USERS and not Config.DISABLED_TSUDO and not Config.TRUSTED_SUDO_USERS:
+    if (
+        not Config.SUDO_USERS
+        and not Config.DISABLED_TSUDO
+        and not Config.TRUSTED_SUDO_USERS
+    ):
         await message.edit("**SUDO** users not found!", del_in=5)
         return
     out_str = "**TRUSTED SUDO USERS**: [{}]\n\n"

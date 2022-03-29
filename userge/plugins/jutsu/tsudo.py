@@ -46,7 +46,7 @@ async def dis_tsudo(message: Message):
         await asyncio.gather(
             TRUSTED_SUDO_USERS.delete_one({"_id": user_}),
             DISABLED_TSUDO.insert_one({"_id": user_, "men": f"@{user.username}"}),
-            message.edit("`TSUDO disabled for you...`", del_in=5)
+            message.edit("`TSUDO disabled for you...`", del_in=5),
         )
     elif user_ not in Config.TRUSTED_SUDO_USERS and user_ in Config.DISABLED_TSUDO:
         await message.edit("`TSUDO for you is already DISABLED temporarily.`", del_in=5)
@@ -58,7 +58,7 @@ async def dis_tsudo(message: Message):
     Config.DISABLED_TSUDO
     & filters.command("entsudo", prefixes=str(Config.SUDO_TRIGGER))
     & ~filters.bot,
-    group=-10
+    group=-10,
 )
 async def en_tsudo(_, message: Message):
     "enable tsudo"
@@ -71,7 +71,7 @@ async def en_tsudo(_, message: Message):
         await asyncio.gather(
             DISABLED_TSUDO.delete_one({"_id": user_}),
             TRUSTED_SUDO_USERS.insert_one({"_id": user_}),
-            message.reply("`TSUDO enabled for you...`")
+            message.reply("`TSUDO enabled for you...`"),
         )
     elif user_ not in Config.DISABLED_TSUDO and user_ in Config.TRUSTED_SUDO_USERS:
         await message.reply("`TSUDO for you is already ENABLED.`", del_in=5)
