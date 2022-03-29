@@ -20,7 +20,8 @@ from git import Repo
 from pyrogram import filters
 from requests import Session
 
-from userge import logbot, logging, get_collection
+from userge import logbot, logging
+from userge.core.database import get_collection
 
 from . import versions
 
