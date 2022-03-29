@@ -61,7 +61,7 @@ async def dis_tsudo(message: Message):
     & ~filters.bot,
     group=-10
 )
-async def en_tsudo(message: Message):
+async def en_tsudo(_, message: Message):
     "enable tsudo"
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
