@@ -46,7 +46,7 @@ async def dis_tsudo(message: Message):
         Config.DISABLED_TSUDO.add(user_)
         await asyncio.gather(
             TRUSTED_SUDO_USERS.delete_one({"_id": user_}),
-            DISABLED_TSUDO.insert_one({"_id": user_, "men": user.mention}),
+            DISABLED_TSUDO.insert_one({"_id": user_, "men": f"@{user.username}"}),
             message.edit("`TSUDO disabled for you...`", del_in=5)
         )
     elif user_ not in Config.TRUSTED_SUDO_USERS and user_ in Config.DISABLED_TSUDO:

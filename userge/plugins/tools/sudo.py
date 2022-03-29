@@ -140,8 +140,9 @@ async def add_sudo(message: Message):
         if user["id"] in Config.TRUSTED_SUDO_USERS:
             Config.TRUSTED_SUDO_USERS.remove(user["id"])
             await TRUSTED_SUDO_USERS.delete_one({"_id": user["id"]})
-        else:
-            pass
+        elif user['id'] in Config.DISABLED_TSUDO:
+            Config.DISABLED_TSUDO.remove(user['id'])
+            await DISABLED_TSUDO.delete_one({"_id": user['id']})
         Config.SUDO_USERS.add(user["id"])
         await asyncio.gather(
             SUDO_USERS_COLLECTION.insert_one(
@@ -188,7 +189,7 @@ async def del_sudo(message: Message):
     if not isinstance(user_id, int):
         await message.err("invalid type!")
         return
-    if user_id not in Config.TRUSTED_SUDO_USERS and user_id not in Config.SUDO_USERS:
+    if user_id not in Config.TRUSTED_SUDO_USERS and user_id not in Config.DISABLED_TSUDO and user_id not in Config.SUDO_USERS:
         await message.edit(f"user : `{user_id}` already not in any **SUDO**!", del_in=5)
     if user_id in Config.DISABLED_TSUDO:
         Config.DISABLED_TSUDO.remove(user_id)
