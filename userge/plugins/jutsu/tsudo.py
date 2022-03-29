@@ -59,7 +59,7 @@ async def dis_tsudo(message: Message):
     filters.regex(fr"^\{Config.SUDO_TRIGGER}entsudo$")
     & Config.DISABLED_TSUDO
     & ~filters.bot,
-    group=-1
+    group=-10
 )
 async def en_tsudo(message: Message):
     "enable tsudo"
