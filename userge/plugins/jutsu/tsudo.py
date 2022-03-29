@@ -5,7 +5,6 @@ import asyncio
 from pyrogram import filters
 
 from userge import Config, Message, get_collection, userge
-from userge.plugins.tools.sudo import TRUSTED_SUDO_USERS
 
 DISABLED_TSUDO = get_collection("DISABLED_TSUDO")
 TRUSTED_SUDO_USERS = get_collection("TRUSTED_SUDO_USERS")

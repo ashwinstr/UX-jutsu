@@ -13,7 +13,6 @@ import asyncio
 from pyrogram.errors import PeerIdInvalid
 
 from userge import Config, Message, get_collection, userge
-from userge.plugins.jutsu.tsudo import TSUDO_LIST
 
 SAVED_SETTINGS = get_collection("CONFIGS")
 TRUSTED_SUDO_USERS = get_collection("trusted_sudo_users")
