@@ -56,7 +56,7 @@ async def dis_tsudo(message: Message):
 
 
 @userge.on_message(
-    filters.command("entsudo", prefixes=Config.SUDO_TRIGGER)
+    filters.regex(fr"^\{Config.SUDO_TRIGGER}entsudo$")
     & Config.DISABLED_TSUDO
     & ~filters.bot,
     group=-1
