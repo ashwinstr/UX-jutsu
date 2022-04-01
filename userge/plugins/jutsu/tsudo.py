@@ -5,7 +5,6 @@ import asyncio
 from pyrogram import filters
 
 from userge import Config, Message, get_collection, userge
-from userge.plugins.tools.sudo import TRUSTED_SUDO_USERS
 
 DISABLED_TSUDO = get_collection("DISABLED_TSUDO")
 TRUSTED_SUDO_USERS = get_collection("TRUSTED_SUDO_USERS")
@@ -14,7 +13,6 @@ TRUSTED_SUDO_USERS = get_collection("TRUSTED_SUDO_USERS")
 async def _init() -> None:
     async for one in DISABLED_TSUDO.find():
         Config.DISABLED_TSUDO.add(one["_id"])
-
 
 
 @userge.on_cmd(
@@ -41,13 +39,14 @@ async def dis_tsudo(message: Message):
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
         return
+    user = await userge.get_users(user_)
     if user_ in Config.TRUSTED_SUDO_USERS and user_ not in Config.DISABLED_TSUDO:
         Config.TRUSTED_SUDO_USERS.remove(user_)
         Config.DISABLED_TSUDO.add(user_)
         await asyncio.gather(
             TRUSTED_SUDO_USERS.delete_one({"_id": user_}),
-            DISABLED_TSUDO.insert_one({"_id": user_}),
-            message.edit("`TSUDO disabled for you...`", del_in=5)
+            DISABLED_TSUDO.insert_one({"_id": user_, "men": f"@{user.username}"}),
+            message.edit("`TSUDO disabled for you...`", del_in=5),
         )
     elif user_ not in Config.TRUSTED_SUDO_USERS and user_ in Config.DISABLED_TSUDO:
         await message.edit("`TSUDO for you is already DISABLED temporarily.`", del_in=5)
@@ -56,11 +55,12 @@ async def dis_tsudo(message: Message):
 
 
 @userge.on_message(
-    filters.command("ensudo", prefixes=Config.SUDO_TRIGGER)
-    & DISABLED_TSUDO
-    & ~filters.bot
+    Config.DISABLED_TSUDO
+    & filters.command("entsudo", prefixes=str(Config.SUDO_TRIGGER))
+    & ~filters.bot,
+    group=-10,
 )
-async def en_tsudo(message: Message):
+async def en_tsudo(_, message: Message):
     "enable tsudo"
     user_ = message.from_user.id
     if user_ in Config.OWNER_ID:
@@ -71,9 +71,9 @@ async def en_tsudo(message: Message):
         await asyncio.gather(
             DISABLED_TSUDO.delete_one({"_id": user_}),
             TRUSTED_SUDO_USERS.insert_one({"_id": user_}),
-            message.edit("`TSUDO enabled for you...`")
+            message.reply("`TSUDO enabled for you...`"),
         )
     elif user_ not in Config.DISABLED_TSUDO and user_ in Config.TRUSTED_SUDO_USERS:
-        await message.edit("`TSUDO for you is already ENABLED.`", del_in=5)
+        await message.reply("`TSUDO for you is already ENABLED.`", del_in=5)
     else:
-        await message.edit("`You're not eligible for this command.`", del_in=5)
+        await message.reply("`You're not eligible for this command.`", del_in=5)
