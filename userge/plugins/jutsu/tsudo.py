@@ -12,7 +12,7 @@ TRUSTED_SUDO_USERS = get_collection("TRUSTED_SUDO_USERS")
 
 async def _init() -> None:
     async for one in DISABLED_TSUDO.find():
-        found = await TRUSTED_SUDO_USERS.find_one({"_id": one['_id']})
+        found = await TRUSTED_SUDO_USERS.find_one({"_id": one["_id"]})
         if found:
             continue
         Config.DISABLED_TSUDO.add(one["_id"])
