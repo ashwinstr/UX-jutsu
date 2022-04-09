@@ -15,7 +15,7 @@ from pyrogram.errors import PeerIdInvalid
 from userge import Config, Message, get_collection, userge
 
 SAVED_SETTINGS = get_collection("CONFIGS")
-TRUSTED_SUDO_USERS = get_collection("trusted_sudo_users")
+TRUSTED_SUDO_USERS = get_collection("TRUSTED_SUDO_USERS")
 SUDO_USERS_COLLECTION = get_collection("sudo_users")
 SUDO_CMDS_COLLECTION = get_collection("sudo_cmds")
 DISABLED_TSUDO = get_collection("DISABLED_TSUDO")
