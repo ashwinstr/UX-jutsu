@@ -19,7 +19,7 @@ from userge.utils.extras import reported_user_image
 CHANNEL = userge.getCLogger(__name__)
 SAVED_SETTINGS = get_collection("CONFIGS")
 ALLOWED_COLLECTION = get_collection("PM_PERMIT")
-BLOCK_REASON = get_collection("BLOCK_REASON")
+BLOCKED_USERS = get_collection("BLOCKED_USERS")
 PMPERMIT_MSG = {}
 
 
@@ -325,6 +325,17 @@ async def uninvitedPmHandler(message: Message):
                 message.chat.id, report_img_, caption=blocked_message
             )
             await message.from_user.block()
+            await BLOCKED_USERS.insert_one(
+                {
+                    "_id": message.chat.id,
+                    "data": {
+                        "user_name": message.chat.first_name,
+                        "username": message.chat.username,
+                    },
+                    "reason": "PM spam"
+                }
+            )
+            Config.BLOCKED_USERS.append(message.chat.id)
             user_ = await userge.get_users(message.chat.id)
             full_name(user_)
             await asyncio.sleep(1)

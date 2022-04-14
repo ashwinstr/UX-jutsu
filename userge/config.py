@@ -127,6 +127,7 @@ class Config:
     ALIVE_MEDIA_TYPE = None
     LOG_KANG = True
     DISABLED_TSUDO = filters.user([])
+    BLOCKED_USERS = []
 
 
 """ class Collection:
