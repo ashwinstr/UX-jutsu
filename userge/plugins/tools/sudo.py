@@ -142,15 +142,9 @@ async def add_sudo(message: Message):
         if user["id"] in Config.TRUSTED_SUDO_USERS:
             Config.TRUSTED_SUDO_USERS.remove(user["id"])
             await TRUSTED_SUDO_USERS.delete_one({"_id": user["id"]})
-<<<<<<< HEAD
         elif user['id'] in Config.DISABLED_TSUDO:
             Config.DISABLED_TSUDO.remove(user['id'])
             await DISABLED_TSUDO.delete_one({'_id': user['id']})
-=======
-        elif user["id"] in Config.DISABLED_TSUDO:
-            Config.DISABLED_TSUDO.remove(user["id"])
-            await DISABLED_TSUDO.delete_one({"_id": user["id"]})
->>>>>>> c09a5d7b9d18830bb3affedc4d3cc71f890f0599
         Config.SUDO_USERS.add(user["id"])
         await asyncio.gather(
             SUDO_USERS_COLLECTION.insert_one(
