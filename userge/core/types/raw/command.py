@@ -15,6 +15,7 @@ import re
 from typing import Union, Dict, List
 
 from pyrogram import filters
+from pyrogram.types import Message
 
 from userge import Config
 from .filter import Filter
@@ -71,7 +72,11 @@ class Command(Filter):
                          and (cname.lstrip(trigger) in Config.ALLOWED_COMMANDS))
                          or (Config.SUDO_ENABLED and (m.from_user.id in Config.TRUSTED_SUDO_USERS)))
                 and m.text.startswith(Config.SUDO_TRIGGER))
-            filters_ = filters_ & (outgoing_flt | incoming_flt)
+            no_react_flt = filters.create(
+                lambda _, __, m:
+                m.reactions is None
+            )
+            filters_ = filters_ & (outgoing_flt | incoming_flt) & no_react_flt
         return cls(_format_about(about), trigger, pattern, filters=filters_, name=cname, **kwargs)
 
     def __repr__(self) -> str:

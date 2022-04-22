@@ -11,6 +11,8 @@ from userge import userge, Config, Message, get_collection
 
 
 BLOCKED_USERS = get_collection("BLOCKED_USERS")
+LOG_ = userge.getLogger(__name__)
+CHANNEL = userge.getCLogger(__name__)
 
 
 async def _init() -> None:
@@ -126,14 +128,16 @@ async def unblock_ing(message: Message):
 
 # i'm noob with raw updates, any suggestion to improve the code is welcome
 
-@userge.on_raw_update()
+@userge.on_raw_update(group=3)
 async def manual_block_unblock(_, update: Update, users: User, chats: Chat):
-    if update is UpdatePeerBlocked:
+    if isinstance(update, UpdatePeerBlocked):
         user_ = update.peer_id.user_id
         if update.blocked == True:
             Config.BLOCKED_USERS.append(user_)
+            await CHANNEL.log(f"User <b>{user_}</b> blocked !!!")
         elif update.blocked == False:
             Config.BLOCKED_USERS.remove(user_)
+            await CHANNEL.log(f"User <b>{user_}</b> unblocked !!!")
         else:
             pass
 
@@ -151,7 +155,7 @@ async def manual_block_unblock(_, update: Update, users: User, chats: Chat):
     allow_channels=False,
 )
 async def v_block_ed(message: Message):
-    await message.editt("`Fetching blocked user list...`")
+    await message.edit("`Fetching blocked user list...`")
     auto_blocked = "<b>Users blocked by userbot:</b> [{}]\n\n"
     auto_ = 0
     manual_blocked = "<b>Users blocked manually:</b> [{}]\n\n"
