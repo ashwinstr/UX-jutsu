@@ -332,7 +332,7 @@ async def uninvitedPmHandler(message: Message):
                         "user_name": message.chat.first_name,
                         "username": message.chat.username,
                     },
-                    "reason": "PM spam"
+                    "reason": "PM spam",
                 }
             )
             Config.BLOCKED_USERS.append(message.chat.id)

@@ -15,7 +15,6 @@ import re
 from typing import Union, Dict, List
 
 from pyrogram import filters
-from pyrogram.types import Message
 
 from userge import Config
 from .filter import Filter
