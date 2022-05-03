@@ -1,14 +1,12 @@
-
 # test build by Kakashi
 
 from pyrogram import filters
-from pyrogram.types import User, Chat
-from pyrogram.raw.types import UpdatePeerBlocked
-from pyrogram.raw.base.update import Update
 from pyrogram.errors import PeerIdInvalid, UsernameInvalid, UsernameNotOccupied
+from pyrogram.raw.base.update import Update
+from pyrogram.raw.types import UpdatePeerBlocked
+from pyrogram.types import Chat, User
 
-from userge import userge, Config, Message, get_collection
-
+from userge import Config, Message, get_collection, userge
 
 BLOCKED_USERS = get_collection("BLOCKED_USERS")
 LOG_ = userge.getLogger(__name__)
@@ -46,20 +44,30 @@ async def block_ing(message: Message):
             try:
                 reason_ = split_[1]
             except IndexError:
-                return await message.edit("`Provide a user_id/username and reason to block.`", del_in=5)
+                return await message.edit(
+                    "`Provide a user_id/username and reason to block.`", del_in=5
+                )
     try:
         user_ = await userge.get_users(user_)
     except (PeerIdInvalid, UsernameNotOccupied, UsernameInvalid):
-        return await message.edit(f"Provided user_id/username `{user_}` is not valid...")
+        return await message.edit(
+            f"Provided user_id/username `{user_}` is not valid..."
+        )
     update_reason = False
     await message.edit("`Blocking user...`")
     if user_.id in Config.BLOCKED_USERS:
         try:
             async with userge.conversation(message.chat.id, timeout=15) as conv:
-                confirm_ = await conv.send_message(f"User <b>{user_.first_name}</b> is already blocked.\nDo you want to update the reason? Reply `y` if you want to.")
-                response = await conv.get_response(mark_read=True, filters=filters.user(Config.OWNER_ID[0]))
+                confirm_ = await conv.send_message(
+                    f"User <b>{user_.first_name}</b> is already blocked.\nDo you want to update the reason? Reply `y` if you want to."
+                )
+                response = await conv.get_response(
+                    mark_read=True, filters=filters.user(Config.OWNER_ID[0])
+                )
         except TimeoutError:
-            return await confirm_.edit(str(confirm_.text) + "\n\n<b>TIMEOUT... block reason is not updated.<b>")
+            return await confirm_.edit(
+                str(confirm_.text) + "\n\n<b>TIMEOUT... block reason is not updated.<b>"
+            )
         if response.text not in ["y", "Y"]:
             return
         update_reason = True
@@ -84,16 +92,18 @@ async def block_ing(message: Message):
         await userge.block_user(user_.id)
         Config.BLOCKED_USERS.append(user_.id)
         action = ""
-    await message.edit(f"User <b>@{user_.username}</b> is blocked with {action}reason <b>{reason_}</b>.")
+    await message.edit(
+        f"User <b>@{user_.username}</b> is blocked with {action}reason <b>{reason_}</b>."
+    )
 
 
 @userge.on_cmd(
     "unblock",
     about={
         "header": "unblock user",
-        "usage": "{tr}unblock [reply to user || user id || username]"
+        "usage": "{tr}unblock [reply to user || user id || username]",
     },
-    allow_channels=False
+    allow_channels=False,
 )
 async def unblock_ing(message: Message):
     "unblock user"
@@ -103,22 +113,34 @@ async def unblock_ing(message: Message):
     else:
         user_ = message.input_str
         if not user_:
-            return await message.edit("`Provide user_id/username or reply to user...`", del_in=5)
+            return await message.edit(
+                "`Provide user_id/username or reply to user...`", del_in=5
+            )
     try:
         user_ = await userge.get_users(user_)
     except (PeerIdInvalid, UsernameInvalid, UsernameNotOccupied):
-        return await message.edit(f"Provided user_id/username `{user_}` is not valid...", del_in=5)
+        return await message.edit(
+            f"Provided user_id/username `{user_}` is not valid...", del_in=5
+        )
     if user_.id not in Config.BLOCKED_USERS:
-        return await message.edit(f"User {user_.mention} not blocked to begin with...", del_in=5)
+        return await message.edit(
+            f"User {user_.mention} not blocked to begin with...", del_in=5
+        )
     await message.edit("`Unblocking user...`")
-    reason_ = (await BLOCKED_USERS.find_one({"_id": user_.id}))['reason']
+    reason_ = (await BLOCKED_USERS.find_one({"_id": user_.id}))["reason"]
     try:
         async with userge.conversation(message.chat.id, timeout=15) as conv:
-            confirm_ = await conv.send_message(f"User {user_.mention} is blocked with reason <b>{reason_}</b>.\nDo you want to unblock? Reply `y` if you want to.")
-            response = await conv.get_response(mark_read=True, filters=filters.user(Config.OWNER_ID[0]))
+            confirm_ = await conv.send_message(
+                f"User {user_.mention} is blocked with reason <b>{reason_}</b>.\nDo you want to unblock? Reply `y` if you want to."
+            )
+            response = await conv.get_response(
+                mark_read=True, filters=filters.user(Config.OWNER_ID[0])
+            )
     except TimeoutError:
-        return await confirm_.edit(str(confirm_.text) + "\n\n<b>TIMEOUT... unblock unsuccessful.<b>")
-    if response.text not in ['y', 'Y']:
+        return await confirm_.edit(
+            str(confirm_.text) + "\n\n<b>TIMEOUT... unblock unsuccessful.<b>"
+        )
+    if response.text not in ["y", "Y"]:
         return
     await BLOCKED_USERS.delete_one({"_id": user_.id})
     Config.BLOCKED_USERS.remove(user_.id)
@@ -128,11 +150,12 @@ async def unblock_ing(message: Message):
 
 # i'm noob with raw updates, any suggestion to improve the code is welcome
 
+
 @userge.on_raw_update(group=3)
 async def manual_block_unblock(_, update: Update, users: User, chats: Chat):
     if isinstance(update, UpdatePeerBlocked):
         user_ = update.peer_id.user_id
-        if update.blocked == True:
+        if update.blocked:
             Config.BLOCKED_USERS.append(user_)
             await CHANNEL.log(f"User <b>{user_}</b> blocked !!!")
         elif update.blocked == False:
@@ -146,10 +169,7 @@ async def manual_block_unblock(_, update: Update, users: User, chats: Chat):
     "vblocked",
     about={
         "header": "see blocked user list",
-        "flags": {
-            "-u": "username",
-            "-r": "reason"
-        },
+        "flags": {"-u": "username", "-r": "reason"},
         "usage": "{tr}vblocked",
     },
     allow_channels=False,
@@ -164,10 +184,16 @@ async def v_block_ed(message: Message):
         found = await BLOCKED_USERS.find_one({"_id": one})
         if found:
             reason_ = f"for <i>{found['reason']}</i>" if "-r" in message.flags else ""
-            user_ = found['data']['username'] if "-u" in message.flags else found['data']['user_name']
+            user_ = (
+                found["data"]["username"]
+                if "-u" in message.flags
+                else found["data"]["user_name"]
+            )
             auto_blocked += f"• `{found['_id']}` - <b>{user_}</b> {reason_}\n"
-            auto_ +=1
+            auto_ += 1
         else:
             manual_blocked += f"• `{one}`\n"
             manual_ += 1
-    await message.edit(f"{auto_blocked.format(auto_)}\n{manual_blocked.format(manual_)}")
+    await message.edit(
+        f"{auto_blocked.format(auto_)}\n{manual_blocked.format(manual_)}"
+    )
