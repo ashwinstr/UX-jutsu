@@ -158,12 +158,12 @@ async def manual_block_unblock(_, update: Update, users: User, chats: Chat):
         if update.blocked:
             Config.BLOCKED_USERS.append(user_)
             await BLOCKED_USERS.updated_one(
-                {'_id': user_}, {'$set': {'reason': 'Manual block...'}}, upsert=True
+                {"_id": user_}, {"$set": {"reason": "Manual block..."}}, upsert=True
             )
             await CHANNEL.log(f"User <b>{user_}</b> blocked !!!")
         elif update.blocked == False:
             Config.BLOCKED_USERS.remove(user_)
-            await BLOCKED_USERS.delete_one({'_id': user_})
+            await BLOCKED_USERS.delete_one({"_id": user_})
             await CHANNEL.log(f"User <b>{user_}</b> unblocked !!!")
         else:
             pass
