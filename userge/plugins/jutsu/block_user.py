@@ -134,7 +134,8 @@ async def unblock_ing(message: Message):
                 f"User {user_.mention} is blocked with reason <b>{reason_}</b>.\nDo you want to unblock? Reply `y` if you want to."
             )
             response = await conv.get_response(
-                mark_read=True, filters=filters.user([Config.OWNER_ID[0], message.from_user.id])
+                mark_read=True,
+                filters=filters.user([Config.OWNER_ID[0], message.from_user.id]),
             )
     except TimeoutError:
         return await confirm_.edit(
