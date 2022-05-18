@@ -40,7 +40,7 @@ async def reveal_var(message: Message):
             {"_id": "REVEAL_VAR"}, {"$set": {"switch": True}}, upsert=True
         )
     out_ = "ON" if Config.REVEAL_VAR else "OFF"
-    await message.edit(f"`Secured Vars : {out_}.`")
+    await message.edit(f"`Secured Vars : {out_}.`", del_in=5)
 
 
 @userge.on_cmd(
@@ -53,8 +53,9 @@ async def reveal_var(message: Message):
 async def view_var(message: Message):
     vname = message.input_str
     if not vname:
-        await message.edit("Give a var name to vview", del_in=5)
+        await message.edit("Give a Var name to view", del_in=5)
         return
     input_name = (vname.strip()).upper()
     var = os.environ.get(input_name)
-    await message.edit(var)
+    out = f"**{(input_name)}** :\n`{(var)}`"
+    await message.edit(out, del_in=15)
