@@ -17,7 +17,7 @@ from userge.utils import post_to_telegraph as pt
 )
 async def last_logged(message: Message):
     """get last traceback from main account"""
-    limit_ = message.input_str
+    limit_ = message.filtered_input_str
     if not limit_:
         limit_ = 5
     elif not limit_.isdigit():
