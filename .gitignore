@@ -161,3 +161,4 @@ userge/plugins/test/tg_ss.py
 userge/plugins/jutsu/protected_content_download.py
 userge/plugins/jutsu/deepl_translator.py
 userge/plugins/test/raw_update.py
+userge/plugins/test/beta.py
