@@ -68,15 +68,16 @@ async def block_ing(message: Message):
                     filters=filters.user([Config.OWNER_ID[0], message.from_user.id]),
                 )
         except (TimeoutError, StopConversation):
+            await message.delete()
             return await confirm_.edit(
-                str(confirm_.text)
-                + "\n\n<b>TIMEOUT... block reason is not updated.<b>",
+                "<b>Timeout</b>\nBlock reason is not updated.",
                 del_in=10,
             )
         if response.text not in ["y", "Y"]:
             return
         update_reason = True
     if update_reason:
+        await confirm_.delete()
         found = BLOCKED_USERS.find({"_id": user_.id})
         if not found:
             return await message.edit("`Something unexpected happended...`", del_in=5)
@@ -153,14 +154,16 @@ async def unblock_ing(message: Message):
                 filters=filters.user([Config.OWNER_ID[0], message.from_user.id]),
             )
     except (TimeoutError, StopConversation):
+        await message.delete()
         return await confirm_.edit(
-            str(confirm_.text) + "\n\n<b>TIMEOUT... unblock unsuccessful.<b>", del_in=10
+            "<b>Timeout</b>\nUnblock unsuccessful.", del_in=10
         )
     if response.text not in ["y", "Y"]:
         return
     await BLOCKED_USERS.delete_one({"_id": user_.id})
     Config.BLOCKED_USERS.remove(user_.id)
     await userge.unblock_user(user_.id)
+    await confirm_.delete()
     await message.edit(f"User <b>@{user_.username}</b> is unblocked now.", del_in=5)
     await CHANNEL.log(f"User <b>@{user_.username}</b> is unblocked now.")
 
