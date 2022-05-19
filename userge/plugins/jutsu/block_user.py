@@ -64,7 +64,8 @@ async def block_ing(message: Message):
                     del_in=20,
                 )
                 response = await conv.get_response(
-                    mark_read=True, filters=filters.user([Config.OWNER_ID[0], message.from_user.id])
+                    mark_read=True,
+                    filters=filters.user([Config.OWNER_ID[0], message.from_user.id]),
                 )
         except (TimeoutError, StopConversation):
             return await confirm_.edit(
