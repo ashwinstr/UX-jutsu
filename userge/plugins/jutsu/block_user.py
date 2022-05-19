@@ -60,14 +60,17 @@ async def block_ing(message: Message):
         try:
             async with userge.conversation(message.chat.id, timeout=15) as conv:
                 confirm_ = await conv.send_message(
-                    f"User <b>{user_.first_name}</b> is already blocked.\nDo you want to update the reason? Reply `y` if you want to."
+                    f"User <b>{user_.first_name}</b> is already blocked.\nDo you want to update the reason? Reply `y` if you want to.",
+                    del_in=20,
                 )
                 response = await conv.get_response(
                     mark_read=True, filters=filters.user([Config.OWNER_ID[0], message.from_user.id])
                 )
         except (TimeoutError, StopConversation):
             return await confirm_.edit(
-                str(confirm_.text) + "\n\n<b>TIMEOUT... block reason is not updated.<b>"
+                str(confirm_.text)
+                + "\n\n<b>TIMEOUT... block reason is not updated.<b>",
+                del_in=10,
             )
         if response.text not in ["y", "Y"]:
             return
@@ -94,6 +97,10 @@ async def block_ing(message: Message):
         Config.BLOCKED_USERS.append(user_.id)
         action = ""
     await message.edit(
+        f"User <b>@{user_.username}</b> is blocked with {action}reason <b>{reason_}</b>.",
+        del_in=5,
+    )
+    await CHANNEL.log(
         f"User <b>@{user_.username}</b> is blocked with {action}reason <b>{reason_}</b>."
     )
 
@@ -132,21 +139,24 @@ async def unblock_ing(message: Message):
     try:
         async with userge.conversation(message.chat.id, timeout=15) as conv:
             confirm_ = await conv.send_message(
-                f"User {user_.mention} is blocked with reason <b>{reason_}</b>.\nDo you want to unblock? Reply `y` if you want to."
+                f"User {user_.mention} is blocked with reason <b>{reason_}</b>.\nDo you want to unblock? Reply `y` if you want to.",
+                del_in=20,
             )
             response = await conv.get_response(
-                mark_read=True, filters=filters.user([Config.OWNER_ID[0], message.from_user.id])
+                mark_read=True,
+                filters=filters.user([Config.OWNER_ID[0], message.from_user.id]),
             )
     except (TimeoutError, StopConversation):
         return await confirm_.edit(
-            str(confirm_.text) + "\n\n<b>TIMEOUT... unblock unsuccessful.<b>"
+            str(confirm_.text) + "\n\n<b>TIMEOUT... unblock unsuccessful.<b>", del_in=10
         )
     if response.text not in ["y", "Y"]:
         return
     await BLOCKED_USERS.delete_one({"_id": user_.id})
     Config.BLOCKED_USERS.remove(user_.id)
     await userge.unblock_user(user_.id)
-    await message.edit(f"User <b>@{user_.username}</b> is unblocked now.")
+    await message.edit(f"User <b>@{user_.username}</b> is unblocked now.", del_in=5)
+    await CHANNEL.log(f"User <b>@{user_.username}</b> is unblocked now.")
 
 
 # i'm noob with raw updates, any suggestion to improve the code is welcome
@@ -200,5 +210,5 @@ async def v_block_ed(message: Message):
             manual_blocked += f"• `{one}`\n"
             manual_ += 1
     await message.edit(
-        f"{auto_blocked.format(auto_)}\n{manual_blocked.format(manual_)}"
+        f"{auto_blocked.format(auto_)}\n{manual_blocked.format(manual_)}", del_in=15
     )
