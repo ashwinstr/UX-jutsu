@@ -63,7 +63,8 @@ async def block_ing(message: Message):
                     f"User <b>{user_.first_name}</b> is already blocked.\nDo you want to update the reason? Reply `y` if you want to."
                 )
                 response = await conv.get_response(
-                    mark_read=True, filters=filters.user([Config.OWNER_ID[0], message.from_user.id])
+                    mark_read=True,
+                    filters=filters.user([Config.OWNER_ID[0], message.from_user.id]),
                 )
         except (TimeoutError, StopConversation):
             return await confirm_.edit(
