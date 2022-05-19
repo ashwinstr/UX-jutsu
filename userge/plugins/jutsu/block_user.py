@@ -60,8 +60,7 @@ async def block_ing(message: Message):
         try:
             async with userge.conversation(message.chat.id, timeout=15) as conv:
                 confirm_ = await conv.send_message(
-                    f"User <b>{user_.first_name}</b> is already blocked.\nDo you want to update the reason? Reply `y` if you want to.",
-                    del_in=20,
+                    f"User <b>{user_.first_name}</b> is already blocked.\nDo you want to update the reason? Reply `y` if you want to."
                 )
                 response = await conv.get_response(
                     mark_read=True, filters=filters.user([Config.OWNER_ID[0], message.from_user.id])
@@ -139,8 +138,7 @@ async def unblock_ing(message: Message):
     try:
         async with userge.conversation(message.chat.id, timeout=15) as conv:
             confirm_ = await conv.send_message(
-                f"User {user_.mention} is blocked with reason <b>{reason_}</b>.\nDo you want to unblock? Reply `y` if you want to.",
-                del_in=20,
+                f"User {user_.mention} is blocked with reason <b>{reason_}</b>.\nDo you want to unblock? Reply `y` if you want to."
             )
             response = await conv.get_response(
                 mark_read=True,
