@@ -16,7 +16,6 @@ from pyrogram.errors import FloodWait, PeerIdInvalid, UserBannedInChannel
 
 from userge import Config, Message, get_collection, userge
 from userge.helpers import extract_id, report_user
-from userge.plugins.tools.sudo import SAVED_SETTINGS
 
 FBAN_LOG_CHANNEL = os.environ.get("FBAN_LOG_CHANNEL")
 
