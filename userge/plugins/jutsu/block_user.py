@@ -7,6 +7,7 @@ from pyrogram.raw.types import UpdatePeerBlocked
 from pyrogram.types import Chat, User
 
 from userge import Config, Message, get_collection, userge
+from userge.utils.exceptions import StopConversation
 
 BLOCKED_USERS = get_collection("BLOCKED_USERS")
 LOG_ = userge.getLogger(__name__)
@@ -62,9 +63,9 @@ async def block_ing(message: Message):
                     f"User <b>{user_.first_name}</b> is already blocked.\nDo you want to update the reason? Reply `y` if you want to."
                 )
                 response = await conv.get_response(
-                    mark_read=True, filters=filters.user(Config.OWNER_ID[0])
+                    mark_read=True, filters=filters.user([Config.OWNER_ID[0], message.from_user.id])
                 )
-        except TimeoutError:
+        except (TimeoutError, StopConversation):
             return await confirm_.edit(
                 str(confirm_.text) + "\n\n<b>TIMEOUT... block reason is not updated.<b>"
             )
@@ -136,7 +137,7 @@ async def unblock_ing(message: Message):
             response = await conv.get_response(
                 mark_read=True, filters=filters.user([Config.OWNER_ID[0], message.from_user.id])
             )
-    except TimeoutError:
+    except (TimeoutError, StopConversation):
         return await confirm_.edit(
             str(confirm_.text) + "\n\n<b>TIMEOUT... unblock unsuccessful.<b>"
         )
