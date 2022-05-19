@@ -155,9 +155,7 @@ async def unblock_ing(message: Message):
             )
     except (TimeoutError, StopConversation):
         await message.delete()
-        return await confirm_.edit(
-            "<b>Timeout</b>\nUnblock unsuccessful.", del_in=10
-        )
+        return await confirm_.edit("<b>Timeout</b>\nUnblock unsuccessful.", del_in=10)
     if response.text not in ["y", "Y"]:
         return
     await BLOCKED_USERS.delete_one({"_id": user_.id})
