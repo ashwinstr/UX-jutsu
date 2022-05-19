@@ -78,7 +78,7 @@ async def block_ing(message: Message):
             return
         update_reason = True
     if update_reason:
-        found = await BLOCKED_USERS.find({"_id": user_.id})
+        found = BLOCKED_USERS.find({"_id": user_.id})
         if not found:
             return await message.edit("`Something unexpected happended...`", del_in=5)
         await BLOCKED_USERS.update_one(
@@ -103,6 +103,7 @@ async def block_ing(message: Message):
             )
         await userge.block_user(user_.id)
         Config.BLOCKED_USERS.append(user_.id)
+        action = "updated "
     await message.edit(
         f"User <b>@{user_.username}</b> is blocked with {action}reason <b>{reason_}</b>.",
         del_in=5,

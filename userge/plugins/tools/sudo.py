@@ -296,6 +296,8 @@ async def add_sudo_cmd(message: Message):
         "tsudo",
         "reveal_vars",
         "rvar",
+        "block",
+        "unblock"
     ]
     if "-all" in message.flags:
         await SUDO_CMDS_COLLECTION.drop()
