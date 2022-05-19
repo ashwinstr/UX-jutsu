@@ -1,5 +1,7 @@
 # test build by Kakashi
 
+from pymongo.errors import DuplicateKeyError
+
 from pyrogram import filters
 from pyrogram.errors import PeerIdInvalid, UsernameInvalid, UsernameNotOccupied
 from pyrogram.raw.base.update import Update
@@ -92,10 +94,15 @@ async def block_ing(message: Message):
             },
             "reason": reason_,
         }
-        await BLOCKED_USERS.insert_one(dict_)
+        try:
+            await BLOCKED_USERS.insert_one(dict_)
+            action = ""
+        except DuplicateKeyError:
+            await BLOCKED_USERS.update_one(
+                {'_id': user_.id}, {'$set': {'reason': reason_}}, upsert=True
+            )
         await userge.block_user(user_.id)
         Config.BLOCKED_USERS.append(user_.id)
-        action = ""
     await message.edit(
         f"User <b>@{user_.username}</b> is blocked with {action}reason <b>{reason_}</b>.",
         del_in=5,
