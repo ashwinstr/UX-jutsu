@@ -5,6 +5,7 @@ beautifulsoup4>=4.9.1
 colour
 cowpy>=1.1.0
 dnspython>=2.0.0
+futures==2.2.0
 gitpython>=3.1.11
 google-api-python-client>=1.12.8
 google-auth-httplib2>=0.0.4
