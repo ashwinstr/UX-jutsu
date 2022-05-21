@@ -278,9 +278,7 @@ async def fban_(message: Message):
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
                     mark_read=True,
-                    filters=(
-                        filters.user([609517172]) & ~filters.service
-                    ),
+                    filters=(filters.user([609517172]) & ~filters.service),
                 )
                 resp = response.text
                 if not (
@@ -487,9 +485,7 @@ async def fban_p(message: Message):
             async with userge.conversation(chat_id, timeout=8) as conv:
                 response = await conv.get_response(
                     mark_read=True,
-                    filters=(
-                        filters.user([609517172]) & ~filters.service
-                    ),
+                    filters=(filters.user([609517172]) & ~filters.service),
                 )
                 resp = response.text
                 if not (
@@ -643,9 +639,7 @@ async def unfban_(message: Message):
                 await conv.send_message(f"/unfban {user} {reason}")
                 response = await conv.get_response(
                     mark_read=True,
-                    filters=(
-                        filters.user([609517172]) & ~filters.service
-                    ),
+                    filters=(filters.user([609517172]) & ~filters.service),
                 )
                 resp = response.text
                 if (
