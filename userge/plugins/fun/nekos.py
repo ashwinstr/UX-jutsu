@@ -1,16 +1,30 @@
 import os
-import requests 
-from anekos import NekosLifeClient, NSFWImageTags, SFWImageTags
+
+import requests
+from anekos import NekosLifeClient, SFWImageTags
 from pyrogram.errors import MediaEmpty, WebpageCurlFailed
 from wget import download
 
 from userge import Message, userge
-
 from userge.plugins.fun.nsfw import age_verification
 
 client = NekosLifeClient()
 
-NSFW = ((((str((requests.get("https://kuuhaku-api-production.up.railway.app/api/nsfw")).json()["nsfw"]).replace("/api/nsfw/", "")).replace("[", "")).replace("]", "")).replace("'","")).replace(",", "")
+NSFW = (
+    (
+        (
+            (
+                str(
+                    (
+                        requests.get(
+                            "https://kuuhaku-api-production.up.railway.app/api/nsfw"
+                        )
+                    ).json()["nsfw"]
+                ).replace("/api/nsfw/", "")
+            ).replace("[", "")
+        ).replace("]", "")
+    ).replace("'", "")
+).replace(",", "")
 SFW = [z for z in dir(SFWImageTags) if not z.startswith("__")]
 
 
@@ -42,7 +56,11 @@ async def neko_life(message: Message):
         elif choice in NSFW:
             if await age_verification(message):
                 return
-            link = (requests.get(f"https://kuuhaku-api-production.up.railway.app/api/nsfw/{choice}")).json()["url"]
+            link = (
+                requests.get(
+                    f"https://kuuhaku-api-production.up.railway.app/api/nsfw/{choice}"
+                )
+            ).json()["url"]
         else:
             await message.err(
                 "Choose a valid Input !, See Help for more info.", del_in=5
