@@ -107,20 +107,31 @@ async def f_adel(message: Message):
     },
     allow_bots=False,
     allow_channels=False,
-    allow_private=False,
 )
 async def addfed_(message: Message):
     """Adds current chat to connected Feds."""
-    name = message.input_str or message.chat.title
     chat_id = message.chat.id
-    found = await FED_LIST.find_one({"chat_id": chat_id})
-    if found:
-        await message.edit(
-            f"Chat __ID__: `{chat_id}`\nFed: **{found['fed_name']}**\n\nAlready exists in Fed List !",
-            del_in=7,
-        )
-        return
-    await FED_LIST.insert_one({"fed_name": name, "chat_id": chat_id})
+    chat_t = await userge.get_chat(chat_id)
+    chat_type = chat_t.type
+    name = message.input_str or chat_t.title or chat_t.first_name
+    if chat_type=="private":
+        found = await FED_LIST.find_one({"schat_id": chat_id})
+        if found:
+            await message.edit(
+                f"Chat __ID__: `{chat_id}`\nFed: **{found['sfed_name']}**\n\nAlready exists in Fed List !",
+                del_in=7,
+            )
+            return
+        await FED_LIST.insert_one({"sfed_name": name, "schat_id": chat_id, "chat_type": chat_type})
+    else:
+        found = await FED_LIST.find_one({"chat_id": chat_id})
+        if found:
+            await message.edit(
+                f"Chat __ID__: `{chat_id}`\nFed: **{found['fed_name']}**\n\nAlready exists in Fed List !",
+                del_in=7,
+            )
+            return
+        await FED_LIST.insert_one({"fed_name": name, "chat_id": chat_id, "chat_type": chat_type})
     msg_ = f"__ID__ `{chat_id}` added to Fed: **{name}**"
     await message.edit(msg_, del_in=7)
     await CHANNEL.log(msg_)
@@ -146,6 +157,7 @@ async def delfed_(message: Message):
     else:
         try:
             chat_ = await message.client.get_chat(message.input_str or message.chat.id)
+            chat_t = chat_.type
             chat_id = chat_.id
             chat_.title
         except (PeerIdInvalid, IndexError):
@@ -154,15 +166,26 @@ async def delfed_(message: Message):
             if not id_.isdigit() or not chat_id.startswith("-"):
                 return await message.err("Provide a valid chat ID...", del_in=7)
         out = f"Chat ID: {chat_id}\n"
-        found = await FED_LIST.find_one({"chat_id": int(chat_id)})
-        if found:
-            msg_ = out + f"Successfully Removed Fed: **{found['fed_name']}**"
-            await message.edit(msg_, del_in=7)
-            await FED_LIST.delete_one(found)
+        if chat_t=="private":
+            found = await FED_LIST.find_one({"schat_id": int(chat_id)})
+            if found:
+                msg_ = out + f"Successfully Removed Fed: **{found['sfed_name']}**"
+                await message.edit(msg_, del_in=7)
+                await FED_LIST.delete_one(found)
+            else:
+                return await message.err(
+                    out + "**Does't exist in your Fed List !**", del_in=7
+                )
         else:
-            return await message.err(
-                out + "**Does't exist in your Fed List !**", del_in=7
-            )
+            found = await FED_LIST.find_one({"chat_id": int(chat_id)})
+            if found:
+                msg_ = out + f"Successfully Removed Fed: **{found['fed_name']}**"
+                await message.edit(msg_, del_in=7)
+                await FED_LIST.delete_one(found)
+            else:
+                return await message.err(
+                    out + "**Does't exist in your Fed List !**", del_in=7
+                )
     await CHANNEL.log(msg_)
 
 
@@ -264,40 +287,59 @@ async def fban_(message: Message):
     reason = reason or "Not specified."
     await message.edit(fban_arg[1])
     async for data in FED_LIST.find():
-        total += 1
-        chat_id = int(data["chat_id"])
+        is_chat = True
         try:
+            chat_id = int(data['chat_id'])
+        except KeyError:
+            chat_id = int(data['schat_id'])
+            is_chat = False
+
+
+        if is_chat:
+            total += 1
+            try:    
+                await userge.send_message(
+                    chat_id,
+                    f"/fban <a href='tg://user?id={user}'>{user}</a> {reason}",
+                    disable_web_page_preview=True,
+                )
+            except UserBannedInChannel:
+                pass
+            try:
+                async with userge.conversation(chat_id, timeout=8) as conv:
+                    response = await conv.get_response(
+                        mark_read=True,
+                        filters=(filters.user([609517172, 2059887769]) & ~filters.service),
+                    )
+                    resp = response.text
+                    if not (
+                        ("New FedBan" in resp)
+                        or ("starting a federation ban" in resp)
+                        or ("Starting a federation ban" in resp)
+                        or ("start a federation ban" in resp)
+                        or ("FedBan Reason update" in resp)
+                        or ("FedBan reason updated" in resp)
+                    ):
+                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+            except FloodWait as f:
+                await asyncio.sleep(f.x + 3)
+            except BaseException:
+                failed.append(data['fed_name'])
+
+        else:
             await userge.send_message(
                 chat_id,
-                f"/fban {user} {reason}",
+                f"{Config.FSUDO_TRIGGER}fban [{user}](tg://user?id={(user)}) {reason}",
                 disable_web_page_preview=True,
             )
-        except UserBannedInChannel:
-            pass
-        try:
-            async with userge.conversation(chat_id, timeout=8) as conv:
-                response = await conv.get_response(
-                    mark_read=True,
-                    filters=(filters.user([609517172, 2059887769]) & ~filters.service),
-                )
-                resp = response.text
-                if not (
-                    ("New FedBan" in resp)
-                    or ("starting a federation ban" in resp)
-                    or ("Starting a federation ban" in resp)
-                    or ("start a federation ban" in resp)
-                    or ("FedBan Reason update" in resp)
-                    or ("FedBan reason updated" in resp)
-                ):
-                    failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
-        except FloodWait as f:
-            await asyncio.sleep(f.x + 3)
-        except BaseException:
-            failed.append(data["fed_name"])
+        
+        await asyncio.sleep(0.1)
+
     if total == 0:
         return await message.err(
             "You Don't have any feds connected!\nsee .help addf, for more info."
         )
+
     await message.edit(fban_arg[2])
 
     if len(failed) != 0:
@@ -472,38 +514,51 @@ async def fban_p(message: Message):
     else:
         reported = ""
     async for data in FED_LIST.find():
-        total += 1
-        chat_id = int(data["chat_id"])
+        is_chat = True
         try:
+            chat_id = int(data['chat_id'])
+        except KeyError:
+            chat_id = int(data['schat_id'])
+            is_chat = False
+        if is_chat:
+            total += 1
+            try:    
+                await userge.send_message(
+                    chat_id,
+                    f"/fban <a href='tg://user?id={user}'>{user}</a> {reason}",
+                    disable_web_page_preview=True,
+                )
+            except UserBannedInChannel:
+                pass
+            try:
+                async with userge.conversation(chat_id, timeout=8) as conv:
+                    response = await conv.get_response(
+                        mark_read=True,
+                        filters=(filters.user([609517172, 2059887769]) & ~filters.service),
+                    )
+                    resp = response.text
+                    if not (
+                        ("New FedBan" in resp)
+                        or ("starting a federation ban" in resp)
+                        or ("Starting a federation ban" in resp)
+                        or ("start a federation ban" in resp)
+                        or ("FedBan Reason update" in resp)
+                        or ("FedBan reason updated" in resp)
+                    ):
+                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+            except FloodWait as f:
+                await asyncio.sleep(f.x + 3)
+            except BaseException:
+                failed.append(data['fed_name'])
+
+        else:
             await userge.send_message(
                 chat_id,
-                f"/fban {user} {reason}",
+                f"{Config.FSUDO_TRIGGER}fban <a href='tg://user?id={user}'>{user}</a> {reason}",
                 disable_web_page_preview=True,
             )
-        except UserBannedInChannel:
-            pass
-        try:
-            async with userge.conversation(chat_id, timeout=8) as conv:
-                response = await conv.get_response(
-                    mark_read=True,
-                    filters=(filters.user([609517172, 2059887769]) & ~filters.service),
-                )
-                resp = response.text
-                if not (
-                    ("New FedBan" in resp)
-                    or ("FedBan Reason update" in resp)
-                    or ("starting a federation ban" in resp)
-                    or ("Starting a federation ban" in resp)
-                    or ("start a federation ban" in resp)
-                    or ("FedBan reason updated" in resp)
-                ):
-                    failed.append(f"{data['fed_name']}  \n__ID__: {data['chat_id']}")
-                elif "FedBan Reason update" in resp:
-                    r_update.append(f"{data['fed_name']} - <i>Reason updated</i>")
-        except FloodWait as f:
-            await asyncio.sleep(f.x + 3)
-        except BaseException:
-            failed.append(data["fed_name"])
+        
+        await asyncio.sleep(0.1)
     if total == 0:
         return await message.err(
             "You Don't have any feds connected!\nsee .help addf, for more info."
@@ -634,25 +689,41 @@ async def unfban_(message: Message):
     total = 0
     await message.edit(fban_arg[1])
     async for data in FED_LIST.find():
-        total += 1
-        chat_id = int(data["chat_id"])
+        is_chat = True
         try:
-            async with userge.conversation(chat_id, timeout=8) as conv:
-                await conv.send_message(f"/unfban {user} {reason}")
-                response = await conv.get_response(
-                    mark_read=True,
-                    filters=(filters.user([609517172, 2059887769]) & ~filters.service),
-                )
-                resp = response.text
-                if (
-                    ("New un-FedBan" not in resp)
-                    and ("I'll give" not in resp)
-                    and ("Un-FedBan" not in resp)
-                ):
-                    failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+            chat_id = int(data['chat_id'])
+        except KeyError:
+            chat_id = int(data['schat_id'])
+            is_chat = False
+        if is_chat:
+            total += 1
+            try:
+                async with userge.conversation(chat_id, timeout=8) as conv:
+                    await conv.send_message(f"/unfban {user} {reason}")
+                    response = await conv.get_response(
+                        mark_read=True,
+                        filters=(filters.user([609517172, 2059887769]) & ~filters.service),
+                    )
+                    resp = response.text
+                    if (
+                        ("New un-FedBan" not in resp)
+                        and ("I'll give" not in resp)
+                        and ("Un-FedBan" not in resp)
+                    ):
+                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+            except FloodWait as f:
+                await asyncio.sleep(f.x + 3)
+            except BaseException:
+                failed.append(data['fed_name'])
 
-        except BaseException:
-            failed.append(data["fed_name"])
+        else:
+            await userge.send_message(
+                chat_id,
+                f"{Config.FSUDO_TRIGGER}unfban <a href='tg://user?id={user}'>{user}</a> {reason}",
+                disable_web_page_preview=True,
+            )
+        
+        await asyncio.sleep(0.1)
     if total == 0:
         return await message.err(
             "You Don't have any feds connected!\nsee .help addf, for more info."
@@ -689,10 +760,18 @@ async def fban_lst_(message: Message):
     out = ""
     total = 0
     async for data in FED_LIST.find():
-        total += 1
-        chat_id = data["chat_id"]
-        id_ = f"'<code>{chat_id}</code>' - " if "-id" in message.flags else ""
-        out += f"• Fed: {id_}<b>{data['fed_name']}</b>\n"
+        is_chat = True
+        try:
+            chat_id = int(data['chat_id'])
+        except KeyError:
+            chat_id = int(data['schat_id'])
+            is_chat = False
+        if is_chat:
+            total += 1
+            id_ = f"'<code>{chat_id}</code>' - " if "-id" in message.flags else ""
+            out += f"• Fed: {id_}<b>{data['fed_name']}</b>\n"
+        else:
+            out += f"👤 SUDO FED: <b>{data['sfed_name']}</b>\n\n"
     await message.edit_or_send_as_file(
         f"**Connected federations: [{total}]**\n\n" + out
         if out
