@@ -114,7 +114,7 @@ async def addfed_(message: Message):
     chat_t = await userge.get_chat(chat_id)
     chat_type = chat_t.type
     name = message.input_str or chat_t.title or chat_t.first_name
-    if chat_type=="private":
+    if chat_type == "private":
         found = await FED_LIST.find_one({"schat_id": chat_id})
         if found:
             await message.edit(
@@ -122,7 +122,9 @@ async def addfed_(message: Message):
                 del_in=7,
             )
             return
-        await FED_LIST.insert_one({"sfed_name": name, "schat_id": chat_id, "chat_type": chat_type})
+        await FED_LIST.insert_one(
+            {"sfed_name": name, "schat_id": chat_id, "chat_type": chat_type}
+        )
     else:
         found = await FED_LIST.find_one({"chat_id": chat_id})
         if found:
@@ -131,7 +133,9 @@ async def addfed_(message: Message):
                 del_in=7,
             )
             return
-        await FED_LIST.insert_one({"fed_name": name, "chat_id": chat_id, "chat_type": chat_type})
+        await FED_LIST.insert_one(
+            {"fed_name": name, "chat_id": chat_id, "chat_type": chat_type}
+        )
     msg_ = f"__ID__ `{chat_id}` added to Fed: **{name}**"
     await message.edit(msg_, del_in=7)
     await CHANNEL.log(msg_)
@@ -166,7 +170,7 @@ async def delfed_(message: Message):
             if not id_.isdigit() or not chat_id.startswith("-"):
                 return await message.err("Provide a valid chat ID...", del_in=7)
         out = f"Chat ID: {chat_id}\n"
-        if chat_t=="private":
+        if chat_t == "private":
             found = await FED_LIST.find_one({"schat_id": int(chat_id)})
             if found:
                 msg_ = out + f"Successfully Removed Fed: **{found['sfed_name']}**"
@@ -289,15 +293,14 @@ async def fban_(message: Message):
     async for data in FED_LIST.find():
         is_chat = True
         try:
-            chat_id = int(data['chat_id'])
+            chat_id = int(data["chat_id"])
         except KeyError:
-            chat_id = int(data['schat_id'])
+            chat_id = int(data["schat_id"])
             is_chat = False
-
 
         if is_chat:
             total += 1
-            try:    
+            try:
                 await userge.send_message(
                     chat_id,
                     f"/fban <a href='tg://user?id={user}'>{user}</a> {reason}",
@@ -309,7 +312,9 @@ async def fban_(message: Message):
                 async with userge.conversation(chat_id, timeout=8) as conv:
                     response = await conv.get_response(
                         mark_read=True,
-                        filters=(filters.user([609517172, 2059887769]) & ~filters.service),
+                        filters=(
+                            filters.user([609517172, 2059887769]) & ~filters.service
+                        ),
                     )
                     resp = response.text
                     if not (
@@ -320,11 +325,13 @@ async def fban_(message: Message):
                         or ("FedBan Reason update" in resp)
                         or ("FedBan reason updated" in resp)
                     ):
-                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+                        failed.append(
+                            f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
+                        )
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
             except BaseException:
-                failed.append(data['fed_name'])
+                failed.append(data["fed_name"])
 
         else:
             await userge.send_message(
@@ -332,7 +339,7 @@ async def fban_(message: Message):
                 f"{Config.FSUDO_TRIGGER}fban [{user}](tg://user?id={(user)}) {reason}",
                 disable_web_page_preview=True,
             )
-        
+
         await asyncio.sleep(0.1)
 
     if total == 0:
@@ -516,13 +523,13 @@ async def fban_p(message: Message):
     async for data in FED_LIST.find():
         is_chat = True
         try:
-            chat_id = int(data['chat_id'])
+            chat_id = int(data["chat_id"])
         except KeyError:
-            chat_id = int(data['schat_id'])
+            chat_id = int(data["schat_id"])
             is_chat = False
         if is_chat:
             total += 1
-            try:    
+            try:
                 await userge.send_message(
                     chat_id,
                     f"/fban <a href='tg://user?id={user}'>{user}</a> {reason}",
@@ -534,7 +541,9 @@ async def fban_p(message: Message):
                 async with userge.conversation(chat_id, timeout=8) as conv:
                     response = await conv.get_response(
                         mark_read=True,
-                        filters=(filters.user([609517172, 2059887769]) & ~filters.service),
+                        filters=(
+                            filters.user([609517172, 2059887769]) & ~filters.service
+                        ),
                     )
                     resp = response.text
                     if not (
@@ -545,11 +554,13 @@ async def fban_p(message: Message):
                         or ("FedBan Reason update" in resp)
                         or ("FedBan reason updated" in resp)
                     ):
-                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+                        failed.append(
+                            f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
+                        )
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
             except BaseException:
-                failed.append(data['fed_name'])
+                failed.append(data["fed_name"])
 
         else:
             await userge.send_message(
@@ -557,7 +568,7 @@ async def fban_p(message: Message):
                 f"{Config.FSUDO_TRIGGER}fban <a href='tg://user?id={user}'>{user}</a> {reason}",
                 disable_web_page_preview=True,
             )
-        
+
         await asyncio.sleep(0.1)
     if total == 0:
         return await message.err(
@@ -691,9 +702,9 @@ async def unfban_(message: Message):
     async for data in FED_LIST.find():
         is_chat = True
         try:
-            chat_id = int(data['chat_id'])
+            chat_id = int(data["chat_id"])
         except KeyError:
-            chat_id = int(data['schat_id'])
+            chat_id = int(data["schat_id"])
             is_chat = False
         if is_chat:
             total += 1
@@ -702,7 +713,9 @@ async def unfban_(message: Message):
                     await conv.send_message(f"/unfban {user} {reason}")
                     response = await conv.get_response(
                         mark_read=True,
-                        filters=(filters.user([609517172, 2059887769]) & ~filters.service),
+                        filters=(
+                            filters.user([609517172, 2059887769]) & ~filters.service
+                        ),
                     )
                     resp = response.text
                     if (
@@ -710,11 +723,13 @@ async def unfban_(message: Message):
                         and ("I'll give" not in resp)
                         and ("Un-FedBan" not in resp)
                     ):
-                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+                        failed.append(
+                            f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
+                        )
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
             except BaseException:
-                failed.append(data['fed_name'])
+                failed.append(data["fed_name"])
 
         else:
             await userge.send_message(
@@ -722,7 +737,7 @@ async def unfban_(message: Message):
                 f"{Config.FSUDO_TRIGGER}unfban <a href='tg://user?id={user}'>{user}</a> {reason}",
                 disable_web_page_preview=True,
             )
-        
+
         await asyncio.sleep(0.1)
     if total == 0:
         return await message.err(
@@ -762,9 +777,9 @@ async def fban_lst_(message: Message):
     async for data in FED_LIST.find():
         is_chat = True
         try:
-            chat_id = int(data['chat_id'])
+            chat_id = int(data["chat_id"])
         except KeyError:
-            chat_id = int(data['schat_id'])
+            chat_id = int(data["schat_id"])
             is_chat = False
         if is_chat:
             total += 1
