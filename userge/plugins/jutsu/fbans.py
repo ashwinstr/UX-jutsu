@@ -330,7 +330,7 @@ async def fban_(message: Message):
                             f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
                         )
                     if "Would you like to update this reason?" in resp:
-                                await response.click("Update reason")
+                        await response.click("Update reason")
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
             except BaseException:
@@ -562,7 +562,7 @@ async def fban_p(message: Message):
                             f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
                         )
                     if "Would you like to update this reason?" in resp:
-                                await response.click("Update reason")
+                        await response.click("Update reason")
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
             except BaseException:
