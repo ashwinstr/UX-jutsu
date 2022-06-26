@@ -324,10 +324,13 @@ async def fban_(message: Message):
                         or ("start a federation ban" in resp)
                         or ("FedBan Reason update" in resp)
                         or ("FedBan reason updated" in resp)
+                        or ("Would you like to update this reason?" in resp)
                     ):
                         failed.append(
                             f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
                         )
+                    if "Would you like to update this reason?" in resp:
+                                await response.click("Update reason")
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
             except BaseException:
@@ -553,10 +556,13 @@ async def fban_p(message: Message):
                         or ("start a federation ban" in resp)
                         or ("FedBan Reason update" in resp)
                         or ("FedBan reason updated" in resp)
+                        or ("Would you like to update this reason?" in resp)
                     ):
                         failed.append(
                             f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
                         )
+                    if "Would you like to update this reason?" in resp:
+                                await response.click("Update reason")
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
             except BaseException:
@@ -786,7 +792,7 @@ async def fban_lst_(message: Message):
             id_ = f"'<code>{chat_id}</code>' - " if "-id" in message.flags else ""
             out += f"• Fed: {id_}<b>{data['fed_name']}</b>\n"
         else:
-            out += f"👤 SUDO FED: <b>{data['sfed_name']}</b>\n\n"
+            out += f"\n• SUDO FED : <b>{data['sfed_name']}</b>\n"
     await message.edit_or_send_as_file(
         f"**Connected federations: [{total}]**\n\n" + out
         if out
