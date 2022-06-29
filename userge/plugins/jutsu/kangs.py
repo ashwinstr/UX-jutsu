@@ -180,7 +180,11 @@ async def kang_(message: Message):
             cmd = "/newvideo"
         while True:
             try:
-                exist = await message.client.send(GetStickerSet(stickerset=InputStickerSetShortName(short_name=packname), hash=0))
+                exist = await message.client.send(
+                    GetStickerSet(
+                        stickerset=InputStickerSetShortName(short_name=packname), hash=0
+                    )
+                )
             except StickersetInvalid:
                 exist = False
                 break
@@ -195,7 +199,9 @@ async def kang_(message: Message):
                 if is_video:
                     packname += f"_video{pack}"
                     packnick += f" (Video){pack}"
-                await kang_msg.edit(f"`Switching to Pack {pack} due to insufficient space`")
+                await kang_msg.edit(
+                    f"`Switching to Pack {pack} due to insufficient space`"
+                )
                 continue
             break
         if exist is not False:
