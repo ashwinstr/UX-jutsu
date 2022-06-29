@@ -178,15 +178,26 @@ async def kang_(message: Message):
             packname += "_video"
             packnick += " (Video)"
             cmd = "/newvideo"
-        exist = False
-        try:
-            exist = await message.client.send(
-                GetStickerSet(
-                    stickerset=InputStickerSetShortName(short_name=packname), hash=0
-                )
-            )
-        except StickersetInvalid:
-            pass
+        while True:
+            try:
+                exist = await message.client.send(GetStickerSet(stickerset=InputStickerSetShortName(short_name=packname), hash=0))
+            except StickersetInvalid:
+                exist = False
+                break
+            limit = 50 if (is_video or is_anim) else 120
+            if exist.set.count >= limit:
+                pack += 1
+                packname = f"a{user.id}_by_userge_{pack}"
+                packnick = f"{custom_packnick} Vol.{pack}"
+                if is_anim:
+                    packname += f"_anim{pack}"
+                    packnick += f" (Animated){pack}"
+                if is_video:
+                    packname += f"_video{pack}"
+                    packnick += f" (Video){pack}"
+                await kang_msg.edit(f"`Switching to Pack {pack} due to insufficient space`")
+                continue
+            break
         if exist is not False:
             async with userge.conversation("Stickers", limit=30) as conv:
                 try:
@@ -196,52 +207,7 @@ async def kang_(message: Message):
                     return
                 await conv.get_response(mark_read=True)
                 await conv.send_message(packname)
-                msg = await conv.get_response(mark_read=True)
-                limit = "50" if is_anim else "120"
-                while limit in msg.text:
-                    pack += 1
-                    packname = f"a{user.id}_by_userge_{pack}"
-                    packnick = f"{custom_packnick} Vol.{pack}"
-                    if is_anim:
-                        packname += "_anim"
-                        packnick += " (Animated)"
-                    if is_video:
-                        packname += "_video"
-                        packnick += " (Video)"
-                    await kang_msg.edit(
-                        "`Switching to Pack "
-                        + str(pack)
-                        + " due to insufficient space`"
-                    )
-                    await conv.send_message(packname)
-                    msg = await conv.get_response(mark_read=True)
-                    if msg.text == "Invalid pack selected.":
-                        await conv.send_message(cmd)
-                        await conv.get_response(mark_read=True)
-                        await conv.send_message(packnick)
-                        await conv.get_response(mark_read=True)
-                        await conv.send_document(media_)
-                        await conv.get_response(mark_read=True)
-                        await conv.send_message(emoji_)
-                        await conv.get_response(mark_read=True)
-                        await conv.send_message("/publish")
-                        if is_anim:
-                            await conv.get_response(mark_read=True)
-                            await conv.send_message(f"<{packnick}>", parse_mode=None)
-                        await conv.get_response(mark_read=True)
-                        await conv.send_message("/skip")
-                        await conv.get_response(mark_read=True)
-                        await conv.send_message(packname)
-                        await conv.get_response(mark_read=True)
-                        out = (
-                            "__kanged__"
-                            if "-s" in message.flags
-                            else f"[kanged](t.me/addstickers/{packname})"
-                        )
-                        await kang_msg.edit(
-                            f"**Sticker** {out} __in a Different Pack__**!**"
-                        )
-                        return
+                await conv.get_response(mark_read=True)
                 try:
                     await conv.send_document(media_)
                 except BaseException:
