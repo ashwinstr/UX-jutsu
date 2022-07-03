@@ -3,9 +3,9 @@
 
 from pyrogram.errors import YouBlockedUser
 
-from userge import Message, Config, userge
-
+from userge import Message, userge
 from userge.plugins.utils.translate import _translate_this as tr
+
 
 @userge.on_cmd(
     "d",
@@ -17,7 +17,7 @@ from userge.plugins.utils.translate import _translate_this as tr
 )
 async def ln_user_(message: Message):
     """device desc"""
-    device_ = message.input_str 
+    device_ = message.input_str
     bot_ = "@vegadata_bot"
     async with userge.conversation(bot_, timeout=30) as conv:
         try:
