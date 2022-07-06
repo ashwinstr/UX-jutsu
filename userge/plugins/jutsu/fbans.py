@@ -370,7 +370,7 @@ async def fban_(message: Message):
     await userge.send_message(int(PROOF_CHANNEL), msg_)
     try:
         check_me = await userge.get_chat_member(d_msg.chat.id, "me")
-        if check_me.status in ["creator", "administrator"]: 
+        if check_me.status in ["creator", "administrator"]:
             x = await d_msg.reply_text(f"!dban {reason}", disable_web_page_preview=True)
             await asyncio.sleep(10)
             await x.delete()
@@ -613,7 +613,7 @@ async def fban_p(message: Message):
     )
     try:
         check_me = await userge.get_chat_member(reply.chat.id, "me")
-        if check_me.status in ["creator", "administrator"]: 
+        if check_me.status in ["creator", "administrator"]:
             x = await reply.reply_text(f"!dban {reason}", disable_web_page_preview=True)
             await asyncio.sleep(10)
             await x.delete()
