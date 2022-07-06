@@ -230,6 +230,7 @@ async def fban_(message: Message):
     else:
         user = message.reply_to_message.from_user.id
         reason = input
+        d_msg = message.reply_to_message
     if user is None:
         return await message.err("Provide a user ID or reply to a user...", del_in=7)
     try:
@@ -367,6 +368,14 @@ async def fban_(message: Message):
     del_ = 3 if "-d" in message.flags or Config.F_ADEL else -1
     await message.edit(msg_, del_in=del_)
     await userge.send_message(int(PROOF_CHANNEL), msg_)
+    try:
+        check_me = await userge.get_chat_member(d_msg.chat.id, "me")
+        if check_me.status in ["creator", "administrator"]: 
+            x = await d_msg.reply_text(f"!dban {reason}", disable_web_page_preview=True)
+            await asyncio.sleep(10)
+            await x.delete()
+    except BaseException:
+        pass
 
 
 @userge.on_cmd(
@@ -602,6 +611,14 @@ async def fban_p(message: Message):
     await userge.send_message(
         int(FBAN_LOG_CHANNEL), msg_, disable_web_page_preview=True
     )
+    try:
+        check_me = await userge.get_chat_member(reply.chat.id, "me")
+        if check_me.status in ["creator", "administrator"]: 
+            x = await reply.reply_text(f"!dban {reason}", disable_web_page_preview=True)
+            await asyncio.sleep(10)
+            await x.delete()
+    except BaseException:
+        pass
 
 
 @userge.on_cmd(
