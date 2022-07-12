@@ -13,7 +13,11 @@ from userge.plugins.misc.uploads import upload
 
 
 @userge.on_cmd(
-    "song", about={"header": "Download Songs from Youtube.", "usage": "{tr}song alone\n{tr}song youtube link"}
+    "song",
+    about={
+        "header": "Download Songs from Youtube.",
+        "usage": "{tr}song alone\n{tr}song youtube link",
+    },
 )
 async def song_dl(message: Message):
     query = message.input_str
