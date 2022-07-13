@@ -27,19 +27,19 @@ from userge.utils import get_file_id, get_response
 from userge.utils import parse_buttons as pb
 from userge.utils import rand_key
 
-from .bot.alive import Bot_Alive
-from .bot.gogo import Anime
-from .bot.utube_inline import (
+from userge.plugins.bot.alive import Bot_Alive
+from userge.plugins.bot.gogo import Anime
+from userge.plugins.bot.utube_inline import (
     download_button,
     get_yt_video_id,
     get_ytthumb,
     result_formatter,
     ytsearch_data,
 )
-from .fun.stylish import Styled, font_gen
-from .jutsu.ivotings import vote_buttons
-from .misc.redditdl import reddit_thumb_link
-from .utils.notes import get_inote
+from userge.plugins.fun.stylish import Styled, font_gen
+from userge.plugins.jutsu.ivotings import vote_buttons
+from userge.plugins.misc.redditdl import reddit_thumb_link
+from userge.plugins.utils.notes import get_inote
 
 # from .inline_ivoting import alive_inline_q
 
@@ -110,6 +110,10 @@ async def _init() -> None:
 )
 async def helpme(message: Message) -> None:
     plugins = userge.manager.enabled_plugins
+    if "-i" in message.flags:
+        await message.delete()
+        query = await userge.get_inline_bot_results((await userge.bot.get_me()).username, "help")
+        return await userge.send_inline_bot_result(chat_id=message.chat.id, query_id=query.query_id, result_id=query.results[0].id)
     if not message.input_str:
         out_str = (
             f"""⚒ <b><u>(<code>{len(plugins)}</code>) Plugin(s) Available</u></b>\n\n"""
