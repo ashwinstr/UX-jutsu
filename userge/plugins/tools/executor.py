@@ -179,9 +179,9 @@ async def init_func(message: Message):
     if not cmd:
         await message.err("No Command Found!")
         return None
-    if "config.env" in cmd:
-        await message.err("That's a dangerous operation! Not Permitted!")
-        return None
+#    if "config.env" in cmd:
+#        await message.err("That's a dangerous operation! Not Permitted!")
+#        return None
     return cmd
 
 
