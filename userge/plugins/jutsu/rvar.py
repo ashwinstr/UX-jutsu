@@ -39,7 +39,7 @@ async def reveal_var(message: Message):
         await SAVED_SETTINGS.update_one(
             {"_id": "REVEAL_VAR"}, {"$set": {"switch": True}}, upsert=True
         )
-    out_ = "ON" if Config.REVEAL_VAR else "OFF"
+    out_ = "OFF" if Config.REVEAL_VAR else "ON"
     await message.edit(f"`Secured Vars : {out_}.`", del_in=5)
 
 
@@ -55,7 +55,7 @@ async def view_var(message: Message):
     if not vname:
         await message.edit("Give a Var name to view", del_in=5)
         return
-    input_name = (vname.strip()).upper()
+    input_name = (vname.strip()).upper().replace(" ", "_")
     var = os.environ.get(input_name)
-    out = f"**{(input_name)}** :\n`{(var)}`"
+    out = f"**{(input_name)} :**\n`{(var)}`"
     await message.edit(out, del_in=15)
