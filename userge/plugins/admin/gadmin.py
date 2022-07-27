@@ -267,7 +267,7 @@ async def kick_usr(message: Message):
     """kick user from tg group"""
     chat_id = message.chat.id
     await message.edit("`Trying to Kick User.. Hang on!! ⏳`")
-    user_id, _ = message.extract_user_and_text
+    user_id, reason = message.extract_user_and_text
     if not user_id:
         await message.edit(
             text="`no valid user_id or message specified,`"
@@ -283,7 +283,8 @@ async def kick_usr(message: Message):
             "#KICK\n\n"
             f"USER: [{get_mem.user.first_name}](tg://user?id={get_mem.user.id}) "
             f"(`{get_mem.user.id}`)\n"
-            f"CHAT: `{message.chat.title}` (`{chat_id}`)",
+            f"CHAT: `{message.chat.title}` (`{chat_id}`)\n",
+            f"REASON: `{reason}`",
             log=__name__,
         )
     except UsernameInvalid:
