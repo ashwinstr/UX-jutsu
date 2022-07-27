@@ -1,74 +1,53 @@
-import os
+### Made by Ryuk ###
+### based on code from ux ###
 
+import os
+import random
 import requests
-from anekos import NekosLifeClient, SFWImageTags
+from nekosbest import Client, Result, models
 from pyrogram.errors import MediaEmpty, WebpageCurlFailed
 from wget import download
-
 from userge import Message, userge
-from userge.plugins.fun.nsfw import age_verification
-
-client = NekosLifeClient()
-
-NSFW = (
-    (
-        (
-            (
-                str(
-                    (
-                        requests.get(
-                            "https://kuuhaku-api-production.up.railway.app/api/nsfw"
-                        )
-                    ).json()["nsfw"]
-                ).replace("/api/nsfw/", "")
-            ).replace("[", "")
-        ).replace("]", "")
-    ).replace("'", "")
-).replace(",", "")
-SFW = [z for z in dir(SFWImageTags) if not z.startswith("__")]
 
 
-neko_help = "<b>NSFW</b> :  "
-neko_help += f"<code>{NSFW.lower()}</code>  "
-neko_help += "\n\n<b>SFW</b> :  "
-for m in SFW:
-    neko_help += f"<code>{m.lower()}</code>   "
+client = Client()
+API = os.environ.get("NEKO_API")
 
+SFW_Tags = [tag for tag in (models.CATEGORIES)]
+NSFW_Tags = requests.get(API).json()["/"]
+
+Tags = "<b>SFW</b> :\n"
+for TAG in SFW_Tags:
+    Tags += f" <code>{TAG}</code>,  "
+Tags += "\n\n<b>NSFW</b> : \n"
+for tAg in NSFW_Tags:
+    Tags += f" <code>{tAg}</code>,  "
 
 @userge.on_cmd(
     "nekos",
     about={
-        "header": "Get NSFW / SFW stuff from nekos.life",
-        "usage": "{tr}nekos\n{tr}nekos [Choice]",
-        "Choice": neko_help,
+        "header": "Get Nekos from nekos.best",
+        "usage": "{tr}nekos for random\n{tr}nekos -nsfw for random nsfw\n{tr}nekos [Choice]",
+        "Choice": Tags,
     },
 )
 async def neko_life(message: Message):
-    choice = message.input_str
+    choice = message.filtered_input_str
     if "-nsfw" in message.flags:
-        if await age_verification(message):
-            return
-        link = (await client.random_image(nsfw=True)).url
+            link = (requests.get(API+random.choice(NSFW_Tags))).json()["url"]
     elif choice:
-        input_choice = (choice.strip()).upper()
-        if input_choice in SFW:
-            link = (await client.image(SFWImageTags[input_choice])).url
-        elif choice in NSFW:
-            if await age_verification(message):
-                return
-            link = (
-                requests.get(
-                    f"https://kuuhaku-api-production.up.railway.app/api/nsfw/{choice}"
-                )
-            ).json()["url"]
+        input_choice = choice.lower()
+        if input_choice in SFW_Tags:
+            link = (await client.get_image(input_choice, 1)).url
+        elif input_choice in NSFW_Tags:
+            link = (requests.get(API+input_choice)).json()["url"]
         else:
             await message.err(
                 "Choose a valid Input !, See Help for more info.", del_in=5
             )
             return
     else:
-        link = (await client.random_image()).url
-
+        link = (await client.get_image(random.choice(SFW_Tags), 1)).url
     await message.delete()
 
     try:
