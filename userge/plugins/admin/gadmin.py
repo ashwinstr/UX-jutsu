@@ -283,7 +283,7 @@ async def kick_usr(message: Message):
             "#KICK\n\n"
             f"USER: [{get_mem.user.first_name}](tg://user?id={get_mem.user.id}) "
             f"(`{get_mem.user.id}`)\n"
-            f"CHAT: `{message.chat.title}` (`{chat_id}`)\n",
+            f"CHAT: `{message.chat.title}` (`{chat_id}`)\n"
             f"REASON: `{reason}`",
             log=__name__,
         )
