@@ -3,12 +3,13 @@
 
 import os
 import random
+
 import requests
-from nekosbest import Client, Result, models
+from nekosbest import Client, models
 from pyrogram.errors import MediaEmpty, WebpageCurlFailed
 from wget import download
-from userge import Message, userge
 
+from userge import Message, userge
 
 client = Client()
 API = os.environ.get("NEKO_API")
@@ -23,6 +24,7 @@ Tags += "\n\n<b>NSFW</b> : \n"
 for tAg in NSFW_Tags:
     Tags += f" <code>{tAg}</code>,  "
 
+
 @userge.on_cmd(
     "nekos",
     about={
@@ -34,13 +36,13 @@ for tAg in NSFW_Tags:
 async def neko_life(message: Message):
     choice = message.filtered_input_str
     if "-nsfw" in message.flags:
-            link = (requests.get(API+random.choice(NSFW_Tags))).json()["url"]
+        link = (requests.get(API + random.choice(NSFW_Tags))).json()["url"]
     elif choice:
         input_choice = choice.lower()
         if input_choice in SFW_Tags:
             link = (await client.get_image(input_choice, 1)).url
         elif input_choice in NSFW_Tags:
-            link = (requests.get(API+input_choice)).json()["url"]
+            link = (requests.get(API + input_choice)).json()["url"]
         else:
             await message.err(
                 "Choose a valid Input !, See Help for more info.", del_in=5
