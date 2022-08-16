@@ -21,6 +21,13 @@ _checkPythonVersion() {
     log "\tFound PYTHON - v$pVer ..."
 }
 
+_installReq() {
+    if [[ $HEROKU_ENV == 1 ]] ; then
+        log "Silently Updating Requirements..."
+        pip install --no-cache-dir -r -q requirements.txt
+    fi
+}
+
 _checkConfigFile() {
     log "Checking Config File ..."
     configPath="config.env"
@@ -165,6 +172,7 @@ _flushMessages() {
 assertPrerequisites() {
     _checkBashReq
     _checkPythonVersion
+    _installReq
     _checkConfigFile
     _checkRequiredVars
 }
