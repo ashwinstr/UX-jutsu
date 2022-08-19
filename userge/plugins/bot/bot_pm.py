@@ -75,7 +75,9 @@ if userge.has_bot:
     async def get_bot_pm_media() -> None:
         global _BOT_PM_MEDIA
         if not Config.BOT_MEDIA:
-            _BOT_PM_MEDIA = get_file_id(await userge.bot.get_messages("UsergeXNotes", 26))
+            _BOT_PM_MEDIA = get_file_id(
+                await userge.bot.get_messages("UsergeXNotes", 26)
+            )
             return
         if Config.BOT_MEDIA.strip().lower() != "false":
             match = _TG_LINK_REGEX.search(Config.BOT_MEDIA)
