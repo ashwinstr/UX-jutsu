@@ -198,7 +198,7 @@ async def upload(
             custom_thumb=custom_thumb,
             log=log,
         )
-    elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a")) and (
+    elif path.name.lower().endswith((".mp3", ".flac", ".wav", ".m4a", ".opus")) and (
         "d" not in message.flags
     ):
         return await audio_upload(
