@@ -4,12 +4,12 @@
 import glob
 import os
 import shutil
+import mutagen
 from pathlib import Path
 from subprocess import call
 from time import time
 
 from userge import Config, Message, userge
-from userge.plugins.misc.uploads import upload
 
 
 @userge.on_cmd(
@@ -29,9 +29,15 @@ async def song_dl(message: Message):
     yt_dl = f"yt-dlp -o {dl_path}/'%(title)s.%(ext)s' --write-thumbnail --extract-audio --audio-format opus --audio-quality 320K --embed-thumbnail 'ytsearch:{query}'"
     call(yt_dl, shell=True)
     s_path = ""
-    for song in glob.glob(os.path.join(dl_path, "*")):
-        if song.lower().endswith(".opus"):
-            s_path = song
-            await upload(message, Path(s_path))
+    t_path = ""
+    for file_ in glob.glob(os.path.join(dl_path, "*")):
+        if file_.lower().endswith(".opus"):
+            s_path = file_
+            duration = mutagen.File(s_path).info.length
+        if file_.lower().endswith((".jpg", ".webp", ".png")):
+            t_path = file_
+    if not s_path:
+        return await message.edit("Not found")
+    await message.reply_audio(audio=s_path, duration = int(duration), thumb = t_path )
     if os.path.exists(str(dl_path)):
         shutil.rmtree(dl_path)
