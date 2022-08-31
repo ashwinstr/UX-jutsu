@@ -4,10 +4,10 @@
 import glob
 import os
 import shutil
-import mutagen
-from pathlib import Path
 from subprocess import call
 from time import time
+
+import mutagen
 
 from userge import Config, Message, userge
 
@@ -38,6 +38,6 @@ async def song_dl(message: Message):
             t_path = file_
     if not s_path:
         return await message.edit("Not found")
-    await message.reply_audio(audio=s_path, duration = int(duration), thumb = t_path )
+    await message.reply_audio(audio=s_path, duration=int(duration), thumb=t_path)
     if os.path.exists(str(dl_path)):
         shutil.rmtree(dl_path)
