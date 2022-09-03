@@ -246,7 +246,7 @@ def _supported(url):
 def _tubeDl(url: list, starttime, prog, uid=None):
     _opts = {
         "outtmpl": os.path.join(
-            Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
+            Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.mp4"
         ),
         "logger": LOGGER,
         "writethumbnail": True,
