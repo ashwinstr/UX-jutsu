@@ -246,14 +246,14 @@ def _supported(url):
 def _tubeDl(url: list, starttime, prog, uid=None):
     _opts = {
         "outtmpl": os.path.join(
-            Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.mp4"
+            Config.DOWN_PATH, str(starttime), "%(title)s-%(format)s.%(ext)s"
         ),
         "logger": LOGGER,
         "writethumbnail": True,
         "prefer_ffmpeg": True,
         "postprocessors": [{"key": "FFmpegMetadata"}],
     }
-    _quality = {"format": "bestvideo+bestaudio/best" if not uid else str(uid)}
+    _quality = {"format": "bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4]" if not uid else str(uid)}
     _opts.update(_quality)
     try:
         x = ytdl.YoutubeDL(_opts)
