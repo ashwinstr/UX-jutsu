@@ -26,7 +26,7 @@ CHANNEL = userge.getCLogger(__name__)
         "description": "Provides admin rights to the person in the supergroup.\n"
         "you can also add custom title while promoting new admin.\n"
         "[NOTE: Requires proper admin rights in the chat!!!]",
-        "flags":{"-full": "To promote with full rights."},
+        "flags": {"-full": "To promote with full rights."},
         "examples": [
             "{tr}promote [username | userid] or [reply to user] :custom title (optional)",
             "{tr}promote @someusername/userid/replytouser Staff (custom title)",
