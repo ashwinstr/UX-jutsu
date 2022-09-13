@@ -26,6 +26,7 @@ CHANNEL = userge.getCLogger(__name__)
         "description": "Provides admin rights to the person in the supergroup.\n"
         "you can also add custom title while promoting new admin.\n"
         "[NOTE: Requires proper admin rights in the chat!!!]",
+        "flags":{"-full": "To promote with full rights."},
         "examples": [
             "{tr}promote [username | userid] or [reply to user] :custom title (optional)",
             "{tr}promote @someusername/userid/replytouser Staff (custom title)",
@@ -60,6 +61,8 @@ async def promote_usr(message: Message):
             can_restrict_members=True,
             can_invite_users=True,
             can_pin_messages=True,
+            can_promote_members=True if "-full" in message.flags else False,
+            can_manage_voice_chats=True if "-full" in message.flags else False,
         )
         if custom_rank:
             await asyncio.sleep(2)
