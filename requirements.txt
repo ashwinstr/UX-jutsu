@@ -18,6 +18,7 @@ heroku3>=4.2.3
 html-telegraph-poster>=0.2.31
 lyricsgenius
 motor>=2.3.0
+music_tag
 numpy
 nekosbest
 oauth2client>=4.1.3
