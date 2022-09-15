@@ -28,7 +28,7 @@ async def song_dl(message: Message):
     reply = message.reply_to_message
     if reply:
         for link in reply.text.split():
-            if link.startswith(('http://www.youtube.com','https://www.youtube.com')):
+            if link.startswith(("http://www.youtube.com", "https://www.youtube.com")):
                 reply_query = link
                 break
     query = reply_query if reply_query else message.filtered_input_str
@@ -43,18 +43,23 @@ async def song_dl(message: Message):
         quality = "--audio-format opus"
     yt_dl = f"yt-dlp -o {dl_path}/'%(title)s.%(ext)s' --write-thumbnail --extract-audio --embed-thumbnail {quality} --add-metadata 'ytsearch:{query}'"
     call(yt_dl, shell=True)
-    for file_ in glob.glob(dl_path+"/*"):
-        if file_.lower().endswith((".opus",".mp3")):
+    for file_ in glob.glob(dl_path + "/*"):
+        if file_.lower().endswith((".opus", ".mp3")):
             audio_path = file_
             audio_info = music_tag.load_file(audio_path)
-            duration = audio_info['#length']
-            artist = audio_info['artist']
+            duration = audio_info["#length"]
+            artist = audio_info["artist"]
         if file_.lower().endswith((".jpg", ".webp", ".png")):
             thumb_path = file_
     if not audio_path:
         return await message.edit("Not found")
     await message.edit("Uploading....")
-    await message.reply_audio(audio=audio_path, duration=int(duration), performer=str(artist), thumb=thumb_path)
+    await message.reply_audio(
+        audio=audio_path,
+        duration=int(duration),
+        performer=str(artist),
+        thumb=thumb_path,
+    )
     await message.delete()
     if os.path.exists(str(dl_path)):
         shutil.rmtree(dl_path)
