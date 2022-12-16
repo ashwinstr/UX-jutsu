@@ -1,35 +1,32 @@
 aiofiles>=0.6.0
-aiohttp[speedups]>=3.7.3
-asyncurban
+aiohttp[speedups]>=3.8.1
+asyncurban>=0.3.3
 beautifulsoup4>=4.9.1
-colour
+colour>=0.1.5
 cowpy>=1.1.0
 dnspython>=2.0.0
-futures==2.2.0
+futures>=3.0.5
 gitpython>=3.1.11
 google-api-python-client>=1.12.8
 google-auth-httplib2>=0.0.4
 google-auth-oauthlib>=0.4.2
 git+https://github.com/Joeclinton1/google-images-download@patch-1
 googletrans==3.1.0a0
-gtts
+gtts>=2.2.4
 hachoir>=3.1.1
 heroku3>=4.2.3
 html-telegraph-poster>=0.2.31
 lyricsgenius
 motor>=2.3.0
-music_tag
-numpy
-nekosbest
+music_tag>=0.4.3
+numpy>=1.23.2
 oauth2client>=4.1.3
 Pillow==9.0.1
 psutil>=5.7.3
 pybase64>=1.1.1
 PyDictionary>=2.0.1
-pymediainfo
+pymediainfo>=5.1.0
 git+https://github.com/ashwinstr/pyrogram.git@x21
-# git+https://github.com/pyrogram/pyrogram.git@master
-# pyrogram==1.4.7
 pySmartDL>=1.3.4
 python-dotenv>=0.15.0
 pytz>=2020.4
@@ -43,14 +40,21 @@ spamwatch>=0.3.0
 speedtest-cli>=2.1.3
 stagger>=1.0.0
 telegraph>=1.4.1
-tgcrypto
+tgcrypto>=1.2.3
 urbandict>=0.5
-vcsi
+vcsi>=7.0.13
 wget>=3.2
 wikipedia>=1.4.0
-youtube_dl
-#git+https://github.com/Nekos-life/Async-nekos.life-wrapper
+yt_dlp>=2022.8.19
 ruamel.yaml==0.17.21
 ujson>=4.0.1
 youtube-search-python==1.5.1
 feedparser>=6.0.2
+
+
+### Ded / Reqs with issues ###
+# nekosbest
+# git+https://github.com/pyrogram/pyrogram.git@master
+# pyrogram==1.4.7
+# youtube_dl #slow af
+# git+https://github.com/Nekos-life/Async-nekos.life-wrapper
