@@ -1,8 +1,8 @@
 ### By Ryuk ###
 
 
-import os
 import glob
+import os
 import shutil
 import traceback
 from time import time
@@ -75,8 +75,8 @@ async def song_dl(message: Message):
         except IndexError:
             nthumb = thumb[-1]["url"]
         thumb_path = download(nthumb, dl_path)
-    for i in glob.glob(dl_path+'*'):
-        if i.endswith((".opus",".mp3")):
+    for i in glob.glob(dl_path + "*"):
+        if i.endswith((".opus", ".mp3")):
             audio_path = i
     if audio_path is not None:
         await message.edit("Uploading....")
