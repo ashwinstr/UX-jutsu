@@ -2,6 +2,7 @@
 
 
 import os
+import glob
 import shutil
 import traceback
 from time import time
@@ -63,7 +64,6 @@ async def song_dl(message: Message):
             yt_info = ytdl.extract_info(query_or_search)
             if not query_or_search.startswith("http"):
                 yt_info = yt_info["entries"][0]
-            title = f"{yt_info['title']}.{aformat}"
             thumb = yt_info["thumbnails"]
             duration = yt_info["formats"][0]["fragments"][0]["duration"]
             artist = yt_info["channel"]
@@ -75,8 +75,9 @@ async def song_dl(message: Message):
         except IndexError:
             nthumb = thumb[-1]["url"]
         thumb_path = download(nthumb, dl_path)
-    if os.path.isfile(dl_path + title):
-        audio_path = dl_path + title
+    for i in glob.glob(dl_path+'*'):
+        if i.endswith((".opus",".mp3")):
+            audio_path = i
     if audio_path is not None:
         await message.edit("Uploading....")
         await message.reply_audio(
