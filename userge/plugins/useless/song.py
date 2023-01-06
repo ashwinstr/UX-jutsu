@@ -34,7 +34,12 @@ async def song_dl(message: Message):
     if reply:
         for link in reply.text.split():
             if link.startswith(
-                ("https://www.youtube", "https://youtube", "https://music.youtube", "https://youtu.be")
+                (
+                    "https://www.youtube",
+                    "https://youtube",
+                    "https://music.youtube",
+                    "https://youtu.be",
+                )
             ):
                 reply_query = link
                 break
