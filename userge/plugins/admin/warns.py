@@ -93,7 +93,6 @@ async def warn_func(message: Message):
     wcount += 1
 
     if wcount >= max_warns:
-
         if warn_mode == "mute":
             warn_mode_text = "muted"
         elif warn_mode == "kick":

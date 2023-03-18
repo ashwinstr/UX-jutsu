@@ -73,7 +73,6 @@ async def ocr_gen(message: Message):
         return
 
     if message.reply_to_message:
-
         lang_code = message.input_str or "eng"
         await message.edit(r"`Trying to Read.. 📖")
         downloaded_file_name = await message.client.download_media(

@@ -225,7 +225,6 @@ if Config.SPOTIFY_CLIENT_ID and Config.SPOTIFY_CLIENT_SECRET:
         return False
 
     async def spotify_bio_():
-
         while Config.SPOTIFY_MODE:
             # SPOTIFY
             skip = False

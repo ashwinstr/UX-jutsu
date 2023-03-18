@@ -150,7 +150,6 @@ if userge.has_bot:
     async def back_cb(_, callback_query: CallbackQuery):
         u_id = callback_query.from_user.id
         if u_id in Config.OWNER_ID or u_id in Config.SUDO_USERS:
-
             buttons = [
                 [
                     InlineKeyboardButton("Open Gapps", callback_data="open_gapps"),
