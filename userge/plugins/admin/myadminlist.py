@@ -10,7 +10,6 @@ import asyncio
 from pyrogram.errors import FloodWait, UserNotParticipant
 
 from userge import Message, userge
-from userge.utils import mention_html
 from userge.utils import post_to_telegraph as pt
 
 
@@ -26,7 +25,6 @@ async def get_your_admin_list(message: Message):
         "<b>Please wait it will take some time</b>"
     )
     owner = await userge.get_me()
-    mention_html(owner.id, owner.first_name)
     groups_admin = []
     groups_creator = []
     channels_admin = []
