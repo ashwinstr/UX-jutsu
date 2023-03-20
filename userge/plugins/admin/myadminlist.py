@@ -8,18 +8,25 @@
 import asyncio
 
 from pyrogram.errors import FloodWait, UserNotParticipant
+
 from userge import Message, userge
 from userge.utils import mention_html
 from userge.utils import post_to_telegraph as pt
 
 
-@userge.on_cmd("myadminlist", about={"header": "List your Admin groups/channels.", "usage": "{tr}myadminlist"})
+@userge.on_cmd(
+    "myadminlist",
+    about={"header": "List your Admin groups/channels.", "usage": "{tr}myadminlist"},
+)
 async def get_your_admin_list(message: Message):
     """get info about your Admin group/channels"""
 
-    await message.edit("💁‍♂️ `Collecting your Telegram Stats ...`\n" "<b>Please wait it will take some time</b>")
+    await message.edit(
+        "💁‍♂️ `Collecting your Telegram Stats ...`\n"
+        "<b>Please wait it will take some time</b>"
+    )
     owner = await userge.get_me()
-    u_mention = mention_html(owner.id, owner.first_name)
+    mention_html(owner.id, owner.first_name)
     groups_admin = []
     groups_creator = []
     channels_admin = []
@@ -50,15 +57,25 @@ async def get_your_admin_list(message: Message):
     text_ = ""
     if channels_creator or groups_creator:
         if groups_creator:
-            text_ += f"""\n<h3>Owner of Groups:</h3>\n• """ + "\n• ".join(sorted(groups_creator))
+            text_ += f"""\n<h3>Owner of Groups:</h3>\n• """ + "\n• ".join(
+                sorted(groups_creator)
+            )
         if channels_creator:
-            text_ += f"""\n\n\n<h3>Owner of Channels:</h3>\n• """ + "\n• ".join(sorted(channels_creator))
+            text_ += f"""\n\n\n<h3>Owner of Channels:</h3>\n• """ + "\n• ".join(
+                sorted(channels_creator)
+            )
     if groups_admin:
-        text_ += f"""\n\n\n<h3>Admin in Groups:</h3>\n• """ + "\n• ".join(sorted(groups_admin))
+        text_ += f"""\n\n\n<h3>Admin in Groups:</h3>\n• """ + "\n• ".join(
+            sorted(groups_admin)
+        )
     if channels_admin:
-        text_ += f"""\n\n\n<h3>Admin in Channels:</h3>\n• """ + "\n• ".join(sorted(channels_admin))
+        text_ += f"""\n\n\n<h3>Admin in Channels:</h3>\n• """ + "\n• ".join(
+            sorted(channels_admin)
+        )
     telegraph = pt(template.replace("\n", "<br>"), text_.replace("\n", "<br>"))
-    await message.edit(f"{template} : \n[📜 TELEGRAPH]({telegraph})", disable_web_page_preview=True)
+    await message.edit(
+        f"{template} : \n[📜 TELEGRAPH]({telegraph})", disable_web_page_preview=True
+    )
 
 
 #  https://git.colinshark.de/PyroBot/PyroBot/src/branch
