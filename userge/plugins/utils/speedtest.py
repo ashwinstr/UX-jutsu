@@ -9,8 +9,7 @@
 import os
 
 import speedtest
-import wget
-
+import asyncio
 from userge import Message, userge
 from userge.utils import humanbytes
 
@@ -34,11 +33,18 @@ async def speedtst(message: Message):
         test.download()
         await message.try_to_edit("`Performing upload test . . .`")
         test.upload()
-        result = test.results.share()
+        result = test.results.dict()
+        url = test.results.share()
     except Exception as e:
         await message.err(text=e)
         return
-    path = wget.download(result)
+    download = await asyncio.create_subprocess_shell(f"wget {url}")
+    await download.communicate()
+    file = os.path.basename(url)
+    if os.path.isfile(file):
+        path = file
+    else:
+        path = url
     output = f"""**--Started at {result['timestamp']}--
 
 Client: {user}
