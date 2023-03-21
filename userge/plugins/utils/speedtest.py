@@ -34,12 +34,11 @@ async def speedtst(message: Message):
         test.download()
         await message.try_to_edit("`Performing upload test . . .`")
         test.upload()
-        test.results.share()
-        result = test.results.dict()
+        result = test.results.share()
     except Exception as e:
         await message.err(text=e)
         return
-    path = wget.download(result["share"])
+    path = wget.download(result)
     output = f"""**--Started at {result['timestamp']}--
 
 Client: {user}
