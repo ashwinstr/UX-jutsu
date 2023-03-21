@@ -6,10 +6,11 @@
 #
 # All rights reserved.
 
+import asyncio
 import os
 
 import speedtest
-import asyncio
+
 from userge import Message, userge
 from userge.utils import humanbytes
 
