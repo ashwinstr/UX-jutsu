@@ -116,7 +116,7 @@ async def demote_usr(message: Message):
             chat_id,
             user_id,
             message.chat.permissions,
-            )
+        )
         await message.edit("`🛡 Demoted Successfully..`", del_in=5)
         await CHANNEL.log(
             "#DEMOTE\n\n"
