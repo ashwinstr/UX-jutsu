@@ -61,8 +61,8 @@ async def promote_usr(message: Message):
             can_restrict_members=True,
             can_invite_users=True,
             can_pin_messages=True,
-            can_promote_members=True if "-full" in message.flags else False,
-            can_manage_voice_chats=True if "-full" in message.flags else False,
+            can_promote_members=("-full" in message.flags),
+            can_manage_voice_chats=("-full" in message.flags),
         )
         if custom_rank:
             await asyncio.sleep(2)
@@ -112,6 +112,12 @@ async def demote_usr(message: Message):
         return
     try:
         get_mem = await message.client.get_chat_member(chat_id, user_id)
+        await message.client.restrict_chat_member(
+            chat_id,
+            user_id,
+            ChatPermissions(),
+        )
+        await asyncio.sleep(1)
         await message.client.restrict_chat_member(
             chat_id,
             user_id,
