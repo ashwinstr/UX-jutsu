@@ -112,15 +112,11 @@ async def demote_usr(message: Message):
         return
     try:
         get_mem = await message.client.get_chat_member(chat_id, user_id)
-        await message.client.promote_chat_member(
+        await message.client.restrict_chat_member(
             chat_id,
             user_id,
-            can_change_info=False,
-            can_delete_messages=False,
-            can_restrict_members=False,
-            can_invite_users=False,
-            can_pin_messages=False,
-        )
+            message.chat.permissions,
+            )
         await message.edit("`🛡 Demoted Successfully..`", del_in=5)
         await CHANNEL.log(
             "#DEMOTE\n\n"
