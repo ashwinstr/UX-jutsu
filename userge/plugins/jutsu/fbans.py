@@ -14,6 +14,7 @@ import os
 
 from pyrogram import filters
 from pyrogram.errors import FloodWait, PeerIdInvalid, UserBannedInChannel
+
 from userge import Config, Message, get_collection, userge
 from userge.helpers import extract_id, report_user
 
@@ -35,7 +36,14 @@ async def _init() -> None:
         Config.F_ADEL = False
 
 
-@userge.on_cmd("fban_tag", about={"header": "enable / disable fbanner's tag", "flags": {"-c": "check"}, "usage": "{tr}fban_tag"})
+@userge.on_cmd(
+    "fban_tag",
+    about={
+        "header": "enable / disable fbanner's tag",
+        "flags": {"-c": "check"},
+        "usage": "{tr}fban_tag",
+    },
+)
 async def fban_sudo_tags(message: Message):
     """enable / disable fbanner's tag"""
     if not hasattr(Config, "FBAN_TAG"):
@@ -51,20 +59,35 @@ async def fban_sudo_tags(message: Message):
     else:
         Config.FBAN_TAG = True
         await message.edit("`Fban tags enabled.`", del_in=5)
-    await SAVED_SETTINGS.update_one({"_id": "FBAN_TAG"}, {"$set": {"data": Config.FBAN_TAG}}, upsert=True)
+    await SAVED_SETTINGS.update_one(
+        {"_id": "FBAN_TAG"}, {"$set": {"data": Config.FBAN_TAG}}, upsert=True
+    )
 
 
-@userge.on_cmd("f_adel", about={"header": "toggle auto delete Fban confirmation", "flags": {"-c": "check"}, "usage": "{tr}f_adel"})
+@userge.on_cmd(
+    "f_adel",
+    about={
+        "header": "toggle auto delete Fban confirmation",
+        "flags": {"-c": "check"},
+        "usage": "{tr}f_adel",
+    },
+)
 async def f_adel(message: Message):
     if "-c" in message.flags:
         out_ = "ON" if Config.F_ADEL else "OFF"
-        return await message.edit(f"`Fban confirmation auto-delete : {out_}.`", del_in=5)
+        return await message.edit(
+            f"`Fban confirmation auto-delete : {out_}.`", del_in=5
+        )
     if Config.F_ADEL:
         Config.F_ADEL = False
-        await SAVED_SETTINGS.update_one({"_id": "F_ADEL"}, {"$set": {"switch": False}}, upsert=True)
+        await SAVED_SETTINGS.update_one(
+            {"_id": "F_ADEL"}, {"$set": {"switch": False}}, upsert=True
+        )
     else:
         Config.F_ADEL = True
-        await SAVED_SETTINGS.update_one({"_id": "F_ADEL"}, {"$set": {"switch": True}}, upsert=True)
+        await SAVED_SETTINGS.update_one(
+            {"_id": "F_ADEL"}, {"$set": {"switch": True}}, upsert=True
+        )
     out_ = "ON" if Config.F_ADEL else "OFF"
     await message.edit(f"`Fban confirmation auto-delete : {out_}.`")
 
@@ -88,8 +111,13 @@ async def addfed_(message: Message):
     found = await FED_LIST.find_one({"chat_id": chat_id})
     fp = "-fp" in message.flags
     if found:
-        return await message.edit(f"Chat __ID__: `{chat_id}`\nFed: **{found['fed_name']}**\n\nAlready exists in Fed List !", del_in=7)
-    await FED_LIST.insert_one({"fed_name": name, "chat_id": chat_id, "chat_type": chat.type, "fp": fp})
+        return await message.edit(
+            f"Chat __ID__: `{chat_id}`\nFed: **{found['fed_name']}**\n\nAlready exists in Fed List !",
+            del_in=7,
+        )
+    await FED_LIST.insert_one(
+        {"fed_name": name, "chat_id": chat_id, "chat_type": chat.type, "fp": fp}
+    )
     msg_ = f"__ID__ `{chat_id}` added to Fed: **{name}**"
     await message.edit(msg_, del_in=7)
     await CHANNEL.log(msg_)
@@ -129,7 +157,9 @@ async def delfed_(message: Message):
             await message.edit(msg_, del_in=7)
             await FED_LIST.delete_one(found)
         else:
-            return await message.err(out + "**Does't exist in your Fed List !**", del_in=7)
+            return await message.err(
+                out + "**Does't exist in your Fed List !**", del_in=7
+            )
     await CHANNEL.log(msg_)
 
 
@@ -152,7 +182,10 @@ async def fban_(message: Message):
     await message.edit(fban_arg[0])
     initialised_in_chat = message.chat.title or message.chat.first_name
     sudo_ = False
-    if message.from_user.id in Config.SUDO_USERS or message.from_user.id in Config.TRUSTED_SUDO_USERS:
+    if (
+        message.from_user.id in Config.SUDO_USERS
+        or message.from_user.id in Config.TRUSTED_SUDO_USERS
+    ):
         sudo_ = True
     if not message.reply_to_message:
         split_ = input.split(" ", 1)
@@ -174,7 +207,12 @@ async def fban_(message: Message):
         user = user_.id
     except (PeerIdInvalid, IndexError):
         pass
-    if user in Config.SUDO_USERS or user in Config.TRUSTED_SUDO_USERS or user in Config.OWNER_ID or user == (await message.client.get_me()).id:
+    if (
+        user in Config.SUDO_USERS
+        or user in Config.TRUSTED_SUDO_USERS
+        or user in Config.OWNER_ID
+        or user == (await message.client.get_me()).id
+    ):
         if not input:
             await message.edit("Can't fban replied user, give user ID...", del_in=7)
             return
@@ -190,15 +228,27 @@ async def fban_(message: Message):
             await CHANNEL.log(d_err)
             try:
                 async with userge.conversation(message.chat.id) as conv:
-                    response = await conv.get_response(mark_read=True, filters=(filters.user([message.from_user.id])))
+                    response = await conv.get_response(
+                        mark_read=True, filters=(filters.user([message.from_user.id]))
+                    )
             except BaseException:
-                return await message.edit(f"`Fban terminated...\nReason: Response timeout.`")
+                return await message.edit(
+                    f"`Fban terminated...\nReason: Response timeout.`"
+                )
             if response.text == "y":
                 pass
             else:
-                return await message.edit(f"`Fban terminated...\nReason: User didn't continue.`")
-        if user in Config.SUDO_USERS or user in Config.OWNER_ID or user == (await message.client.get_me()).id:
-            return await message.err("Can't fban user that exists in SUDO or OWNERS...", del_in=7)
+                return await message.edit(
+                    f"`Fban terminated...\nReason: User didn't continue.`"
+                )
+        if (
+            user in Config.SUDO_USERS
+            or user in Config.OWNER_ID
+            or user == (await message.client.get_me()).id
+        ):
+            return await message.err(
+                "Can't fban user that exists in SUDO or OWNERS...", del_in=7
+            )
     try:
         user_ = await userge.get_users(user)
         u_link = user_.mention
@@ -216,12 +266,21 @@ async def fban_(message: Message):
         if data["chat_type"] != "private":
             total += 1
             try:
-                await userge.send_message(chat_id, f"/fban <a href='tg://user?id={user}'>{user}</a> {reason}", disable_web_page_preview=True)
+                await userge.send_message(
+                    chat_id,
+                    f"/fban <a href='tg://user?id={user}'>{user}</a> {reason}",
+                    disable_web_page_preview=True,
+                )
             except UserBannedInChannel:
                 pass
             try:
                 async with userge.conversation(chat_id, timeout=8) as conv:
-                    response = await conv.get_response(mark_read=True, filters=(filters.user([609517172, 2059887769]) & ~filters.service))
+                    response = await conv.get_response(
+                        mark_read=True,
+                        filters=(
+                            filters.user([609517172, 2059887769]) & ~filters.service
+                        ),
+                    )
                     resp = response.text
                     if not (
                         ("New FedBan" in resp)
@@ -232,7 +291,9 @@ async def fban_(message: Message):
                         or ("FedBan reason updated" in resp)
                         or ("Would you like to update this reason?" in resp)
                     ):
-                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+                        failed.append(
+                            f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
+                        )
                     if "Would you like to update this reason?" in resp:
                         await response.click("Update reason")
             except FloodWait as f:
@@ -241,12 +302,18 @@ async def fban_(message: Message):
                 failed.append(data["fed_name"])
 
         else:
-            await userge.send_message(chat_id, f"{Config.FSUDO_TRIGGER}fban [{user}](tg://user?id={(user)}) {reason}", disable_web_page_preview=True)
+            await userge.send_message(
+                chat_id,
+                f"{Config.FSUDO_TRIGGER}fban [{user}](tg://user?id={(user)}) {reason}",
+                disable_web_page_preview=True,
+            )
 
         await asyncio.sleep(0.1)
 
     if total == 0:
-        return await message.err("You Don't have any feds connected!\nsee .help addf, for more info.")
+        return await message.err(
+            "You Don't have any feds connected!\nsee .help addf, for more info."
+        )
 
     await message.edit(fban_arg[2])
 
@@ -256,7 +323,10 @@ async def fban_(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Fbanned in `{total}` feds."
-    msg_ = fban_arg[3].format(u_link) + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}\n"
+    msg_ = (
+        fban_arg[3].format(u_link)
+        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}\n"
+    )
     msg_ += f"**Ban Initialised in**: __{initialised_in_chat}__"
     if sudo_:
         msg_ += f"\n**By:** {message.from_user.mention}"
@@ -279,7 +349,10 @@ async def fban_(message: Message):
         "header": "Fban with proof",
         "description": "Fban user from the list of feds with replied message as proof"
         "\nWARNING: don't use if any of the fed group has links blocklisted",
-        "flags": {"-r": "remote fban, use with direct proof link", "-d": "auto-delete message"},
+        "flags": {
+            "-r": "remote fban, use with direct proof link",
+            "-d": "auto-delete message",
+        },
         "usage": "{tr}fbanp [direct reply to spammer] {reason}\n{tr}fbanp [reply to proof forwarded by you] {user id} {reason}",
     },
     allow_bots=False,
@@ -290,18 +363,29 @@ async def fban_p(message: Message):
     fban_arg = ["❯", "❯❯", "❯❯❯", "❯❯❯ <b>FBanned {}{}</b>"]
     d_err = ("Failed to detect user **{}**, fban might not work...",)
     if not FBAN_LOG_CHANNEL:
-        await message.edit("Add <code>FBAN_LOG_CHANNEL</code> to forward the proofs...", del_in=5)
+        await message.edit(
+            "Add <code>FBAN_LOG_CHANNEL</code> to forward the proofs...", del_in=5
+        )
         return
     try:
         channel_ = await userge.get_chat(int(FBAN_LOG_CHANNEL))
     except BaseException:
-        return await message.edit(f"`The FBAN_LOG_CHANNEL ID provided ('{FBAN_LOG_CHANNEL}') is invalid, enter correct one.`", del_in=5)
+        return await message.edit(
+            f"`The FBAN_LOG_CHANNEL ID provided ('{FBAN_LOG_CHANNEL}') is invalid, enter correct one.`",
+            del_in=5,
+        )
     initialised_in_chat = message.chat.title or message.chat.first_name
     if channel_.username is None or channel_.type != "channel":
-        await message.edit("Proof channel should be a <b>channel</b> and should be <b>public</b> for this command to work...", del_in=5)
+        await message.edit(
+            "Proof channel should be a <b>channel</b> and should be <b>public</b> for this command to work...",
+            del_in=5,
+        )
         return
     sudo_ = False
-    if message.from_user.id in Config.SUDO_USERS or message.from_user.id in Config.TRUSTED_SUDO_USERS:
+    if (
+        message.from_user.id in Config.SUDO_USERS
+        or message.from_user.id in Config.TRUSTED_SUDO_USERS
+    ):
         sudo_ = True
     if "-r" in message.flags:
         link_ = message.filtered_input_str
@@ -322,14 +406,18 @@ async def fban_p(message: Message):
                 chat_id = chat_.id
             msg_id = int(user_and_message[-1])
         except BaseException:
-            await message.edit("`Provide a proper spam message link to report...`", del_in=5)
+            await message.edit(
+                "`Provide a proper spam message link to report...`", del_in=5
+            )
             return
         try:
             msg_en = await userge.get_messages(chat_id, int(msg_id))
             user = msg_en.from_user.id
             proof = msg_en.message_id
         except BaseException:
-            await message.edit("`Provide a proper spam message link to report...`", del_in=5)
+            await message.edit(
+                "`Provide a proper spam message link to report...`", del_in=5
+            )
             return
         input = ""
     else:
@@ -344,10 +432,18 @@ async def fban_p(message: Message):
         msg_en = reply
         proof = msg_en.message_id
     fps = True
-    if user in Config.SUDO_USERS or user in Config.TRUSTED_SUDO_USERS or user in Config.OWNER_ID or user == (await message.client.get_me()).id:
+    if (
+        user in Config.SUDO_USERS
+        or user in Config.TRUSTED_SUDO_USERS
+        or user in Config.OWNER_ID
+        or user == (await message.client.get_me()).id
+    ):
         fps = False
         if not input:
-            await message.err("Can't fban replied/specified user because of them being SUDO_USER or OWNER, give user ID...", del_in=5)
+            await message.err(
+                "Can't fban replied/specified user because of them being SUDO_USER or OWNER, give user ID...",
+                del_in=5,
+            )
             return
         split_ = input.split(" ", 1)
         user = split_[0]
@@ -364,8 +460,14 @@ async def fban_p(message: Message):
             reason = split_[1]
         except BaseException:
             reason = "not specified"
-        if user in Config.SUDO_USERS or user in Config.OWNER_ID or user == (await message.client.get_me()).id:
-            return await message.err("Can't fban user that exists in SUDO or OWNERS...", del_in=5)
+        if (
+            user in Config.SUDO_USERS
+            or user in Config.OWNER_ID
+            or user == (await message.client.get_me()).id
+        ):
+            return await message.err(
+                "Can't fban user that exists in SUDO or OWNERS...", del_in=5
+            )
     try:
         user_ = await userge.get_users(user)
         u_link = user_.mention
@@ -378,7 +480,9 @@ async def fban_p(message: Message):
     r_update = []
     total = 0
     await message.edit(fban_arg[1])
-    log_fwd = await userge.forward_messages(int(FBAN_LOG_CHANNEL), from_chat_id=chat_id, message_ids=proof)
+    log_fwd = await userge.forward_messages(
+        int(FBAN_LOG_CHANNEL), from_chat_id=chat_id, message_ids=proof
+    )
     reason = reason or "Not specified"
     reason += " || {" + log_fwd.link + "}"
     if fps:
@@ -393,12 +497,21 @@ async def fban_p(message: Message):
             try:
                 if data.get("fp"):
                     await log_fwd.forward(chat_id)
-                await userge.send_message(chat_id, f"/fban <a href='tg://user?id={user}'>{user}</a> {reason}", disable_web_page_preview=True)
+                await userge.send_message(
+                    chat_id,
+                    f"/fban <a href='tg://user?id={user}'>{user}</a> {reason}",
+                    disable_web_page_preview=True,
+                )
             except UserBannedInChannel:
                 pass
             try:
                 async with userge.conversation(chat_id, timeout=8) as conv:
-                    response = await conv.get_response(mark_read=True, filters=(filters.user([609517172, 2059887769]) & ~filters.service))
+                    response = await conv.get_response(
+                        mark_read=True,
+                        filters=(
+                            filters.user([609517172, 2059887769]) & ~filters.service
+                        ),
+                    )
                     resp = response.text
                     if not (
                         ("New FedBan" in resp)
@@ -409,7 +522,9 @@ async def fban_p(message: Message):
                         or ("FedBan reason updated" in resp)
                         or ("Would you like to update this reason?" in resp)
                     ):
-                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+                        failed.append(
+                            f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
+                        )
                     if "Would you like to update this reason?" in resp:
                         await response.click("Update reason")
             except FloodWait as f:
@@ -419,12 +534,16 @@ async def fban_p(message: Message):
 
         else:
             await userge.send_message(
-                chat_id, f"{Config.FSUDO_TRIGGER}fban <a href='tg://user?id={user}'>{user}</a> {reason}", disable_web_page_preview=True
+                chat_id,
+                f"{Config.FSUDO_TRIGGER}fban <a href='tg://user?id={user}'>{user}</a> {reason}",
+                disable_web_page_preview=True,
             )
 
         await asyncio.sleep(0.1)
     if total == 0:
-        return await message.err("You Don't have any feds connected!\nsee .help addf, for more info.")
+        return await message.err(
+            "You Don't have any feds connected!\nsee .help addf, for more info."
+        )
     await message.edit(fban_arg[2])
 
     if len(failed) != 0:
@@ -436,13 +555,18 @@ async def fban_p(message: Message):
         if len(r_update) != 0:
             for i in r_update:
                 status += f"\n• {i}"
-    msg_ = fban_arg[3].format(reported, u_link) + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}\n"
+    msg_ = (
+        fban_arg[3].format(reported, u_link)
+        + f"\n**ID:** <code>{u_id}</code>\n**Reason:** {reason}\n**Status:** {status}\n"
+    )
     msg_ += f"**Ban Initialised in**: __{initialised_in_chat}__"
     if sudo_:
         msg_ += f"\n**By:** {message.from_user.mention}"
     del_ = 3 if "-d" in message.flags or Config.F_ADEL else -1
     await message.edit(msg_, del_in=del_, disable_web_page_preview=True)
-    await userge.send_message(int(FBAN_LOG_CHANNEL), msg_, disable_web_page_preview=True)
+    await userge.send_message(
+        int(FBAN_LOG_CHANNEL), msg_, disable_web_page_preview=True
+    )
     try:
         check_me = await userge.get_chat_member(reply.chat.id, "me")
         if check_me.status in ["creator", "administrator"]:
@@ -483,7 +607,11 @@ async def fban_m(message: Message):
                 user = user_.id
             except BaseException:
                 pass
-        if user in Config.SUDO_USERS or user in Config.OWNER_ID or user == (await message.client.get_me()).id:
+        if (
+            user in Config.SUDO_USERS
+            or user in Config.OWNER_ID
+            or user == (await message.client.get_me()).id
+        ):
             cant += 1
             continue
         fail = 0
@@ -502,14 +630,25 @@ async def fban_m(message: Message):
             prog_2 = False
         if prog == 100:
             fban_prog = fban_arg[3]
-        await message.edit(f"{fban_prog}\n" f"**Fbanned:** {ban} out of {len(input)}\n" f"**Can't fban:** {cant}")
+        await message.edit(
+            f"{fban_prog}\n"
+            f"**Fbanned:** {ban} out of {len(input)}\n"
+            f"**Can't fban:** {cant}"
+        )
         if user_n == len(input):
-            await userge.send_message(PROOF_CHANNEL, f"#FBAN\n**Fbanned:** {ban} out of {len(input)}\n**Failed:** {fail}\n**Can't fban:** {cant}")
+            await userge.send_message(
+                PROOF_CHANNEL,
+                f"#FBAN\n**Fbanned:** {ban} out of {len(input)}\n**Failed:** {fail}\n**Can't fban:** {cant}",
+            )
 
 
 @userge.on_cmd(
     "unfban",
-    about={"header": "Unfban user", "description": "Unfban the user from the list of fed", "usage": "{tr}unfban [username|reply to user|user_id]"},
+    about={
+        "header": "Unfban user",
+        "description": "Unfban the user from the list of fed",
+        "usage": "{tr}unfban [username|reply to user|user_id]",
+    },
     allow_bots=False,
     allow_channels=False,
 )
@@ -546,10 +685,21 @@ async def unfban_(message: Message):
             try:
                 async with userge.conversation(chat_id, timeout=8) as conv:
                     await conv.send_message(f"/unfban {user} {reason}")
-                    response = await conv.get_response(mark_read=True, filters=(filters.user([609517172, 2059887769]) & ~filters.service))
+                    response = await conv.get_response(
+                        mark_read=True,
+                        filters=(
+                            filters.user([609517172, 2059887769]) & ~filters.service
+                        ),
+                    )
                     resp = response.text
-                    if ("New un-FedBan" not in resp) and ("I'll give" not in resp) and ("Un-FedBan" not in resp):
-                        failed.append(f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`")
+                    if (
+                        ("New un-FedBan" not in resp)
+                        and ("I'll give" not in resp)
+                        and ("Un-FedBan" not in resp)
+                    ):
+                        failed.append(
+                            f"{data['fed_name']}  \n__ID__: `{data['chat_id']}`"
+                        )
             except FloodWait as f:
                 await asyncio.sleep(f.x + 3)
             except BaseException:
@@ -557,12 +707,16 @@ async def unfban_(message: Message):
 
         else:
             await userge.send_message(
-                chat_id, f"{Config.FSUDO_TRIGGER}unfban <a href='tg://user?id={user}'>{user}</a> {reason}", disable_web_page_preview=True
+                chat_id,
+                f"{Config.FSUDO_TRIGGER}unfban <a href='tg://user?id={user}'>{user}</a> {reason}",
+                disable_web_page_preview=True,
             )
 
         await asyncio.sleep(0.1)
     if total == 0:
-        return await message.err("You Don't have any feds connected!\nsee .help addf, for more info.")
+        return await message.err(
+            "You Don't have any feds connected!\nsee .help addf, for more info."
+        )
     await message.edit(fban_arg[2])
 
     if len(failed) != 0:
@@ -571,7 +725,10 @@ async def unfban_(message: Message):
             status += "• " + i + "\n"
     else:
         status = f"Success! Un-Fbanned in `{total}` feds."
-    msg_ = fban_arg[3].format(user_.mention) + f"\n<b>ID:</b> <code>{user}</code>\n<b>Reason:</b> {reason}\n**Status:** {status}"
+    msg_ = (
+        fban_arg[3].format(user_.mention)
+        + f"\n<b>ID:</b> <code>{user}</code>\n<b>Reason:</b> {reason}\n**Status:** {status}"
+    )
     await message.edit(msg_)
     await userge.send_message(int(PROOF_CHANNEL), msg_)
 
@@ -604,7 +761,9 @@ async def fban_lst_(message: Message):
             sudo_feds += f"    <b>{data['fed_name']}</b>\n"
     out = normal_feds + proofed_feds + sudo_feds
     await message.edit_or_send_as_file(
-        f"**Connected federations: [{total}]**\n\n" + out if total else "**You haven't connected to any federations yet!**",
+        f"**Connected federations: [{total}]**\n\n" + out
+        if total
+        else "**You haven't connected to any federations yet!**",
         caption="Connected Fed List",
     )
 
