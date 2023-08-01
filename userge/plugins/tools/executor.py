@@ -156,23 +156,28 @@ async def term_(message: Message):
     except ImportError:
         uid = 1
     output = f"{curruser}:~# {cmd}\n" if uid == 0 else f"{curruser}:~$ {cmd}\n"
-    count = 0
-    while not t_obj.finished:
-        count += 1
+    sleep_for = 1
+    _stdout = ""
+    async for stdout in t_obj.get_output():
         if message.process_is_canceled:
             t_obj.cancel()
-            await message.reply("`process canceled!`")
-            return
-        await asyncio.sleep(0.5)
-        if count >= Config.EDIT_SLEEP_TIMEOUT * 2:
-            count = 0
-            out_data = f"<pre>{output}{t_obj.read_line}</pre>"
-            await message.try_to_edit(out_data, parse_mode="html")
-    out_data = f"<pre>{output}{t_obj.get_output}</pre>"
+            return await message.reply("`process canceled!`")
+        if _stdout != stdout:
+            if len(stdout) <= 4096:
+                await message.edit(
+                        f"<code>{stdout}</code>",
+                        disable_web_page_preview=True,
+                        parse_mode="html",
+                )
+            _stdout = stdout
+        if sleep_for >= 6:
+            sleep_for = 1
+        sleep_for += 1
+        await asyncio.sleep(sleep_for)
+    out_data = f"<pre>{output}{t_obj.full_std}</pre>"
     await message.edit_or_send_as_file(
         out_data, parse_mode="html", filename="term.txt", caption=cmd
     )
-
 
 async def init_func(message: Message):
     cmd = message.input_str
@@ -186,59 +191,39 @@ async def init_func(message: Message):
 
 
 class Term:
-    """live update term class"""
+    " Live Term By Ryuk "
+    def __init__(self, process):
+        self.process = process
+        self.full_std = ""
+        self.is_done = False
 
-    def __init__(self, process: asyncio.subprocess.Process) -> None:
-        self._process = process
-        self._stdout = b""
-        self._stderr = b""
-        self._stdout_line = b""
-        self._stderr_line = b""
-        self._finished = False
-
-    def cancel(self) -> None:
-        self._process.kill()
-
-    @property
-    def finished(self) -> bool:
-        return self._finished
-
-    @property
-    def read_line(self) -> str:
-        return (self._stdout_line + self._stderr_line).decode("utf-8").strip()
-
-    @property
-    def get_output(self) -> str:
-        return (self._stdout + self._stderr).decode("utf-8").strip()
-
-    async def _read_stdout(self) -> None:
+    async def read_output(self):
         while True:
-            line = await self._process.stdout.readline()
-            if line:
-                self._stdout_line = line
-                self._stdout += line
-            else:
+            line = (await self.process.stdout.readline()).decode("utf-8")
+            if not line:
                 break
+            self.full_std += line
+        self.is_done = True
+        await self.process.wait()
 
-    async def _read_stderr(self) -> None:
-        while True:
-            line = await self._process.stderr.readline()
-            if line:
-                self._stderr_line = line
-                self._stderr += line
-            else:
-                break
+    async def get_output(self):
+        while not self.is_done:
+            yield self.full_std
 
-    async def worker(self) -> None:
-        await asyncio.wait([self._read_stdout(), self._read_stderr()])
-        await self._process.wait()
-        self._finished = True
+    def cancel(self):
+        if not self.is_done:
+            self.process.kill()
+            self._task.cancel()
 
     @classmethod
-    async def execute(cls, cmd: str) -> "Term":
-        process = await asyncio.create_subprocess_shell(
-            cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+    async def execute(cls, cmd):
+        sub_process = cls(
+            process=await asyncio.create_subprocess_shell(
+                cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT
+            )
         )
-        t_obj = cls(process)
-        asyncio.get_event_loop().create_task(t_obj.worker())
-        return t_obj
+        sub_process._task = asyncio.create_task(
+            sub_process.read_output(), name="AsyncShell"
+        )
+        await asyncio.sleep(0.5)
+        return sub_process
