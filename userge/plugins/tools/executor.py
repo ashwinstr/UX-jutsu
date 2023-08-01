@@ -16,7 +16,7 @@ import traceback
 from getpass import getuser
 from os import geteuid
 
-from userge import Config, Message, userge
+from userge import Message, userge
 from userge.utils import runcmd
 
 CHANNEL = userge.getCLogger()
@@ -165,9 +165,9 @@ async def term_(message: Message):
         if _stdout != stdout:
             if len(stdout) <= 4096:
                 await message.edit(
-                        f"<code>{stdout}</code>",
-                        disable_web_page_preview=True,
-                        parse_mode="html",
+                    f"<code>{stdout}</code>",
+                    disable_web_page_preview=True,
+                    parse_mode="html",
                 )
             _stdout = stdout
         if sleep_for >= 6:
@@ -178,6 +178,7 @@ async def term_(message: Message):
     await message.edit_or_send_as_file(
         out_data, parse_mode="html", filename="term.txt", caption=cmd
     )
+
 
 async def init_func(message: Message):
     cmd = message.input_str
@@ -191,7 +192,8 @@ async def init_func(message: Message):
 
 
 class Term:
-    " Live Term By Ryuk "
+    "Live Term By Ryuk"
+
     def __init__(self, process):
         self.process = process
         self.full_std = ""
