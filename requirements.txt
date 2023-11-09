@@ -50,7 +50,7 @@ wikipedia>=1.4.0
 yt_dlp>=2022.8.19
 ruamel.yaml==0.17.21
 ujson>=4.0.1
-youtube-search-python==1.5.1
+youtube-search-python==1.6.6
 feedparser>=6.0.2
 
 
